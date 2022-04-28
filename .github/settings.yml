@@ -1,2 +1,9 @@
 # See https://github.com/Financial-Times/github-apps-config-next for details
 _extends: github-apps-config-next
+
+repository:
+  has_projects: false
+  has_wiki: false
+  has_downloads: false
+  default_branch: main
+  delete_branch_on_merge: true
