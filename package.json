@@ -14,7 +14,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "npm run test --workspaces",
+    "lint": "echo 'TODO add eslint as a seperate piece of work'",
+    "test": "echo 'TODO add jest as a seperate piece of work'",
     "prepare": "husky install"
   },
   "devDependencies": {
