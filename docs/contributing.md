@@ -89,4 +89,10 @@ In order to preserve conventional commits, pull requests must be merged or rebas
 
 ## Releasing
 
-TODO
+Our releases are managed by [Release Please](https://github.com/googleapis/release-please#readme).
+
+When a commit with the `feat` or `fix` [commit type prefix](#commit-type-prefixes) or a breaking change (`!`) reaches the `main` branch, a pull request will be opened with a name matching something like `chore: release main`. Merging this pull request will automatically create GitHub releases for each package as well as publishing the new package versions to npm.
+
+If the PR is left alone, it will continue to be updated with new releases as more commits appear on the `main` branch.
+
+Before approving and merging, it's important to review the release PR like you would any other to make sure that the expected package versions are being released.
