@@ -95,4 +95,4 @@ When a commit with the `feat` or `fix` [commit type prefix](#commit-type-prefixe
 
 If the PR is left alone, it will continue to be updated with new releases as more commits appear on the `main` branch.
 
-Before approving and merging, it's important to review the release PR like you would any other to make sure that the expected package versions are being released.
+Before approving and merging the release PR, make sure you review it. You need to check the package versions that it updates to make sure you’re only releasing the things you expect.
