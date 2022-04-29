@@ -83,6 +83,8 @@ jobs:
       - *create_cache
       - persist_to_workspace:
           root: *workspace_root
+          paths:
+            - build
 
   lint:
     <<: *container_config_node
