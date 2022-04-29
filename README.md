@@ -5,9 +5,16 @@ Reliability Kit is a well tested suite of tools designed to help FT.com applicat
 
 **:warning: The packages in this repo are a work in progress and will likely change a lot before being considered stable.**
 
+
+## Design
+
+To understand the design decisions we made when building this project, [read the design guide here](docs/design.md).
+
+
 ## Contributing
 
 [The contributing guide is available here](docs/contributing.md).
+
 
 ## License
 
