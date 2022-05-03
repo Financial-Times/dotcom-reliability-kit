@@ -3,8 +3,11 @@
 		"jest": true
 	},
 	"extends": ["@financial-times/eslint-config-next"],
+	"parser": "@babel/eslint-parser",
 	"parserOptions": {
-		"ecmaVersion": 2020
+		"ecmaVersion": 2020,
+		"requireConfigFile": false,
+		"sourceType": "script"
 	},
 	"plugins": [
 		"prettier"
