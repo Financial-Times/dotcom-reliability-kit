@@ -15,16 +15,18 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "echo 'TODO add jest as a seperate piece of work'",
+    "test": "jest --silent --runInBand",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@commitlint/cli": "^16.2.4",
     "@commitlint/config-conventional": "^16.2.4",
     "@financial-times/eslint-config-next": "^4.0.0",
+    "@types/jest": "^27.5.0",
     "eslint": "^8.14.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
+    "jest": "^28.0.3",
     "lint-staged": "^12.4.1",
     "prettier": "^2.6.2",
     "release-please": "^13.15.0"
