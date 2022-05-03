@@ -56,7 +56,13 @@ The linters are also run on pull requests and linting errors will block merging,
 
 ### Unit tests
 
-TODO Jest
+We run unit tests with [Jest](https://jestjs.io/) and aim for ~100% coverage. This library is meant to help our applications be more reliable and so it's important that we cover as many edge cases as possible. Tests are written within each package (e.g. `packages/example/test/example.spec.js`) and are run in parallel. You can run the tests with the following:
+
+```
+npm run test
+```
+
+Tests are also run on pull requests and failing tests will block merging, so it's useful to check before opening a PR.
 
 
 ## Committing

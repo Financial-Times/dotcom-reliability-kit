@@ -1,0 +1,15 @@
+{
+	"clearMocks": true,
+	"collectCoverage": true,
+	"collectCoverageFrom": [
+		"**/*.js",
+		"!**/test/**"
+	],
+	"coveragePathIgnorePatterns": [
+		"/node_modules/"
+	],
+	"projects": [
+		"<rootDir>/packages/*"
+	],
+	"testEnvironment": "node"
+}
