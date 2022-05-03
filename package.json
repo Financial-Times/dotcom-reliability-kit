@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "jest --silent --runInBand",
+    "test": "jest --silent",
     "prepare": "husky install"
   },
   "devDependencies": {
