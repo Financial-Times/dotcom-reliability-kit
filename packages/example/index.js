@@ -1,4 +1,3 @@
-
 // This is just an example module
 // and we will delete it before we
 // publish anything. It's required

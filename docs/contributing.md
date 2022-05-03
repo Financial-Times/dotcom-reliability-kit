@@ -7,6 +7,8 @@ We're glad you want to contribute to Reliability Kit!
     * [Optional](#optional)
   * [Getting set up](#getting-set-up)
   * [Testing](#testing)
+    * [Linters](#linters)
+    * [Unit tests](#unit-tests)
   * [Committing](#committing)
     * [Commit type prefixes](#commit-type-prefixes)
     * [Commit linting](#commit-linting)
@@ -40,7 +42,21 @@ To set up this repo to make changes locally, make sure you have all of the [requ
 
 ## Testing
 
-TODO
+Reliability Kit includes some tooling to ensure that code quality and consistency is high.
+
+### Linters
+
+JavaScript files are expected to pass the linting rules defined by the project ([ESLint](https://eslint.org/) and [Prettier](https://prettier.io/)). We attempt to run the linters on every commit, but you can also check lint errors manually either by installing the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) or by running the following locally:
+
+```
+npm run lint
+```
+
+The linters are also run on pull requests and linting errors will block merging, so it's useful to check before opening a PR.
+
+### Unit tests
+
+TODO Jest
 
 
 ## Committing
