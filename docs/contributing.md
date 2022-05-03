@@ -8,6 +8,7 @@ We're glad you want to contribute to Reliability Kit!
   * [Getting set up](#getting-set-up)
   * [Testing](#testing)
     * [Linters](#linters)
+    * [Type safety](#type-safety)
     * [Unit tests](#unit-tests)
   * [Committing](#committing)
     * [Commit type prefixes](#commit-type-prefixes)
@@ -53,6 +54,18 @@ npm run lint
 ```
 
 The linters are also run on pull requests and linting errors will block merging, so it's useful to check before opening a PR.
+
+### Type safety
+
+We do not write TypeScript in this project, but we _do_ write [thorough JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) and test against it which gives us all the benefits of TypeScript ([more info](./design.md#languages)).
+
+We do not compile the code in our packages, but we do check that all variables are set to the correct types. If there are any type errors then you should see these in your editor if you're using VS Code. Otherwise type checking can be manually run as part of linting:
+
+```
+npm run lint
+```
+
+As with ESLint, we check types in pull requests and errors will block merging, so it's useful to check before opening a PR.
 
 ### Unit tests
 

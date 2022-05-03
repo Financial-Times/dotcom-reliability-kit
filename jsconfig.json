@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"module": "commonjs",
+		"strict": true
+	},
+	"exclude": [
+		"coverage",
+		"node_modules"
+	],
+	"include": [
+		"**/*.js"
+	]
+}
