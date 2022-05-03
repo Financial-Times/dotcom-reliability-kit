@@ -3,7 +3,8 @@
 		"allowJs": true,
 		"checkJs": true,
 		"module": "commonjs",
-		"strict": true
+		"strict": true,
+		"target": "es2020"
 	},
 	"exclude": [
 		"coverage",
