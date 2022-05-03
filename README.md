@@ -6,6 +6,14 @@ Reliability Kit is a well tested suite of tools designed to help FT.com applicat
 **:warning: The packages in this repo are a work in progress and will likely change a lot before being considered stable.**
 
 
+## Packages
+
+All of the packages in this monorepo are viewable in the [`packages` folder](./packages/). A brief outline of what each package does is listed here:
+
+  * **[@dotcom-reliability-kit/errors](./packages/errors/#readme):**<br/>
+    A suite of error classes which help you throw the most appropriate error in any situation
+
+
 ## Design
 
 To understand the design decisions we made when building this project, [read the design guide here](docs/design.md).
