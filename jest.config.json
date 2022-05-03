@@ -2,7 +2,8 @@
 	"clearMocks": true,
 	"collectCoverage": true,
 	"collectCoverageFrom": [
-		"**/*.js"
+		"**/*.js",
+		"!**/test/**"
 	],
 	"coveragePathIgnorePatterns": [
 		"/node_modules/"
