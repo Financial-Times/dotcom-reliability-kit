@@ -10,6 +10,7 @@ We're glad you want to contribute to Reliability Kit!
     * [Linters](#linters)
     * [Type safety](#type-safety)
     * [Unit tests](#unit-tests)
+      * [Coverage](#coverage)
   * [Committing](#committing)
     * [Commit type prefixes](#commit-type-prefixes)
     * [Commit linting](#commit-linting)
@@ -69,13 +70,30 @@ As with ESLint, we check types in pull requests and errors will block merging, s
 
 ### Unit tests
 
-We run unit tests with [Jest](https://jestjs.io/) and aim for ~100% coverage. This library is meant to help our applications be more reliable and so it's important that we cover as many edge cases as possible. Tests are written within each package (e.g. `packages/example/test/example.spec.js`) and are run in parallel. You can run the tests with the following:
+We run unit tests with [Jest](https://jestjs.io/) and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`) and are run in parallel. You can run the tests with the following:
 
 ```
 npm run test
 ```
 
 Tests are also run on pull requests and failing tests will block merging, so it's useful to check before opening a PR.
+
+#### Coverage
+
+We intentionally fail the unit tests if coverage drops below 100%. This library is meant to help our applications be more reliable and so it's important that we cover as many edge cases as possible. If you have a valid reason for some code not to be covered, e.g. an empty function as a default parameter, then use code comments to disable coverage for that line or block:
+
+```js
+/* istanbul ignore next */
+function example() { console.log('this is not covered'); }
+```
+
+This is better than dropping the required coverage because:
+
+  * We have to make an active and conscious decision to drop a piece of code below 100% coverage
+
+  * The fact that code isn't covered is _documented_ in the code
+
+  * It opens up discussion in the pull request when we see an uncovered piece of code – maybe the reviewer will have some useful ideas about how to make it possible to cover
 
 
 ## Committing
