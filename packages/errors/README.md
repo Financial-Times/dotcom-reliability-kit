@@ -37,24 +37,13 @@ It works in the same way as a normal error, expecting a message:
 throw new OperationalError('example message');
 ```
 
-You can test whether an error is operational (known about) either by checking whether it's an instance of this class:
+#### `OperationalError.isErrorMarkedAsOperational()`
+
+You can test whether an error is operational (known about) either by using the `isErrorMarkedAsOperational` method. It accepts an error object of any kind and will return `true` if that error has a truthy `isOperational` property and `false` otherwise:
 
 ```js
-try {
-    // your code
-} catch (error) {
-    console.log(error instanceof OperationalError); // true
-}
-```
-
-Or by checking the `isOperational` property:
-
-```js
-try {
-    // your code
-} catch (error) {
-    console.log(error.isOperational); // true
-}
+OperationalError.isErrorMarkedAsOperational(new OperationalError('example message')); // true
+OperationalError.isErrorMarkedAsOperational(new Error('example message')); // false
 ```
 
 

@@ -39,4 +39,35 @@ describe('@dotcom-reliability-kit/errors/lib/operationa-error', () => {
 			});
 		});
 	});
+
+	describe('isErrorMarkedAsOperational(error)', () => {
+		describe('when called with an OperationalError instance', () => {
+			it('returns `true`', () => {
+				expect(
+					OperationalError.isErrorMarkedAsOperational(
+						new OperationalError('mock message')
+					)
+				).toStrictEqual(true);
+			});
+		});
+
+		describe('when called with an Error instance', () => {
+			it('returns `false`', () => {
+				expect(
+					OperationalError.isErrorMarkedAsOperational(new Error('mock message'))
+				).toStrictEqual(false);
+			});
+		});
+
+		describe('when called with an Error instance that has a manually added `isOperational` property', () => {
+			it('returns `true`', () => {
+				const error = new Error('mock message');
+				// @ts-ignore Fine to add additonal properties for testing purposes
+				error.isOperational = true;
+				expect(
+					OperationalError.isErrorMarkedAsOperational(error)
+				).toStrictEqual(true);
+			});
+		});
+	});
 });
