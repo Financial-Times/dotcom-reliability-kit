@@ -7,6 +7,6 @@
 		"node-workspace"
 	],
 	"packages": {
-		"packages/example": {}
+		"packages/errors": {}
 	}
 }
