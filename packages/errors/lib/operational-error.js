@@ -29,4 +29,19 @@ module.exports = class OperationalError extends Error {
 		// TODO process more error data here
 		super(message);
 	}
+
+	/**
+	 * Get whether an error object is marked as operational (it has a truthy `isOperational` property).
+	 *
+	 * @public
+	 * @param {Error} error
+	 *     The error object to check.
+	 * @returns {Boolean}
+	 *     Returns whether the error is operational.
+	 */
+	static isErrorMarkedAsOperational(error) {
+		// @ts-ignore Error.prototype.isOperational does not exist, but it's OK to check in this
+		// case as we're manually casting `undefined` to a Boolean
+		return Boolean(error.isOperational);
+	}
 };
