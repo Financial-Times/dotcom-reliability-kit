@@ -5,6 +5,7 @@ A suite of error classes which help you throw the most appropriate error in any 
 
   * [Usage](#usage)
     * [`OperationalError`](#operationalerror)
+      * [`.isErrorMarkedAsOperational`](#operationalerroriserrormarkedasoperational)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -38,6 +39,17 @@ It works in the same way as a normal error, expecting a message:
 ```js
 throw new OperationalError('example message');
 ```
+
+You can alternatively construct an operational error with a data object. Currently this accepts a `code` property, which must be set to a unique identifier for the type of error which is occurring, and a `message` property which contains a human-readable message:
+
+```js
+throw new OperationalError({
+    message: 'example message',
+    code: 'EXAMPLE_CODE'
+});
+```
+
+Error codes are normalized to be uppercase, alphanumeric, and underscore-delimited.
 
 #### `OperationalError.isErrorMarkedAsOperational()`
 

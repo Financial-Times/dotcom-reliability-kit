@@ -5,29 +5,47 @@
 /**
  * Class representing an operational error.
  */
-module.exports = class OperationalError extends Error {
+class OperationalError extends Error {
 	/**
+	 * @readonly
 	 * @access public
 	 * @type {string}
 	 */
 	name = 'OperationalError';
 
 	/**
+	 * Whether the error is operational.
+	 *
+	 * @readonly
 	 * @access public
 	 * @type {boolean}
 	 */
 	isOperational = true;
 
 	/**
+	 * A machine-readable error code which identifies the specific type of error.
+	 *
+	 * @readonly
+	 * @access public
+	 * @type {String}
+	 */
+	code = 'UNKNOWN';
+
+	/**
 	 * Create an operational error.
 	 *
-	 * @access public
-	 * @param {string} message
-	 *     The error message.
+	 * @param {(String|OperationalErrorData)} [data = {}]
+	 *     The error message if it's a string, or full error information if an object.
 	 */
-	constructor(message) {
-		// TODO process more error data here
-		super(message);
+	constructor(data = {}) {
+		if (typeof data === 'string') {
+			data = { message: data };
+		}
+		super(data.message || 'An operational error occurred');
+
+		if (typeof data.code === 'string') {
+			this.code = OperationalError.normalizeErrorCode(data.code);
+		}
 	}
 
 	/**
@@ -44,4 +62,30 @@ module.exports = class OperationalError extends Error {
 		// case as we're manually casting `undefined` to a Boolean
 		return Boolean(error.isOperational);
 	}
-};
+
+	/**
+	 * Normalize a machine-readable error code.
+	 *
+	 * @access private
+	 * @param {String} code
+	 *     The error code to normalize.
+	 * @returns {String}
+	 *     Returns the normalized error code.
+	 */
+	static normalizeErrorCode(code) {
+		return code
+			.trim()
+			.toUpperCase()
+			.replace(/[^a-z0-9_]+/gi, '_');
+	}
+}
+
+/**
+ * @typedef {Object} OperationalErrorData
+ * @property {String} [code]
+ *     A machine-readable error code which identifies the specific type of error.
+ * @property {String} [message]
+ *     A human readable message which describes the error.
+ */
+
+module.exports = OperationalError;

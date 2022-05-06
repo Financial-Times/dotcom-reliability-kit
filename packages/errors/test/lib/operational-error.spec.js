@@ -1,10 +1,13 @@
 const OperationalError = require('../../lib/operational-error');
 
-describe('@dotcom-reliability-kit/errors/lib/operationa-error', () => {
+describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
+	afterEach(() => {
+		jest.restoreAllMocks();
+	});
+
 	it('exports a class', () => {
 		expect(OperationalError).toBeInstanceOf(Function);
 		expect(() => {
-			// @ts-ignore TypeScript will not allow us to use a class constructor like this
 			OperationalError();
 		}).toThrow(/class constructor/i);
 	});
@@ -13,17 +16,48 @@ describe('@dotcom-reliability-kit/errors/lib/operationa-error', () => {
 		expect(OperationalError.prototype).toBeInstanceOf(Error);
 	});
 
+	describe('new OperationalError()', () => {
+		let instance;
+
+		beforeEach(() => {
+			instance = new OperationalError();
+		});
+
+		describe('.code', () => {
+			it('is set to "UNKNOWN"', () => {
+				expect(instance.code).toStrictEqual('UNKNOWN');
+			});
+		});
+
+		describe('.isOperational', () => {
+			it('is set to true', () => {
+				expect(instance.isOperational).toStrictEqual(true);
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to a default value', () => {
+				expect(instance.message).toStrictEqual('An operational error occurred');
+			});
+		});
+
+		describe('.name', () => {
+			it('is set to "OperationalError"', () => {
+				expect(instance.name).toStrictEqual('OperationalError');
+			});
+		});
+	});
+
 	describe('new OperationalError(message)', () => {
-		/** @type {OperationalError} */
 		let instance;
 
 		beforeEach(() => {
 			instance = new OperationalError('mock message');
 		});
 
-		describe('.name', () => {
-			it('is set to "OperationalError"', () => {
-				expect(instance.name).toStrictEqual('OperationalError');
+		describe('.code', () => {
+			it('is set to "UNKNOWN"', () => {
+				expect(instance.code).toStrictEqual('UNKNOWN');
 			});
 		});
 
@@ -36,6 +70,54 @@ describe('@dotcom-reliability-kit/errors/lib/operationa-error', () => {
 		describe('.message', () => {
 			it('is set to the passed in message parameter', () => {
 				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+
+		describe('.name', () => {
+			it('is set to "OperationalError"', () => {
+				expect(instance.name).toStrictEqual('OperationalError');
+			});
+		});
+	});
+
+	describe('new OperationalError(data)', () => {
+		let instance;
+
+		beforeEach(() => {
+			jest
+				.spyOn(OperationalError, 'normalizeErrorCode')
+				.mockReturnValue('MOCK_CODE');
+			instance = new OperationalError({
+				message: 'mock message',
+				code: 'mock_code'
+			});
+		});
+
+		it('normalizes the passed in error code', () => {
+			expect(OperationalError.normalizeErrorCode).toBeCalledWith('mock_code');
+		});
+
+		describe('.code', () => {
+			it('is set to the normalized error code', () => {
+				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.isOperational', () => {
+			it('is set to true', () => {
+				expect(instance.isOperational).toStrictEqual(true);
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to the data.message property', () => {
+				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+
+		describe('.name', () => {
+			it('is set to "OperationalError"', () => {
+				expect(instance.name).toStrictEqual('OperationalError');
 			});
 		});
 	});
@@ -62,12 +144,19 @@ describe('@dotcom-reliability-kit/errors/lib/operationa-error', () => {
 		describe('when called with an Error instance that has a manually added `isOperational` property', () => {
 			it('returns `true`', () => {
 				const error = new Error('mock message');
-				// @ts-ignore Fine to add additonal properties for testing purposes
 				error.isOperational = true;
 				expect(
 					OperationalError.isErrorMarkedAsOperational(error)
 				).toStrictEqual(true);
 			});
+		});
+	});
+
+	describe('.normalizeErrorCode(code)', () => {
+		it('uppercases and normalizes spacing in the code', () => {
+			expect(
+				OperationalError.normalizeErrorCode(' ABC-123_foo   bar ')
+			).toStrictEqual('ABC_123_FOO_BAR');
 		});
 	});
 });
