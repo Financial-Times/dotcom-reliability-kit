@@ -3,5 +3,6 @@
  */
 
 module.exports = {
+	HttpError: require('./http-error'),
 	OperationalError: require('./operational-error')
 };
