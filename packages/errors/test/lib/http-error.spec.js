@@ -45,6 +45,12 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 			});
 		});
 
+		describe('.data', () => {
+			it('is set to an empty object', () => {
+				expect(instance.data).toEqual({});
+			});
+		});
+
 		describe('.message', () => {
 			it('is set to the status message for the default 500 code', () => {
 				expect(instance.message).toStrictEqual('mock status message');
@@ -94,6 +100,12 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		describe('.code', () => {
 			it('is set to "HTTP_500"', () => {
 				expect(instance.code).toStrictEqual('HTTP_500');
+			});
+		});
+
+		describe('.data', () => {
+			it('is set to an empty object', () => {
+				expect(instance.data).toEqual({});
 			});
 		});
 
@@ -154,6 +166,12 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 			});
 		});
 
+		describe('.data', () => {
+			it('is set to an empty object', () => {
+				expect(instance.data).toEqual({});
+			});
+		});
+
 		describe('.message', () => {
 			it('is set to the status message for the normalized status code', () => {
 				expect(instance.message).toStrictEqual('mock status message');
@@ -200,7 +218,8 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 			instance = new HttpError({
 				message: 'mock message',
 				code: 'mock_code',
-				statusCode: 567
+				statusCode: 567,
+				extra: 'mock extra data'
 			});
 		});
 
@@ -219,6 +238,14 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		describe('.code', () => {
 			it('is set to the normalized error code', () => {
 				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.data', () => {
+			it('is set to an object containing the extra keys in `data`', () => {
+				expect(instance.data).toEqual({
+					extra: 'mock extra data'
+				});
 			});
 		});
 

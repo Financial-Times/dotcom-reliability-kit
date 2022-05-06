@@ -32,6 +32,15 @@ class OperationalError extends Error {
 	code = 'UNKNOWN';
 
 	/**
+	 * Additional error information.
+	 *
+	 * @readonly
+	 * @access public
+	 * @type {Object<String, String>}
+	 */
+	data = {};
+
+	/**
 	 * Create an operational error.
 	 *
 	 * @param {(String|OperationalErrorData)} [data = {}]
@@ -46,7 +55,22 @@ class OperationalError extends Error {
 		if (typeof data.code === 'string') {
 			this.code = OperationalError.normalizeErrorCode(data.code);
 		}
+
+		for (const [key, value] of Object.entries(data)) {
+			// @ts-ignore TypeScript does not properly infer the constructor
+			if (!this.constructor.reservedKeys.includes(key)) {
+				this.data[key] = value;
+			}
+		}
 	}
+
+	/**
+	 * Reserved keys that should not appear in `OperationalError.prototype.data`.
+	 *
+	 * @access private
+	 * @type {Array<String>}
+	 */
+	static reservedKeys = ['code', 'message'];
 
 	/**
 	 * Get whether an error object is marked as operational (it has a truthy `isOperational` property).

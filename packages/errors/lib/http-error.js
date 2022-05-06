@@ -63,6 +63,10 @@ class HttpError extends OperationalError {
 			data = { statusCode: data };
 		}
 
+		// Make sure that we don't modify the original data object
+		// by shallow-cloning it
+		data = { ...data };
+
 		// Default the status code
 		data.statusCode =
 			typeof data.statusCode === 'number'
@@ -85,6 +89,18 @@ class HttpError extends OperationalError {
 		this.statusCode = data.statusCode;
 		this.statusMessage = HttpError.getMessageForStatusCode(data.statusCode);
 	}
+
+	/**
+	 * Reserved keys that should not appear in `HttpError.prototype.data`.
+	 *
+	 * @access private
+	 * @type {Array<String>}
+	 */
+	static reservedKeys = [
+		...OperationalError.reservedKeys,
+		'statusCode',
+		'statusMessage'
+	];
 
 	/**
 	 * Normalize an HTTP status code.

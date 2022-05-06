@@ -29,6 +29,12 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 			});
 		});
 
+		describe('.data', () => {
+			it('is set to an empty object', () => {
+				expect(instance.data).toEqual({});
+			});
+		});
+
 		describe('.isOperational', () => {
 			it('is set to true', () => {
 				expect(instance.isOperational).toStrictEqual(true);
@@ -61,6 +67,12 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 			});
 		});
 
+		describe('.data', () => {
+			it('is set to an empty object', () => {
+				expect(instance.data).toEqual({});
+			});
+		});
+
 		describe('.isOperational', () => {
 			it('is set to true', () => {
 				expect(instance.isOperational).toStrictEqual(true);
@@ -89,7 +101,8 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 				.mockReturnValue('MOCK_CODE');
 			instance = new OperationalError({
 				message: 'mock message',
-				code: 'mock_code'
+				code: 'mock_code',
+				extra: 'mock extra data'
 			});
 		});
 
@@ -100,6 +113,14 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		describe('.code', () => {
 			it('is set to the normalized error code', () => {
 				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.data', () => {
+			it('is set to an object containing the extra keys in `data`', () => {
+				expect(instance.data).toEqual({
+					extra: 'mock extra data'
+				});
 			});
 		});
 

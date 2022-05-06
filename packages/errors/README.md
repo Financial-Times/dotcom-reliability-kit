@@ -58,6 +58,20 @@ error.message // example message
 error.code // EXAMPLE_CODE
 ```
 
+You may also pass additional properties into an error object, these will be collected and stored on a `data` property on the error. Note: TypeScript will complain about these additional properties, so if you're checking types you will need to ignore the relevant lines:
+
+```js
+const error = new OperationalError({
+    message: 'example message',
+    code: 'EXAMPLE_CODE',
+    // @ts-ignore
+    article: 'd92acacb-ac53-4505-aa88-eae4b42de994'
+});
+
+error.data.article // d92acacb-ac53-4505-aa88-eae4b42de994
+```
+
+
 #### `OperationalError.isErrorMarkedAsOperational()`
 
 You can test whether an error is operational (known about) either by using the `isErrorMarkedAsOperational` method. It accepts an error object of any kind and will return `true` if that error has a truthy `isOperational` property and `false` otherwise:
