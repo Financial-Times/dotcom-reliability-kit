@@ -3,6 +3,14 @@
  */
 
 /**
+ * @typedef {Object} OperationalErrorData
+ * @property {String} [code]
+ *     A machine-readable error code which identifies the specific type of error.
+ * @property {String} [message]
+ *     A human readable message which describes the error.
+ */
+
+/**
  * Class representing an operational error.
  */
 class OperationalError extends Error {
@@ -103,13 +111,5 @@ class OperationalError extends Error {
 			.replace(/[^a-z0-9_]+/gi, '_');
 	}
 }
-
-/**
- * @typedef {Object} OperationalErrorData
- * @property {String} [code]
- *     A machine-readable error code which identifies the specific type of error.
- * @property {String} [message]
- *     A human readable message which describes the error.
- */
 
 module.exports = OperationalError;

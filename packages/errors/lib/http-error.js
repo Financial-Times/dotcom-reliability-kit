@@ -15,6 +15,16 @@ const OperationalError = require('./operational-error');
 const STATUS_CODES = require('http').STATUS_CODES;
 
 /**
+ * @typedef {Object} HttpErrorData
+ * @property {String} [code]
+ *     A machine-readable error code which identifies the specific type of error.
+ * @property {String} [message]
+ *     A human readable message which describes the error.
+ * @property {Number} [statusCode]
+ *     An HTTP status code.
+ */
+
+/**
  * Class representing an HTTP error.
  */
 class HttpError extends OperationalError {
@@ -138,15 +148,5 @@ class HttpError extends OperationalError {
 		return STATUS_CODES[500];
 	}
 }
-
-/**
- * @typedef {Object} HttpErrorData
- * @property {String} [code]
- *     A machine-readable error code which identifies the specific type of error.
- * @property {String} [message]
- *     A human readable message which describes the error.
- * @property {Number} [statusCode]
- *     An HTTP status code.
- */
 
 module.exports = HttpError;
