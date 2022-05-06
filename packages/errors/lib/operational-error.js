@@ -43,7 +43,7 @@ class OperationalError extends Error {
 	/**
 	 * Create an operational error.
 	 *
-	 * @param {(String|OperationalErrorData)} [data = {}]
+	 * @param {(String|OperationalErrorData & Record<String, any>)} [data = {}]
 	 *     The error message if it's a string, or full error information if an object.
 	 */
 	constructor(data = {}) {

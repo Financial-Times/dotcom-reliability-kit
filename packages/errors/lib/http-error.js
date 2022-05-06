@@ -51,7 +51,7 @@ class HttpError extends OperationalError {
 	/**
 	 * Create an HTTP error.
 	 *
-	 * @param {(String|Number|HttpErrorData)} [data = {}]
+	 * @param {(String|Number|HttpErrorData & Record<String, any>)} [data = {}]
 	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
 	 *     information if an object.
 	 */
