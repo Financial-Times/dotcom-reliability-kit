@@ -13,6 +13,9 @@ All of the packages in this monorepo are viewable in the [`packages` folder](./p
   * **[@dotcom-reliability-kit/errors](./packages/errors/#readme):**<br/>
     A suite of error classes which help you throw the most appropriate error in any situation
 
+  * **[@dotcom-reliability-kit/serialize-error](./packages/serialize-error/#readme):**<br/>
+    A utility function to serialize an error object in a way that's friendly to loggers, view engines, and converting to JSON
+
 
 ## Design
 
