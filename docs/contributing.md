@@ -6,6 +6,7 @@ We're glad you want to contribute to Reliability Kit!
   * [Requirements](#requirements)
     * [Optional](#optional)
   * [Getting set up](#getting-set-up)
+  * [Creating a new package](#creating-a-new-package)
   * [Testing](#testing)
     * [Linters](#linters)
     * [Type safety](#type-safety)
@@ -40,6 +41,19 @@ To set up this repo to make changes locally, make sure you have all of the [requ
   * Clone this repo and `cd` into it
   * Run `npm install` to install dependencies
   * Run `npm test` to verify that everything's working
+
+
+## Creating a new package
+
+To create a new package in this repo, run the following command. This will bootstrap the package files and make sure it's added to the [release configuration](#releasing) and is auto-versioned correctly.
+
+The name of the package must be lowercase with words hyphen-delimited.
+
+```
+npm run create-package <NAME>
+```
+
+You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
 
 
 ## Testing
