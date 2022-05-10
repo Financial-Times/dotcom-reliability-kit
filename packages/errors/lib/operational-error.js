@@ -44,7 +44,7 @@ class OperationalError extends Error {
 	 *
 	 * @readonly
 	 * @access public
-	 * @type {Object<String, String>}
+	 * @type {Object<String, any>}
 	 */
 	data = {};
 
