@@ -31,6 +31,8 @@ This module exports different Error classes which have different jobs. All can b
 
 The `OperationalError` class is the base class for most other error types. "Operational" in this context means "we understand why this error has occurred", so by using this error type you're helping your team to understand when a thrown error is unexpected.
 
+[Joyent's Error Handling docs](https://www.joyent.com/node-js/production/design/errors) have a good explanation of Operational Errors.
+
 It works in the same way as a normal error, expecting a message:
 
 ```js
