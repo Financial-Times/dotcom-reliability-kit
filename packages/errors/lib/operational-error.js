@@ -3,10 +3,10 @@
  */
 
 /**
- * @typedef {Object} OperationalErrorData
- * @property {String} [code]
+ * @typedef {object} OperationalErrorData
+ * @property {string} [code]
  *     A machine-readable error code which identifies the specific type of error.
- * @property {String} [message]
+ * @property {string} [message]
  *     A human readable message which describes the error.
  */
 
@@ -35,7 +35,7 @@ class OperationalError extends Error {
 	 *
 	 * @readonly
 	 * @access public
-	 * @type {String}
+	 * @type {string}
 	 */
 	code = 'UNKNOWN';
 
@@ -44,14 +44,14 @@ class OperationalError extends Error {
 	 *
 	 * @readonly
 	 * @access public
-	 * @type {Object<String, any>}
+	 * @type {Object<string, any>}
 	 */
 	data = {};
 
 	/**
 	 * Create an operational error.
 	 *
-	 * @param {(String|OperationalErrorData & Record<String, any>)} [data = {}]
+	 * @param {(string | OperationalErrorData & Record<string, any>)} [data = {}]
 	 *     The error message if it's a string, or full error information if an object.
 	 */
 	constructor(data = {}) {
@@ -76,7 +76,7 @@ class OperationalError extends Error {
 	 * Reserved keys that should not appear in `OperationalError.prototype.data`.
 	 *
 	 * @access private
-	 * @type {Array<String>}
+	 * @type {Array<string>}
 	 */
 	static reservedKeys = ['code', 'message'];
 
@@ -99,9 +99,9 @@ class OperationalError extends Error {
 	 * Normalize a machine-readable error code.
 	 *
 	 * @access private
-	 * @param {String} code
+	 * @param {string} code
 	 *     The error code to normalize.
-	 * @returns {String}
+	 * @returns {string}
 	 *     Returns the normalized error code.
 	 */
 	static normalizeErrorCode(code) {

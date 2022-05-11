@@ -8,19 +8,19 @@ const OperationalError = require('./operational-error');
  * We have guards in place wherever we use this map of status messages
  * which means we can safely cast it to an object where every property
  * is a string. If we don't do this then TypeScript will complain.
- * {@see HttpError.getMessageForStatusCode}
  *
- * @type {Object<String, String>}
+ * @see HttpError.getMessageForStatusCode
+ * @type {Object<any, string>}
  */
 const STATUS_CODES = require('http').STATUS_CODES;
 
 /**
- * @typedef {Object} HttpErrorData
- * @property {String} [code]
+ * @typedef {object} HttpErrorData
+ * @property {string} [code]
  *     A machine-readable error code which identifies the specific type of error.
- * @property {String} [message]
+ * @property {string} [message]
  *     A human readable message which describes the error.
- * @property {Number} [statusCode]
+ * @property {number} [statusCode]
  *     An HTTP status code.
  */
 
@@ -31,28 +31,28 @@ class HttpError extends OperationalError {
 	/**
 	 * @readonly
 	 * @access public
-	 * @type {String}
+	 * @type {string}
 	 */
 	name = 'HttpError';
 
 	/**
 	 * @readonly
 	 * @access public
-	 * @type {Number}
+	 * @type {number}
 	 */
 	statusCode = 500;
 
 	/**
 	 * @readonly
 	 * @access public
-	 * @type {String}
+	 * @type {string}
 	 */
 	statusMessage = STATUS_CODES[500];
 
 	/**
 	 * @readonly
 	 * @access public
-	 * @type {Number}
+	 * @type {number}
 	 */
 	get status() {
 		return this.statusCode;
@@ -61,7 +61,7 @@ class HttpError extends OperationalError {
 	/**
 	 * Create an HTTP error.
 	 *
-	 * @param {(String|Number|HttpErrorData & Record<String, any>)} [data = {}]
+	 * @param {(string | number | HttpErrorData & Record<string, any>)} [data = {}]
 	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
 	 *     information if an object.
 	 */
@@ -104,7 +104,7 @@ class HttpError extends OperationalError {
 	 * Reserved keys that should not appear in `HttpError.prototype.data`.
 	 *
 	 * @access private
-	 * @type {Array<String>}
+	 * @type {Array<string>}
 	 */
 	static reservedKeys = [
 		...OperationalError.reservedKeys,
@@ -116,9 +116,9 @@ class HttpError extends OperationalError {
 	 * Normalize an HTTP status code.
 	 *
 	 * @access private
-	 * @param {Number} statusCode
+	 * @param {number} statusCode
 	 *     The HTTP status code to normalize.
-	 * @returns {Number}
+	 * @returns {number}
 	 *     Returns the normalized HTTP status code.
 	 */
 	static normalizeErrorStatusCode(statusCode) {
@@ -133,9 +133,9 @@ class HttpError extends OperationalError {
 	 * Get the HTTP message for a given status code.
 	 *
 	 * @access private
-	 * @param {Number} statusCode
+	 * @param {number} statusCode
 	 *     The HTTP status code to get a message for.
-	 * @returns {String}
+	 * @returns {string}
 	 *     Returns the message.
 	 */
 	static getMessageForStatusCode(statusCode) {
