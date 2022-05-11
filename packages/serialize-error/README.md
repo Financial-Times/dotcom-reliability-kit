@@ -6,6 +6,7 @@ A utility function to serialize an error object in a way that's friendly to logg
   * [Usage](#usage)
     * [`serializeError`](#serializeerror)
     * [`SerializedError` type](#serializederror-type)
+      * [`SerializedError.name`](#serializederrorname)
       * [`SerializedError.code`](#serializederrorcode)
       * [`SerializedError.message`](#serializederrormessage)
       * [`SerializedError.isOperational`](#serializederrorisoperational)
@@ -39,6 +40,7 @@ The `serializeError` function accepts an error-like object (e.g. an instance of 
 ```js
 serializeError(new Error('example message'));
 // {
+//     name: 'Error',
 //     code: 'UNKNOWN',
 //     message: 'An error occurred',
 //     isOperational: false,
@@ -59,6 +61,10 @@ serializeError({
 ### `SerializedError` type
 
 The `SerializedError` type documents the return value of the [`serializeError` function](#serializeerror). It will always have the following properties, extracting them from a given error object.
+
+#### `SerializedError.name`
+
+This is extracted from the `error.name` property and is always cast to a `String`. It defaults to `"Error"`.
 
 #### `SerializedError.code`
 

@@ -4,6 +4,8 @@
 
 /**
  * @typedef {Object} SerializedError
+ * @property {String} name
+ *     The name of the class that the error is an instance of.
  * @property {String} code
  *     A machine-readable error code which identifies the specific type of error.
  * @property {String} message
@@ -35,6 +37,11 @@ function serializeError(error) {
 	}
 
 	const errorProperties = {};
+
+	// If set, error name is cast to a string
+	if (error.name) {
+		errorProperties.name = `${error.name}`;
+	}
 
 	// If set, error code is cast to a string
 	if (error.code) {
@@ -84,6 +91,7 @@ function createSerializedError(properties) {
 	return Object.assign(
 		{},
 		{
+			name: 'Error',
 			code: 'UNKNOWN',
 			message: 'An error occurred',
 			isOperational: false,

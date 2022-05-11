@@ -10,12 +10,22 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 
 		it('returns the expected serialized error properties', () => {
 			expect(serializeError(error)).toMatchObject({
+				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'mock message',
 				isOperational: false,
 				stack: error.stack,
 				statusCode: 500,
 				data: {}
+			});
+		});
+
+		describe('when the error is an instance of something other than `Error`', () => {
+			it('returns the class name in the serialized error properties', () => {
+				error = new TypeError('mock type error');
+				expect(serializeError(error)).toMatchObject({
+					name: 'TypeError'
+				});
 			});
 		});
 
@@ -123,12 +133,22 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 
 		it('returns the expected serialized error properties', () => {
 			expect(serializeError(error)).toMatchObject({
+				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'An error occurred',
 				isOperational: false,
 				stack: null,
 				statusCode: 500,
 				data: {}
+			});
+		});
+
+		describe('when the object has a `name` property', () => {
+			it('returns the name in the serialized error properties', () => {
+				error.name = 'MockError';
+				expect(serializeError(error)).toMatchObject({
+					name: 'MockError'
+				});
 			});
 		});
 
@@ -195,6 +215,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = 'mock message';
 			expect(serializeError(error)).toMatchObject({
+				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'mock message',
 				isOperational: false,
@@ -209,6 +230,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = 123;
 			expect(serializeError(error)).toMatchObject({
+				name: 'Error',
 				code: 'UNKNOWN',
 				message: '123',
 				isOperational: false,
@@ -223,6 +245,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = ['mock', 'message'];
 			expect(serializeError(error)).toMatchObject({
+				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'mock,message',
 				isOperational: false,
