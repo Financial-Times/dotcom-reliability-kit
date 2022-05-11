@@ -3,20 +3,20 @@
  */
 
 /**
- * @typedef {Object} SerializedError
- * @property {String} name
+ * @typedef {object} SerializedError
+ * @property {string} name
  *     The name of the class that the error is an instance of.
- * @property {String} code
+ * @property {string} code
  *     A machine-readable error code which identifies the specific type of error.
- * @property {String} message
+ * @property {string} message
  *     A human readable message which describes the error.
- * @property {Boolean} isOperational
+ * @property {boolean} isOperational
  *     Whether the error is operational, as in it's an error we expect sometimes as part of running the application.
- * @property {(String|null)} stack
+ * @property {(string | null)} stack
  *     The full error stack.
- * @property {Number} statusCode
+ * @property {number} statusCode
  *     An HTTP status code to represent the error.
- * @property {Object<String, any>} data
+ * @property {Object<string, any>} data
  *     Any additional error information.
  */
 
@@ -24,7 +24,7 @@
  * Serialize an error object so that it can be consistently logged or output as JSON.
  *
  * @access public
- * @param {(String|Error & Record<String, any>)} error
+ * @param {(string | Error & Record<string, any>)} error
  *     The error object to serialize.
  * @returns {SerializedError}
  *     Returns the serialized error object.
@@ -82,7 +82,7 @@ function serializeError(error) {
  * Create a new serialized error object.
  *
  * @access private
- * @param {Record<String, any>} properties
+ * @param {Record<string, any>} properties
  *     The properties of the serialized error.
  * @returns {SerializedError}
  *     Returns the serialized error object.
