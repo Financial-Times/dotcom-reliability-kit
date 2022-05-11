@@ -22,5 +22,10 @@
 		"prettier/prettier": "error",
 		"quotes": 0,
 		"space-before-function-paren": 0
+	},
+	"settings": {
+		"jsdoc": {
+			"mode": "typescript"
+		}
 	}
 }
