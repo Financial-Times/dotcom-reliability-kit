@@ -14,7 +14,7 @@ describe('@dotcom-reliability-kit/errors/lib/operationa-error', () => {
 	});
 
 	describe('new OperationalError(message)', () => {
-		/** @type OperationalError */
+		/** @type {OperationalError} */
 		let instance;
 
 		beforeEach(() => {

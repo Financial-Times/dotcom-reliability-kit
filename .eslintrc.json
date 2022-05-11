@@ -2,7 +2,10 @@
 	"env": {
 		"jest": true
 	},
-	"extends": ["@financial-times/eslint-config-next"],
+	"extends": [
+		"@financial-times/eslint-config-next",
+		"plugin:jsdoc/recommended"
+	],
 	"parser": "@babel/eslint-parser",
 	"parserOptions": {
 		"ecmaVersion": 2020,
@@ -10,9 +13,12 @@
 		"sourceType": "script"
 	},
 	"plugins": [
+		"jsdoc",
 		"prettier"
 	],
 	"rules": {
+		"jsdoc/check-access": "error",
+		"jsdoc/require-description-complete-sentence": "error",
 		"prettier/prettier": "error",
 		"quotes": 0,
 		"space-before-function-paren": 0
