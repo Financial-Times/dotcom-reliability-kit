@@ -8,13 +8,13 @@
 module.exports = class OperationalError extends Error {
 	/**
 	 * @access public
-	 * @type {String}
+	 * @type {string}
 	 */
 	name = 'OperationalError';
 
 	/**
 	 * @access public
-	 * @type {Boolean}
+	 * @type {boolean}
 	 */
 	isOperational = true;
 
@@ -22,7 +22,7 @@ module.exports = class OperationalError extends Error {
 	 * Create an operational error.
 	 *
 	 * @access public
-	 * @param {String} message
+	 * @param {string} message
 	 *     The error message.
 	 */
 	constructor(message) {
@@ -36,7 +36,7 @@ module.exports = class OperationalError extends Error {
 	 * @public
 	 * @param {Error} error
 	 *     The error object to check.
-	 * @returns {Boolean}
+	 * @returns {boolean}
 	 *     Returns whether the error is operational.
 	 */
 	static isErrorMarkedAsOperational(error) {
