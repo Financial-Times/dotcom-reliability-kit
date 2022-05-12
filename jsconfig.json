@@ -8,7 +8,8 @@
 	},
 	"exclude": [
 		"coverage",
-		"node_modules"
+		"node_modules",
+		"**/*.spec.js"
 	],
 	"include": [
 		"**/*.js"
