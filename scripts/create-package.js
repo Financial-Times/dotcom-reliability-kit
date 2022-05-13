@@ -80,7 +80,7 @@ module.exports = {};
 		path.join(testPath, 'index.spec.js'),
 		`describe('@dotcom-reliability-kit/${name}', () => {
 	it('has some tests', () => {
-		throw new Error('Plase write some tests');
+		throw new Error('Please write some tests');
 	});
 });
 `
