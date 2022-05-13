@@ -84,7 +84,7 @@ This is extracted from the `error.stack` property. If this property is not a str
 
 #### `SerializedError.statusCode`
 
-This is extracted from the `error.statusCode` property first, then the `error.status` property otherwise. These are always cast to a `Number` and this property defaults to `null`.
+This is extracted from the `error.statusCode` property first, then the `error.status` property otherwise (we use look at both properties to maintain compatibility with third-party request and error libraries). These are always cast to a `Number` and this property defaults to `null`.
 
 #### `SerializedError.data`
 
