@@ -14,7 +14,7 @@
  *     Whether the error is operational, as in it's an error we expect sometimes as part of running the application.
  * @property {(string | null)} stack
  *     The full error stack.
- * @property {number} statusCode
+ * @property {(number | null)} statusCode
  *     An HTTP status code to represent the error.
  * @property {Object<string, any>} data
  *     Any additional error information.
@@ -96,7 +96,7 @@ function createSerializedError(properties) {
 			message: 'An error occurred',
 			isOperational: false,
 			stack: null,
-			statusCode: 500,
+			statusCode: null,
 			data: {}
 		},
 		properties

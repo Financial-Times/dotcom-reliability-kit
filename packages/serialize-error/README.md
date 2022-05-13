@@ -45,7 +45,7 @@ serializeError(new Error('example message'));
 //     message: 'An error occurred',
 //     isOperational: false,
 //     stack: '...',
-//     statusCode: 500,
+//     statusCode: null,
 //     data: {}
 // }
 ```
@@ -84,7 +84,7 @@ This is extracted from the `error.stack` property. If this property is not a str
 
 #### `SerializedError.statusCode`
 
-This is extracted from the `error.statusCode` property first, then the `error.status` property otherwise. These are always cast to a `Number` and this property defaults to `500`.
+This is extracted from the `error.statusCode` property first, then the `error.status` property otherwise. These are always cast to a `Number` and this property defaults to `null`.
 
 #### `SerializedError.data`
 

@@ -15,7 +15,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'mock message',
 				isOperational: false,
 				stack: error.stack,
-				statusCode: 500,
+				statusCode: null,
 				data: {}
 			});
 		});
@@ -138,7 +138,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'An error occurred',
 				isOperational: false,
 				stack: null,
-				statusCode: 500,
+				statusCode: null,
 				data: {}
 			});
 		});
@@ -220,7 +220,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'mock message',
 				isOperational: false,
 				stack: null,
-				statusCode: 500,
+				statusCode: null,
 				data: {}
 			});
 		});
@@ -235,7 +235,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: '123',
 				isOperational: false,
 				stack: null,
-				statusCode: 500,
+				statusCode: null,
 				data: {}
 			});
 		});
@@ -250,7 +250,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'mock,message',
 				isOperational: false,
 				stack: null,
-				statusCode: 500,
+				statusCode: null,
 				data: {}
 			});
 		});
