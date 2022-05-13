@@ -29,6 +29,7 @@
 		"node-workspace"
 	],
 	"packages": {
-		"packages/errors": {}
+		"packages/errors": {},
+		"packages/serialize-error": {}
 	}
 }
