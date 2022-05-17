@@ -30,6 +30,7 @@
 	],
 	"packages": {
 		"packages/errors": {},
-		"packages/serialize-error": {}
+		"packages/serialize-error": {},
+		"packages/serialize-request": {}
 	}
 }
