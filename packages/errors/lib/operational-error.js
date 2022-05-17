@@ -8,6 +8,8 @@
  *     A machine-readable error code which identifies the specific type of error.
  * @property {string} [message]
  *     A human readable message which describes the error.
+ * @property {Array<string>} [relatesToSystems]
+ *     An array of FT system codes which are related to this error.
  */
 
 /**
@@ -40,6 +42,16 @@ class OperationalError extends Error {
 	code = 'UNKNOWN';
 
 	/**
+	 * An array of valid FT system codes (found in Biz Ops) which this error is related to.
+	 * If this error is caused by one or more dependencies, include their system code here.
+	 *
+	 * @readonly
+	 * @access public
+	 * @type {Array<string>}
+	 */
+	relatesToSystems = [];
+
+	/**
 	 * Additional error information.
 	 *
 	 * @readonly
@@ -64,6 +76,14 @@ class OperationalError extends Error {
 			this.code = OperationalError.normalizeErrorCode(data.code);
 		}
 
+		if (data.relatesToSystems) {
+			if (Array.isArray(data.relatesToSystems)) {
+				this.relatesToSystems = data.relatesToSystems;
+			} else {
+				this.relatesToSystems = [data.relatesToSystems];
+			}
+		}
+
 		for (const [key, value] of Object.entries(data)) {
 			// @ts-ignore TypeScript does not properly infer the constructor
 			if (!this.constructor.reservedKeys.includes(key)) {
@@ -78,7 +98,7 @@ class OperationalError extends Error {
 	 * @access private
 	 * @type {Array<string>}
 	 */
-	static reservedKeys = ['code', 'message'];
+	static reservedKeys = ['code', 'message', 'relatesToSystems'];
 
 	/**
 	 * Get whether an error object is marked as operational (it has a truthy `isOperational` property).

@@ -14,6 +14,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				code: 'UNKNOWN',
 				message: 'mock message',
 				isOperational: false,
+				relatesToSystems: [],
 				stack: error.stack,
 				statusCode: null,
 				data: {}
@@ -60,6 +61,24 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 					error.isOperational = 1;
 					expect(serializeError(error)).toMatchObject({
 						isOperational: true
+					});
+				});
+			});
+		});
+
+		describe('when the error has a `relatesToSystems` property', () => {
+			it('includes the related systems in the error', () => {
+				error.relatesToSystems = ['system-one'];
+				expect(serializeError(error)).toMatchObject({
+					relatesToSystems: ['system-one']
+				});
+			});
+
+			describe('when the `relatesToSystems` property is not an array', () => {
+				it('is set to the default empty array', () => {
+					error.relatesToSystems = 'system-one';
+					expect(serializeError(error)).toMatchObject({
+						relatesToSystems: []
 					});
 				});
 			});

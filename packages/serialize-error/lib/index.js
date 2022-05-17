@@ -56,6 +56,11 @@ function serializeError(error) {
 	// The `isOperational` property is cast to a boolean
 	errorProperties.isOperational = Boolean(error.isOperational);
 
+	// If set, we include the array of related systems
+	if (error.relatesToSystems && Array.isArray(error.relatesToSystems)) {
+		errorProperties.relatesToSystems = error.relatesToSystems;
+	}
+
 	// Only include error stack if it's a string
 	if (typeof error.stack === 'string') {
 		errorProperties.stack = error.stack;
@@ -95,6 +100,7 @@ function createSerializedError(properties) {
 			code: 'UNKNOWN',
 			message: 'An error occurred',
 			isOperational: false,
+			relatesToSystems: [],
 			stack: null,
 			statusCode: null,
 			data: {}
