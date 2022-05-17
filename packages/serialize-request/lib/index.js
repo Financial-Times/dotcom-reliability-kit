@@ -30,6 +30,8 @@
 
 /**
  * @typedef {object} SerializedRequest
+ * @property {(string|null)} id
+ *     A unique identifier for the request.
  * @property {string} method
  *     The HTTP method for the request.
  * @property {string} url
@@ -86,6 +88,11 @@ function serializeRequest(request, options = {}) {
 	includeHeaders = includeHeaders.map((header) => header.toLowerCase());
 
 	const requestProperties = {};
+
+	// If set, request ID is cast to a string
+	if (request.headers?.['x-request-id']) {
+		requestProperties.id = `${request.headers?.['x-request-id']}`;
+	}
 
 	// If set, request method is cast to a string and upper-cased
 	if (request.method) {
@@ -154,6 +161,7 @@ function createSerializedRequest(properties) {
 	return Object.assign(
 		{},
 		{
+			id: null,
 			method: '-',
 			url: '/',
 			headers: {}

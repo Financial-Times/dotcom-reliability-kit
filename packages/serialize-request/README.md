@@ -8,6 +8,7 @@ A utility function to serialize a request object ([Express](https://expressjs.co
     * [configuration options](#configuration-options)
       * [`includeHeaders`](#optionsincludeheaders)
     * [`SerializedRequest` type](#serializedrequest-type)
+      * [`SerializedRequest.id`](#serializedrequestid)
       * [`SerializedRequest.method`](#serializedrequestmethod)
       * [`SerializedRequest.url`](#serializedrequesturl)
       * [`SerializedRequest.headers`](#serializedrequestheaders)
@@ -42,6 +43,7 @@ app.get('/fruit/:fruitId', (request, response, next) => {
 	next();
 });
 // {
+//     id: 'request137',
 //     method: 'GET',
 //     url: '/fruit/feijoa',
 //     headers: {
@@ -91,6 +93,10 @@ serializeRequest(request, {
 ### `SerializedRequest` type
 
 The `SerializedRequest` type documents the return value of the [`serializeRequest` function](#serializerequest). It will have the following properties, extracting them from a given request object.
+
+#### `SerializedRequest.id`
+
+This is extracted from the `request.headers['x-request-id']` property and is always cast to a `String`. It defaults to `null`.
 
 #### `SerializedRequest.method`
 

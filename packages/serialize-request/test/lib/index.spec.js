@@ -11,13 +11,15 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				headers: {
 					accept: '*/*',
 					'content-type': 'application/json',
-					'mock-header': 'mock-param-value'
+					'mock-header': 'mock-param-value',
+					'x-request-id': 'mock-id'
 				}
 			};
 		});
 
 		it('returns the expected serialized request properties', () => {
 			expect(serializeRequest(request)).toEqual({
+				id: 'mock-id',
 				method: 'GET',
 				url: '/mock-url',
 				headers: {
@@ -38,7 +40,8 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				headers: {
 					accept: '*/*',
 					'content-type': 'application/json',
-					'mock-header': 'mock-param-value'
+					'mock-header': 'mock-param-value',
+					'x-request-id': 'mock-id'
 				},
 				route: {
 					path: '/mock-route-path'
@@ -51,6 +54,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		it('returns the expected serialized request properties', () => {
 			expect(serializeRequest(request)).toEqual({
+				id: 'mock-id',
 				method: 'GET',
 				url: '/mock-url',
 				headers: {
@@ -77,7 +81,8 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				headers: {
 					accept: '*/*',
 					'content-type': 'application/json',
-					'mock-header': 'mock-param-value'
+					'mock-header': 'mock-param-value',
+					'x-request-id': 'mock-id'
 				},
 				route: {
 					path: '/mock-route-path'
@@ -86,6 +91,18 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 					'mock-param': 'mock-param-value'
 				}
 			};
+		});
+
+		describe('when `request.headers.x-request-id` is undefined', () => {
+			beforeEach(() => {
+				delete request.headers['x-request-id'];
+			});
+
+			it('defaults the serialized ID to `null`', () => {
+				expect(serializeRequest(request)).toMatchObject({
+					id: null
+				});
+			});
 		});
 
 		describe('when `request.method` is undefined', () => {
@@ -187,6 +204,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 		it('returns the expected serialized request properties', () => {
 			const request = 'mock message';
 			expect(serializeRequest(request)).toEqual({
+				id: null,
 				method: '-',
 				url: 'mock message',
 				headers: {}
@@ -204,7 +222,8 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				headers: {
 					accept: '*/*',
 					'content-type': 'application/json',
-					'mock-header': 'mock-param-value'
+					'mock-header': 'mock-param-value',
+					'x-request-id': 'mock-id'
 				}
 			};
 		});
