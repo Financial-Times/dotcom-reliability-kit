@@ -71,6 +71,15 @@ error.data.article // d92acacb-ac53-4505-aa88-eae4b42de994
 ```
 
 
+#### `OperationalError.relatesToSystems`
+
+The `relatesToSystems` property of an operational error stores a list of [FT systems](https://biz-ops.in.ft.com/list/Systems) which are related to the error that you're throwing.
+
+This array could include:
+
+- dependencies which have returned an HTTP error status code
+- data stores which haven't provided the expected data
+
 #### `OperationalError.isErrorMarkedAsOperational()`
 
 You can test whether an error is operational (known about) either by using the `isErrorMarkedAsOperational` method. It accepts an error object of any kind and will return `true` if that error has a truthy `isOperational` property and `false` otherwise:

@@ -52,6 +52,12 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 				expect(instance.name).toStrictEqual('OperationalError');
 			});
 		});
+
+		describe('.relatesToSystems', () => {
+			it('is set to an empty array', () => {
+				expect(instance.relatesToSystems).toStrictEqual([]);
+			});
+		});
 	});
 
 	describe('new OperationalError(message)', () => {
@@ -102,7 +108,8 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 			instance = new OperationalError({
 				message: 'mock message',
 				code: 'mock_code',
-				extra: 'mock extra data'
+				extra: 'mock extra data',
+				relatesToSystems: ['system-one', 'system-two']
 			});
 		});
 
@@ -139,6 +146,24 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		describe('.name', () => {
 			it('is set to "OperationalError"', () => {
 				expect(instance.name).toStrictEqual('OperationalError');
+			});
+		});
+
+		describe('.relatesToSystems', () => {
+			it('is an array', () => {
+				expect(instance.relatesToSystems).toStrictEqual([
+					'system-one',
+					'system-two'
+				]);
+			});
+
+			it('will store a string as an array', () => {
+				let singleSystemError = new OperationalError({
+					relatesToSystems: 'system-one'
+				});
+				expect(singleSystemError.relatesToSystems).toStrictEqual([
+					'system-one'
+				]);
 			});
 		});
 	});

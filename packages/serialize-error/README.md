@@ -44,6 +44,7 @@ serializeError(new Error('example message'));
 //     code: 'UNKNOWN',
 //     message: 'An error occurred',
 //     isOperational: false,
+//     relatesToSystems: [],
 //     stack: '...',
 //     statusCode: null,
 //     data: {}
@@ -77,6 +78,10 @@ This is extracted from the `error.message` property and is always cast to a `Str
 #### `SerializedError.isOperational`
 
 This indicates whether the error is operational (known about). See the documentation for [`OperationalError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#operationalerror) for more information. It is extracted from the `error.isOperational` property. It is always cast to a `Boolean` and defaults to `false`.
+
+#### `SerializedError.relatesToSystems`
+
+This array contains a list of [system codes](https://biz-ops.in.ft.com/list/Systems) which are related to the error. It defaults to an empty array.
 
 #### `SerializedError.stack`
 
