@@ -17,11 +17,11 @@ Throwing good errors is key to producing a reliabile application. Most of Reliab
 
 ## Types of error
 
-Errors can be sorted into two broad categories, it's important to understand the difference because they should be handled differently by your application. These take inspiration from the [Joyent error handling documentation](https://www.joyent.com/node-js/production/design/errors), which is also worth a read.
+Errors can be sorted into two broad categories. It's important to understand the difference, because they should be handled differently by your application. These take inspiration from the [Joyent error handling documentation](https://www.joyent.com/node-js/production/design/errors), which is also worth a read.
 
 ### Operational errors
 
-An error can be considered "Operational" when they are _expected_ to occur as part of day-to-day running of an application. They normally represent that something went wrong outside of the control of the application code, e.g. a remote service failed. You can also consider an error operational when for things like end-user mistakes, e.g. filling out a form incorrectly.
+An error can be considered "Operational" when they are _expected_ to occur as part of day-to-day running of an application. They normally represent that something went wrong outside of the control of the application code, e.g. a remote service failed. You can also consider an error operational for things like end-user mistakes, e.g. filling out a form incorrectly.
 
 Some operational errors may be recoverable (as in the page can continue to render even if they occur). Some operational errors may not be recoverable, and in the context of a web service these will result in a non-`200` status code for an end-user. Both of these cases are still "Operational" if they're part of the expected running of the app.
 
@@ -45,7 +45,7 @@ throw new OperationalError({
 });
 ```
 
-This (and further error classes that which extend it) should ideally be used _anywhere_ where you understand how to handle an error. This means in your app you might do something like this:
+This (and further error classes that which extend it) should ideally be used _anywhere_ that you understand how to handle an error. This means in your app you might do something like this:
 
 ```js
 // E.g. GET https://your-app/pokemon/oddish

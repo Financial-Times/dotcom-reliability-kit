@@ -59,7 +59,7 @@ Reliability Kit provides some Express error handlers which can be used to [log e
 
 ## Don't fear the try/catch block
 
-One of the tools we have to make sure [thrown errors should be specific](./throwing-errors.md#being-specific) is the `try`/`catch` block. In previous examples we've wrapped all our code in a single try/catch block and sent the error on to the Express error handler. If we want to be _really_ specific about what went wrong in our code, then this is often not enough.
+One of the tools we have to make sure [thrown errors should be specific](./throwing-errors.md#being-specific) is the `try`/`catch` block. In previous examples we've wrapped all our code in a single `try`/`catch` block and sent the error on to the Express error handler. If we want to be _really_ specific about what went wrong in our code, then this is often not enough.
 
 We have a couple of different ways that we update our `try`/`catch` to help us to handle errors and rethrow more specific ones. We can use either or both of these.
 
@@ -103,7 +103,7 @@ app.get('/fruit/:name', async (request, response, next) => {
     } catch (error) {
         
         // If the name parameter is not set, let's throw a more
-        // friendly 404 error. We know that we're dealing with
+        // friendly 400 error. We know that we're dealing with
         // that error if we have a `AssertionError` or if
         // `error.code` is "ERR_ASSERTION". We throw a 400 error
         // in this case to indicate that the input was invalid
@@ -148,7 +148,7 @@ app.get('/fruit/:name', async (request, response, next) => {
 });
 ```
 
-With this checking in place you can be confident that your error logging (and any dashboards powered by it) will display easy to understand errors and make debugging much easier. However this checking is quite simplistic. What if we make multiple API requests, any of which can fail?
+With this checking in place you can be confident that your error logging (and any dashboards powered by it) will display easy to understand errors and make debugging much easier. However, this checking is quite simplistic; what if we make multiple API requests, any of which can fail?
 
 ### Multiple try/catch blocks
 
