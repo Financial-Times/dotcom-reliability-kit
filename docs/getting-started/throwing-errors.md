@@ -208,6 +208,8 @@ throw new OperationalError({
 });
 ```
 
+Your error codes should uniquely identify a _type_ of error your app can throw. It's up to your team whether you'd like to include a prefix or something to help organise, e.g. `API_` when a third-party API fails in some way, or `INVALID_` when the error is a result of user input.
+
 ### Adding more data
 
 It's also sometimes useful to add extra details to an error so that further debugging of them can be done once we've determined what _type_ of error they are using `code`. Useful information might be the actual value of any input which caused an error, or further details about application state (e.g. the ID of the user this error occurred for).
