@@ -85,7 +85,7 @@ function uppercaseAll(array) {
 }
 ```
 
-Then you may want to add in some code to check that the data passed in is _definitely_ an array, because otherwise your code won't work correctly. You might add something like this:
+Then you may want to add in some code to check that the data passed in is _definitely_ an array, because otherwise your code won't work correctly. You might add something like this, **which is incorrect** (explained below example):
 
 ```js
 function uppercaseAll(array) {
@@ -205,7 +205,7 @@ throw new OperationalError({
 
 When you're working on more complex code than our previous examples and catching errors in places where they could have been caused by multiple things, it's important to throw _specific_ errors which identify the cause rather than a generic one.
 
-Let's switch back to the example of using a third-party API and make some improvements:
+Let's switch back to the example of using a third-party API. This example code could be improved:
 
 ```js
 // E.g. GET https://your-app/pokemon/oddish
