@@ -4,6 +4,9 @@
 We've covered creating and throwing good errors, now let's talk about handling errors. The way you handle errors, particularly in Express, is important. You can end up writing a lot of code in different parts of your app if you're not careful. More code isn't always bad, but duplicated error handling can lead to your errors not being surfaced to where they're needed.
 
   * [Bubbling up in Express](#bubbling-up-in-express)
+    * [Synchronous handlers](#synchronous-handlers)
+    * [Asynchronous handlers](#asynchronous-handlers)
+    * [Registering error handlers](#registering-error-handlers)
   * [Don't fear the try/catch block](#dont-fear-the-trycatch-block)
     * [Error checking](#error-checking)
     * [Multiple try/catch blocks](#multiple-trycatch-blocks)
@@ -28,6 +31,8 @@ app.get('/', (request, response) => {
 
 The way you make sure errors are handled by the main Express error handler is by always passing errors on. The way you do this will depend on whether your route handler is `async` or not.
 
+### Synchronous handlers
+
 For non-`async` route handlers, any errors thrown will immediately be handled by Express:
 
 ```js
@@ -38,7 +43,19 @@ app.get('/', (request, response) => {
 });
 ```
 
-For `async` route handlers, it's very important that you either use a module like [async-express-errors](https://www.npmjs.com/package/express-async-errors) (to avoid app crashes) or wrap your handler in an outer try/catch block:
+This keeps things simple, and if you're throwing your _own_ error in this route then you can do so with the regular `throw` keyword:
+
+```js
+throw new Error('Something went wrong');
+```
+
+### Asynchronous handlers
+
+For `async` route handlers, it's very important that you either use a module like [`express-async-errors`](https://www.npmjs.com/package/express-async-errors) (to avoid app crashes) or wrap your handler in an outer try/catch block.
+
+This is because unhandled Promise exceptions will crash your app entirely, instead of just serving an error to the one user request which caused the error (see [Express documentation on error handling](http://expressjs.com/en/advanced/best-practice-performance.html#handle-exceptions-properly)).
+
+Example of wrapping with an outer try/catch and using `next`:
 
 ```js
 app.get('/', async (request, response, next) => {
@@ -54,7 +71,26 @@ app.get('/', async (request, response, next) => {
 });
 ```
 
-Reliability Kit provides some Express error handlers which can be used to [log errors in a consistent and centralised way](./logging-errors.md).
+Example of using the `express-async-errors` module (looks a lot like the sync example, right?):
+
+```js
+// This should be in your app setup, the same place you
+// `require` in Express and before you make any calls to
+// `app.use` or `app.get` etc.
+require('express-async-errors');
+
+app.get('/', async (request, response, next) => {
+    await exampleFunctionWhichThrowsAnError();
+});
+```
+
+This way of handling async errors will also be [built-in in Express v5](https://expressjs.com/en/guide/migrating-5.html#rejected-promises).
+
+**Note: the rest of the examples in this documentation assume that you're _not_ including `express-async-errors`. If you do use this library then you can simplify a lot when you're implementing in your own app.**
+
+### Registering error handlers
+
+The Express documentation covers [writing centralised error handlers](https://expressjs.com/en/guide/error-handling.html#writing-error-handlers), but Reliability Kit provides some of it's own which can be used to [log errors in a consistent and centralised way](./logging-errors.md). It's generally better to rely on these than to write your own error handlers for your app.
 
 
 ## Don't fear the try/catch block
