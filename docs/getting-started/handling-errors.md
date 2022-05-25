@@ -17,7 +17,7 @@ We've covered creating and throwing good errors, now let's talk about handling e
 
 In Express, error handlers can be bound at the Application and Route level. This allows you to write lots of error handling code in one place, and you can rely on your Express error handler to do things such as [log the appropriate error detail](./logging-errors.md), forward them on to a service like Splunk, or render a custom error page.
 
-**The following is not a great pattern**, as Express has no chance to log the error to a central place, we're missing a lot of information that we should be capturing:
+**The following is not a great pattern**, as Express has no chance to log the error to a central place. This means our logs could be missing information that's essential to debugging this error:
 
 ```js
 app.get('/', (request, response) => {
