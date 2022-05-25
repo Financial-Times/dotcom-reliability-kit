@@ -16,6 +16,9 @@ All of the packages in this monorepo are viewable in the [`packages` folder](./p
   * **[@dotcom-reliability-kit/serialize-error](./packages/serialize-error/#readme):**<br/>
     A utility function to serialize an error object in a way that's friendly to loggers, view engines, and converting to JSON
 
+  * **[@dotcom-reliability-kit/serialize-request](./packages/serialize-request/#readme):**<br/>
+    A utility function to serialize a request object in a way that's friendly to loggers, view engines, and converting to JSON
+
 
 ## Design
 

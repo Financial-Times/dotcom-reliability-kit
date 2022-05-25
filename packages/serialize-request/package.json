@@ -1,0 +1,21 @@
+{
+  "name": "@dotcom-reliability-kit/serialize-request",
+  "version": "0.0.0",
+  "description": "A utility function to serialize a request object in a way that's friendly to loggers, view engines, and converting to JSON",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "packages/serialize-request"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-request#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
+  "license": "MIT",
+  "engines": {
+    "node": "14.x || 16.x",
+    "npm": "7.x || 8.x"
+  },
+  "main": "lib",
+  "devDependencies": {
+    "@types/express": "^4.17.13"
+  }
+}
