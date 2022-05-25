@@ -9,6 +9,7 @@ Throwing good errors is key to producing a reliabile application. Most of Reliab
   * [Types of error in code](#types-of-error-in-code)
     * [Operational errors in library code](#operational-errors-in-library-code)
   * [What does a good error look like?](#what-does-a-good-error-look-like)
+    * [Using error objects](#using-error-objects)
     * [Making errors human readable](#making-errors-human-readable)
     * [Making errors machine readable](#making-errors-machine-readable)
     * [Adding more data](#adding-more-data)
@@ -123,6 +124,30 @@ Whenever you're throwing an error, you should be thinking about the different au
   * Your logging dashboard, which groups errors so you can easily see when specific ones spike
 
   * Your first-line support team, who want to know why a system is crashing
+
+### Using error objects
+
+When you're throwing errors, _always_ use an `Error` object (or a class which extends `Error`). The `Error` object includes a lot of useful information for free, including the `stack` property which indicates where the error was thrown. Without this, errors become far more difficult to debug.
+
+**Don't do this:**
+
+```js
+throw {message: 'something went wrong'};
+throw 'Something went wrong';
+Promise.reject('something went wrong');
+```
+
+**Do this:**
+
+```js
+throw new Error('Something went wrong');
+Promise.reject(new Error('something went wrong'));
+```
+
+You can enforce this rule in your application by turning on the [ESLint](https://eslint.org/) rules:
+
+  * [`no-throw-literal`](https://eslint.org/docs/rules/no-throw-literal)
+  * [`prefer-promise-reject-errors`](https://eslint.org/docs/rules/prefer-promise-reject-errors)
 
 ### Making errors human readable
 
