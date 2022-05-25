@@ -1,5 +1,5 @@
 {
-  "packages/errors": "0.1.1",
-  "packages/serialize-error": "0.1.0",
-  "packages/serialize-request": "0.0.0"
+  "packages/errors": "0.1.2",
+  "packages/serialize-error": "0.1.1",
+  "packages/serialize-request": "0.1.0"
 }

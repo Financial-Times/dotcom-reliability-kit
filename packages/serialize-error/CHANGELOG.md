@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v0.1.0...serialize-error-v0.1.1) (2022-05-25)
+
+
+### Features
+
+* add property relatesToSystems to errors ([2869396](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2869396ef42d5e1bf5693082c63098909a206570))
+
 ## 0.1.0 (2022-05-13)
 
 
