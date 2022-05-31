@@ -30,6 +30,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 
 		beforeEach(() => {
 			process.env.REGION = 'mock-region';
+			process.env.SYSTEM_CODE = 'mock-system-code';
 			error = new Error('mock error');
 			request = { isMockRequest: true };
 			response = {
@@ -60,7 +61,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 				error: 'mock-serialized-error',
 				request: 'mock-serialized-request',
 				app: {
-					name: 'mock-response-ft-app-name-value',
+					name: 'mock-system-code',
 					region: 'mock-region'
 				}
 			});
@@ -70,8 +71,42 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			expect(next).toBeCalledWith(error);
 		});
 
-		describe('when the response has no "ft-app-name" header', () => {
+		describe('when `process.env.SYSTEM_CODE` is not defined', () => {
 			beforeEach(() => {
+				delete process.env.SYSTEM_CODE;
+				middleware(error, request, response, next);
+			});
+
+			it('serializes the error', () => {
+				expect(serializeError).toBeCalledWith(error);
+			});
+
+			it('serializes the request', () => {
+				expect(serializeRequest).toBeCalledWith(request, {
+					includeHeaders: undefined
+				});
+			});
+
+			it('logs the "ft-app-name" response header instead', () => {
+				expect(logger.error).toBeCalledWith({
+					event: 'HANDLED_ERROR',
+					error: 'mock-serialized-error',
+					request: 'mock-serialized-request',
+					app: {
+						name: 'mock-response-ft-app-name-value',
+						region: 'mock-region'
+					}
+				});
+			});
+
+			it('calls `next` with the original error', () => {
+				expect(next).toBeCalledWith(error);
+			});
+		});
+
+		describe('when `process.env.SYSTEM_CODE` is not defined and the response has no "ft-app-name" header', () => {
+			beforeEach(() => {
+				delete process.env.SYSTEM_CODE;
 				response.getHeader.mockImplementation(() => undefined);
 				middleware(error, request, response, next);
 			});
@@ -119,7 +154,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 					error: 'mock-serialized-error',
 					request: 'mock-serialized-request',
 					app: {
-						name: 'mock-response-ft-app-name-value',
+						name: 'mock-system-code',
 						region: null
 					}
 				});
@@ -154,7 +189,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 					error: 'mock-serialized-error',
 					request: 'mock-serialized-request',
 					app: {
-						name: 'mock-response-ft-app-name-value',
+						name: 'mock-system-code',
 						region: 'mock-region'
 					}
 				});
