@@ -40,8 +40,10 @@ function createErrorLoggingMiddleware(options = {}) {
 		// We add a paranoid try/catch here because it'd be really embarassing
 		// if the error logging middleware threw an unhandled error, wouldn't it
 		try {
+			const systemCode = process.env.SYSTEM_CODE;
+			const appNameHeader = response.getHeader('ft-app-name');
 			const app = {
-				name: response.getHeader('ft-app-name') || null,
+				name: systemCode || appNameHeader || null,
 				region: process.env.REGION || null
 			};
 
