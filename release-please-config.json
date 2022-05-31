@@ -30,6 +30,7 @@
 	],
 	"packages": {
 		"packages/errors": {},
+		"packages/middleware-log-errors": {},
 		"packages/serialize-error": {},
 		"packages/serialize-request": {}
 	}

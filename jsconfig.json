@@ -4,8 +4,12 @@
 		"checkJs": true,
 		"module": "commonjs",
 		"resolveJsonModule": true,
-		"strict": true,
-		"target": "es2020"
+		"strictBindCallApply": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"target": "es2020",
+		"useUnknownInCatchVariables": true
 	},
 	"exclude": [
 		"coverage",
