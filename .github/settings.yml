@@ -2,8 +2,17 @@
 _extends: github-apps-config-next
 
 repository:
+
+  # Only allow rebase merges
+  allow_squash_merge: false
+  allow_merge_commit: false
+  allow_rebase_merge: true
+
+  # Disable GitHub features we don't need
   has_projects: false
   has_wiki: false
   has_downloads: false
+
+  # Branching behaviour
   default_branch: main
   delete_branch_on_merge: true
