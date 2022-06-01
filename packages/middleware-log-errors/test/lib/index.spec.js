@@ -34,6 +34,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			error = new Error('mock error');
 			request = { isMockRequest: true };
 			response = {
+				locals: {},
 				getHeader: jest.fn()
 			};
 			next = jest.fn();
@@ -65,6 +66,10 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 					region: 'mock-region'
 				}
 			});
+		});
+
+		it('suppresses Raven error logging', () => {
+			expect(response.locals.suppressRavenLogger).toStrictEqual(true);
 		});
 
 		it('calls `next` with the original error', () => {
