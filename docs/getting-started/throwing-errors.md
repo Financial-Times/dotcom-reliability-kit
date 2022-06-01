@@ -1,7 +1,7 @@
 
 # Getting started: throwing errors
 
-Throwing good errors is key to producing a reliabile application. Most of Reliability Kit's packages rely on sensible errors being thrown if a fault is encountered in your app, and without reviewing your existing errors you won't get as much value from using it.
+Throwing good errors is key to producing a reliable application. Most of Reliability Kit's packages rely on sensible errors being thrown if a fault is encountered in your app, and without reviewing your existing errors you won't get as much value from using it.
 
   * [Types of error](#types-of-error)
     * [Operational errors](#operational-errors)
