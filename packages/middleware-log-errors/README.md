@@ -60,6 +60,8 @@ This will automatically [serialize error objects](https://github.com/Financial-T
 }
 ```
 
+**Note:** if you're also using [n-raven v6.1+](https://github.com/Financial-Times/n-raven) in your application then the Raven error logging will be deactivated so that you don't get double-logged errors.
+
 ### Configuration options
 
 Config options can be passed into the `createErrorLogger` function as an object with any of the keys below.

@@ -53,6 +53,11 @@ function createErrorLoggingMiddleware(options = {}) {
 				request: serializeRequest(request, { includeHeaders }),
 				app
 			});
+
+			// HACK: this suppresses the Raven error logger. We can remove this
+			// code without a breaking change if/when we pull Raven logging into
+			// this module and deprecate n-raven
+			response.locals.suppressRavenLogger = true;
 		} catch (_) {
 			// Not a lot we can do here
 		}
