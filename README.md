@@ -16,6 +16,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/errors](./packages/errors/#readme):**<br/>
       A suite of error classes which help you throw the most appropriate error in any situation
 
+    * **[@dotcom-reliability-kit/log-error](./packages/log-error/#readme):**<br/>
+      A method to consistently log error object with optional request information
+
     * **[@dotcom-reliability-kit/middleware-log-errors](./packages/middleware-log-errors/#readme):**<br/>
       Express middleware to consistently log errors
 
