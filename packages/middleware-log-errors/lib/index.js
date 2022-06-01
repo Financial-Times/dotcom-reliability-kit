@@ -2,9 +2,7 @@
  * @module @dotcom-reliability-kit/middleware-log-errors
  */
 
-const logger = require('@financial-times/n-logger').default;
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
-const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
+const { logHandledError } = require('@dotcom-reliability-kit/log-error');
 
 /**
  * @typedef {object} ErrorLoggingOptions
@@ -40,18 +38,10 @@ function createErrorLoggingMiddleware(options = {}) {
 		// We add a paranoid try/catch here because it'd be really embarassing
 		// if the error logging middleware threw an unhandled error, wouldn't it
 		try {
-			const systemCode = process.env.SYSTEM_CODE;
-			const appNameHeader = response.getHeader('ft-app-name');
-			const app = {
-				name: systemCode || appNameHeader || null,
-				region: process.env.REGION || null
-			};
-
-			logger.error({
-				event: 'HANDLED_ERROR',
-				error: serializeError(error),
-				request: serializeRequest(request, { includeHeaders }),
-				app
+			logHandledError({
+				error,
+				includeHeaders,
+				request
 			});
 
 			// HACK: this suppresses the Raven error logger. We can remove this
