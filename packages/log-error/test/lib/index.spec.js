@@ -19,7 +19,7 @@ jest.mock('@dotcom-reliability-kit/serialize-request', () =>
 );
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 
-describe('@dotcom-reliability-kit/log-errors', () => {
+describe('@dotcom-reliability-kit/log-error', () => {
 	afterEach(() => {
 		serializeError.mockClear();
 		serializeRequest.mockClear();
