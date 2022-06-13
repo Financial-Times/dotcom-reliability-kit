@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v0.1.2...middleware-log-errors-v0.2.0) (2022-06-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* refactor to use the log-error package
+
+### Bug Fixes
+
+* address a copy/paste error in the docs ([4bdadfa](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4bdadfa2ee6b8099156a08a94440417726ec1c7c))
+
+
+### Miscellaneous
+
+* refactor to use the log-error package ([8c6bea0](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8c6bea05ede2f6515388e8b5b7037684c2c9ea26))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from * to ^0.1.0
+
 ### [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v0.1.1...middleware-log-errors-v0.1.2) (2022-06-01)
 
 
