@@ -101,7 +101,7 @@ The information logged looks like this:
 
 ```js
 {
-    event: 'RECOVERABLE_ERROR',
+    event: 'UNHANDLED_ERROR',
 
     error: {
         // See `@dotcom-reliability-kit/serialize-error` (linked above)
