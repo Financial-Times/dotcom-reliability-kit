@@ -28,6 +28,8 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/serialize-request](./packages/serialize-request/#readme):**<br/>
       A utility function to serialize a request object in a way that's friendly to loggers, view engines, and converting to JSON
 
+  * **The [code examples](./examples/)** illustrate more real-world examples of how to use Reliability Kit
+
 
 ## Design
 

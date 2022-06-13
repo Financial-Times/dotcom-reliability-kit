@@ -1,0 +1,28 @@
+{
+  "name": "@dotcom-reliability-kit/example-express",
+  "version": "0.0.0",
+  "private": true,
+  "description": "An example Express application which uses Reliability Kit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "examples/express"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/examples/express#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
+  "license": "MIT",
+  "engines": {
+    "node": "14.x || 16.x",
+    "npm": "7.x || 8.x"
+  },
+  "scripts": {
+    "start": "node ."
+  },
+  "dependencies": {
+    "@dotcom-reliability-kit/errors": "*",
+    "@dotcom-reliability-kit/log-error": "*",
+    "@dotcom-reliability-kit/middleware-log-errors": "*",
+    "@dotcom-reliability-kit/serialize-error": "*",
+    "@financial-times/n-express": "^23.2.0"
+  }
+}
