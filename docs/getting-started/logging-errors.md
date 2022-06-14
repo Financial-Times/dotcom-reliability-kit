@@ -6,8 +6,8 @@ Logging when errors occur is important when it comes to debugging an issue with 
   * [What to log](#what-to-log)
     * [What not to log](#what-not-to-log)
     * [Extracting logging information](#extracting-logging-information)
-  * [One way of logging](#one-way-of-logging)
   * [Appropriate logging levels](#appropriate-logging-levels)
+  * [One way of logging](#one-way-of-logging)
   * [Unhandled errors](#unhandled-errors)
 
 
@@ -76,36 +76,6 @@ app.get('/fruit/:name', async (request, response, next) => {
 The above examples work well but will likely result in a lot of repeated code. That's why it's important to rely on centralised logging, outlined below.
 
 
-## One way of logging
-
-If you're handling errors correctly and have read through [bubbling up in Express](./handling-errors.md#bubbling-up-in-express), then you know that moving our error handling to a centralised place is a sensible way to avoid boilerplate code and make sure that everything we do is consistent.
-
-Reliability Kit has a package which helps you with this if you're running an Express application: [`@dotcom-reliability-kit/middleware-log-errors`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-log-errors#readme) is a middleware which logs error, request, and application information. You can register it _after_ your application routes like this:
-
-```js
-import createErrorLogger from '@dotcom-reliability-kit/middleware-log-errors';
-
-// All your app setup and routes
-
-// Assume `app` is an Express application
-app.use(createErrorLogger());
-```
-
-Now all your routes need to do is pass on any errors and they'll be logged consistently:
-
-```js
-// E.g. GET https://your-app/fruit/feijoa
-app.get('/fruit/:name', async (request, response, next) => {
-    try {
-        // Something that might throw an error
-    } catch (error) {
-        // No in-route logging necessary here
-        next(error);
-    }
-});
-```
-
-
 ## Appropriate logging levels
 
 When logging errors it's important to consider the level of the log you send. The level can be used to indicate the severity of the error. For example:
@@ -135,6 +105,67 @@ When logging errors it's important to consider the level of the log you send. Th
     ```
 
   * If an error is not recoverable at all and throws the app into an unstable state, e.g. an intial database connection cannot be established, then consider a level of "fatal" or "critical" if your logger supports it (currently [n-logger](https://github.com/Financial-Times/n-logger) does not support critical logs but we'll be investigating adding this in future).
+
+
+## One way of logging
+
+If you're handling errors correctly and have read through [bubbling up in Express](./handling-errors.md#bubbling-up-in-express), then you know that moving our error handling to a centralised place is a sensible way to avoid boilerplate code and make sure that everything we do is consistent.
+
+Reliability Kit has a package which helps you with this if you're running an Express application: [`@dotcom-reliability-kit/middleware-log-errors`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-log-errors#readme) is a middleware which logs error, request, and application information. You can register it _after_ your application routes like this:
+
+```js
+import createErrorLogger from '@dotcom-reliability-kit/middleware-log-errors';
+
+// All your app setup and routes
+
+// Assume `app` is an Express application
+app.use(createErrorLogger());
+```
+
+Now all your routes need to do is pass on any errors and they'll be logged consistently:
+
+```js
+// E.g. GET https://your-app/fruit/feijoa
+app.get('/fruit/:name', async (request, response, next) => {
+    try {
+        // Something that might throw an error
+    } catch (error) {
+        // No in-route logging necessary here
+        next(error);
+    }
+});
+```
+
+Reliability Kit also provides methods to log errors which are [recoverable](./handling-errors.md#handling-recoverable-errors), you can do this with the [`@dotcom-reliability-kit/log-error`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/log-error#readme) package. It's best to use these centralised methods for logging as they ensure that:
+
+  1. The same information is always logged in a [consistent format](#extracting-logging-information)
+
+  2. The appropriate [log level](#appropriate-logging-levels) is used
+
+```js
+import { logRecoverableError } from '@dotcom-reliability-kit/log-error';
+
+logRecoverableError({
+    error: new Error('Something went wrong')
+});
+```
+
+If you're in an Express route, then it's also a good idea to include request information. the `log-error` package also allows you to do this:
+
+```js
+// E.g. GET https://your-app/fruit/feijoa
+app.get('/fruit/:name', async (request, response, next) => {
+    try {
+        // Something that might throw an error
+    } catch (error) {
+        logRecoverableError({
+            error,
+            request
+        });
+        response.render('fruit');
+    }
+});
+```
 
 
 ## Unhandled errors
