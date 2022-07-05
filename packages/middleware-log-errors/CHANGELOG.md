@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v0.2.0...middleware-log-errors-v1.0.0) (2022-07-05)
+
+
+### Miscellaneous
+
+* add label filter to package bug pages ([05e7285](https://github.com/Financial-Times/dotcom-reliability-kit/commit/05e7285c87ecbad909d86414579e970173af344f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^0.1.0 to ^1.0.0
+
 ## [0.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v0.1.2...middleware-log-errors-v0.2.0) (2022-06-13)
 
 
