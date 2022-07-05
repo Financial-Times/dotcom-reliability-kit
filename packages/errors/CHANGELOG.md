@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v0.1.2...errors-v1.0.0) (2022-07-05)
+
+
+### Miscellaneous
+
+* add label filter to package bug pages ([05e7285](https://github.com/Financial-Times/dotcom-reliability-kit/commit/05e7285c87ecbad909d86414579e970173af344f))
+
 ### [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v0.1.1...errors-v0.1.2) (2022-05-25)
 
 
