@@ -8,7 +8,7 @@
     "directory": "packages/log-error"
   },
   "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/log-error#readme",
-  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: log-error\"",
   "license": "MIT",
   "engines": {
     "node": "14.x || 16.x",

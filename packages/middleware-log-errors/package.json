@@ -8,7 +8,7 @@
     "directory": "packages/middleware-log-errors"
   },
   "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-log-errors#readme",
-  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: middleware-log-errors\"",
   "license": "MIT",
   "engines": {
     "node": "14.x || 16.x",

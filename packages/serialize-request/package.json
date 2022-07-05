@@ -8,7 +8,7 @@
     "directory": "packages/serialize-request"
   },
   "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-request#readme",
-  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: serialize-request\"",
   "license": "MIT",
   "engines": {
     "node": "14.x || 16.x",
