@@ -30,7 +30,7 @@ const releasePleaseManifest = require('../.release-please-manifest.json');
 			directory: `packages/${name}`
 		},
 		homepage: `https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/${name}#readme`,
-		bugs: 'https://github.com/Financial-Times/dotcom-reliability-kit/issues',
+		bugs: `https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:"package: ${name}"`,
 		license: rootManifest.license,
 		engines: rootManifest.engines,
 		main: 'lib'
