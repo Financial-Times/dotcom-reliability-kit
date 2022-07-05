@@ -55,6 +55,8 @@ npm run create-package <NAME>
 
 You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
 
+You'll also need to manually add an entry for the package to [the Dependabot config](../.github/dependabot.yml) so that dependency update pull requests can be opened.
+
 
 ## Testing
 
