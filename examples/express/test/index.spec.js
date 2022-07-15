@@ -1,6 +1,8 @@
 jest.mock('@financial-times/n-logger', () => ({
 	default: {
-		log: jest.fn()
+		error: jest.fn(),
+		log: jest.fn(),
+		warn: jest.fn()
 	}
 }));
 
