@@ -33,9 +33,11 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  * @returns {void}
  */
 function logError({ error, event, includeHeaders, level = 'error', request }) {
+	const serializedError = serializeError(error);
 	const logData = {
 		event,
-		error: serializeError(error),
+		message: getErrorMessage(serializedError),
+		error: serializedError,
 		app: {
 			name: process.env.SYSTEM_CODE || null,
 			region: process.env.REGION || null
@@ -46,6 +48,21 @@ function logError({ error, event, includeHeaders, level = 'error', request }) {
 	}
 
 	logger.log(level, logData);
+}
+
+/**
+ * Get a human readable error message from a serialized error object.
+ *
+ * @access private
+ * @param {serializeError.SerializedError} serializedError
+ *     The serialized error to get a message for.
+ * @returns {string}
+ *     Returns the human readable error message.
+ */
+function getErrorMessage(serializedError) {
+	return `${serializedError.name || 'Error'}${
+		serializedError.message ? `: ${serializedError.message}` : ''
+	}`;
 }
 
 /**

@@ -10,7 +10,10 @@ jest.mock('@financial-times/n-logger', () => ({
 const logger = require('@financial-times/n-logger').default;
 
 jest.mock('@dotcom-reliability-kit/serialize-error', () =>
-	jest.fn().mockReturnValue('mock-serialized-error')
+	jest.fn().mockReturnValue({
+		name: 'MockError',
+		message: 'mock error'
+	})
 );
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 
@@ -52,7 +55,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		it('logs the serialized error, request, and app details', () => {
 			expect(logger.log).toBeCalledWith('error', {
 				event: 'HANDLED_ERROR',
-				error: 'mock-serialized-error',
+				message: 'MockError: mock error',
+				error: {
+					name: 'MockError',
+					message: 'mock error'
+				},
 				request: 'mock-serialized-request',
 				app: {
 					name: 'mock-system-code',
@@ -80,7 +87,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs without an app name', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'HANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: null,
@@ -109,7 +120,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs without an app region', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'HANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
@@ -141,7 +156,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs the serialized error, request, and app details', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'HANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
@@ -168,7 +187,61 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs the serialized error and app details', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'HANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					app: {
+						name: 'mock-system-code',
+						region: 'mock-region'
+					}
+				});
+			});
+		});
+
+		describe('when the serialized error does not have a name', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValueOnce({
+					message: 'mock error'
+				});
+				logHandledError({ error, request });
+				serializeError.mockClear();
+			});
+
+			it('defaults the message to use "Error"', () => {
+				expect(logger.log).toBeCalledWith('error', {
+					event: 'HANDLED_ERROR',
+					message: 'Error: mock error',
+					error: {
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						name: 'mock-system-code',
+						region: 'mock-region'
+					}
+				});
+			});
+		});
+
+		describe('when the serialized error does not have a message', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValueOnce({
+					name: 'MockError'
+				});
+				logHandledError({ error, request });
+				serializeError.mockClear();
+			});
+
+			it('defaults the message to only use the name', () => {
+				expect(logger.log).toBeCalledWith('error', {
+					event: 'HANDLED_ERROR',
+					message: 'MockError',
+					error: {
+						name: 'MockError'
+					},
+					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
 						region: 'mock-region'
@@ -204,7 +277,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		it('logs the serialized error, request, and app details', () => {
 			expect(logger.log).toBeCalledWith('warn', {
 				event: 'RECOVERABLE_ERROR',
-				error: 'mock-serialized-error',
+				message: 'MockError: mock error',
+				error: {
+					name: 'MockError',
+					message: 'mock error'
+				},
 				request: 'mock-serialized-request',
 				app: {
 					name: 'mock-system-code',
@@ -232,7 +309,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs without an app name', () => {
 				expect(logger.log).toBeCalledWith('warn', {
 					event: 'RECOVERABLE_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: null,
@@ -261,7 +342,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs without an app region', () => {
 				expect(logger.log).toBeCalledWith('warn', {
 					event: 'RECOVERABLE_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
@@ -293,7 +378,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs the serialized error, request, and app details', () => {
 				expect(logger.log).toBeCalledWith('warn', {
 					event: 'RECOVERABLE_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
@@ -320,7 +409,61 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs the serialized error and app details', () => {
 				expect(logger.log).toBeCalledWith('warn', {
 					event: 'RECOVERABLE_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					app: {
+						name: 'mock-system-code',
+						region: 'mock-region'
+					}
+				});
+			});
+		});
+
+		describe('when the serialized error does not have a name', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValueOnce({
+					message: 'mock error'
+				});
+				logRecoverableError({ error, request });
+				serializeError.mockClear();
+			});
+
+			it('defaults the message to use "Error"', () => {
+				expect(logger.log).toBeCalledWith('warn', {
+					event: 'RECOVERABLE_ERROR',
+					message: 'Error: mock error',
+					error: {
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						name: 'mock-system-code',
+						region: 'mock-region'
+					}
+				});
+			});
+		});
+
+		describe('when the serialized error does not have a message', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValueOnce({
+					name: 'MockError'
+				});
+				logRecoverableError({ error, request });
+				serializeError.mockClear();
+			});
+
+			it('defaults the message to only use the name', () => {
+				expect(logger.log).toBeCalledWith('warn', {
+					event: 'RECOVERABLE_ERROR',
+					message: 'MockError',
+					error: {
+						name: 'MockError'
+					},
+					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
 						region: 'mock-region'
@@ -356,7 +499,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		it('logs the serialized error, request, and app details', () => {
 			expect(logger.log).toBeCalledWith('error', {
 				event: 'UNHANDLED_ERROR',
-				error: 'mock-serialized-error',
+				message: 'MockError: mock error',
+				error: {
+					name: 'MockError',
+					message: 'mock error'
+				},
 				request: 'mock-serialized-request',
 				app: {
 					name: 'mock-system-code',
@@ -384,7 +531,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs without an app name', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'UNHANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: null,
@@ -413,7 +564,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs without an app region', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'UNHANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
@@ -445,7 +600,11 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs the serialized error, request, and app details', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'UNHANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
 					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
@@ -472,7 +631,61 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			it('logs the serialized error and app details', () => {
 				expect(logger.log).toBeCalledWith('error', {
 					event: 'UNHANDLED_ERROR',
-					error: 'mock-serialized-error',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					app: {
+						name: 'mock-system-code',
+						region: 'mock-region'
+					}
+				});
+			});
+		});
+
+		describe('when the serialized error does not have a name', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValueOnce({
+					message: 'mock error'
+				});
+				logUnhandledError({ error, request });
+				serializeError.mockClear();
+			});
+
+			it('defaults the message to use "Error"', () => {
+				expect(logger.log).toBeCalledWith('error', {
+					event: 'UNHANDLED_ERROR',
+					message: 'Error: mock error',
+					error: {
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						name: 'mock-system-code',
+						region: 'mock-region'
+					}
+				});
+			});
+		});
+
+		describe('when the serialized error does not have a message', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValueOnce({
+					name: 'MockError'
+				});
+				logUnhandledError({ error, request });
+				serializeError.mockClear();
+			});
+
+			it('defaults the message to only use the name', () => {
+				expect(logger.log).toBeCalledWith('error', {
+					event: 'UNHANDLED_ERROR',
+					message: 'MockError',
+					error: {
+						name: 'MockError'
+					},
+					request: 'mock-serialized-request',
 					app: {
 						name: 'mock-system-code',
 						region: 'mock-region'
