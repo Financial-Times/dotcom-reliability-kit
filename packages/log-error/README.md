@@ -46,6 +46,7 @@ This will automatically [serialize error objects](https://github.com/Financial-T
 ```js
 {
     event: 'HANDLED_ERROR',
+    message: 'Error: something went wrong',
 
     error: {
         // See `@dotcom-reliability-kit/serialize-error` (linked above)
@@ -74,6 +75,7 @@ The information logged looks like this:
 ```js
 {
     event: 'RECOVERABLE_ERROR',
+    message: 'Error: something went wrong',
 
     error: {
         // See `@dotcom-reliability-kit/serialize-error` (linked above)
@@ -102,6 +104,7 @@ The information logged looks like this:
 ```js
 {
     event: 'UNHANDLED_ERROR',
+    message: 'Error: something went wrong',
 
     error: {
         // See `@dotcom-reliability-kit/serialize-error` (linked above)
