@@ -36,7 +36,7 @@ function logError({ error, event, includeHeaders, level = 'error', request }) {
 	const serializedError = serializeError(error);
 	const logData = {
 		event,
-		message: getErrorMessage(serializedError),
+		message: extractErrorMessage(serializedError),
 		error: serializedError,
 		app: {
 			name: process.env.SYSTEM_CODE || null,
@@ -59,7 +59,7 @@ function logError({ error, event, includeHeaders, level = 'error', request }) {
  * @returns {string}
  *     Returns the human readable error message.
  */
-function getErrorMessage(serializedError) {
+function extractErrorMessage(serializedError) {
 	return `${serializedError.name || 'Error'}${
 		serializedError.message ? `: ${serializedError.message}` : ''
 	}`;
