@@ -173,6 +173,7 @@ When this option is defined, the logged data looks includes request data:
 ```js
 {
     event: 'RECOVERABLE_ERROR',
+    message: 'Error: something went wrong',
 
     error: {
         // See `@dotcom-reliability-kit/serialize-error` (linked above)
