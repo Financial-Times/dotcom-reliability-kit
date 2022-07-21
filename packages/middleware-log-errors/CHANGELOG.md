@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.0.1...middleware-log-errors-v1.1.0) (2022-07-21)
+
+
+### Features
+
+* log an error summary in the message property ([a4484d0](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a4484d0aca72bf730f1ea2df2773f33e346a3f53))
+
+
+### Documentation Changes
+
+* correct a missing documentation change ([1c32b26](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1c32b26f213290794de289fd4fb6754e3b46af00))
+* manually fix the broken changelogs ([7249a61](https://github.com/Financial-Times/dotcom-reliability-kit/commit/7249a6177c7bed3ea4b53254aef259b9b5fe2d4c))
+
+
+### Miscellaneous
+
+* **dev-deps:** update release-please to 13.18.6 ([5078c57](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5078c57d651afc624d1fac0934f983cc0d5bd428))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.1.0 to ^1.2.0
+
 ## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.0.0...middleware-log-errors-v1.0.1) (2022-07-11)
 
 

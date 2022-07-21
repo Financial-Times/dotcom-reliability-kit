@@ -1,7 +1,7 @@
 {
   "packages/errors": "1.0.0",
-  "packages/log-error": "1.1.0",
-  "packages/middleware-log-errors": "1.0.1",
+  "packages/log-error": "1.2.0",
+  "packages/middleware-log-errors": "1.1.0",
   "packages/serialize-error": "1.0.0",
   "packages/serialize-request": "1.0.0"
 }
