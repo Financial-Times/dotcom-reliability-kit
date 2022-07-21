@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.0.0...middleware-log-errors-v1.0.1) (2022-07-11)
+
+
 ### Dependencies
 
 * The following workspace dependencies were updated
