@@ -1,5 +1,5 @@
 {
-	"changelog-type": "github",
+	"changelog-type": "default",
 	"changelog-sections": [
 		{
 			"type": "feat",
