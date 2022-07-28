@@ -23,9 +23,9 @@ We're glad you want to contribute to Reliability Kit!
 
 In order to contribute and make changes to this repository, you'll need some software installed:
 
-  * [Node.js](https://nodejs.dev/) v14 or higher
+  * [Node.js](https://nodejs.dev) on a version defined in `package.json`: `engines.node`
 
-  * [npm](https://www.npmjs.com/) v7 or higher (usually bundled with Node.js)
+  * [npm](https://www.npmjs.com) on a version defined in `package.json`: `engines.npm` (usually bundled with Node.js)
 
 ### Optional
 
@@ -141,11 +141,6 @@ Indicate a breaking change by placing an `!` between the type name and the colon
 feat!: add a breaking feature
 ```
 
-or
-
-```
-chore!: drop support for Node.js v12
-```
 
 ### Commit linting
 

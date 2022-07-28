@@ -18,7 +18,7 @@ Throwing good errors is key to producing a reliable application. Most of Reliabi
 
 ## Types of error
 
-Errors can be sorted into two broad categories. It's important to understand the difference, because they should be handled differently by your application. These take inspiration from the [Joyent error handling documentation](https://www.joyent.com/node-js/production/design/errors), which is also worth a read.
+Errors can be sorted into two broad categories. It's important to understand the difference, because they should be handled differently by your application. These take inspiration from the [Joyent error handling documentation](https://web.archive.org/web/20220223020910/https://www.joyent.com/node-js/production/design/errors), which is also worth a read.
 
 ### Operational errors
 
@@ -46,7 +46,7 @@ throw new OperationalError({
 });
 ```
 
-This (and further error classes that which extend it) should ideally be used _anywhere_ that you understand how to handle an error. This means in your app you might do something like this:
+This (and further error classes which extend it) should ideally be used _anywhere_ that you understand how to handle an error. This means in your app you might do something like this:
 
 ```js
 // E.g. GET https://your-app/pokemon/oddish
@@ -115,11 +115,11 @@ function uppercaseAll(array) {
 
 ## What does a good error look like?
 
-Good errors are descriptive and can be easily understood by both humans (e.g an engineer trying to debug a problem) and machines (e.g. a logging dashboard used to group errors by type). In this section we'll talk through how to do this.
+Good errors are descriptive and can be easily understood by both humans (e.g. an engineer trying to debug a problem) and machines (e.g. a logging dashboard used to group errors by type). In this section we'll talk through how to do this.
 
 Whenever you're throwing an error, you should be thinking about the different audiences to whom that error matters. Who are they and what do they need?
 
-  * Yourself in 6 month times when this error starts being thrown at 4am
+  * Yourself in six month's time when this error starts being thrown at 4am
 
   * Your logging dashboard, which groups errors so you can easily see when specific ones spike
 
@@ -212,7 +212,7 @@ Your error codes should uniquely identify a _type_ of error your app can throw. 
 
 ### Adding more data
 
-It's also sometimes useful to add extra details to an error so that further debugging of them can be done once we've determined what _type_ of error they are using `code`. Useful information might be the actual value of any input which caused an error, or further details about application state (e.g. the ID of the user this error occurred for).
+It's also sometimes useful to add extra details to an error so that further debugging of them can be done once we've determined what _type_ of error they are using via the `code` value. Useful information might be the actual value of any input which caused an error, or further details about application state (e.g. the ID of the user this error occurred for).
 
 Taking the example from above where we set the code, we might want to provide the input fruit name alongside our message and code:
 
@@ -264,7 +264,7 @@ In this example, there are actually multiple ways the API could fail. We're just
 
   * The API responds with a _different_ status code that we don't know how to handle
 
-In this scenario it pays to be specific, because our error reporting will be able to differentiate between a server error (the API is down) vs a user error (someone asked for a Pokemon that doesn't exist). Let's fix our example:
+In this scenario it pays to be specific, because our error reporting will be able to differentiate between a server error (the API is down) versus a user error (someone asked for a Pokemon that doesn't exist). Let's fix our example:
 
 ```js
 // E.g. GET https://your-app/pokemon/oddish

@@ -95,7 +95,7 @@ The Express documentation covers [writing centralised error handlers](https://ex
 
 ## Don't fear the try/catch block
 
-One of the tools we have to make sure [thrown errors should be specific](./throwing-errors.md#being-specific) is the `try`/`catch` block. In previous examples we've wrapped all our code in a single `try`/`catch` block and sent the error on to the Express error handler. If we want to be _really_ specific about what went wrong in our code, then this is often not enough.
+One of the tools we have to make sure [thrown errors are specific](./throwing-errors.md#being-specific) is the `try`/`catch` block. In previous examples we've wrapped all our code in a single `try`/`catch` block and sent the error on to the Express error handler. If we want to be _really_ specific about what went wrong in our code, then this is often not enough.
 
 We have a couple of different ways that we update our `try`/`catch` to help us to handle errors and rethrow more specific ones. We can use either or both of these.
 
@@ -121,7 +121,7 @@ app.get('/fruit/:name', async (request, response, next) => {
 });
 ```
 
-In this scenario we have the following possible errors which we know can make it into our final try/catch:
+In this scenario we have the following possible errors which we know can make it into our final `try`/`catch`:
 
   * The `name` parameter is an empty string, throwing an `AssertionError`
 
@@ -146,8 +146,8 @@ app.get('/fruit/:name', async (request, response, next) => {
         if (error.code === 'ERR_ASSERTION') {
             return next(new HttpError({
                 statusCode: 400,
-                code: 'INVALID_FRUIT_NAME',
-                message: 'Please provide a fruit name'
+                code: 'FRUIT_NAME_NOT_PROVIDED',
+                message: 'A fruit name was not provided'
             }));
         }
 

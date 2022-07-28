@@ -25,7 +25,7 @@ In terms of TypeScript, the key benefits are having type safety and type hinting
 
 ## Tooling
 
-This repository does not use [Tool Kit](https://github.com/Financial-Times/dotcom-tool-kit#readme). This is because, at the time of writing, Tool kit did not have full support for managing and publishing packages in a monorepo. We copied many of the scripts and the CircleCI config from Tool Kit itself so that we can manage the monorepo in the same way. This may change in future.
+This repository does not use [Tool Kit](https://github.com/Financial-Times/dotcom-tool-kit#readme). This is because, at the time of writing, Tool Kit did not have full support for managing and publishing packages in a monorepo. We copied many of the scripts and the CircleCI config from Tool Kit itself so that we can manage the monorepo in the same way. This may change in future.
 
 ### Testing
 
