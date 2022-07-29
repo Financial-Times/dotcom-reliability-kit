@@ -54,8 +54,11 @@ This will automatically [serialize error objects](https://github.com/Financial-T
     },
 
     app: {
+        commit: '137da65185397a7d699ed54c3052d10d83e82137',
         name: 'example-app',
-        region: 'EU'
+        nodeVersion: '16.16.0',
+        region: 'EU',
+        releaseDate: '2022-07-25T01:37:00Z'
     }
 }
 ```
@@ -83,8 +86,11 @@ The information logged looks like this:
     },
 
     app: {
+        commit: '137da65185397a7d699ed54c3052d10d83e82137',
         name: 'example-app',
-        region: 'EU'
+        nodeVersion: '16.16.0',
+        region: 'EU',
+        releaseDate: '2022-07-25T01:37:00Z'
     }
 }
 ```
@@ -112,8 +118,11 @@ The information logged looks like this:
     },
 
     app: {
+        commit: '137da65185397a7d699ed54c3052d10d83e82137',
         name: 'example-app',
-        region: 'EU'
+        nodeVersion: '16.16.0',
+        region: 'EU',
+        releaseDate: '2022-07-25T01:37:00Z'
     }
 }
 ```
@@ -186,8 +195,11 @@ When this option is defined, the logged data looks includes request data:
     },
 
     app: {
+        commit: '137da65185397a7d699ed54c3052d10d83e82137',
         name: 'example-app',
-        region: 'EU'
+        nodeVersion: '16.16.0',
+        region: 'EU',
+        releaseDate: '2022-07-25T01:37:00Z'
     }
 }
 ```
