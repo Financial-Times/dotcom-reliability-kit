@@ -39,8 +39,11 @@ function logError({ error, event, includeHeaders, level = 'error', request }) {
 		message: extractErrorMessage(serializedError),
 		error: serializedError,
 		app: {
+			commit: process.env.HEROKU_SLUG_COMMIT || null,
 			name: process.env.SYSTEM_CODE || null,
-			region: process.env.REGION || null
+			nodeVersion: process.versions.node,
+			region: process.env.REGION || null,
+			releaseDate: process.env.HEROKU_RELEASE_CREATED_AT || null
 		}
 	};
 	if (request) {
