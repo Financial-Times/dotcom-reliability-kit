@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.0.0...errors-v1.0.1) (2022-08-01)
+
+
+### Documentation Changes
+
+* apply documentation amends ([9d83857](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9d838573d58644b98888b3e2bbb48b330e37a011))
+* update 'chore' definition ([383730a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/383730a43fe00dbc9ef3c2cfcd776ee5cbd7d3ed))
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v0.1.2...errors-v1.0.0) (2022-07-05)
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.1.0...middleware-log-errors-v1.2.0) (2022-08-01)
+
+
+### Features
+
+* add new app properties to error logs ([c4d9421](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c4d9421f1e10c442b3f9ea81c33d77bb10596c61))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.2.0 to ^1.3.0
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.0.1...middleware-log-errors-v1.1.0) (2022-07-21)
 
 
