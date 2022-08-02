@@ -12,6 +12,8 @@
  *     A human readable message which describes the error.
  * @property {boolean} isOperational
  *     Whether the error is operational, as in it's an error we expect sometimes as part of running the application.
+ * @property {(Error | null)} cause
+ *     The root cause error instance.
  * @property {(string | null)} stack
  *     The full error stack.
  * @property {(number | null)} statusCode
@@ -61,6 +63,11 @@ function serializeError(error) {
 		errorProperties.relatesToSystems = error.relatesToSystems;
 	}
 
+	// If set, error cause (which in turn is an error instance) is serialized
+	if (error.cause && error.cause instanceof Error) {
+		errorProperties.cause = serializeError(error.cause);
+	}
+
 	// Only include error stack if it's a string
 	if (typeof error.stack === 'string') {
 		errorProperties.stack = error.stack;
@@ -101,6 +108,7 @@ function createSerializedError(properties) {
 			message: 'An error occurred',
 			isOperational: false,
 			relatesToSystems: [],
+			cause: null,
 			stack: null,
 			statusCode: null,
 			data: {}

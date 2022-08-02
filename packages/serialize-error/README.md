@@ -10,6 +10,7 @@ A utility function to serialize an error object in a way that's friendly to logg
       * [`SerializedError.code`](#serializederrorcode)
       * [`SerializedError.message`](#serializederrormessage)
       * [`SerializedError.isOperational`](#serializederrorisoperational)
+      * [`SerializedError.cause`](#serializederrorcause)
       * [`SerializedError.stack`](#serializederrorstack)
       * [`SerializedError.statusCode`](#serializederrorstatuscode)
       * [`SerializedError.data`](#serializederrordata)
@@ -45,6 +46,7 @@ serializeError(new Error('example message'));
 //     message: 'An error occurred',
 //     isOperational: false,
 //     relatesToSystems: [],
+//     cause: null,
 //     stack: '...',
 //     statusCode: null,
 //     data: {}
@@ -82,6 +84,10 @@ This indicates whether the error is operational (known about). See the documenta
 #### `SerializedError.relatesToSystems`
 
 This array contains a list of [system codes](https://biz-ops.in.ft.com/list/Systems) which are related to the error. It defaults to an empty array.
+
+#### `SerializedError.cause`
+
+This is an error instance extracted from the `error.cause` property, which is serialized before being assigned. It defaults to `null`.
 
 #### `SerializedError.stack`
 

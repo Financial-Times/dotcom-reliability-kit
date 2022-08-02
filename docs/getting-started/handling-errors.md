@@ -337,10 +337,10 @@ app.get('/fruit/:name', async (request, response, next) => {
             console.warn({
                 event: 'RECOVERABLE_ERROR',
                 error: serializeError(new OperationalError({
-                    statusCode: error.statusCode,
                     code: 'FRUIT_STOCK_LEVEL_FAILED',
                     message: `The Fruit API did not return a stock level for ID ${fruit.id}`,
-                    relatesToSystems: ['fruit-api']
+                    relatesToSystems: ['fruit-api'],
+                    cause: error
                 }))
             });
             fruit.stockLevel = null;

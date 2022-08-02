@@ -5,6 +5,7 @@ A suite of error classes which help you throw the most appropriate error in any 
 
   * [Usage](#usage)
     * [`OperationalError`](#operationalerror)
+      * [`.cause`](#operationalerrorcause)
       * [`.isErrorMarkedAsOperational`](#operationalerroriserrormarkedasoperational)
     * [`HttpError`](#httperror)
       * [Why use this over `http-errors`?](#why-use-this-over-http-errors)
@@ -79,6 +80,10 @@ This array could include:
 
 - dependencies which have returned an HTTP error status code
 - data stores which haven't provided the expected data
+
+#### `OperationalError.cause`
+
+The `cause` property of an operational error stores the root cause error instance, e.g. an error that has been caught as part of a `try`/`catch` block. It allows the operational error to include the diagnostic information captured by the root cause error.
 
 #### `OperationalError.isErrorMarkedAsOperational()`
 
