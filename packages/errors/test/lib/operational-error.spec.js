@@ -58,6 +58,12 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 				expect(instance.relatesToSystems).toStrictEqual([]);
 			});
 		});
+
+		describe('.cause', () => {
+			it('is set to null', () => {
+				expect(instance.cause).toStrictEqual(null);
+			});
+		});
 	});
 
 	describe('new OperationalError(message)', () => {
@@ -96,20 +102,31 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 				expect(instance.name).toStrictEqual('OperationalError');
 			});
 		});
+
+		describe('.cause', () => {
+			it('is set to null', () => {
+				expect(instance.cause).toStrictEqual(null);
+			});
+		});
 	});
 
 	describe('new OperationalError(data)', () => {
 		let instance;
+		let rootCauseErrorInstance;
 
 		beforeEach(() => {
 			jest
 				.spyOn(OperationalError, 'normalizeErrorCode')
 				.mockReturnValue('MOCK_CODE');
+
+			rootCauseErrorInstance = new Error('mock root cause error message');
+
 			instance = new OperationalError({
 				message: 'mock message',
 				code: 'mock_code',
 				extra: 'mock extra data',
-				relatesToSystems: ['system-one', 'system-two']
+				relatesToSystems: ['system-one', 'system-two'],
+				cause: rootCauseErrorInstance
 			});
 		});
 
@@ -164,6 +181,12 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 				expect(singleSystemError.relatesToSystems).toStrictEqual([
 					'system-one'
 				]);
+			});
+		});
+
+		describe('.cause', () => {
+			it('is set to the root cause error instance', () => {
+				expect(instance.cause).toEqual(rootCauseErrorInstance);
 			});
 		});
 	});

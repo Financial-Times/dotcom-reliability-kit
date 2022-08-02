@@ -228,6 +228,20 @@ throw new OperationalError({
 });
 ```
 
+You might create an `OperationalError` instance in reaction to an error that has been caught. The root cause error and all the diagnostic information it contains can be included in the `OperationalError` instance by setting it as the value of the `cause` property:
+
+```js
+try {
+    fruit.stockLevel = await fruitApiClient.getStockLevel(fruit.id);
+} catch (error) {
+    throw new OperationalError({
+        message: `A "${fruitName}" is not a valid fruit`,
+        code: 'INVALID_FRUIT',
+        cause: error
+    });
+}
+````
+
 ### Being specific
 
 When you're working on more complex code than our previous examples and catching errors in places where they could have been caused by multiple things, it's important to throw _specific_ errors which identify the cause rather than a generic one.

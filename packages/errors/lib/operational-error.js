@@ -10,6 +10,8 @@
  *     A human readable message which describes the error.
  * @property {Array<string>} [relatesToSystems]
  *     An array of FT system codes which are related to this error.
+ * @property {Error|null} [cause]
+ *     The root cause error instance.
  */
 
 /**
@@ -52,6 +54,15 @@ class OperationalError extends Error {
 	relatesToSystems = [];
 
 	/**
+	 * The root cause error instance.
+	 *
+	 * @readonly
+	 * @access public
+	 * @type {Error|null}
+	 */
+	cause = null;
+
+	/**
 	 * Additional error information.
 	 *
 	 * @readonly
@@ -84,6 +95,10 @@ class OperationalError extends Error {
 			}
 		}
 
+		if (data.cause instanceof Error) {
+			this.cause = data.cause;
+		}
+
 		for (const [key, value] of Object.entries(data)) {
 			// @ts-ignore TypeScript does not properly infer the constructor
 			if (!this.constructor.reservedKeys.includes(key)) {
@@ -98,7 +113,7 @@ class OperationalError extends Error {
 	 * @access private
 	 * @type {Array<string>}
 	 */
-	static reservedKeys = ['code', 'message', 'relatesToSystems'];
+	static reservedKeys = ['code', 'message', 'relatesToSystems', 'cause'];
 
 	/**
 	 * Get whether an error object is marked as operational (it has a truthy `isOperational` property).

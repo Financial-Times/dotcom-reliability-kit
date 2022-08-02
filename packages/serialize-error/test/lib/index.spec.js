@@ -15,6 +15,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'mock message',
 				isOperational: false,
 				relatesToSystems: [],
+				cause: null,
 				stack: error.stack,
 				statusCode: null,
 				data: {}
@@ -79,6 +80,30 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 					error.relatesToSystems = 'system-one';
 					expect(serializeError(error)).toMatchObject({
 						relatesToSystems: []
+					});
+				});
+			});
+		});
+
+		describe('when the error has a `cause` property', () => {
+			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
+				const rootCauseErrorInstance = new Error(
+					'mock root cause error message'
+				);
+				error.cause = rootCauseErrorInstance;
+				expect(serializeError(error)).toMatchObject({
+					cause: serializeError(rootCauseErrorInstance)
+				});
+				expect(serializeError(error).cause).toMatchObject({
+					message: 'mock root cause error message'
+				});
+			});
+
+			describe('when the `cause` property is not an Error instance', () => {
+				it('leaves the property value unassigned', () => {
+					error.cause = 'foo';
+					expect(serializeError(error)).toMatchObject({
+						cause: null
 					});
 				});
 			});
@@ -156,6 +181,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				code: 'UNKNOWN',
 				message: 'An error occurred',
 				isOperational: false,
+				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}
@@ -194,6 +220,21 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				error.isOperational = true;
 				expect(serializeError(error)).toMatchObject({
 					isOperational: true
+				});
+			});
+		});
+
+		describe('when the object has a `cause` property', () => {
+			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
+				const rootCauseErrorInstance = new Error(
+					'mock root cause error message'
+				);
+				error.cause = rootCauseErrorInstance;
+				expect(serializeError(error)).toMatchObject({
+					cause: serializeError(rootCauseErrorInstance)
+				});
+				expect(serializeError(error).cause).toMatchObject({
+					message: 'mock root cause error message'
 				});
 			});
 		});
@@ -238,6 +279,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				code: 'UNKNOWN',
 				message: 'mock message',
 				isOperational: false,
+				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}
@@ -253,6 +295,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				code: 'UNKNOWN',
 				message: '123',
 				isOperational: false,
+				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}
@@ -268,6 +311,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				code: 'UNKNOWN',
 				message: 'mock,message',
 				isOperational: false,
+				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}
