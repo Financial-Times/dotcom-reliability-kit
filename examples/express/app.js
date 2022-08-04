@@ -5,6 +5,7 @@
 
 const express = require('@financial-times/n-express');
 const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
+const createErrorRenderingMiddleware = require('@dotcom-reliability-kit/middleware-render-error-info');
 const {
 	HttpError,
 	OperationalError
@@ -68,6 +69,9 @@ app.get('/recoverable', (request, response) => {
 
 // Register the logging middleware
 app.use(createErrorLogger());
+
+// Register the error info page middleware
+app.use(createErrorRenderingMiddleware());
 
 // JSON-based error handler for demo/testing purposes
 app.use(

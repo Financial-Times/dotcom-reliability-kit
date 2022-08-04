@@ -17,6 +17,10 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
+    directory: "/packages/middleware-render-error-info"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
     directory: "/packages/serialize-error"
     schedule:
       interval: "daily"

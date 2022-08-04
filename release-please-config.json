@@ -32,6 +32,7 @@
 		"packages/errors": {},
 		"packages/log-error": {},
 		"packages/middleware-log-errors": {},
+		"packages/middleware-render-error-info": {},
 		"packages/serialize-error": {},
 		"packages/serialize-request": {}
 	}
