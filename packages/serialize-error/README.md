@@ -10,6 +10,7 @@ A utility function to serialize an error object in a way that's friendly to logg
       * [`SerializedError.code`](#serializederrorcode)
       * [`SerializedError.message`](#serializederrormessage)
       * [`SerializedError.isOperational`](#serializederrorisoperational)
+      * [`SerializedError.relatesToSystems`](#serializederrorrelatestosystems)
       * [`SerializedError.cause`](#serializederrorcause)
       * [`SerializedError.stack`](#serializederrorstack)
       * [`SerializedError.statusCode`](#serializederrorstatuscode)

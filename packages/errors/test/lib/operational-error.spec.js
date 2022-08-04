@@ -103,6 +103,12 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 			});
 		});
 
+		describe('.relatesToSystems', () => {
+			it('is set to an empty array', () => {
+				expect(instance.relatesToSystems).toStrictEqual([]);
+			});
+		});
+
 		describe('.cause', () => {
 			it('is set to null', () => {
 				expect(instance.cause).toStrictEqual(null);
