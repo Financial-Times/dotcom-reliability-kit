@@ -5,6 +5,10 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
+    directory: "/logos/rock"
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
     directory: "/packages/errors"
     schedule:
       interval: "daily"
