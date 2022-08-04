@@ -228,7 +228,9 @@ throw new OperationalError({
 });
 ```
 
-You might create an `OperationalError` instance in reaction to an error that has been caught. The root cause error and all the diagnostic information it contains can be included in the `OperationalError` instance by setting it as the value of the `cause` property:
+You might create an `OperationalError` instance in reaction to an error that has been caught. The root cause error and all the diagnostic information it contains can be included in the `OperationalError` instance by setting it as the value of the `cause` property.
+
+If the error is caused by interfacing with external systems, the names of those systems can be included as the value of the `relatesToSystems` property.
 
 ```js
 try {
@@ -237,6 +239,7 @@ try {
     throw new OperationalError({
         message: `A "${fruitName}" is not a valid fruit`,
         code: 'INVALID_FRUIT',
+        relatesToSystems: ['fruit-api'],
         cause: error
     });
 }

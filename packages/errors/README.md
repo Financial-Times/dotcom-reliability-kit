@@ -5,6 +5,7 @@ A suite of error classes which help you throw the most appropriate error in any 
 
   * [Usage](#usage)
     * [`OperationalError`](#operationalerror)
+      * [`.relatesToSystems`](#operationalerrorrelatestosystems)
       * [`.cause`](#operationalerrorcause)
       * [`.isErrorMarkedAsOperational`](#operationalerroriserrormarkedasoperational)
     * [`HttpError`](#httperror)
