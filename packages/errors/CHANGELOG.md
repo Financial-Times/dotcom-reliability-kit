@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.0.1...errors-v1.1.0) (2022-08-04)
+
+
+### Features
+
+* add OperationalError cause property ([9505f6f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9505f6f21f24bf4893f2f0ff81257318ed6d2acb))
+
 ## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.0.0...errors-v1.0.1) (2022-08-01)
 
 
