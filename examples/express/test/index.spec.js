@@ -6,6 +6,10 @@ jest.mock('@financial-times/n-logger', () => ({
 	}
 }));
 
+// The node enironment be set to "test" to get around the error info renderer
+// so that our JSON error handler triggers
+process.env.NODE_ENV = 'test';
+
 process.env.SYSTEM_CODE = 'reliability-kit-express-example';
 process.env.REGION = 'test';
 

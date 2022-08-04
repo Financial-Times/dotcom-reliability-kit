@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@dotcom-reliability-kit/middleware-render-error-info middleware(error, request, response, next) responds with an HTML representation of the error 1`] = `
+"<h1>MockSerializedError: mock serialized error message</h1>
+<pre>mock serialized error stack</pre>"
+`;
