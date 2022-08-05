@@ -1,0 +1,60 @@
+
+/* Override to avoid super long pages and make pre elements scroll */
+pre {
+	max-height: 300px;
+	white-space: pre-wrap;
+}
+
+/* Override to add some spacing below alert messages in the main body of the page */
+.o-layout__main .o-message {
+	margin-bottom: var(--o-spacing-s4);
+}
+
+/* Override to add some spacing below sections in the main body of the page */
+.o-layout__main > section {
+	margin-bottom: var(--o-spacing-m12);
+}
+
+/* Styles for a key/value list. Description list styles are not provided by Origami */
+.kv-list {
+	display: grid;
+	grid-template-columns: 1fr 4fr;
+	margin: 0;
+}
+.kv-list__key {
+	padding-right: var(--o-spacing-s3);
+}
+.kv-list__label {
+	font-weight: 500;
+}
+.kv-list__value {
+	overflow: auto;
+	background-color: var(--o-colors-black-5);
+	padding: var(--o-spacing-s2);
+}
+.kv-list__key,
+.kv-list__value {
+	margin: 0;
+	padding-top: var(--o-spacing-s2);
+	padding-bottom: var(--o-spacing-s2);
+	border-bottom: 1px solid var(--o-colors-black-20);
+}
+.kv-list__key:first-child,
+.kv-list__value:nth-child(2) {
+	border-top: 1px solid var(--o-colors-black-20);
+}
+.kv-list__value pre {
+	margin: 0;
+	padding: 0;
+}
+
+/* Boolean value styling */
+.boolean {
+	font-weight: 600;
+}
+.boolean--positive {
+	color: var(--o-colors-jade);
+}
+.boolean--negative {
+	color: var(--o-colors-crimson);
+}

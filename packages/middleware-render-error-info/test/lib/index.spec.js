@@ -3,8 +3,31 @@ const createErrorRenderingMiddleware = require('../../lib/index');
 jest.mock('@dotcom-reliability-kit/serialize-error', () => jest.fn());
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 serializeError.mockReturnValue({
+	// We nest multiple causes so that we can test each
+	// kind of error warning which might appear in the
+	// output. E.g. operational error vs non-error thrown
+	cause: {
+		cause: {
+			data: {}
+		},
+		data: {},
+		isOperational: false,
+		message: 'mock caused error message',
+		relatesToSystems: [],
+		stack: 'mock caused error stack'
+	},
+	code: 'MOCK_SERIALIZED_ERROR_CODE',
+	data: {
+		booleanValue: true,
+		stringValue: 'mock value',
+		numberValue: 123,
+		arrayValue: ['mock', 'array'],
+		objectValue: { isObject: true }
+	},
+	isOperational: true,
 	message: 'mock serialized error message',
 	name: 'MockSerializedError',
+	relatesToSystems: ['mock-system-1', 'mock-system-2'],
 	stack: 'mock serialized error stack',
 	statusCode: 456
 });
@@ -30,8 +53,18 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 
 		beforeEach(() => {
 			error = new Error('mock error');
-			request = { isMockRequest: true };
+			request = {
+				method: 'mock request method',
+				path: 'mock request path',
+				query: {
+					'mock-request-query': 'yes'
+				},
+				headers: {
+					'mock-request-header': 'yes'
+				}
+			};
 			response = {
+				status: 'mock response status',
 				send: jest.fn(),
 				set: jest.fn(),
 				status: jest.fn()
@@ -77,7 +110,8 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		describe('when the serialized error does not have a `statusCode` property', () => {
 			beforeEach(() => {
 				serializeError.mockReturnValue({
-					statusCode: null
+					statusCode: null,
+					data: {}
 				});
 				response.status = jest.fn();
 
@@ -95,6 +129,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				delete process.env.NODE_ENV;
 				middleware = createErrorRenderingMiddleware();
 				response = {
+					status: 'mock response status',
 					send: jest.fn(),
 					set: jest.fn(),
 					status: jest.fn()
@@ -116,6 +151,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				process.env.NODE_ENV = 'production';
 				middleware = createErrorRenderingMiddleware();
 				response = {
+					status: 'mock response status',
 					send: jest.fn(),
 					set: jest.fn(),
 					status: jest.fn()
