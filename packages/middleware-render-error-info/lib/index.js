@@ -3,6 +3,7 @@
  */
 
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
+const renderErrorPage = require('./render-error-page');
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 
 /**
@@ -29,7 +30,13 @@ function createErrorRenderingMiddleware() {
 				const serializedError = serializeError(error);
 				response.status(serializedError.statusCode || 500);
 				response.set('content-type', 'text/html');
-				return response.send(renderErrorPage(serializedError));
+				return response.send(
+					renderErrorPage({
+						request,
+						response,
+						serializedError
+					})
+				);
 			} catch (/** @type {any} */ renderingError) {
 				logRecoverableError({
 					error: renderingError,
@@ -39,22 +46,6 @@ function createErrorRenderingMiddleware() {
 		}
 		next(error);
 	};
-}
-
-/**
- * Render an HTML error info page.
- *
- * @access private
- * @param {serializeError.SerializedError} serializedError
- *     The error to render a page for.
- * @returns {string}
- *     Returns the rendered error page.
- */
-function renderErrorPage(serializedError) {
-	return `
-		<h1>${serializedError.name}: ${serializedError.message}</h1>
-		<pre>${serializedError.stack}</pre>
-	`;
 }
 
 module.exports = createErrorRenderingMiddleware;
