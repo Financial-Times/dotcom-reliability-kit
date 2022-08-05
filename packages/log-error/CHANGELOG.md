@@ -6,6 +6,12 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-error bumped from ^1.0.0 to ^1.1.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/serialize-error bumped from ^1.1.0 to ^1.1.1
+
 ## [1.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.2.0...log-error-v1.3.0) (2022-08-01)
 
 
