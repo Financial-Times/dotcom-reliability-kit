@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.0...errors-v1.1.1) (2022-08-05)
+
+
+### Miscellaneous
+
+* additional relatesToSystems documentation and tests ([63f094d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/63f094d59576f789597274444ce0e14db2c3599e))
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.0.1...errors-v1.1.0) (2022-08-04)
 
 
