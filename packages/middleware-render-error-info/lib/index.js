@@ -13,7 +13,11 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
  *     Returns error info rendering middleware.
  */
 function createErrorRenderingMiddleware() {
-	// Only render the error info page if we're not in production
+	// Only render the error info page if we're not in production.
+	// Note: if we ever want to get this working in production, we
+	// will need to make this middleware play nicely with
+	// Sentry/n-raven – right now it will render a page and skip
+	// any later middleware so Sentry will never run.
 	const performRendering =
 		process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
 
@@ -26,7 +30,6 @@ function createErrorRenderingMiddleware() {
 				response.status(serializedError.statusCode || 500);
 				response.set('content-type', 'text/html');
 				return response.send(renderErrorPage(serializedError));
-				// TODO do we need to call `next` anyway for n-raven to work?
 			} catch (/** @type {any} */ renderingError) {
 				logRecoverableError({
 					error: renderingError,
