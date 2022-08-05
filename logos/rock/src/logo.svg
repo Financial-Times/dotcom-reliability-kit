@@ -117,29 +117,4 @@
       <title>Mouth</title>
     </path>
   </g>
-  <g transform="matrix(-0.707107, -0.707107, 0.707107, -0.707107, 493.254852, 369.137115)" style="">
-    <title>Plaster</title>
-    <path d="M 144 32 H 208 A 16 16 0 0 1 224 48 V 48 A 16 16 0 0 1 208 64 H 144 A 16 16 0 0 1 128 48 V 48 A 16 16 0 0 1 144 32 Z" style="fill: rgb(229, 192, 169);">
-      <title>Backing</title>
-    </path>
-    <path d="M 164 35 H 188 A 4 4 0 0 1 192 39 V 57 A 4 4 0 0 1 188 61 H 164 A 4 4 0 0 1 160 57 V 39 A 4 4 0 0 1 164 35 Z" style="fill: rgb(219, 160, 123);">
-      <title>Cover</title>
-    </path>
-    <g transform="matrix(0.909624, 0, 0, 0.909624, 16.865139, 4.276351)" style="">
-      <title>Breathing Holes</title>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="166" cy="42" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="172" cy="42" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="178" cy="42" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="184" cy="42" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="169" cy="48" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="175" cy="48" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="181" cy="48" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="187" cy="48" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="166" cy="54" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="172" cy="54" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="178" cy="54" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="184" cy="54" rx="2" ry="2"/>
-      <ellipse style="fill: rgb(241, 221, 208);" cx="163" cy="48" rx="2" ry="2"/>
-    </g>
-  </g>
 </svg>
