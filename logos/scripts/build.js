@@ -15,6 +15,7 @@ const sharp = require('sharp');
 
 	// Build the logos
 	await buildLogo('rock-color', [1024, 512, 256, 128]);
+	await buildLogo('rock-mono', [128, 64, 32, 16]);
 
 	/**
 	 * Build logo assets.
@@ -43,6 +44,7 @@ const sharp = require('sharp');
 				.png()
 				.toFile(path.join(dist, `${name}-${size}.png`));
 		}
+		console.log(`✅  ${name}: done\n`);
 	}
 })().catch((error) => {
 	console.error(error.message);
