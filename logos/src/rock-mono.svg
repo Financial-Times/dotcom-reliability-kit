@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <bx:grid x="0" y="0" width="16" height="16"/>
+  </defs>
+  <path style="stroke-linecap: round; stroke-miterlimit: 6; stroke: rgb(0, 0, 0); stroke-linejoin: round; paint-order: stroke; stroke-width: 32px; fill: rgb(255, 255, 255);" d="M 176 160 L 368 128 L 400 176 L 464 192 L 464 400 L 144 400 L 48 272 L 176 160 Z">
+    <title>Outline</title>
+  </path>
+  <g transform="matrix(1.356737, 0, 0, 1.356737, -68.4935, -79.909088)">
+    <title>Eye</title>
+    <ellipse cx="215.586" cy="247.586" rx="23.586" ry="23.586">
+      <title>Outer</title>
+    </ellipse>
+    <ellipse style="fill: rgb(255, 255, 255);" cx="227.379" cy="247.586" rx="11.793" ry="11.793">
+      <title>Highlight</title>
+    </ellipse>
+    <ellipse style="fill: rgb(255, 255, 255);" cx="209.689" cy="253.482" rx="5.897" ry="5.897">
+      <title>Highlight</title>
+    </ellipse>
+  </g>
+  <g transform="matrix(1.356737, 0, 0, 1.356737, 59.506493, -79.909096)">
+    <title>Eye</title>
+    <ellipse cx="215.586" cy="247.586" rx="23.586" ry="23.586">
+      <title>Outer</title>
+    </ellipse>
+    <ellipse style="fill: rgb(255, 255, 255);" cx="227.379" cy="247.586" rx="11.793" ry="11.793">
+      <title>Highlight</title>
+    </ellipse>
+    <ellipse style="fill: rgb(255, 255, 255);" cx="209.69" cy="253.482" rx="5.897" ry="5.897">
+      <title>Highlight</title>
+    </ellipse>
+  </g>
+  <path d="M 196 216 L 252 216 C 254.209 216 256 217.791 256 220 C 256 222.209 254.209 224 252 224 L 196 224 C 193.791 224 192 222.209 192 220 C 192 217.791 193.791 216 196 216 Z">
+    <title>Brow</title>
+  </path>
+  <path d="M 324 216 L 380 216 C 382.209 216 384 217.791 384 220 C 384 222.209 382.209 224 380 224 L 324 224 C 321.791 224 320 222.209 320 220 C 320 217.791 321.791 216 324 216 Z">
+    <title>Brow</title>
+  </path>
+  <path d="M 264 320 L 312 320 C 316.418 320 320 323.582 320 328 C 320 332.418 316.418 336 312 336 L 264 336 C 259.582 336 256 332.418 256 328 C 256 323.582 259.582 320 264 320 Z">
+    <title>Mouth</title>
+  </path>
+</svg>
