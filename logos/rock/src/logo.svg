@@ -63,29 +63,35 @@
     <path style="stroke-width: 5px; fill: rgb(193, 193, 190);" d="M 48.243 278.682 C 44.12 274.892 44.221 270.21 48.646 265.197 C 58.459 254.079 77.472 240.009 82.416 236.235 C 87.781 232.14 98.231 267.626 98.116 273.622 C 98.001 279.638 85.116 306.533 79.246 302.355 C 73.435 298.219 57.816 287.482 48.243 278.682 Z">
       <title>Highlight</title>
     </path>
-    <g style="visibility: hidden;">
+    <g style="">
       <title>Blemishes</title>
-      <ellipse style="fill: rgb(161, 161, 156); stroke-width: 5px;" cx="134.338" cy="235.942" rx="6.338" ry="6.686">
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="133.207" cy="245.207" rx="5.207" ry="5.207">
         <title>Blemish</title>
       </ellipse>
-      <ellipse style="fill: rgb(161, 161, 156); stroke-width: 5px;" cx="153.919" cy="225.013" rx="6.338" ry="6.686">
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="149.207" cy="229.207" rx="5.207" ry="5.207">
         <title>Blemish</title>
       </ellipse>
-      <ellipse style="fill: rgb(161, 161, 156); stroke-width: 5px;" cx="166.338" cy="249.314" rx="6.338" ry="6.686">
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="149.207" cy="250.793" rx="5.207" ry="5.207">
         <title>Blemish</title>
       </ellipse>
-      <ellipse style="fill: rgb(161, 161, 156); stroke-width: 5px;" cx="409.662" cy="326.686" rx="6.338" ry="6.686">
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="383.423" cy="362.793" rx="5.207" ry="5.207">
         <title>Blemish</title>
       </ellipse>
-      <ellipse style="fill: rgb(161, 161, 156); stroke-width: 5px;" cx="396.986" cy="305.686" rx="6.338" ry="6.686">
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="389.207" cy="346.793" ry="5.207" rx="5.207">
         <title>Blemish</title>
       </ellipse>
-      <ellipse style="fill: rgb(161, 161, 156); stroke-width: 5px;" cx="417.518" cy="305.686" rx="6.338" ry="6.686">
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="389.207" cy="154.793" ry="5.207" rx="5.207">
+        <title>Blemish</title>
+      </ellipse>
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="373.207" cy="149.207" ry="5.207" rx="5.207">
+        <title>Blemish</title>
+      </ellipse>
+      <ellipse style="stroke-width: 5px; fill: rgb(163, 163, 158);" cx="378.793" cy="170.793" ry="5.207" rx="5.207">
         <title>Blemish</title>
       </ellipse>
     </g>
   </g>
-  <g transform="matrix(1, 0, 0, 1, 0, 5)">
+  <g transform="matrix(1, 0, 0, 1, 16, 14)">
     <title>Face</title>
     <g transform="matrix(1, 0, 0, 1, 0, 2.416016)">
       <title>Left Face</title>
