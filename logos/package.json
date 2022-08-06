@@ -1,14 +1,14 @@
 {
-  "name": "@dotcom-reliability-kit/logo-rock",
+  "name": "@dotcom-reliability-kit/logos",
   "version": "0.0.0",
   "private": true,
-  "description": "The rock logo",
+  "description": "The Reliability Kit logos",
   "repository": {
     "type": "git",
     "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
-    "directory": "logos/rock"
+    "directory": "logos"
   },
-  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/logos/rock#readme",
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/logos#readme",
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
   "license": "MIT",
   "engines": {

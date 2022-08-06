@@ -12,11 +12,11 @@
   "license": "MIT",
   "workspaces": [
     "examples/*",
-    "logos/*",
+    "logos",
     "packages/*"
   ],
   "scripts": {
-    "build:logos": "npm run build -w logos/*",
+    "build:logos": "npm run build -w logos",
     "create-package": "./scripts/create-package.js",
     "lint": "npm run lint:eslint && npm run lint:tsc",
     "lint:eslint": "eslint .",
