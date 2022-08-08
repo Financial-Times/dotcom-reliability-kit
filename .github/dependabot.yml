@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
-    directory: "/logos/rock"
+    directory: "/logos"
     schedule:
       interval: "daily"
   - package-ecosystem: "npm"
