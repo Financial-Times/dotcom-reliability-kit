@@ -1,5 +1,7 @@
 
-<h1 align="center">:rock: FT.com Reliability Kit</h1>
+<h1 align="center">
+    <img alt="FT.com Reliability Kit" width="400" src="https://raw.githubusercontent.com/Financial-Times/dotcom-reliability-kit/main/logos/src/reliability-kit-color.svg" />
+</h1>
 
 Reliability Kit is a well tested suite of tools designed to help FT.com applications be more reliable and measurable.
 
