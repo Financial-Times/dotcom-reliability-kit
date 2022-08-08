@@ -16,6 +16,7 @@ const sharp = require('sharp');
 	// Build the logos
 	await buildLogo('rock-color', [1024, 512, 256, 128]);
 	await buildLogo('rock-mono', [128, 64, 32, 16]);
+	await buildLogo('reliability-kit-color', [1552, 720]);
 
 	/**
 	 * Build logo assets.
