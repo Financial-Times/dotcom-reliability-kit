@@ -25,6 +25,7 @@ const renderLayout = require('./render-layout');
  *     Returns the rendered error page.
  */
 function renderErrorPage({ request, response, serializedError }) {
+	const appName = process.env.SYSTEM_CODE || 'application';
 	return renderLayout({
 		body: `
 			<h1 id="errors">Error information</h1>
@@ -33,7 +34,7 @@ function renderErrorPage({ request, response, serializedError }) {
 			${renderResponse(response)}
 		`,
 		request,
-		response
+		title: escape(`${serializedError.name} in ${appName}`)
 	});
 }
 
