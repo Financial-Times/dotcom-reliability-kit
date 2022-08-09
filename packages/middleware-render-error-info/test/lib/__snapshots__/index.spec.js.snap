@@ -184,7 +184,7 @@ target=\\"_blank\\"
 <span class=\\"kv-list__label\\">Stack:</span>
 <br/><small>The full stack trace for the error, indicating where it was thrown</small>
 </dt>
-<dd class=\\"kv-list__value\\"><pre><code>mock serialized error stack</code></pre></dd>
+<dd class=\\"kv-list__value\\"><pre><code>mock serialized error stack &lt;script&gt;oops&lt;/script&gt;</code></pre></dd>
 
 <dt class=\\"kv-list__key\\">
 <span class=\\"kv-list__label\\">Cause:</span>

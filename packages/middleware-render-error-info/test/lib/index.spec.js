@@ -28,7 +28,7 @@ serializeError.mockReturnValue({
 	message: 'mock serialized error message',
 	name: 'MockSerializedError',
 	relatesToSystems: ['mock-system-1', 'mock-system-2'],
-	stack: 'mock serialized error stack',
+	stack: 'mock serialized error stack <script>oops</script>',
 	statusCode: 456
 });
 
