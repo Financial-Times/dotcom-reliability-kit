@@ -2,6 +2,7 @@
  * @module @dotcom-reliability-kit/middleware-render-error-info/lib/render-error-page
  */
 
+const entities = require('entities');
 const renderLayout = require('./render-layout');
 
 /**
@@ -379,10 +380,7 @@ function renderAsJson(value) {
  *     Returns the HTML-escaped value.
  */
 function escape(value) {
-	return `${value}`
-		.replace(/</g, '&lt;')
-		.replace(/>/g, '&gt;')
-		.replace(/"/g, '&quot;');
+	return entities.escapeUTF8(`${value}`);
 }
 
 module.exports = renderErrorPage;
