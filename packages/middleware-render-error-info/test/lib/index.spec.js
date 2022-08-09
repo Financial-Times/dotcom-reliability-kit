@@ -42,6 +42,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 
 	beforeEach(() => {
 		process.env.NODE_ENV = 'development';
+		process.env.SYSTEM_CODE = 'mock-system-code';
 		middleware = createErrorRenderingMiddleware();
 	});
 
@@ -105,6 +106,38 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 
 		it('does not call `next` with the original error', () => {
 			expect(next).toBeCalledTimes(0);
+		});
+
+		describe('when the `SYSTEM_CODE` environment variable is not set', () => {
+			beforeEach(() => {
+				delete process.env.SYSTEM_CODE;
+				middleware = createErrorRenderingMiddleware();
+				response.send = jest.fn();
+				middleware(error, request, response, next);
+			});
+
+			it('uses the default system code in the Origami Build Service URLs', () => {
+				expect(response.send).toBeCalledTimes(1);
+				const html = response.send.mock.calls[0][0];
+				expect(typeof html).toBe('string');
+
+				// Regular expressions expecting the URL-encoded Origami default system code
+				expect(html).toMatch(
+					/bundles\/css\?system_code=%24%24%24-no-bizops-system-code-%24%24%24/i
+				);
+				expect(html).toMatch(
+					/bundles\/js\?system_code=%24%24%24-no-bizops-system-code-%24%24%24/i
+				);
+			});
+
+			it('uses a default "application" string in the page title', () => {
+				expect(response.send).toBeCalledTimes(1);
+				const html = response.send.mock.calls[0][0];
+				expect(typeof html).toBe('string');
+				expect(html).toMatch(
+					/<title>MockSerializedError in application<\/title>/
+				);
+			});
 		});
 
 		describe('when the serialized error does not have a `statusCode` property', () => {

@@ -4,29 +4,17 @@
 
 const fs = require('fs');
 
-// We need a system code for the system. Most of our apps supply a SYSTEM_CODE
-// environment variable. If this is not possible then we fall back to the Origami
-// default: https://www.ft.com/__origami/service/build/v3/docs/api#get-v3-bundles-css
-const systemCode = '$$$-no-bizops-system-code-$$$';
-
-// Build service URLs don't change per-request so work them out here
 const buildServiceBaseUrl = 'https://www.ft.com/__origami/service/build/v3';
-const buildServiceParams = new URLSearchParams({
-	system_code: systemCode,
-	brand: 'internal',
-	components: [
-		'o-autoinit@^3.1.3',
-		'o-spacing@^3.2.1',
-		'o-colors@^6.4.2',
-		'o-layout@^5.2.3',
-		'o-header-services@^5.2.3',
-		'o-footer-services@^4.2.3',
-		'o-syntax-highlight@^4.2.3',
-		'o-message@^5.3.1'
-	].join(',')
-});
-const buildServiceCssBundle = `${buildServiceBaseUrl}/bundles/css?${buildServiceParams}`;
-const buildServiceJsBundle = `${buildServiceBaseUrl}/bundles/js?${buildServiceParams}`;
+const buildServiceComponents = [
+	'o-autoinit@^3.1.3',
+	'o-spacing@^3.2.1',
+	'o-colors@^6.4.2',
+	'o-layout@^5.2.3',
+	'o-header-services@^5.2.3',
+	'o-footer-services@^4.2.3',
+	'o-syntax-highlight@^4.2.3',
+	'o-message@^5.3.1'
+];
 
 // Load CSS syncronously, this is only run once during startup so won't
 // negatively impact the app performance while running
@@ -38,8 +26,8 @@ const styles = fs.readFileSync(`${__dirname}/render-error-page.css`, 'utf-8');
  *     The main body of the page.
  * @property {import('express').Request} request
  *     An Express request object.
- * @property {import('express').Response} response
- *     An Express response object.
+ * @property {string} title
+ *     The page title.
  */
 
 /**
@@ -51,18 +39,18 @@ const styles = fs.readFileSync(`${__dirname}/render-error-page.css`, 'utf-8');
  * @returns {string}
  *     Returns the rendered error page.
  */
-function renderLayout({ body, request }) {
+function renderLayout({ body, request, title }) {
 	return `
 		<!DOCTYPE html>
 		<html lang="en">
 			<head>
 				<meta charset="utf-8" />
 				<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-				<title>Error Info</title>
+				<title>${title}</title>
 				<meta name="viewport" content="initial-scale=1.0, width=device-width" />
-				<link rel="stylesheet" type="text/css" href="${buildServiceCssBundle}" />
+				<link rel="stylesheet" type="text/css" href="${getBuildServiceUrl('css')}" />
 				<style>${styles}</style>
-				<script defer="" src="${buildServiceJsBundle}"></script>
+				<script defer="" src="${getBuildServiceUrl('js')}"></script>
 			</head>
 			<body>
 				<div class="o-layout o-layout--docs" data-o-component="o-layout" data-o-layout-construct-nav="true">
@@ -122,6 +110,27 @@ function renderLayout({ body, request }) {
 			</body>
 		</html>
 	`;
+}
+
+/**
+ * Get an Origami Build Service bundle URL.
+ *
+ * @access private
+ * @param {'css'|'js'} type
+ *     The type of bundle to return a URL for.
+ * @returns {string}
+ *     Returns the bundle URL.
+ */
+function getBuildServiceUrl(type) {
+	const buildServiceParams = new URLSearchParams({
+		// We need a system code for the system. Most of our apps supply a SYSTEM_CODE
+		// environment variable. If this is not possible then we fall back to the Origami
+		// default: https://www.ft.com/__origami/service/build/v3/docs/api#get-v3-bundles-css
+		system_code: process.env.SYSTEM_CODE || '$$$-no-bizops-system-code-$$$',
+		brand: 'internal',
+		components: buildServiceComponents.join(',')
+	});
+	return `${buildServiceBaseUrl}/bundles/${type}?${buildServiceParams}`;
 }
 
 module.exports = renderLayout;

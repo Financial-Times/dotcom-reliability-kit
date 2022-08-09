@@ -6,9 +6,9 @@ exports[`@dotcom-reliability-kit/middleware-render-error-info middleware(error, 
 <head>
 <meta charset=\\"utf-8\\" />
 <meta http-equiv=\\"X-UA-Compatible\\" content=\\"IE=Edge\\" />
-<title>Error Info</title>
+<title>MockSerializedError in mock-system-code</title>
 <meta name=\\"viewport\\" content=\\"initial-scale=1.0, width=device-width\\" />
-<link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"https://www.ft.com/__origami/service/build/v3/bundles/css?system_code=%24%24%24-no-bizops-system-code-%24%24%24&brand=internal&components=o-autoinit%40%5E3.1.3%2Co-spacing%40%5E3.2.1%2Co-colors%40%5E6.4.2%2Co-layout%40%5E5.2.3%2Co-header-services%40%5E5.2.3%2Co-footer-services%40%5E4.2.3%2Co-syntax-highlight%40%5E4.2.3%2Co-message%40%5E5.3.1\\" />
+<link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"https://www.ft.com/__origami/service/build/v3/bundles/css?system_code=mock-system-code&brand=internal&components=o-autoinit%40%5E3.1.3%2Co-spacing%40%5E3.2.1%2Co-colors%40%5E6.4.2%2Co-layout%40%5E5.2.3%2Co-header-services%40%5E5.2.3%2Co-footer-services%40%5E4.2.3%2Co-syntax-highlight%40%5E4.2.3%2Co-message%40%5E5.3.1\\" />
 <style>
 /* Override to avoid super long pages and make pre elements scroll */
 pre {
@@ -66,7 +66,7 @@ color: var(--o-colors-jade);
 color: var(--o-colors-crimson);
 }
 </style>
-<script defer=\\"\\" src=\\"https://www.ft.com/__origami/service/build/v3/bundles/js?system_code=%24%24%24-no-bizops-system-code-%24%24%24&brand=internal&components=o-autoinit%40%5E3.1.3%2Co-spacing%40%5E3.2.1%2Co-colors%40%5E6.4.2%2Co-layout%40%5E5.2.3%2Co-header-services%40%5E5.2.3%2Co-footer-services%40%5E4.2.3%2Co-syntax-highlight%40%5E4.2.3%2Co-message%40%5E5.3.1\\"></script>
+<script defer=\\"\\" src=\\"https://www.ft.com/__origami/service/build/v3/bundles/js?system_code=mock-system-code&brand=internal&components=o-autoinit%40%5E3.1.3%2Co-spacing%40%5E3.2.1%2Co-colors%40%5E6.4.2%2Co-layout%40%5E5.2.3%2Co-header-services%40%5E5.2.3%2Co-footer-services%40%5E4.2.3%2Co-syntax-highlight%40%5E4.2.3%2Co-message%40%5E5.3.1\\"></script>
 </head>
 <body>
 <div class=\\"o-layout o-layout--docs\\" data-o-component=\\"o-layout\\" data-o-layout-construct-nav=\\"true\\">
