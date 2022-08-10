@@ -1,4 +1,4 @@
-const OperationalError = require('../../lib/operational-error');
+const OperationalError = require('../../../lib/operational-error');
 
 describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 	afterEach(() => {

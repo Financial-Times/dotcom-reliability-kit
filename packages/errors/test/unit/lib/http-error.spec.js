@@ -1,5 +1,5 @@
-const HttpError = require('../../lib/http-error');
-const OperationalError = require('../../lib/operational-error');
+const HttpError = require('../../../lib/http-error');
+const OperationalError = require('../../../lib/operational-error');
 
 jest.mock('http', () => ({
 	STATUS_CODES: {
