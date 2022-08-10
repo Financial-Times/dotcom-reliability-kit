@@ -17,7 +17,6 @@
 		}
 	},
 	"projects": [
-		"<rootDir>/examples/*",
 		"<rootDir>/packages/*"
 	],
 	"testEnvironment": "node"
