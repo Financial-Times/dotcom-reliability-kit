@@ -23,7 +23,6 @@
     "@dotcom-reliability-kit/log-error": "*",
     "@dotcom-reliability-kit/middleware-log-errors": "*",
     "@dotcom-reliability-kit/middleware-render-error-info": "*",
-    "@dotcom-reliability-kit/serialize-error": "*",
     "@financial-times/n-express": "^25.1.1"
   }
 }
