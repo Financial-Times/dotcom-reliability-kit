@@ -19,7 +19,7 @@
 		{
 			"type": "chore",
 			"section": "Miscellaneous",
-			"hidden": false
+			"hidden": true
 		}
 	],
 	"prerelease": true,
