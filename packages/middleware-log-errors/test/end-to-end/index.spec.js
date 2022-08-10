@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const { fork } = require('child_process');
 
-describe('@dotcom-reliability-kit/middleware-log-errors integration', () => {
+describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	let child;
 	let stderr = '';
 	let baseUrl;
