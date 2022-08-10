@@ -1,7 +1,7 @@
 
 ## Reliability Kit Express Example
 
-This is an example Express application which illustrates how to use [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme). It's also used to run integration tests for some of the core packages.
+This is an example Express application which illustrates how to use [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
 Most of the code for this example app is in [`app.js`](./app.js). It's important to remember that this app isn't an example of how to correctly set up a Financial Times Express application – it's used to illustrate how to integrate Reliability Kit into an express app with as little boilerplate code as possible.
 
