@@ -1,7 +1,7 @@
-const errors = require('../..');
+const errors = require('../../..');
 
-jest.mock('../../lib/http-error', () => 'mock-http-error');
-jest.mock('../../lib/operational-error', () => 'mock-operational-error');
+jest.mock('../../../lib/http-error', () => 'mock-http-error');
+jest.mock('../../../lib/operational-error', () => 'mock-operational-error');
 
 describe('@dotcom-reliability-kit/errors', () => {
 	it('exports an object', () => {

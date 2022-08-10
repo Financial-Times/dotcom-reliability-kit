@@ -1,4 +1,4 @@
-const serializeError = require('../../lib/index');
+const serializeError = require('../../../lib/index');
 
 describe('@dotcom-reliability-kit/serialize-error', () => {
 	describe('when called with an error object', () => {

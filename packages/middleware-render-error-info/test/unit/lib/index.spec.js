@@ -1,4 +1,4 @@
-const createErrorRenderingMiddleware = require('../../lib/index');
+const createErrorRenderingMiddleware = require('../../../lib/index');
 
 jest.mock('@dotcom-reliability-kit/serialize-error', () => jest.fn());
 const serializeError = require('@dotcom-reliability-kit/serialize-error');

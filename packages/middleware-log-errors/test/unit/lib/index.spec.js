@@ -1,4 +1,4 @@
-const createErrorLoggingMiddleware = require('../../lib/index');
+const createErrorLoggingMiddleware = require('../../../lib/index');
 
 jest.mock('@dotcom-reliability-kit/log-error', () => ({
 	logHandledError: jest.fn().mockReturnValue('mock-serialized-error')

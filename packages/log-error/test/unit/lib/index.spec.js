@@ -2,7 +2,7 @@ const {
 	logHandledError,
 	logRecoverableError,
 	logUnhandledError
-} = require('../../lib/index');
+} = require('../../../lib/index');
 
 jest.mock('@financial-times/n-logger', () => ({
 	default: { log: jest.fn() }

@@ -73,8 +73,8 @@ module.exports = {};
 	);
 
 	// Bootstrap test JavaScript files
-	console.log('🏗  adding "test/lib/index.spec.js"');
-	const testPath = path.join(packagePath, 'test', 'lib');
+	console.log('🏗  adding "test/unit/lib/index.spec.js"');
+	const testPath = path.join(packagePath, 'test', 'unit', 'lib');
 	await fs.mkdir(testPath, { recursive: true });
 	await fs.writeFile(
 		path.join(testPath, 'index.spec.js'),

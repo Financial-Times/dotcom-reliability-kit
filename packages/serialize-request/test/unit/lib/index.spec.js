@@ -1,4 +1,4 @@
-const serializeRequest = require('../../lib/index');
+const serializeRequest = require('../../../lib/index');
 
 describe('@dotcom-reliability-kit/serialize-request', () => {
 	describe('when called with an `http.IncomingMessage` object', () => {
