@@ -5,6 +5,17 @@
 const entities = require('entities');
 const renderLayout = require('./render-layout');
 
+const X_API_KEY_REQUEST_PROPERTY_NAME = 'x-api-key';
+const COOKIE_REQUEST_PROPERTY_NAME = 'cookie';
+
+const CONCEALED_REQUEST_PROPERTY_NAMES = new Set([
+	X_API_KEY_REQUEST_PROPERTY_NAME,
+	COOKIE_REQUEST_PROPERTY_NAME
+]);
+
+const CONCEALED_VALUE_MESSAGE =
+	'** This value is likely sensitive and should be examined via other tools **';
+
 /**
  * @typedef {object} ErrorRenderingOptions
  * @property {import('express').Request} request
@@ -160,14 +171,18 @@ function renderRequest(request) {
 			...Object.entries(request.query).map(([key, value]) => {
 				return {
 					label: `Query (${key})`,
-					value,
+					value: CONCEALED_REQUEST_PROPERTY_NAMES.has(key.toLowerCase())
+						? CONCEALED_VALUE_MESSAGE
+						: value,
 					formatter: renderCodeBlock
 				};
 			}),
 			...Object.entries(request.headers).map(([key, value]) => {
 				return {
 					label: `Header (${key})`,
-					value,
+					value: CONCEALED_REQUEST_PROPERTY_NAMES.has(key.toLowerCase())
+						? CONCEALED_VALUE_MESSAGE
+						: value,
 					formatter: renderCodeBlock
 				};
 			})
