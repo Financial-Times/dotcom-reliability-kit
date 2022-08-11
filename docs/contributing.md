@@ -15,8 +15,10 @@ We're glad you want to contribute to Reliability Kit!
   * [Committing](#committing)
     * [Commit type prefixes](#commit-type-prefixes)
     * [Commit linting](#commit-linting)
+    * [Pull request scope](#pull-request-scope)
     * [Merging pull requests](#merging-pull-requests)
   * [Releasing](#releasing)
+    * [Correcting releases](#correcting-releases)
 
 
 ## Requirements
@@ -141,10 +143,18 @@ Indicate a breaking change by placing an `!` between the type name and the colon
 feat!: add a breaking feature
 ```
 
-
 ### Commit linting
 
 We use [commitlint](https://commitlint.js.org/) to enforce standard commit messages. If you're reviewing pull requests in this project then be sure to check that all commit messages conform anyway.
+
+### Pull request scope
+
+Because of the way [our release process](#releasing) works (as well as smaller focused PRs being easier to understand and review) it's important to consider the scope of the changes in your PR. When calculating the next version bump for a package, Release Please will look at all the files in the pull request rather than just the files related to the individual commits. This can cause unwanted version bumps, e.g. a `docs` changes in the root of the repo can end up creating extra `patch` releases of packages that aren't actually impacted by it.
+
+This makes it important to consider whether the changes you're making outside of the `packages` folder really belong in the same PR as changes to packages. If you're making broad changes to the repo this can result in unnecessary version bumps for packages if you use anything other than a `chore` commit for them.
+
+If superflous releases are generated after merging a PR, [it's possible to fix it](#correcting-releases).
+
 
 ### Merging pull requests
 
@@ -160,3 +170,15 @@ When a commit with the `feat` or `fix` [commit type prefix](#commit-type-prefixe
 If the PR is left alone, it will continue to be updated with new releases as more commits appear on the `main` branch.
 
 Before approving and merging the release PR, make sure you review it. You need to check the package versions that it updates to make sure you’re only releasing the things you expect.
+
+### Correcting releases
+
+Sometimes the releases that Release Please decides to create may be incorrect, because of the way it bumps packages for _all_ changed files in a PR. Considering [pull request scope](#pull-request-scope) is important, but sometimes it's unavoidable that some additional changes sneak in. In this case it's possible to change the releases that an already-merged PR will create.
+
+[Update the PR description with a special override to correct the release type](https://github.com/googleapis/release-please/blob/main/README.md#how-can-i-fix-release-notes) and re-run the Release Please command locally (where `XXXXXX` is a GitHub token with write access to the Reliability Kit repo):
+
+```
+npx release-please release-pr --token="XXXXXX" --repo-url="Financial-Times/dotcom-reliability-kit"
+```
+
+[There's an example of a PR which we did this for here](https://github.com/Financial-Times/dotcom-reliability-kit/pull/116).
