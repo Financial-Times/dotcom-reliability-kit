@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.0.0...middleware-render-error-info-v1.0.1) (2022-08-11)
+
+
+### Bug Fixes
+
+* remove a lie from the example README ([8a6ce2d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8a6ce2dbb21c6a8c7a2560ec58ac42852ae34f64))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.3
+    * @dotcom-reliability-kit/serialize-error bumped from ^1.1.0 to ^1.1.2
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v0.1.0...middleware-render-error-info-v1.0.0) (2022-08-09)
 
 

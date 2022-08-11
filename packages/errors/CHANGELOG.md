@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.1...errors-v1.1.2) (2022-08-11)
+
+
+### Bug Fixes
+
+* remove a lie from the example README ([8a6ce2d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8a6ce2dbb21c6a8c7a2560ec58ac42852ae34f64))
+
 ## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.0...errors-v1.1.1) (2022-08-05)
 
 
