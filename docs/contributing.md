@@ -175,10 +175,12 @@ Before approving and merging the release PR, make sure you review it. You need t
 
 Sometimes the releases that Release Please decides to create may be incorrect, because of the way it bumps packages for _all_ changed files in a PR. Considering [pull request scope](#pull-request-scope) is important, but sometimes it's unavoidable that some additional changes sneak in. In this case it's possible to change the releases that an already-merged PR will create.
 
-[Update the PR description with a special override to correct the release type](https://github.com/googleapis/release-please/blob/main/README.md#how-can-i-fix-release-notes) and re-run the Release Please command locally (where `XXXXXX` is a GitHub token with write access to the Reliability Kit repo):
+[Update the PR description with a special override to correct the release type](https://github.com/googleapis/release-please/blob/main/README.md#how-can-i-fix-release-notes) and re-run the Release Please command locally:
 
 ```
 npx release-please release-pr --token="XXXXXX" --repo-url="Financial-Times/dotcom-reliability-kit"
 ```
+
+In this command, change `XXXXXX` to a GitHub token with write access to the Reliability Kit repo. This can be a personal or bot token, but it's best to use the one defined in the [Dotcom Reliability Kit vault](https://vault.in.ft.com:8080/ui/vault/secrets/secret/show/teams/next/dotcom-reliability-kit/continuous-integration) as `RELEASE_PLEASE_GITHUB_TOKEN`.
 
 [There's an example of a PR which we did this for here](https://github.com/Financial-Times/dotcom-reliability-kit/pull/116).
