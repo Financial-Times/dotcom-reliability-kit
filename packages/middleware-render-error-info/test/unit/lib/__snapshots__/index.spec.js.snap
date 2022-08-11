@@ -297,10 +297,22 @@ See the <a href=\\"https://github.com/Financial-Times/dotcom-reliability-kit/blo
 <dd class=\\"kv-list__value\\"><pre><code>yes</code></pre></dd>
 
 <dt class=\\"kv-list__key\\">
+<span class=\\"kv-list__label\\">Query (x-api-key):</span>
+
+</dt>
+<dd class=\\"kv-list__value\\"><pre><code>** This value is likely sensitive and should be examined via other tools **</code></pre></dd>
+
+<dt class=\\"kv-list__key\\">
 <span class=\\"kv-list__label\\">Header (mock-request-header):</span>
 
 </dt>
 <dd class=\\"kv-list__value\\"><pre><code>yes</code></pre></dd>
+
+<dt class=\\"kv-list__key\\">
+<span class=\\"kv-list__label\\">Header (cookie):</span>
+
+</dt>
+<dd class=\\"kv-list__value\\"><pre><code>** This value is likely sensitive and should be examined via other tools **</code></pre></dd>
 
 </dl>
 </section>

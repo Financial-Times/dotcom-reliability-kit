@@ -58,10 +58,12 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				method: 'mock request method',
 				path: 'mock request path',
 				query: {
-					'mock-request-query': 'yes'
+					'mock-request-query': 'yes',
+					'x-api-key': 'foo' // 'x-api-key' is a concealed request property name
 				},
 				headers: {
-					'mock-request-header': 'yes'
+					'mock-request-header': 'yes',
+					cookie: 'bar' // 'cookie' is a concealed request property name
 				}
 			};
 			response = {
