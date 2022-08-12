@@ -134,7 +134,7 @@ The prefix is used to calculate the semver release level:
 | --------- | ------------------------------------------------------ | ------------- |
 | feat      | a feature has been added                               | `minor`       |
 | fix       | a bug has been patched                                 | `patch`       |
-| docs      | a change to documentation                              | none          |
+| docs      | a change to documentation                              | `patch`       |
 | chore     | repo maintenance and support tasks                     | none          |
 
 Indicate a breaking change by placing an `!` between the type name and the colon, e.g.
