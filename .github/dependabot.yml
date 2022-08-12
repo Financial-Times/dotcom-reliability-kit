@@ -1,34 +1,58 @@
 version: 2
 updates:
+
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
   - package-ecosystem: "npm"
     directory: "/logos"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
   - package-ecosystem: "npm"
     directory: "/packages/errors"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
   - package-ecosystem: "npm"
     directory: "/packages/log-error"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
   - package-ecosystem: "npm"
     directory: "/packages/middleware-log-errors"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
   - package-ecosystem: "npm"
     directory: "/packages/middleware-render-error-info"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
   - package-ecosystem: "npm"
     directory: "/packages/serialize-error"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
   - package-ecosystem: "npm"
     directory: "/packages/serialize-request"
     schedule:
       interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
