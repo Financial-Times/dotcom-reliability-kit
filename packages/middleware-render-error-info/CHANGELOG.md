@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.0.0...middleware-render-error-info-v1.1.0) (2022-08-12)
+
+
+### Features
+
+* conceal sensitive values in middleware-render-error-info display ([739573e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/739573e0af4b098d228438d80f997e45118966bc))
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v0.1.0...middleware-render-error-info-v1.0.0) (2022-08-09)
 
 
