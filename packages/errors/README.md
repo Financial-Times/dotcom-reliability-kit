@@ -10,6 +10,9 @@ A suite of error classes which help you throw the most appropriate error in any 
       * [`.isErrorMarkedAsOperational`](#operationalerroriserrormarkedasoperational)
     * [`HttpError`](#httperror)
       * [Why use this over `http-errors`?](#why-use-this-over-http-errors)
+    * [`DataStoreError`](#datastoreerror)
+    * [`UpstreamServiceError`](#upstreamserviceerror)
+    * [`UserInputError`](#userinputerror)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -38,7 +41,9 @@ The `OperationalError` class is the base class for most other error types. "Oper
 
 [Joyent's Error Handling docs](https://web.archive.org/web/20220223020910/https://www.joyent.com/node-js/production/design/errors) have a good explanation of Operational Errors.
 
-It works in the same way as a normal error, expecting a message:
+It's always best to use a more specific error, e.g. [`UpstreamServiceError`](#upstreamserviceerror), if one exists that suits your needs. So review the docs here to find the most suitable error.
+
+`OperationalError` can work in the same way as a normal error, expecting a message:
 
 ```js
 throw new OperationalError('example message');
@@ -132,6 +137,58 @@ error.code // HTTP_404
 
 The benefit of using this error rather than the excellent [http-errors](https://github.com/jshttp/http-errors#readme) library is that we extend `OperationalError` by default. This means that all HTTP errors you throw are considered "known errors" by the rest of our tooling. We also set a `code` property by default which results in less code in our monitoring dashboards – we don't need to check both `code` and `statusCode` properties to determine the type of error thrown.
 
+### `DataStoreError`
+
+The `DataStoreError` class extends `OperationalError` and represents an error which occurred while accessing a data store, e.g. MongoDB, PostgreSQL, or Redis. It has all of the features of operational errors, you can construct with just a message:
+
+```js
+throw new DataStoreError('Could not connect to Redis');
+```
+
+You can alternatively construct a data store error with a data object. You can use any of the properties defined in [`OperationalError`](#operationalerror):
+
+```js
+throw new DataStoreError({
+    code: 'REDIS_CONNECTION_FAILED',
+    message: 'Could not connect to Redis',
+});
+```
+
+### `UpstreamServiceError`
+
+The `UpstreamServiceError` class extends `HttpError` and represents an error which occurred while connecting to an upstream service, e.g. an FT or third-party API. It has all of the features of operational and HTTP errors, you can construct with just a message:
+
+```js
+throw new UpstreamServiceError('Content could not be fetched');
+```
+
+You can alternatively construct an upstream service error with a data object. You can use any of the properties defined in [`HttpError`](#httperror) and [`OperationalError`](#operationalerror):
+
+```js
+throw new UpstreamServiceError({
+    code: 'CONTENT_PIPELINE_FAILED',
+    message: 'Content could not be fetched, the content pipeline is responding with a 503 status',
+    statusCode: 503,
+    relatesToSystems: ['cp-content-pipeline-graphql']
+});
+```
+
+### `UserInputError`
+
+The `UserInputError` class extends `HttpError` and represents an error which occurred based on invalid user input, e.g. they inputted a malformed email address into a form. It has all of the features of operational and HTTP errors but defaults to a `400` status code. You can construct with just a message:
+
+```js
+throw new UserInputError('An invalid email address was input');
+```
+
+You can alternatively construct a user input error with a data object. You can use any of the properties defined in [`HttpError`](#httperror) and [`OperationalError`](#operationalerror):
+
+```js
+throw new UserInputError({
+    code: 'REGISTRATION_INFO_INVALID',
+    message: 'An invalid email address was input'
+});
+```
 
 ## Contributing
 

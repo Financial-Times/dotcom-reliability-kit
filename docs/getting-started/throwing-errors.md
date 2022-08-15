@@ -12,6 +12,8 @@ Throwing good errors is key to producing a reliable application. Most of Reliabi
     * [Using error objects](#using-error-objects)
     * [Making errors human readable](#making-errors-human-readable)
     * [Making errors machine readable](#making-errors-machine-readable)
+      * [Error codes](#error-codes)
+      * [Error classes](#error-classes)
     * [Adding more data](#adding-more-data)
     * [Being specific](#being-specific)
 
@@ -75,6 +77,8 @@ app.get('/pokemon/:name', async (request, response, next) => {
     }
 });
 ```
+
+**Note:** we do provide many more error classes in Reliability Kit, and it's always good to use the most specific one. Most of our examples use `OperationalError` for simplicity (and to not overload you with information), but the section on [error classes](#error-classes) covers some of these other error types.
 
 ### Operational errors in library code
 
@@ -182,6 +186,8 @@ Config file at path mock/config.json does not exist
 
 Great for humans, but bad if we want to run a report like "how many times does the app crash because our config loader fails"? That's where the error `code` property is useful.
 
+#### Error codes
+
 Node.js uses `error.code` internally to help us identify error types, e.g.
 
 ```js
@@ -209,6 +215,38 @@ throw new OperationalError({
 ```
 
 Your error codes should uniquely identify a _type_ of error your app can throw. It's up to your team whether you'd like to include a prefix or something to help organise, e.g. `API_` when a third-party API fails in some way, or `INVALID_` when the error is a result of user input.
+
+#### Error classes
+
+As well as error codes, you can identify the _class_ of error by using different JavaScript classes which extend the base `Error` object. `OperationalError` is one example, but there are also built-in error classes which you may have come across before, e.g.
+
+  * [`TypeError`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypeError) which indicates that a value was not of the expected type
+  * [`RangeError`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RangeError) which indicates that a value was not in the expected range
+
+There's a subtle difference between error classes and error codes. It's helpful to think of the error class (and thus the error's `name` property) as an indicator of the general classification of error encountered, and the `code` property as unique to the specific type of error being thrown.
+
+Let's illustrate this with an example. Let's say the Pokémon API from our previous examples fails with a `503` status code, we could use:
+
+  * a _class_ of `UpstreamServiceError`, which would help our tooling to understand how often all our systems error due to upstream services failing
+  * a _code_ of `POKEMON_API_UNAVAILABLE` which helps our tooling identify specifically _which_ upstream services are failing and why
+
+In code it'd look something like this, using Reliability Kit's [`UpstreamServiceError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#upstreamserviceerror):
+
+```js
+throw new UpstreamServiceError({
+    code: 'POKEMON_API_UNAVAILABLE',
+    message: `The Pokemon API responded with a 503 status`,
+    relatesToSystems: ['pokeapi']
+});
+```
+
+You can do this relatively easily by using Reliability Kit's built-in error classes, [`DataStoreError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#datastoreerror), [`HttpError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#httperror), [`UpstreamServiceError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#upstreamserviceerror), and [`UserInputError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#userinputerror). Or you could extend one of these errors yourself to get something more suitable to your needs:
+
+```js
+class PermissionsError extends OperationalError {
+    name = 'PermissionsError';
+}
+```
 
 ### Adding more data
 
@@ -243,7 +281,7 @@ try {
         cause: error
     });
 }
-````
+```
 
 ### Being specific
 
