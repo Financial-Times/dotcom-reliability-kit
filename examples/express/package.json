@@ -12,7 +12,7 @@
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
   "license": "MIT",
   "engines": {
-    "node": "14.x || 16.x",
+    "node": "14.x || 16.x || 18.x",
     "npm": "7.x || 8.x"
   },
   "scripts": {
