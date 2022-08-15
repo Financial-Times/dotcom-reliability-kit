@@ -129,7 +129,7 @@ In this scenario we have the following possible errors which we know can make it
 
   * The fruit API does not have a fruit matching `request.params.name` and so the client throws an error with a `statusCode` property set to `404`
 
-Let's update our `catch` block to handle these cases (Note: this example uses `HttpError` from the [`@dotcom-reliability-kit/errors`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#readme) package):
+Let's update our `catch` block to handle these cases (Note: this example uses `UpstreamServiceError` and `UserInputError` from the [`@dotcom-reliability-kit/errors`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#readme) package):
 
 ```js
 // E.g. GET https://your-app/fruit/feijoa
@@ -144,8 +144,7 @@ app.get('/fruit/:name', async (request, response, next) => {
         // `error.code` is "ERR_ASSERTION". We throw a 400 error
         // in this case to indicate that the input was invalid
         if (error.code === 'ERR_ASSERTION') {
-            return next(new HttpError({
-                statusCode: 400,
+            return next(new UserInputError({
                 code: 'FRUIT_NAME_NOT_PROVIDED',
                 message: 'A fruit name was not provided'
             }));
@@ -154,7 +153,7 @@ app.get('/fruit/:name', async (request, response, next) => {
         // If the fruit was not found, we throw a new 404 error
         // with some added detail
         if (error.statusCode === 404) {
-            return next(new HttpError({
+            return next(new UserInputError({
                 statusCode: 404,
                 code: 'FRUIT_NOT_FOUND',
                 message: `The fruit ${request.params.name} was not found in the fruit API`
@@ -167,7 +166,7 @@ app.get('/fruit/:name', async (request, response, next) => {
         // received an invalid response from an upstream server.
         // We can also indicate the system which caused the error
         if (error.statusCode === 503) {
-            return next(new HttpError({
+            return next(new UpstreamServiceError({
                 statusCode: 502,
                 code: 'FRUIT_API_FAILED',
                 message: 'The fruit API was not reachable',
@@ -235,7 +234,7 @@ app.get('/people/:person/favourite-fruit', async (request, response, next) => {
             // We throw here rather than passing to `next` because it allows
             // us to handle all of that in one place – the final try/catch
             if (error.statusCode === 503) {
-                throw new HttpError({
+                throw new UpstreamServiceError({
                     statusCode: 502,
                     code: 'PERSON_API_FAILED',
                     message: 'The person API was not reachable',
@@ -255,7 +254,7 @@ app.get('/people/:person/favourite-fruit', async (request, response, next) => {
             // We throw here rather than passing to `next` because it allows
             // us to handle all of that in one place – the final try/catch
             if (error.statusCode === 503) {
-                throw new HttpError({
+                throw new UpstreamServiceError({
                     statusCode: 502,
                     code: 'FRUIT_API_FAILED',
                     message: 'The fruit API was not reachable',
