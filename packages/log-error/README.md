@@ -49,7 +49,9 @@ This will automatically [serialize error objects](https://github.com/Financial-T
     message: 'Error: something went wrong',
 
     error: {
-        // See `@dotcom-reliability-kit/serialize-error` (linked above)
+        code: 'EXAMPLE_CODE',
+        message: 'Something went wrong'
+        // etc. (see `@dotcom-reliability-kit/serialize-error` linked above
         // for information about the logged properties
     },
 
@@ -81,7 +83,9 @@ The information logged looks like this:
     message: 'Error: something went wrong',
 
     error: {
-        // See `@dotcom-reliability-kit/serialize-error` (linked above)
+        code: 'EXAMPLE_CODE',
+        message: 'Something went wrong'
+        // etc. (see `@dotcom-reliability-kit/serialize-error` linked above
         // for information about the logged properties
     },
 
@@ -113,7 +117,9 @@ The information logged looks like this:
     message: 'Error: something went wrong',
 
     error: {
-        // See `@dotcom-reliability-kit/serialize-error` (linked above)
+        code: 'EXAMPLE_CODE',
+        message: 'Something went wrong'
+        // etc. (see `@dotcom-reliability-kit/serialize-error` linked above
         // for information about the logged properties
     },
 
@@ -163,6 +169,8 @@ logRecoverableError({
 });
 ```
 
+**Note:** there's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
+
 #### `options.request`
 
 A request object (e.g. an instance of `Express.Request` or an object with `method` and `url` properties) to include alongside the error in the log. This will be [automatically serialized with `@dotcom-reliability-kit/serialize-request`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-request#readme).
@@ -185,13 +193,18 @@ When this option is defined, the logged data looks includes request data:
     message: 'Error: something went wrong',
 
     error: {
-        // See `@dotcom-reliability-kit/serialize-error` (linked above)
+        code: 'EXAMPLE_CODE',
+        message: 'Something went wrong'
+        // etc. (see `@dotcom-reliability-kit/serialize-error` linked above
         // for information about the logged properties
     },
 
     request: {
-        // See `@dotcom-reliability-kit/serialize-request` (linked above)
-        // for information about the logged properties
+        id: 'abc123',
+        method: 'GET',
+        url: '/'
+        // etc. (see `dotcom-reliability-kit/serialize-request` linked above
+        // for information about the logged properties)
     },
 
     app: {

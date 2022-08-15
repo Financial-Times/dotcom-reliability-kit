@@ -45,13 +45,18 @@ This will automatically [serialize error objects](https://github.com/Financial-T
     message: 'Error: something went wrong',
 
     error: {
-        // See `@dotcom-reliability-kit/serialize-error` (linked above)
+        code: 'EXAMPLE_CODE',
+        message: 'Something went wrong'
+        // etc. (see `@dotcom-reliability-kit/serialize-error` linked above
         // for information about the logged properties
     },
 
     request: {
-        // See `dotcom-reliability-kit/serialize-request` (linked above)
-        // for information about the logged properties
+        id: 'abc123',
+        method: 'GET',
+        url: '/'
+        // etc. (see `dotcom-reliability-kit/serialize-request` linked above
+        // for information about the logged properties)
     },
 
     app: {
@@ -90,6 +95,8 @@ app.use(createErrorLogger({
     ]
 }));
 ```
+
+**Note:** there's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
 
 
 ## Contributing
