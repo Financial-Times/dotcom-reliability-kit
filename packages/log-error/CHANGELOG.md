@@ -12,6 +12,13 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-error bumped from ^1.1.0 to ^1.1.1
 
+## [1.3.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.2...log-error-v1.3.3) (2022-08-16)
+
+
+### Documentation Changes
+
+* clarify that x-request-id is auto-logged ([4fb32cc](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4fb32cc7cd0df2347464b5a6194819395fdf2fbb))
+
 ## [1.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.2.0...log-error-v1.3.0) (2022-08-01)
 
 
