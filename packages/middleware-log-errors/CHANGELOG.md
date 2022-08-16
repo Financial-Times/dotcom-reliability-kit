@@ -12,6 +12,20 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.2
 
+## [1.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.2...middleware-log-errors-v1.2.3) (2022-08-16)
+
+
+### Documentation Changes
+
+* clarify that x-request-id is auto-logged ([4fb32cc](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4fb32cc7cd0df2347464b5a6194819395fdf2fbb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.2 to ^1.3.3
+
 ## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.1.0...middleware-log-errors-v1.2.0) (2022-08-01)
 
 

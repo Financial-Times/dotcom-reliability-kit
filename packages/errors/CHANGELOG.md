@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.1...errors-v1.1.2) (2022-08-16)
+
+
+### Bug Fixes
+
+* correct type hinting for HTTP errors ([246877c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/246877c529088121e29c6781ab2cfb0cce9690f9))
+
 ## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.0...errors-v1.1.1) (2022-08-05)
 
 
