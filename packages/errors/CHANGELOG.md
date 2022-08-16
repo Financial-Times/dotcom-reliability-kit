@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.2...errors-v1.2.0) (2022-08-16)
+
+
+### Features
+
+* add new more specific error classes ([82b006c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/82b006c5eacc9a9d2eec4947ba4331b03e46f19d))
+
 ## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.1...errors-v1.1.2) (2022-08-16)
 
 
