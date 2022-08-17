@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.0...errors-v1.2.1) (2022-08-17)
+
+
+### Bug Fixes
+
+* default UpstreamServiceError to HTTP 502 ([42b5be9](https://github.com/Financial-Times/dotcom-reliability-kit/commit/42b5be9e1d754c3c6ed7aa013ab7dd2957cc1ce9))
+
 ## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.1.2...errors-v1.2.0) (2022-08-16)
 
 
