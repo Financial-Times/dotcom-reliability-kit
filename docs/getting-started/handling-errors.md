@@ -161,13 +161,12 @@ app.get('/fruit/:name', async (request, response, next) => {
         }
 
         // If the fruit API was down, let's throw an error which
-        // better describes what's happened. We switch the status
-        // code to 502 because that matches what's happening – we
-        // received an invalid response from an upstream server.
+        // better describes what's happened. UpstreamServiceError switches
+        // the status code to 502 because that matches what's happening –
+        // we received an invalid response from an upstream server.
         // We can also indicate the system which caused the error
         if (error.statusCode === 503) {
             return next(new UpstreamServiceError({
-                statusCode: 502,
                 code: 'FRUIT_API_FAILED',
                 message: 'The fruit API was not reachable',
                 relatesToSystems: ['fruit-api']
@@ -235,7 +234,6 @@ app.get('/people/:person/favourite-fruit', async (request, response, next) => {
             // us to handle all of that in one place – the final try/catch
             if (error.statusCode === 503) {
                 throw new UpstreamServiceError({
-                    statusCode: 502,
                     code: 'PERSON_API_FAILED',
                     message: 'The person API was not reachable',
                     relatesToSystems: ['person-api']
@@ -255,7 +253,6 @@ app.get('/people/:person/favourite-fruit', async (request, response, next) => {
             // us to handle all of that in one place – the final try/catch
             if (error.statusCode === 503) {
                 throw new UpstreamServiceError({
-                    statusCode: 502,
                     code: 'FRUIT_API_FAILED',
                     message: 'The fruit API was not reachable',
                     relatesToSystems: ['fruit-api']

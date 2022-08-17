@@ -28,8 +28,8 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 
 		describe('.code', () => {
-			it('is set to "HTTP_500"', () => {
-				expect(instance.code).toStrictEqual('HTTP_500');
+			it('is set to "HTTP_502"', () => {
+				expect(instance.code).toStrictEqual('HTTP_502');
 			});
 		});
 
@@ -40,7 +40,7 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 
 		describe('.message', () => {
-			it('is set to the status message for the default 500 code', () => {
+			it('is set to the status message for the default 502 code', () => {
 				expect(instance.message).toStrictEqual('mock status message');
 			});
 		});
@@ -52,8 +52,8 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 
 		describe('.statusCode', () => {
-			it('is set to 500', () => {
-				expect(instance.statusCode).toStrictEqual(500);
+			it('is set to 502', () => {
+				expect(instance.statusCode).toStrictEqual(502);
 			});
 		});
 
@@ -65,7 +65,7 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 
 		describe('.statusMessage', () => {
-			it('is set to the status message for the default 500 code', () => {
+			it('is set to the status message for the default 502 code', () => {
 				expect(instance.statusMessage).toStrictEqual('mock status message');
 			});
 		});
@@ -82,8 +82,8 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 
 		describe('.code', () => {
-			it('is set to "HTTP_500"', () => {
-				expect(instance.code).toStrictEqual('HTTP_500');
+			it('is set to "HTTP_502"', () => {
+				expect(instance.code).toStrictEqual('HTTP_502');
 			});
 		});
 
@@ -106,8 +106,8 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 
 		describe('.statusCode', () => {
-			it('is set to 500', () => {
-				expect(instance.statusCode).toStrictEqual(500);
+			it('is set to 502', () => {
+				expect(instance.statusCode).toStrictEqual(502);
 			});
 		});
 
@@ -119,7 +119,7 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 
 		describe('.statusMessage', () => {
-			it('is set to the status message for the default 500 code', () => {
+			it('is set to the status message for the default 502 code', () => {
 				expect(instance.statusMessage).toStrictEqual('mock status message');
 			});
 		});
