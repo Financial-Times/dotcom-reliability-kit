@@ -29,6 +29,17 @@ class UpstreamServiceError extends HttpError {
 		if (typeof data === 'number') {
 			data = { statusCode: data };
 		}
+
+		// Make sure that we don't modify the original data object
+		// by shallow-cloning it
+		data = { ...data };
+
+		// Default the status code
+		data.statusCode =
+			typeof data.statusCode === 'number'
+				? UpstreamServiceError.normalizeErrorStatusCode(data.statusCode)
+				: 502;
+
 		super(data);
 	}
 }

@@ -162,6 +162,8 @@ The `UpstreamServiceError` class extends `HttpError` and represents an error whi
 throw new UpstreamServiceError('Content could not be fetched');
 ```
 
+The HTTP status code defaults to a [502](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/502). This indicates that while connecting to an upstream service, your system has received a response that it cannot serve to an end user.
+
 You can alternatively construct an upstream service error with a data object. You can use any of the properties defined in [`HttpError`](#httperror) and [`OperationalError`](#operationalerror):
 
 ```js
