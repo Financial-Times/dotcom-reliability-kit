@@ -24,6 +24,6 @@
   },
   "devDependencies": {
     "@types/sharp": "^0.30.5",
-    "@types/svgo": "^2.6.3"
+    "@types/svgo": "^2.6.4"
   }
 }
