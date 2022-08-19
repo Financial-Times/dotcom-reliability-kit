@@ -22,7 +22,7 @@ function createErrorRenderingMiddleware() {
 	const performRendering =
 		process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
 
-	return (error, request, response, next) => {
+	return function errorRenderingMiddleware(error, request, response, next) {
 		if (performRendering) {
 			// It's unlikely that this will fail but we want to be sure
 			// that any rendering errors are caught properly

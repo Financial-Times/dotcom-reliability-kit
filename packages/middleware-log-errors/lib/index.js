@@ -34,7 +34,7 @@ function createErrorLoggingMiddleware(options = {}) {
 		}
 	}
 
-	return (error, request, response, next) => {
+	return function errorLoggingMiddleware(error, request, response, next) {
 		// We add a paranoid try/catch here because it'd be really embarassing
 		// if the error logging middleware threw an unhandled error, wouldn't it
 		try {
