@@ -12,6 +12,13 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.2
 
+## [1.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.3...middleware-log-errors-v1.2.4) (2022-08-19)
+
+
+### Bug Fixes
+
+* return named functions in middleware ([00e7ddd](https://github.com/Financial-Times/dotcom-reliability-kit/commit/00e7ddd77d18681dea8c504c40e4879c04207748))
+
 ## [1.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.2...middleware-log-errors-v1.2.3) (2022-08-16)
 
 
