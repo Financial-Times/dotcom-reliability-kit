@@ -2,6 +2,7 @@
  * @module @dotcom-reliability-kit/middleware-render-error-info/lib/render-error-page
  */
 
+const appInfo = require('@dotcom-reliability-kit/app-info');
 const entities = require('entities');
 const renderLayout = require('./render-layout');
 
@@ -36,7 +37,7 @@ const CONCEALED_VALUE_MESSAGE =
  *     Returns the rendered error page.
  */
 function renderErrorPage({ request, response, serializedError }) {
-	const appName = process.env.SYSTEM_CODE || 'application';
+	const appName = appInfo.systemCode || 'application';
 	return renderLayout({
 		body: `
 			<h1 id="errors">Error information</h1>

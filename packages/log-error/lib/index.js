@@ -2,6 +2,7 @@
  * @module @dotcom-reliability-kit/log-error
  */
 
+const appInfo = require('@dotcom-reliability-kit/app-info');
 const logger = require('@financial-times/n-logger').default;
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
@@ -39,11 +40,11 @@ function logError({ error, event, includeHeaders, level = 'error', request }) {
 		message: extractErrorMessage(serializedError),
 		error: serializedError,
 		app: {
-			commit: process.env.HEROKU_SLUG_COMMIT || null,
-			name: process.env.SYSTEM_CODE || null,
+			commit: appInfo.commitHash,
+			name: appInfo.systemCode,
 			nodeVersion: process.versions.node,
-			region: process.env.REGION || null,
-			releaseDate: process.env.HEROKU_RELEASE_CREATED_AT || null
+			region: appInfo.region,
+			releaseDate: appInfo.releaseDate
 		}
 	};
 	if (request) {

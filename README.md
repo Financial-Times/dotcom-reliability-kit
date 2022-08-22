@@ -13,6 +13,9 @@ We maintain documentation in this repo:
 
   * **The package README files** in this monorepo contain technical documentation. They can be found in the [`packages` folder](./packages/). A brief outline of what each package does is listed here:
 
+    * **[@dotcom-reliability-kit/app-info](./packages/app-info/#readme):**<br/>
+      A utility to get application information (e.g. the system code) in a consistent way
+
     * **[@dotcom-reliability-kit/errors](./packages/errors/#readme):**<br/>
       A suite of error classes which help you throw the most appropriate error in any situation
 

@@ -16,13 +16,14 @@
     "npm": "7.x || 8.x"
   },
   "scripts": {
-    "start": "node ."
+    "start": "SYSTEM_CODE='$$$-no-bizops-system-code-$$$' node ."
   },
   "dependencies": {
-    "@dotcom-reliability-kit/errors": "*",
-    "@dotcom-reliability-kit/log-error": "*",
-    "@dotcom-reliability-kit/middleware-log-errors": "*",
-    "@dotcom-reliability-kit/middleware-render-error-info": "*",
+    "@dotcom-reliability-kit/app-info": "^0.0.0",
+    "@dotcom-reliability-kit/errors": "^1.2.1",
+    "@dotcom-reliability-kit/log-error": "^1.3.3",
+    "@dotcom-reliability-kit/middleware-log-errors": "^1.2.4",
+    "@dotcom-reliability-kit/middleware-render-error-info": "^1.1.2",
     "@financial-times/n-express": "^25.2.1"
   }
 }

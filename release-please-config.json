@@ -29,6 +29,7 @@
 		"node-workspace"
 	],
 	"packages": {
+		"packages/app-info": {},
 		"packages/errors": {},
 		"packages/log-error": {},
 		"packages/middleware-log-errors": {},

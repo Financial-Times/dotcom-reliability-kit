@@ -16,6 +16,7 @@
   },
   "main": "lib",
   "dependencies": {
+    "@dotcom-reliability-kit/app-info": "^0.0.0",
     "@dotcom-reliability-kit/serialize-error": "^1.1.1",
     "@dotcom-reliability-kit/serialize-request": "^1.0.0",
     "@financial-times/n-logger": "^10.2.0"
