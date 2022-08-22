@@ -9,6 +9,13 @@ updates:
       timezone: "Europe/London"
 
   - package-ecosystem: "npm"
+    directory: "/examples/express"
+    schedule:
+      interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
+  - package-ecosystem: "npm"
     directory: "/logos"
     schedule:
       interval: "daily"
