@@ -22,7 +22,17 @@ jest.mock('@dotcom-reliability-kit/serialize-request', () =>
 );
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 
+jest.mock('@dotcom-reliability-kit/app-info', () => ({}));
+const appInfo = require('@dotcom-reliability-kit/app-info');
+
 describe('@dotcom-reliability-kit/log-error', () => {
+	beforeEach(() => {
+		appInfo.commitHash = 'mock-commit-hash';
+		appInfo.region = 'mock-region';
+		appInfo.releaseDate = 'mock-release-date';
+		appInfo.systemCode = 'mock-system-code';
+	});
+
 	afterEach(() => {
 		serializeError.mockClear();
 		serializeRequest.mockClear();
@@ -34,10 +44,6 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		let request;
 
 		beforeEach(() => {
-			process.env.HEROKU_RELEASE_CREATED_AT = 'mock-release-date';
-			process.env.HEROKU_SLUG_COMMIT = 'mock-commit-hash';
-			process.env.REGION = 'mock-region';
-			process.env.SYSTEM_CODE = 'mock-system-code';
 			error = new Error('mock error');
 			request = { isMockRequest: true };
 
@@ -73,9 +79,9 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 		});
 
-		describe('when `process.env.SYSTEM_CODE` is not defined', () => {
+		describe('when a system code is not defined', () => {
 			beforeEach(() => {
-				delete process.env.SYSTEM_CODE;
+				appInfo.systemCode = null;
 				logHandledError({ error, request });
 			});
 
@@ -104,114 +110,6 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
 						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.REGION` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.REGION;
-				logHandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without an app region', () => {
-				expect(logger.log).toBeCalledWith('error', {
-					event: 'HANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: null,
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.HEROKU_SLUG_COMMIT` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.HEROKU_SLUG_COMMIT;
-				logHandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without a commit hash', () => {
-				expect(logger.log).toBeCalledWith('error', {
-					event: 'HANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: null,
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.HEROKU_RELEASE_CREATED_AT` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.HEROKU_RELEASE_CREATED_AT;
-				logHandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without a release date', () => {
-				expect(logger.log).toBeCalledWith('error', {
-					event: 'HANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: null
 					}
 				});
 			});
@@ -351,10 +249,6 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		let request;
 
 		beforeEach(() => {
-			process.env.HEROKU_RELEASE_CREATED_AT = 'mock-release-date';
-			process.env.HEROKU_SLUG_COMMIT = 'mock-commit-hash';
-			process.env.REGION = 'mock-region';
-			process.env.SYSTEM_CODE = 'mock-system-code';
 			error = new Error('mock error');
 			request = { isMockRequest: true };
 
@@ -387,150 +281,6 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					region: 'mock-region',
 					releaseDate: 'mock-release-date'
 				}
-			});
-		});
-
-		describe('when `process.env.SYSTEM_CODE` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.SYSTEM_CODE;
-				logRecoverableError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without an app name', () => {
-				expect(logger.log).toBeCalledWith('warn', {
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: null,
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.REGION` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.REGION;
-				logRecoverableError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without an app region', () => {
-				expect(logger.log).toBeCalledWith('warn', {
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: null,
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.HEROKU_SLUG_COMMIT` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.HEROKU_SLUG_COMMIT;
-				logRecoverableError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without a commit hash', () => {
-				expect(logger.log).toBeCalledWith('warn', {
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: null,
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.HEROKU_RELEASE_CREATED_AT` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.HEROKU_RELEASE_CREATED_AT;
-				logRecoverableError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without a release date', () => {
-				expect(logger.log).toBeCalledWith('warn', {
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: null
-					}
-				});
 			});
 		});
 
@@ -668,10 +418,6 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		let request;
 
 		beforeEach(() => {
-			process.env.HEROKU_RELEASE_CREATED_AT = 'mock-release-date';
-			process.env.HEROKU_SLUG_COMMIT = 'mock-commit-hash';
-			process.env.REGION = 'mock-region';
-			process.env.SYSTEM_CODE = 'mock-system-code';
 			error = new Error('mock error');
 			request = { isMockRequest: true };
 
@@ -704,150 +450,6 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					region: 'mock-region',
 					releaseDate: 'mock-release-date'
 				}
-			});
-		});
-
-		describe('when `process.env.SYSTEM_CODE` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.SYSTEM_CODE;
-				logUnhandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without an app name', () => {
-				expect(logger.log).toBeCalledWith('error', {
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: null,
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.REGION` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.REGION;
-				logUnhandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without an app region', () => {
-				expect(logger.log).toBeCalledWith('error', {
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: null,
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.HEROKU_SLUG_COMMIT` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.HEROKU_SLUG_COMMIT;
-				logUnhandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without a commit hash', () => {
-				expect(logger.log).toBeCalledWith('error', {
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: null,
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date'
-					}
-				});
-			});
-		});
-
-		describe('when `process.env.HEROKU_RELEASE_CREATED_AT` is not defined', () => {
-			beforeEach(() => {
-				delete process.env.HEROKU_RELEASE_CREATED_AT;
-				logUnhandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without a release date', () => {
-				expect(logger.log).toBeCalledWith('error', {
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: null
-					}
-				});
 			});
 		});
 

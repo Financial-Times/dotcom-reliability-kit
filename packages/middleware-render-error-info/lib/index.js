@@ -2,6 +2,7 @@
  * @module @dotcom-reliability-kit/middleware-render-error-info
  */
 
+const appInfo = require('@dotcom-reliability-kit/app-info');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const renderErrorPage = require('./render-error-page');
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
@@ -19,8 +20,7 @@ function createErrorRenderingMiddleware() {
 	// will need to make this middleware play nicely with
 	// Sentry/n-raven – right now it will render a page and skip
 	// any later middleware so Sentry will never run.
-	const performRendering =
-		process.env.NODE_ENV === 'development' || !process.env.NODE_ENV;
+	const performRendering = appInfo.environment === 'development';
 
 	return function errorRenderingMiddleware(error, request, response, next) {
 		if (performRendering) {

@@ -2,6 +2,7 @@
  * @module @dotcom-reliability-kit/middleware-render-error-info/lib/render-layout
  */
 
+const appInfo = require('@dotcom-reliability-kit/app-info');
 const fs = require('fs');
 
 const buildServiceBaseUrl = 'https://www.ft.com/__origami/service/build/v3';
@@ -126,7 +127,7 @@ function getBuildServiceUrl(type) {
 		// We need a system code for the system. Most of our apps supply a SYSTEM_CODE
 		// environment variable. If this is not possible then we fall back to the Origami
 		// default: https://www.ft.com/__origami/service/build/v3/docs/api#get-v3-bundles-css
-		system_code: process.env.SYSTEM_CODE || '$$$-no-bizops-system-code-$$$',
+		system_code: appInfo.systemCode || '$$$-no-bizops-system-code-$$$',
 		brand: 'internal',
 		components: buildServiceComponents.join(',')
 	});

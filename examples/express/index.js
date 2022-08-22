@@ -11,13 +11,14 @@ const {
 	OperationalError
 } = require('@dotcom-reliability-kit/errors');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
+const { systemCode } = require('@dotcom-reliability-kit/app-info');
 
 // Create an n-express application. Reliability Kit will work
 // with any Express application but we're using n-express to
 // better match our existing Customer Products apps.
 const app = express({
 	demo: true,
-	systemCode: process.env.SYSTEM_CODE || 'reliability-kit-express-example',
+	systemCode: systemCode || 'reliability-kit-express-example',
 	withBackendAuthentication: false,
 	withServiceMetrics: false
 });

@@ -37,12 +37,15 @@ jest.mock('@dotcom-reliability-kit/log-error', () => ({
 }));
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 
+jest.mock('@dotcom-reliability-kit/app-info', () => ({}));
+const appInfo = require('@dotcom-reliability-kit/app-info');
+
 describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 	let middleware;
 
 	beforeEach(() => {
-		process.env.NODE_ENV = 'development';
-		process.env.SYSTEM_CODE = 'mock-system-code';
+		appInfo.environment = 'development';
+		appInfo.systemCode = 'mock-system-code';
 		middleware = createErrorRenderingMiddleware();
 	});
 
@@ -110,9 +113,9 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			expect(next).toBeCalledTimes(0);
 		});
 
-		describe('when the `SYSTEM_CODE` environment variable is not set', () => {
+		describe('when the system code is not set', () => {
 			beforeEach(() => {
-				delete process.env.SYSTEM_CODE;
+				appInfo.systemCode = null;
 				middleware = createErrorRenderingMiddleware();
 				response.send = jest.fn();
 				middleware(error, request, response, next);
@@ -159,31 +162,9 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 		});
 
-		describe('when `process.env.NODE_ENV` is undefined', () => {
+		describe('when the environment is set to "production"', () => {
 			beforeEach(() => {
-				delete process.env.NODE_ENV;
-				middleware = createErrorRenderingMiddleware();
-				response = {
-					status: 'mock response status',
-					send: jest.fn(),
-					set: jest.fn(),
-					status: jest.fn()
-				};
-				next = jest.fn();
-				middleware(error, request, response, next);
-			});
-
-			it('behaves in the same way as when `NODE_ENV` is set to "development"', () => {
-				expect(serializeError).toBeCalledWith(error);
-				expect(response.status).toBeCalledTimes(1);
-				expect(response.set).toBeCalledTimes(1);
-				expect(response.send).toBeCalledTimes(1);
-			});
-		});
-
-		describe('when `process.env.NODE_ENV` is set to "production"', () => {
-			beforeEach(() => {
-				process.env.NODE_ENV = 'production';
+				appInfo.environment = 'production';
 				middleware = createErrorRenderingMiddleware();
 				response = {
 					status: 'mock response status',
