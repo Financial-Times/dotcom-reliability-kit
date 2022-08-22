@@ -19,11 +19,11 @@
     "start": "SYSTEM_CODE='$$$-no-bizops-system-code-$$$' node ."
   },
   "dependencies": {
-    "@dotcom-reliability-kit/app-info": "^0.0.0",
+    "@dotcom-reliability-kit/app-info": "^1.0.0",
     "@dotcom-reliability-kit/errors": "^1.2.1",
-    "@dotcom-reliability-kit/log-error": "^1.3.3",
-    "@dotcom-reliability-kit/middleware-log-errors": "^1.2.4",
-    "@dotcom-reliability-kit/middleware-render-error-info": "^1.1.2",
+    "@dotcom-reliability-kit/log-error": "^1.3.4",
+    "@dotcom-reliability-kit/middleware-log-errors": "^1.2.5",
+    "@dotcom-reliability-kit/middleware-render-error-info": "^1.1.3",
     "@financial-times/n-express": "^25.2.1"
   }
 }

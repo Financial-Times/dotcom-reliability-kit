@@ -12,6 +12,12 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.3 to ^1.3.4
+
 ## [1.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.3...middleware-log-errors-v1.2.4) (2022-08-19)
 
 

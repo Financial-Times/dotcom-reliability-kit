@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/app-info",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A utility to get application info in a consistent way.",
   "repository": {
     "type": "git",
