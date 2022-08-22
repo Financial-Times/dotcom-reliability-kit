@@ -6,6 +6,21 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.3
 
+## [1.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.2...middleware-render-error-info-v1.1.3) (2022-08-22)
+
+
+### Bug Fixes
+
+* refactor to centralise environment variables ([d8837f5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d8837f57289266438f9e23e3adbaf60a0018bb08))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^0.0.0 to ^1.0.0
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.3 to ^1.3.4
+
 ## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.1...middleware-render-error-info-v1.1.2) (2022-08-19)
 
 
