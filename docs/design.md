@@ -4,6 +4,8 @@
 This document outlines the design decisions made in this project.
 
   * [Languages](#languages)
+    * [JavaScript](#javascript)
+    * [CommonJS](#commonjs)
   * [Tooling](#tooling)
     * [Testing](#testing)
     * [Monorepo management](#monorepo-management)
@@ -20,7 +22,7 @@ We made two language decisions when starting this project:
 
 The combination of the above allows us to work on and publish the packages in this monorepo without needing a build step. This means that the code we write is exactly the same as the code run inside our applications.
 
-### TypeScript
+### JavaScript
 
 In terms of TypeScript, the key benefits are having type safety and type hinting in your editor. We can achieve both of these without writing TypeScript. Using [JavaScript with JSDoc comments to document types](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html), VSCode (used by the majority of our engineers) offers the same level of type hinting as it does with TypeScript. It's also possible to run the TypeScript type checker against JavaScript code to verify that everything is type safe (e.g. using `tsc --checkJS`).
 
