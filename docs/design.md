@@ -20,7 +20,19 @@ We made two language decisions when starting this project:
 
 The combination of the above allows us to work on and publish the packages in this monorepo without needing a build step. This means that the code we write is exactly the same as the code run inside our applications.
 
+### TypeScript
+
 In terms of TypeScript, the key benefits are having type safety and type hinting in your editor. We can achieve both of these without writing TypeScript. Using [JavaScript with JSDoc comments to document types](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html), VSCode (used by the majority of our engineers) offers the same level of type hinting as it does with TypeScript. It's also possible to run the TypeScript type checker against JavaScript code to verify that everything is type safe (e.g. using `tsc --checkJS`).
+
+### CommonJS
+
+If we wanted to support ES Modules (which _is_ the future direction I think we'll all go in) then we'd need to choose between one of the following, neither of which seems preferable to just sticking with CommonJS for now.
+
+  1. We write our code in ES Modules but we cross-compile to CommonJS before publishing. This isn't ideal because it introduces a build step and steps away from "what you see is what's running in your app"
+
+  2. We write our code in ES Modules and publish them as ES Modules with no cross-compilation. This makes them incompatible with a large number of our apps (many of them use CommonJS exclusively) and would tie adopting Reliability Kit to an unrelated migration step
+
+A note that for now there is a small downside to sticking with CommonJS. It will continue to work [for the forseeable future](https://github.com/nodejs/node/issues/33954) in Node.js itself, but more modules on npm are switching to native ESM which is not very compatible with CommonJS. We may find ourselves forced to reconsider at some point if any of our key dependencies (e.g. Express or Jest) migrate to ESM-only and drop support for their old CommonJS versions.
 
 
 ## Tooling
