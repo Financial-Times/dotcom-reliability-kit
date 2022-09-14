@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@financial-times/n-express": "^25.3.2",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.14",
     "node-fetch": "^2.6.7"
   }
 }
