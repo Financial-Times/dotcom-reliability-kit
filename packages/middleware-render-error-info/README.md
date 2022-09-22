@@ -29,7 +29,7 @@ const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-e
 
 The `renderErrorInfoPage` function can be used to generate Express middleware which renders an error debugging page. The error page will only ever display in a non-production environment, that is when the `NODE_ENV` environment variable is either **empty** or set to **`"development"`**.
 
-It must be added to your Express app _after_ all your application routes:
+:warning: this middleware **must** be added to your Express app _after_ all your application routes – you won't get rendered errors for any routes which are mounted after this middleware:
 
 ```js
 const app = express();
