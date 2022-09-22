@@ -6,6 +6,20 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.3
 
+## [1.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.3...middleware-render-error-info-v1.1.4) (2022-09-22)
+
+
+### Documentation Changes
+
+* clarify middleware mounting order ([bc3bc5e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/bc3bc5ef0cd3e2f8ba675267f49c0fcdc702b0e1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.4 to ^1.3.5
+
 ## [1.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.2...middleware-render-error-info-v1.1.3) (2022-08-22)
 
 
