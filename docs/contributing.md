@@ -7,6 +7,10 @@ We're glad you want to contribute to Reliability Kit!
     * [Optional](#optional)
   * [Getting set up](#getting-set-up)
   * [Creating a new package](#creating-a-new-package)
+  * [Installing dependencies](#installing-dependencies)
+    * [Repo-wide dependencies](#repo-wide-dependencies)
+    * [Package dependencies](#package-dependencies)
+    * [Depending on other Reliability Kit packages](#depending-on-other-reliability-kit-packages)
   * [Testing](#testing)
     * [Linters](#linters)
     * [Type safety](#type-safety)
@@ -58,6 +62,45 @@ npm run create-package <NAME>
 You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
 
 You'll also need to manually add an entry for the package to [the Dependabot config](../.github/dependabot.yml) so that dependency update pull requests can be opened.
+
+
+## Installing dependencies
+
+Because we use a monorepo managed with [npm workspaces](./design.md#monorepo-management), installing dependencies is slightly different to other projects. You'll need to adjust the way you install dependencies as follows. If you're reviewing a pull request on Reliability Kit, then please also check that dependencies have been installed in the expected places.
+
+### Repo-wide dependencies
+
+The top level `package.json` file should _never_ include any dependencies apart from `devDependencies`. If you install the dependencies that individual packages rely on here then they will not have access to them after publishing.
+
+If you need a new development dependency that is used across the whole repository, then you can install it as normal by running the following from the repo base path:
+
+```
+npm install --save-dev <DEPENDENCY_NAME>
+```
+
+### Package dependencies
+
+If a specific package relies on a new dependency, then you **must not** `cd` into the package and run an `npm install`. This will end up creating a `package-lock.json` file within that folder and cause all sorts of dependency issues. Instead, you must use the `--workspace` flag, setting it to the package you want to install a dependency in:
+
+```
+npm install --workspace=packages/<PACKAGE_NAME> <DEPENDENCY_NAME>
+```
+
+This ensures that we continue to maintain a single `package-lock.json` file in the root of the repo.
+
+Some packages may also require their own specific development dependencies, for example `@types` packages or specific modules required for testing that package alone. This can be done with the `--workspace` flag too:
+
+```
+npm install --save-dev --workspace=packages/<PACKAGE_NAME> <DEPENDENCY_NAME>
+```
+
+### Depending on other Reliability Kit packages
+
+If a package within Reliability Kit relies on _another_ Reliability Kit package, you'll still need to codify this relationship in the `package.json` file for the dependent package. You can do this normally with an `npm install`, using the full `@dotcom-reliability-kit/<NAME>` package name. For example if your package relies on the internal `errors` package then you'd run this:
+
+```
+npm install --workspace=packages/<PACKAGE_NAME> @dotcom-reliability-kit/errors
+```
 
 
 ## Testing
