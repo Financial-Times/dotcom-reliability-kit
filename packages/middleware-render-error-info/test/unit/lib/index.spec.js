@@ -49,6 +49,14 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		middleware = createErrorRenderingMiddleware();
 	});
 
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(createErrorRenderingMiddleware.default).toStrictEqual(
+				createErrorRenderingMiddleware
+			);
+		});
+	});
+
 	describe('middleware(error, request, response, next)', () => {
 		let error;
 		let next;

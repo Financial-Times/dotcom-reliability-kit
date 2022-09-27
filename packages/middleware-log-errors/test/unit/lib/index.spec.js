@@ -12,6 +12,14 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 		middleware = createErrorLoggingMiddleware();
 	});
 
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(createErrorLoggingMiddleware.default).toStrictEqual(
+				createErrorLoggingMiddleware
+			);
+		});
+	});
+
 	describe('middleware(error, request, response, next)', () => {
 		let error;
 		let next;

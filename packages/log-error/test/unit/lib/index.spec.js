@@ -1,8 +1,5 @@
-const {
-	logHandledError,
-	logRecoverableError,
-	logUnhandledError
-} = require('../../../lib/index');
+const logError = require('../../../lib');
+const { logHandledError, logRecoverableError, logUnhandledError } = logError;
 
 jest.mock('@financial-times/n-logger', () => ({
 	default: { log: jest.fn() }
@@ -37,6 +34,12 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		serializeError.mockClear();
 		serializeRequest.mockClear();
 		logger.log.mockClear();
+	});
+
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(logError.default).toStrictEqual(logError);
+		});
 	});
 
 	describe('logHandledError(options)', () => {

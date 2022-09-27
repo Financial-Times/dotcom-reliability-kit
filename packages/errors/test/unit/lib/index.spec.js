@@ -10,8 +10,10 @@ jest.mock(
 jest.mock('../../../lib/user-input-error', () => 'mock-user-input-error');
 
 describe('@dotcom-reliability-kit/errors', () => {
-	it('exports an object', () => {
-		expect(errors).toBeInstanceOf(Object);
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(errors.default).toStrictEqual(errors);
+		});
 	});
 
 	describe('.DataStoreError', () => {

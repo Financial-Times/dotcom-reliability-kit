@@ -1,3 +1,4 @@
+const { UpstreamServiceError } = require('../../../lib');
 const HttpError = require('../../../lib/http-error');
 const UserInputError = require('../../../lib/user-input-error');
 
@@ -193,6 +194,12 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 			it('is set to the status message for the passed in status code', () => {
 				expect(instance.statusMessage).toStrictEqual('mock status message');
 			});
+		});
+	});
+
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(UpstreamServiceError.default).toStrictEqual(UpstreamServiceError);
 		});
 	});
 });

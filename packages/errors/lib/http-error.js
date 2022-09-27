@@ -146,3 +146,5 @@ class HttpError extends OperationalError {
 }
 
 module.exports = HttpError;
+
+module.exports.default = module.exports;

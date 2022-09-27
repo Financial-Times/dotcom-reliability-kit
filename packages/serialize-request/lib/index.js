@@ -171,3 +171,6 @@ function createSerializedRequest(properties) {
 }
 
 module.exports = serializeRequest;
+
+// @ts-ignore
+module.exports.default = module.exports;

@@ -49,3 +49,5 @@ function createErrorRenderingMiddleware() {
 }
 
 module.exports = createErrorRenderingMiddleware;
+
+module.exports.default = module.exports;

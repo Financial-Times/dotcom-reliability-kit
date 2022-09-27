@@ -340,4 +340,10 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 			});
 		});
 	});
+
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(HttpError.default).toStrictEqual(HttpError);
+		});
+	});
 });

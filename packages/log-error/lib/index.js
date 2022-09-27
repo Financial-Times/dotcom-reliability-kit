@@ -121,8 +121,8 @@ function logUnhandledError({ error, includeHeaders, request }) {
 	});
 }
 
-module.exports = {
-	logHandledError,
-	logRecoverableError,
-	logUnhandledError
-};
+exports.logHandledError = logHandledError;
+exports.logRecoverableError = logRecoverableError;
+exports.logUnhandledError = logUnhandledError;
+
+exports.default = exports;
