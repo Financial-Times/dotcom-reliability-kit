@@ -12,6 +12,12 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		appInfo = require('../../../lib');
 	});
 
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(appInfo.default).toStrictEqual(appInfo);
+		});
+	});
+
 	describe('.commitHash', () => {
 		it('is set to `process.env.HEROKU_SLUG_COMMIT`', () => {
 			expect(appInfo.commitHash).toBe('mock-commit-hash');

@@ -41,3 +41,5 @@ class UserInputError extends HttpError {
 }
 
 module.exports = UserInputError;
+
+module.exports.default = module.exports;

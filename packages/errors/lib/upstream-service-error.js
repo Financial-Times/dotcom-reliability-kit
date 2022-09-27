@@ -45,3 +45,5 @@ class UpstreamServiceError extends HttpError {
 }
 
 module.exports = UpstreamServiceError;
+
+module.exports.default = module.exports;

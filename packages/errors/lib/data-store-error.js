@@ -27,3 +27,5 @@ class DataStoreError extends OperationalError {
 }
 
 module.exports = DataStoreError;
+
+module.exports.default = module.exports;

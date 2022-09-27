@@ -121,4 +121,10 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 			});
 		});
 	});
+
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(DataStoreError.default).toStrictEqual(DataStoreError);
+		});
+	});
 });

@@ -234,4 +234,10 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 			).toStrictEqual('ABC_123_FOO_BAR');
 		});
 	});
+
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(OperationalError.default).toStrictEqual(OperationalError);
+		});
+	});
 });

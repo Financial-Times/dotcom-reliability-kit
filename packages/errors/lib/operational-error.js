@@ -148,3 +148,5 @@ class OperationalError extends Error {
 }
 
 module.exports = OperationalError;
+
+module.exports.default = module.exports;

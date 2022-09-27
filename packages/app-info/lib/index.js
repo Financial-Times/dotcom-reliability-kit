@@ -99,3 +99,6 @@ module.exports = {
 		return systemCode;
 	}
 };
+
+// @ts-ignore
+module.exports.default = module.exports;

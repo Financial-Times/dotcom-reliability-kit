@@ -120,3 +120,6 @@ function createSerializedError(properties) {
 }
 
 module.exports = serializeError;
+
+// @ts-ignore
+module.exports.default = module.exports;

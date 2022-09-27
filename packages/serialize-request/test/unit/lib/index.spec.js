@@ -1,6 +1,12 @@
 const serializeRequest = require('../../../lib/index');
 
 describe('@dotcom-reliability-kit/serialize-request', () => {
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(serializeRequest.default).toStrictEqual(serializeRequest);
+		});
+	});
+
 	describe('when called with an `http.IncomingMessage` object', () => {
 		let request;
 

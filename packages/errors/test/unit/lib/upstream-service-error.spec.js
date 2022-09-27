@@ -242,4 +242,10 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 			});
 		});
 	});
+
+	describe('.default', () => {
+		it('aliases the module exports', () => {
+			expect(UpstreamServiceError.default).toStrictEqual(UpstreamServiceError);
+		});
+	});
 });

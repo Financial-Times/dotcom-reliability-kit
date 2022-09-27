@@ -56,3 +56,5 @@ function createErrorLoggingMiddleware(options = {}) {
 }
 
 module.exports = createErrorLoggingMiddleware;
+
+module.exports.default = module.exports;
