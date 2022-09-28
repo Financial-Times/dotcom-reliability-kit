@@ -12,6 +12,22 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-error bumped from ^1.1.0 to ^1.1.1
 
+## [1.3.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.5...log-error-v1.3.6) (2022-09-28)
+
+
+### Bug Fixes
+
+* make sure that ESM + TypeScript works ([cc71ede](https://github.com/Financial-Times/dotcom-reliability-kit/commit/cc71eded6475d73b05771603df0946258600f50e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.0.0 to ^1.0.1
+    * @dotcom-reliability-kit/serialize-error bumped from ^1.1.1 to ^1.1.2
+    * @dotcom-reliability-kit/serialize-request bumped from ^1.0.0 to ^1.0.1
+
 ## [1.3.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.4...log-error-v1.3.5) (2022-09-22)
 
 

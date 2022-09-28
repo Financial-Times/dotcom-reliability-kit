@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v1.1.1...serialize-error-v1.1.2) (2022-09-28)
+
+
+### Bug Fixes
+
+* make sure that ESM + TypeScript works ([cc71ede](https://github.com/Financial-Times/dotcom-reliability-kit/commit/cc71eded6475d73b05771603df0946258600f50e))
+
 ## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v1.1.0...serialize-error-v1.1.1) (2022-08-05)
 
 
