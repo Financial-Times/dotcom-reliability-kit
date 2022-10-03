@@ -78,7 +78,8 @@ app.get('/pokemon/:name', async (request, response, next) => {
 });
 ```
 
-**Note:** we do provide many more error classes in Reliability Kit, and it's always good to use the most specific one. Most of our examples use `OperationalError` for simplicity (and to not overload you with information), but the section on [error classes](#error-classes) covers some of these other error types.
+> **Note**
+> We do provide many more error classes in Reliability Kit, and it's always good to use the most specific one. Most of our examples use `OperationalError` for simplicity (and to not overload you with information), but the section on [error classes](#error-classes) covers some of these other error types.
 
 ### Operational errors in library code
 
