@@ -169,7 +169,8 @@ logRecoverableError({
 });
 ```
 
-**Note:** there's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
+> **Note**
+> There's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
 
 #### `options.request`
 

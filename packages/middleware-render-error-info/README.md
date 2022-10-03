@@ -29,7 +29,8 @@ const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-e
 
 The `renderErrorInfoPage` function can be used to generate Express middleware which renders an error debugging page. The error page will only ever display in a non-production environment, that is when the `NODE_ENV` environment variable is either **empty** or set to **`"development"`**.
 
-:warning: this middleware **must** be added to your Express app _after_ all your application routes – you won't get rendered errors for any routes which are mounted after this middleware:
+> **Warning**
+> This middleware **must** be added to your Express app _after_ all your application routes – you won't get rendered errors for any routes which are mounted after this middleware.
 
 ```js
 const app = express();
@@ -37,7 +38,8 @@ const app = express();
 app.use(renderErrorInfoPage());
 ```
 
-**Note:** if you're using [@dotcom-reliability-kit/middleware-log-errors](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-log-errors#readme) in your app, it's best to mount the error page middleware _after_ the logging middleware. Otherwise the error will never be logged in local development, which may cause some confusion.
+> **Note**
+> If you're using [@dotcom-reliability-kit/middleware-log-errors](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-log-errors#readme) in your app, it's best to mount the error page middleware _after_ the logging middleware. Otherwise the error will never be logged in local development, which may cause some confusion.
 
 Once you've mounted the middleware, if you're working locally you should now see a detailed error page when you encounter an error in your app (assuming you're [relying on the Express error handler to serve errors](https://github.com/Financial-Times/dotcom-reliability-kit/blob/main/docs/getting-started/handling-errors.md#bubbling-up-in-express)):
 

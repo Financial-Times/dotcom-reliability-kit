@@ -42,7 +42,8 @@ Errors can contain a lot of information about what happened, but passing an erro
 
 Extracting the information we do want can result in a lot of boilerplate code littered around our systems. To aid this, Reliability Kit provides a couple of packages to help with this task.
 
-**Note:** the code examples in this section are illustrative to help understand what we're doing under the hood. For our recommended implementation of error logging, see the [One way of logging](#one-way-of-logging) section.
+> **Note**
+> The code examples in this section are illustrative to help understand what we're doing under the hood. For our recommended implementation of error logging, see the [One way of logging](#one-way-of-logging) section.
 
 [`@dotcom-reliability-kit/serialize-error`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-error#readme)  provides a `serializeError` function which accepts an error object and converts it to a plain object with all of the data extracted for logging. If you were logging something manually you could get all error information like this:
 

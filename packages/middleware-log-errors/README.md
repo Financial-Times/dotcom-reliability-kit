@@ -31,7 +31,8 @@ const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors
 
 The `createErrorLogger` function can be used to generate Express middleware which logs errors to the console and Splunk via [n-logger](https://github.com/Financial-Times/n-logger).
 
-:warning: this middleware **must** be added to your Express app _after_ all your application routes – you won't get error logs for any routes which are mounted after this middleware:
+> **Warning**
+> This middleware **must** be added to your Express app _after_ all your application routes – you won't get error logs for any routes which are mounted after this middleware.
 
 ```js
 const app = express();
@@ -71,7 +72,8 @@ This will automatically [serialize error objects](https://github.com/Financial-T
 }
 ```
 
-**Note:** if you're also using [n-raven v6.1+](https://github.com/Financial-Times/n-raven) in your application then the Raven error logging will be deactivated so that you don't get double-logged errors.
+> **Note**
+> If you're also using [n-raven v6.1+](https://github.com/Financial-Times/n-raven) in your application then the Raven error logging will be deactivated so that you don't get double-logged errors.
 
 ### Configuration options
 
@@ -98,7 +100,8 @@ app.use(createErrorLogger({
 }));
 ```
 
-**Note:** there's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
+> **Note**
+> There's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
 
 
 ## Contributing
