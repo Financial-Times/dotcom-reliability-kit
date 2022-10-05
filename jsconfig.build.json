@@ -7,9 +7,6 @@
 		"noEmit": false,
 		"removeComments": true
 	},
-	"exclude": [
-		"**/test/**/*"
-	],
 	"include": [
 		"packages/**/*.js"
 	]

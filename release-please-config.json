@@ -34,6 +34,7 @@
 		"packages/crash-handler": {},
 		"packages/errors": {},
 		"packages/log-error": {},
+		"packages/logger": {},
 		"packages/middleware-log-errors": {},
 		"packages/middleware-render-error-info": {},
 		"packages/serialize-error": {},

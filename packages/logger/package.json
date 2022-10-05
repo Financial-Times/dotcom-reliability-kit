@@ -1,0 +1,28 @@
+{
+  "name": "@dotcom-reliability-kit/logger",
+  "version": "0.0.0",
+  "description": "A simple and fast logger based on Pino, with FT preferences baked in",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "packages/logger"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: logger\"",
+  "license": "MIT",
+  "engines": {
+    "node": "14.x || 16.x || 18.x",
+    "npm": "7.x || 8.x"
+  },
+  "main": "lib",
+  "dependencies": {
+    "@dotcom-reliability-kit/serialize-error": "^1.1.4",
+    "@ungap/structured-clone": "^1.0.1",
+    "pino": "^8.6.1"
+  },
+  "devDependencies": {
+    "@financial-times/n-logger": "^10.3.0",
+    "@types/events": "^3.0.0",
+    "@types/ungap__structured-clone": "^0.3.0"
+  }
+}
