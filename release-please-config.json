@@ -22,6 +22,7 @@
 			"hidden": true
 		}
 	],
+	"pull-request-header": ":rock: I've created a release for you",
 	"prerelease": true,
 	"bump-minor-pre-major": true,
 	"bump-patch-for-minor-pre-major": true,
