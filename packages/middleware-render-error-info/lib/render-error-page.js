@@ -26,7 +26,7 @@ const CONCEALED_VALUE_MESSAGE =
 /**
  * Render an HTML error info page.
  *
- * @access private
+ * @private
  * @param {ErrorRenderingOptions} options
  *     Options which impact the rendering of the page.
  * @returns {string}
@@ -49,7 +49,7 @@ function renderErrorPage({ request, response, serializedError }) {
 /**
  * Render a serialized error to HTML.
  *
- * @access private
+ * @private
  * @param {import('@dotcom-reliability-kit/serialize-error').SerializedError} error
  *     The error information to render.
  * @returns {string}
@@ -144,7 +144,7 @@ function renderError(error) {
 /**
  * Render an HTTP request to HTML.
  *
- * @access private
+ * @private
  * @param {import('express').Request} request
  *     The request information to render.
  * @returns {string}
@@ -190,7 +190,7 @@ function renderRequest(request) {
 /**
  * Render an HTTP response to HTML.
  *
- * @access private
+ * @private
  * @param {import('express').Response} response
  *     The responses information to render.
  * @returns {string}
@@ -225,7 +225,7 @@ function renderResponse(response) {
 /**
  * Render a page section.
  *
- * @access private
+ * @private
  * @param {object} section
  *     The section information.
  * @param {string} section.id
@@ -254,7 +254,7 @@ function renderSection({ id, title, body, fields }) {
 /**
  * Render a warning message.
  *
- * @access private
+ * @private
  * @param {object} warning
  *     The warning information.
  * @param {string} warning.title
@@ -281,7 +281,7 @@ function renderWarning({ title, body }) {
 /**
  * Render a definition list title and value.
  *
- * @access private
+ * @private
  * @param {Field} field
  *     The field information.
  * @returns {string}
@@ -306,7 +306,7 @@ function renderField({ label, helpText, value, formatter = escape }) {
 /**
  * Render a block of code.
  *
- * @access private
+ * @private
  * @param {string} block
  *     The value to wrap in a `<pre>` element.
  * @returns {string}
@@ -319,7 +319,7 @@ function renderCodeBlock(block) {
 /**
  * Convert a boolean into a "Yes" or "No" string.
  *
- * @access private
+ * @private
  * @param {boolean} boolean
  *     The boolean to render.
  * @param {string} trueModifier
@@ -342,7 +342,7 @@ function renderBoolean(
 /**
  * Render a list of systems, linking them to Biz Ops.
  *
- * @access private
+ * @private
  * @param {Array<string>} systems
  *     An array of system codes.
  * @returns {string}
@@ -355,7 +355,7 @@ function renderBizOpsSystems(systems) {
 /**
  * Render a single Biz Ops system.
  *
- * @access private
+ * @private
  * @param {string} systemCode
  *     The system code to link to.
  * @returns {string}
@@ -373,7 +373,7 @@ function renderBizOpsSystem(systemCode) {
 /**
  * Render a value as JSON in a <pre> element.
  *
- * @access private
+ * @private
  * @param {any} value
  *     The value to stringify and render.
  * @returns {string}
@@ -386,7 +386,7 @@ function renderAsJson(value) {
 /**
  * Escape a value for use in HTML.
  *
- * @access private
+ * @private
  * @param {any} value
  *     The value to escape.
  * @returns {string}

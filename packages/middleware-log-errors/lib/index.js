@@ -9,7 +9,7 @@ const { logHandledError } = require('@dotcom-reliability-kit/log-error');
 /**
  * Create a middleware function to log errors.
  *
- * @access public
+ * @public
  * @param {ErrorLoggingOptions} [options = {}]
  *     Options to configure the middleware.
  * @returns {import('express').ErrorRequestHandler}

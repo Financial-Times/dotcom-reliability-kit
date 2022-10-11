@@ -30,7 +30,7 @@ const styles = fs.readFileSync(`${__dirname}/render-error-page.css`, 'utf-8');
 /**
  * Render an HTML error info page.
  *
- * @access private
+ * @private
  * @param {LayoutRenderingOptions} options
  *     Options which impact the rendering of the page.
  * @returns {string}
@@ -112,7 +112,7 @@ function renderLayout({ body, request, title }) {
 /**
  * Get an Origami Build Service bundle URL.
  *
- * @access private
+ * @private
  * @param {'css'|'js'} type
  *     The type of bundle to return a URL for.
  * @returns {string}

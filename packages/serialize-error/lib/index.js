@@ -23,7 +23,7 @@
 /**
  * Serialize an error object so that it can be consistently logged or output as JSON.
  *
- * @access public
+ * @public
  * @param {(string | Error & Record<string, any>)} error
  *     The error object to serialize.
  * @returns {SerializedError}
@@ -91,7 +91,7 @@ function serializeError(error) {
 /**
  * Create a new serialized error object.
  *
- * @access private
+ * @private
  * @param {Record<string, any>} properties
  *     The properties of the serialized error.
  * @returns {SerializedError}

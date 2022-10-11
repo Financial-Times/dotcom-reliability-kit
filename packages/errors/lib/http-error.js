@@ -22,28 +22,28 @@ const STATUS_CODES = require('http').STATUS_CODES;
 class HttpError extends OperationalError {
 	/**
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {string}
 	 */
 	name = 'HttpError';
 
 	/**
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {number}
 	 */
 	statusCode = 500;
 
 	/**
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {string}
 	 */
 	statusMessage = STATUS_CODES[500];
 
 	/**
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {number}
 	 */
 	get status() {
@@ -95,7 +95,7 @@ class HttpError extends OperationalError {
 	/**
 	 * Reserved keys that should not appear in `HttpError.prototype.data`.
 	 *
-	 * @access private
+	 * @protected
 	 * @type {Array<string>}
 	 */
 	static reservedKeys = [
@@ -107,7 +107,7 @@ class HttpError extends OperationalError {
 	/**
 	 * Normalize an HTTP status code.
 	 *
-	 * @access private
+	 * @protected
 	 * @param {number} statusCode
 	 *     The HTTP status code to normalize.
 	 * @returns {number}
@@ -124,7 +124,7 @@ class HttpError extends OperationalError {
 	/**
 	 * Get the HTTP message for a given status code.
 	 *
-	 * @access private
+	 * @private
 	 * @param {number} statusCode
 	 *     The HTTP status code to get a message for.
 	 * @returns {string}
