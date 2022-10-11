@@ -44,6 +44,7 @@ module.exports = {
 	/**
 	 * The application commit hash.
 	 *
+	 * @readonly
 	 * @type {string | null}
 	 */
 	commitHash: process.env.HEROKU_SLUG_COMMIT || null,
@@ -51,6 +52,7 @@ module.exports = {
 	/**
 	 * The application environment.
 	 *
+	 * @readonly
 	 * @type {string}
 	 */
 	environment: process.env.NODE_ENV || 'development',
@@ -58,6 +60,7 @@ module.exports = {
 	/**
 	 * The region the application is running in.
 	 *
+	 * @readonly
 	 * @type {string | null}
 	 */
 	region: process.env.REGION || null,
@@ -65,6 +68,7 @@ module.exports = {
 	/**
 	 * The date and time that the application was last released at.
 	 *
+	 * @readonly
 	 * @type {string | null}
 	 */
 	releaseDate: process.env.HEROKU_RELEASE_CREATED_AT || null,
@@ -72,6 +76,7 @@ module.exports = {
 	/**
 	 * The last released version of the application.
 	 *
+	 * @readonly
 	 * @type {string | null}
 	 */
 	releaseVersion: process.env.HEROKU_RELEASE_VERSION || null,
@@ -79,6 +84,7 @@ module.exports = {
 	/**
 	 * The application system code.
 	 *
+	 * @readonly
 	 * @type {string | null}
 	 */
 	systemCode
