@@ -40,51 +40,50 @@ function normalizePackageName(name) {
 const systemCode =
 	process.env.SYSTEM_CODE || getSystemCodeFromPackage(process.cwd()) || null;
 
-/**
- * @typedef {object} AppInfo
- * @property {string | null} commitHash
- *     The application commit hash.
- * @property {string} environment
- *     The application environment.
- * @property {string | null} region
- *     The region the application is running in.
- * @property {string | null} releaseDate
- *     The date and time that the application was last released at.
- * @property {string | null} releaseVersion
- *     The last released version of the application.
- * @property {string | null} systemCode
- *     The application system code.
- */
+module.exports = {
+	/**
+	 * The application commit hash.
+	 *
+	 * @type {string | null}
+	 */
+	commitHash: process.env.HEROKU_SLUG_COMMIT || null,
 
-/**
- * @type {AppInfo}
- */
-const appInfo = {
-	get commitHash() {
-		return process.env.HEROKU_SLUG_COMMIT || null;
-	},
+	/**
+	 * The application environment.
+	 *
+	 * @type {string}
+	 */
+	environment: process.env.NODE_ENV || 'development',
 
-	get environment() {
-		return process.env.NODE_ENV || 'development';
-	},
+	/**
+	 * The region the application is running in.
+	 *
+	 * @type {string | null}
+	 */
+	region: process.env.REGION || null,
 
-	get region() {
-		return process.env.REGION || null;
-	},
+	/**
+	 * The date and time that the application was last released at.
+	 *
+	 * @type {string | null}
+	 */
+	releaseDate: process.env.HEROKU_RELEASE_CREATED_AT || null,
 
-	get releaseDate() {
-		return process.env.HEROKU_RELEASE_CREATED_AT || null;
-	},
+	/**
+	 * The last released version of the application.
+	 *
+	 * @type {string | null}
+	 */
+	releaseVersion: process.env.HEROKU_RELEASE_VERSION || null,
 
-	get releaseVersion() {
-		return process.env.HEROKU_RELEASE_VERSION || null;
-	},
-
-	get systemCode() {
-		return systemCode;
-	}
+	/**
+	 * The application system code.
+	 *
+	 * @type {string | null}
+	 */
+	systemCode
 };
 
-module.exports = appInfo;
-
+// @ts-ignore
 module.exports.default = module.exports;
+Object.freeze(module.exports);
