@@ -5,8 +5,7 @@
 		"declarationMap": true,
 		"emitDeclarationOnly": true,
 		"noEmit": false,
-		"removeComments": true,
-		"useDefineForClassFields": true,
+		"removeComments": true
 	},
 	"exclude": [
 		"**/test/**/*"
