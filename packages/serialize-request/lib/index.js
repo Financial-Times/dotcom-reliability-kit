@@ -1,8 +1,4 @@
 /**
- * @module @dotcom-reliability-kit/serialize-request
- */
-
-/**
  * @typedef {import('express').Request | import('http').IncomingMessage & {route: object, params: object}} Request
  */
 

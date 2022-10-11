@@ -1,8 +1,4 @@
 /**
- * @module @dotcom-reliability-kit/errors/lib/operational-error
- */
-
-/**
  * @typedef {object} OperationalErrorData
  * @property {string} [code]
  *     A machine-readable error code which identifies the specific type of error.

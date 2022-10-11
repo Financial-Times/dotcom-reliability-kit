@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/app-info
- */
-
 const path = require('path');
 
 /**
@@ -44,61 +40,51 @@ function normalizePackageName(name) {
 const systemCode =
 	process.env.SYSTEM_CODE || getSystemCodeFromPackage(process.cwd()) || null;
 
-module.exports = {
-	/**
-	 * @readonly
-	 * @access public
-	 * @type {(string | null)}
-	 */
+/**
+ * @typedef {object} AppInfo
+ * @property {string | null} commitHash
+ *     The application commit hash.
+ * @property {string} environment
+ *     The application environment.
+ * @property {string | null} region
+ *     The region the application is running in.
+ * @property {string | null} releaseDate
+ *     The date and time that the application was last released at.
+ * @property {string | null} releaseVersion
+ *     The last released version of the application.
+ * @property {string | null} systemCode
+ *     The application system code.
+ */
+
+/**
+ * @type {AppInfo}
+ */
+const appInfo = {
 	get commitHash() {
 		return process.env.HEROKU_SLUG_COMMIT || null;
 	},
 
-	/**
-	 * @readonly
-	 * @access public
-	 * @type {string}
-	 */
 	get environment() {
 		return process.env.NODE_ENV || 'development';
 	},
 
-	/**
-	 * @readonly
-	 * @access public
-	 * @type {(string | null)}
-	 */
 	get region() {
 		return process.env.REGION || null;
 	},
 
-	/**
-	 * @readonly
-	 * @access public
-	 * @type {(string | null)}
-	 */
 	get releaseDate() {
 		return process.env.HEROKU_RELEASE_CREATED_AT || null;
 	},
 
-	/**
-	 * @readonly
-	 * @access public
-	 * @type {(string | null)}
-	 */
 	get releaseVersion() {
 		return process.env.HEROKU_RELEASE_VERSION || null;
 	},
 
-	/**
-	 * @readonly
-	 * @access public
-	 * @type {(string | null)}
-	 */
 	get systemCode() {
 		return systemCode;
 	}
 };
 
-// @ts-ignore
+module.exports = appInfo;
+
 module.exports.default = module.exports;

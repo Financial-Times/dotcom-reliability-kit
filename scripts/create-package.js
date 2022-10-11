@@ -64,11 +64,7 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 	await fs.mkdir(libPath);
 	await fs.writeFile(
 		path.join(libPath, 'index.js'),
-		`/**
- * @module @dotcom-reliability-kit/${name}
- */
-
-module.exports = {};
+		`module.exports = {};
 `
 	);
 

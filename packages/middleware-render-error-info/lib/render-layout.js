@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/middleware-render-error-info/lib/render-layout
- */
-
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const fs = require('fs');
 

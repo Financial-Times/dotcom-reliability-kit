@@ -1,8 +1,4 @@
 /**
- * @module @dotcom-reliability-kit/serialize-error
- */
-
-/**
  * @typedef {object} SerializedError
  * @property {string} name
  *     The name of the class that the error is an instance of.

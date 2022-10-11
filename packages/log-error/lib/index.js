@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/log-error
- */
-
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const logger = require('@financial-times/n-logger').default;
 const serializeError = require('@dotcom-reliability-kit/serialize-error');

@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/errors
- */
-
 exports.DataStoreError = require('./data-store-error');
 exports.HttpError = require('./http-error');
 exports.OperationalError = require('./operational-error');

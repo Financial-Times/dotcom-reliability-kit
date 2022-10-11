@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/middleware-render-error-info
- */
-
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const renderErrorPage = require('./render-error-page');
