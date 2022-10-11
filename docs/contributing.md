@@ -22,6 +22,7 @@ We're glad you want to contribute to Reliability Kit!
     * [Pull request scope](#pull-request-scope)
     * [Merging pull requests](#merging-pull-requests)
   * [Releasing](#releasing)
+    * [Generated files](#generated-files)
     * [Correcting releases](#correcting-releases)
 
 
@@ -213,6 +214,16 @@ When a commit with the `feat` or `fix` [commit type prefix](#commit-type-prefixe
 If the PR is left alone, it will continue to be updated with new releases as more commits appear on the `main` branch.
 
 Before approving and merging the release PR, make sure you review it. You need to check the package versions that it updates to make sure you’re only releasing the things you expect.
+
+### Generated files
+
+Before publishing npm packages we do generate TypeScript type declaration files (`.d.ts`) so that TypeScript-based project which use Reliability Kit will get correct type hinting.
+
+If a release has caused issues with Type hinting or TypeScript-based projects compiling, then you can inspect the generated files by running the build command locally and viewing the `.d.ts` files in your editor:
+
+```
+npm run build
+```
 
 ### Correcting releases
 

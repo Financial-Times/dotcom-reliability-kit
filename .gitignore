@@ -1,3 +1,5 @@
+*.d.ts
+*.d.ts.map
 logos/dist
 node_modules/
 coverage

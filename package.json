@@ -20,7 +20,11 @@
     "create-package": "./scripts/create-package.js",
     "lint": "npm run lint:eslint && npm run lint:tsc",
     "lint:eslint": "eslint .",
-    "lint:tsc": "tsc --project ./jsconfig.json",
+    "lint:tsc": "npm run clean && tsc --project ./jsconfig.json",
+    "clean": "npm run clean:types",
+    "clean:types": "find ./packages -name \"*.d.ts*\" | xargs rm",
+    "build": "npm run clean && npm run build:types",
+    "build:types": "tsc --project ./jsconfig.build.json",
     "test": "jest --silent",
     "prepare": "husky install",
     "postinstall": "npm run build:logos"

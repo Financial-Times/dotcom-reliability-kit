@@ -1,0 +1,17 @@
+{
+	"extends": "./jsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": true,
+		"noEmit": false,
+		"removeComments": true,
+		"useDefineForClassFields": true,
+	},
+	"exclude": [
+		"**/test/**/*"
+	],
+	"include": [
+		"packages/**/*.js"
+	]
+}
