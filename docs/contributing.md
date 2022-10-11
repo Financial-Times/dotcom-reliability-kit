@@ -217,7 +217,7 @@ Before approving and merging the release PR, make sure you review it. You need t
 
 ### Generated files
 
-Before publishing npm packages we do generate TypeScript type declaration files (`.d.ts`) so that TypeScript-based project which use Reliability Kit will get correct type hinting.
+Before publishing npm packages we do generate TypeScript type declaration files (`.d.ts`) so that TypeScript-based projects which use Reliability Kit will get correct type hinting.
 
 If a release has caused issues with Type hinting or TypeScript-based projects compiling, then you can inspect the generated files by running the build command locally and viewing the `.d.ts` files in your editor:
 
