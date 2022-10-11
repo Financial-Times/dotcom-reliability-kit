@@ -6,7 +6,7 @@ const HttpError = require('./http-error');
 class UserInputError extends HttpError {
 	/**
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {string}
 	 */
 	name = 'UserInputError';

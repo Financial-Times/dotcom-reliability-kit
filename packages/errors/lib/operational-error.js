@@ -16,7 +16,7 @@
 class OperationalError extends Error {
 	/**
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {string}
 	 */
 	name = 'OperationalError';
@@ -25,7 +25,7 @@ class OperationalError extends Error {
 	 * Whether the error is operational.
 	 *
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {boolean}
 	 */
 	isOperational = true;
@@ -34,7 +34,7 @@ class OperationalError extends Error {
 	 * A machine-readable error code which identifies the specific type of error.
 	 *
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {string}
 	 */
 	code = 'UNKNOWN';
@@ -44,7 +44,7 @@ class OperationalError extends Error {
 	 * If this error is caused by one or more dependencies, include their system code here.
 	 *
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {Array<string>}
 	 */
 	relatesToSystems = [];
@@ -53,7 +53,7 @@ class OperationalError extends Error {
 	 * The root cause error instance.
 	 *
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {Error|null}
 	 */
 	cause = null;
@@ -62,7 +62,7 @@ class OperationalError extends Error {
 	 * Additional error information.
 	 *
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {Object<string, any>}
 	 */
 	data = {};
@@ -106,7 +106,7 @@ class OperationalError extends Error {
 	/**
 	 * Reserved keys that should not appear in `OperationalError.prototype.data`.
 	 *
-	 * @access private
+	 * @protected
 	 * @type {Array<string>}
 	 */
 	static reservedKeys = ['code', 'message', 'relatesToSystems', 'cause'];
@@ -129,7 +129,7 @@ class OperationalError extends Error {
 	/**
 	 * Normalize a machine-readable error code.
 	 *
-	 * @access private
+	 * @private
 	 * @param {string} code
 	 *     The error code to normalize.
 	 * @returns {string}

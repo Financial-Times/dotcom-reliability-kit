@@ -6,7 +6,7 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
 /**
  * Create a middleware function to render an error info page.
  *
- * @access public
+ * @public
  * @returns {import('express').ErrorRequestHandler}
  *     Returns error info rendering middleware.
  */

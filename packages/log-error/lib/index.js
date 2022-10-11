@@ -24,7 +24,7 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 /**
  * Log an error object with optional request information.
  *
- * @access private
+ * @private
  * @param {ErrorLoggingOptions & InternalErrorLoggingOptions} options
  *     The data to log.
  * @returns {void}
@@ -53,7 +53,7 @@ function logError({ error, event, includeHeaders, level = 'error', request }) {
 /**
  * Get a human readable error message from a serialized error object.
  *
- * @access private
+ * @private
  * @param {serializeError.SerializedError} serializedError
  *     The serialized error to get a message for.
  * @returns {string}
@@ -68,7 +68,7 @@ function extractErrorMessage(serializedError) {
 /**
  * Log a handled error.
  *
- * @access public
+ * @public
  * @param {ErrorLoggingOptions} options
  *     The data to log.
  * @returns {void}
@@ -85,7 +85,7 @@ function logHandledError({ error, includeHeaders, request }) {
 /**
  * Log a recoverable error.
  *
- * @access public
+ * @public
  * @param {ErrorLoggingOptions} options
  *     The data to log.
  * @returns {void}
@@ -103,7 +103,7 @@ function logRecoverableError({ error, includeHeaders, request }) {
 /**
  * Log an unhandled error.
  *
- * @access public
+ * @public
  * @param {ErrorLoggingOptions} options
  *     The data to log.
  * @returns {void}

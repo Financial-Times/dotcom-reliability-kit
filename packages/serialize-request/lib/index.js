@@ -41,7 +41,7 @@
 /**
  * The default request headers to include in the serialization.
  *
- * @access private
+ * @private
  * @type {Array<string>}
  */
 const DEFAULT_INCLUDED_HEADERS = ['accept', 'content-type'];
@@ -49,7 +49,7 @@ const DEFAULT_INCLUDED_HEADERS = ['accept', 'content-type'];
 /**
  * Serialize a request object so that it can be consistently logged or output as JSON.
  *
- * @access public
+ * @public
  * @param {(string | Request)} request
  *     The request object to serialize. Either an Express Request object or a
  *     built-in Node.js IncomingMessage object.
@@ -128,7 +128,7 @@ function serializeRequest(request, options = {}) {
 /**
  * Serialize request headers.
  *
- * @access private
+ * @private
  * @param {Record<string, any>} headers
  *     The headers object to serialize.
  * @param {Array<string>} includeHeaders
@@ -147,7 +147,7 @@ function serializeHeaders(headers, includeHeaders) {
 /**
  * Create a new serialized request object.
  *
- * @access private
+ * @private
  * @param {Record<string, any>} properties
  *     The properties of the serialized error.
  * @returns {SerializedRequest}

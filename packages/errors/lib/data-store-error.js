@@ -6,7 +6,7 @@ const OperationalError = require('./operational-error');
 class DataStoreError extends OperationalError {
 	/**
 	 * @readonly
-	 * @access public
+	 * @public
 	 * @type {string}
 	 */
 	name = 'DataStoreError';
