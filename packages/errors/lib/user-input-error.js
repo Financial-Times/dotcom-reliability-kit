@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/errors/lib/user-input-error
- */
-
 const HttpError = require('./http-error');
 
 /**

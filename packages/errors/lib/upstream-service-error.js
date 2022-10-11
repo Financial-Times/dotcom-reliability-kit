@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/errors/lib/upstream-service-error
- */
-
 const HttpError = require('./http-error');
 
 /**

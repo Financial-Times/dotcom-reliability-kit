@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/middleware-log-errors
- */
-
 const { logHandledError } = require('@dotcom-reliability-kit/log-error');
 
 /**

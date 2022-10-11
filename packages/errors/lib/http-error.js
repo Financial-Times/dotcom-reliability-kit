@@ -1,7 +1,3 @@
-/**
- * @module @dotcom-reliability-kit/errors/lib/http-error
- */
-
 const OperationalError = require('./operational-error');
 
 /**
