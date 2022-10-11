@@ -3,6 +3,7 @@
 		"allowJs": true,
 		"checkJs": true,
 		"module": "commonjs",
+		"noEmit": true,
 		"resolveJsonModule": true,
 		"strictBindCallApply": true,
 		"strictFunctionTypes": true,

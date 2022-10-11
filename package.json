@@ -20,7 +20,7 @@
     "create-package": "./scripts/create-package.js",
     "lint": "npm run lint:eslint && npm run lint:tsc",
     "lint:eslint": "eslint .",
-    "lint:tsc": "tsc --noEmit --project ./jsconfig.json",
+    "lint:tsc": "tsc --project ./jsconfig.json",
     "test": "jest --silent",
     "prepare": "husky install",
     "postinstall": "npm run build:logos"
