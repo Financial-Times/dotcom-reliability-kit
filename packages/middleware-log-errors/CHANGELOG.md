@@ -18,6 +18,20 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.3 to ^1.3.4
 
+## [1.2.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.8...middleware-log-errors-v1.2.9) (2022-10-12)
+
+
+### Bug Fixes
+
+* include TypeScript types in the build ([65d8fb2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/65d8fb29f0a4e469a2d766ae2f92a67b221c1436))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.7 to ^1.3.8
+
 ## [1.2.8](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.7...middleware-log-errors-v1.2.8) (2022-10-12)
 
 

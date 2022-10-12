@@ -6,6 +6,22 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.3
 
+## [1.1.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.6...middleware-render-error-info-v1.1.7) (2022-10-12)
+
+
+### Bug Fixes
+
+* include TypeScript types in the build ([65d8fb2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/65d8fb29f0a4e469a2d766ae2f92a67b221c1436))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.0.2 to ^1.0.3
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.7 to ^1.3.8
+    * @dotcom-reliability-kit/serialize-error bumped from ^1.1.3 to ^1.1.4
+
 ## [1.1.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.5...middleware-render-error-info-v1.1.6) (2022-10-12)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.0.2...app-info-v1.0.3) (2022-10-12)
+
+
+### Bug Fixes
+
+* include TypeScript types in the build ([65d8fb2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/65d8fb29f0a4e469a2d766ae2f92a67b221c1436))
+
 ## [1.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.0.1...app-info-v1.0.2) (2022-10-12)
 
 
