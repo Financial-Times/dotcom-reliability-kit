@@ -55,7 +55,7 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 	console.log('📄 adding ".npmignore"');
 	await fs.writeFile(
 		path.join(packagePath, '.npmignore'),
-		['CHANGELOG.md', 'docs', 'test'].join('\n')
+		['!*.d.ts', '!*.d.ts.map', 'CHANGELOG.md', 'docs', 'test'].join('\n')
 	);
 
 	// Bootstrap base JavaScript files
