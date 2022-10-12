@@ -18,6 +18,25 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.3 to ^1.3.4
 
+## [1.2.8](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.7...middleware-log-errors-v1.2.8) (2022-10-12)
+
+
+### Bug Fixes
+
+* correct property and method privacy JSDoc ([1b52fee](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1b52fee58f8bd37600f51c93580c0e48765f0d2a))
+
+
+### Documentation Changes
+
+* use GitHub's note/warning highlights ([4a40080](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4a400802584f1008c5771e24bc06a6c5ec447d34))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.6 to ^1.3.7
+
 ## [1.2.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.6...middleware-log-errors-v1.2.7) (2022-09-28)
 
 

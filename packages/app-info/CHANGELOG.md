@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.0.1...app-info-v1.0.2) (2022-10-12)
+
+
+### Bug Fixes
+
+* add the [@readonly](https://github.com/readonly) tag to appInfo properties ([8ea488a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8ea488afa3e8a6a5e9c78adc194e1b226409d6f1))
+
 ## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.0.0...app-info-v1.0.1) (2022-09-28)
 
 

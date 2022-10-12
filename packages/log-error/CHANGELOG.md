@@ -12,6 +12,28 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-error bumped from ^1.1.0 to ^1.1.1
 
+## [1.3.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.6...log-error-v1.3.7) (2022-10-12)
+
+
+### Bug Fixes
+
+* correct property and method privacy JSDoc ([1b52fee](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1b52fee58f8bd37600f51c93580c0e48765f0d2a))
+* use module.exports for consistency ([8cdd4d7](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8cdd4d74afe44c51504ddf0f9a3219db3ad2654a))
+
+
+### Documentation Changes
+
+* use GitHub's note/warning highlights ([4a40080](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4a400802584f1008c5771e24bc06a6c5ec447d34))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.0.1 to ^1.0.2
+    * @dotcom-reliability-kit/serialize-error bumped from ^1.1.2 to ^1.1.3
+    * @dotcom-reliability-kit/serialize-request bumped from ^1.0.1 to ^1.0.2
+
 ## [1.3.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.5...log-error-v1.3.6) (2022-09-28)
 
 

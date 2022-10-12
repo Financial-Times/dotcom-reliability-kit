@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.2...errors-v1.2.3) (2022-10-12)
+
+
+### Bug Fixes
+
+* correct property and method privacy JSDoc ([1b52fee](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1b52fee58f8bd37600f51c93580c0e48765f0d2a))
+* use module.exports for consistency ([8cdd4d7](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8cdd4d74afe44c51504ddf0f9a3219db3ad2654a))
+
 ## [1.2.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.1...errors-v1.2.2) (2022-09-28)
 
 
