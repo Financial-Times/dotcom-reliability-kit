@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.4...errors-v1.2.5) (2022-10-12)
+
+
+### Bug Fixes
+
+* **errors:** removes readonly JDoc property from getter ([7e16b3f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/7e16b3fe0234785ff39574958ccacb4dc244f71b))
+
 ## [1.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.3...errors-v1.2.4) (2022-10-12)
 
 
