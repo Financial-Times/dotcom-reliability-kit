@@ -42,7 +42,6 @@ class HttpError extends OperationalError {
 	statusMessage = STATUS_CODES[500];
 
 	/**
-	 * @readonly
 	 * @public
 	 * @type {number}
 	 */
