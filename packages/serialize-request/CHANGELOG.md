@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.0.1...serialize-request-v1.0.2) (2022-10-12)
+
+
+### Bug Fixes
+
+* correct property and method privacy JSDoc ([1b52fee](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1b52fee58f8bd37600f51c93580c0e48765f0d2a))
+
 ## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.0.0...serialize-request-v1.0.1) (2022-09-28)
 
 
