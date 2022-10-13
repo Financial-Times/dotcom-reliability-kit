@@ -21,6 +21,7 @@ const STATUS_CODES = require('http').STATUS_CODES;
  */
 class HttpError extends OperationalError {
 	/**
+	 * @override
 	 * @readonly
 	 * @public
 	 * @type {string}
@@ -94,6 +95,7 @@ class HttpError extends OperationalError {
 	/**
 	 * Reserved keys that should not appear in `HttpError.prototype.data`.
 	 *
+	 * @override
 	 * @protected
 	 * @type {Array<string>}
 	 */

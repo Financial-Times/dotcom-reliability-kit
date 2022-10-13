@@ -5,6 +5,7 @@
 		"exactOptionalPropertyTypes": true,
 		"module": "commonjs",
 		"noEmit": true,
+		"noImplicitOverride": true,
 		"noImplicitThis": true,
 		"resolveJsonModule": true,
 		"strictBindCallApply": true,
