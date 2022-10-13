@@ -1,8 +1,11 @@
 {
 	"compilerOptions": {
+		"alwaysStrict": true,
 		"checkJs": true,
+		"exactOptionalPropertyTypes": true,
 		"module": "commonjs",
 		"noEmit": true,
+		"noImplicitThis": true,
 		"resolveJsonModule": true,
 		"strictBindCallApply": true,
 		"strictFunctionTypes": true,
