@@ -5,6 +5,7 @@ const HttpError = require('./http-error');
  */
 class UpstreamServiceError extends HttpError {
 	/**
+	 * @override
 	 * @readonly
 	 * @public
 	 * @type {string}

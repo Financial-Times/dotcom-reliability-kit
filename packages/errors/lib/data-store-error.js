@@ -5,6 +5,7 @@ const OperationalError = require('./operational-error');
  */
 class DataStoreError extends OperationalError {
 	/**
+	 * @override
 	 * @readonly
 	 * @public
 	 * @type {string}

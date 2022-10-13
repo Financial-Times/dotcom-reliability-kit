@@ -15,6 +15,7 @@
  */
 class OperationalError extends Error {
 	/**
+	 * @override
 	 * @readonly
 	 * @public
 	 * @type {string}
