@@ -1,0 +1,14 @@
+{
+  "name": "@dotcom-reliability-kit/splunk-dashboards",
+  "version": "0.0.0",
+  "private": true,
+  "description": "The Reliability Kit Splunk dashboard JSON",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "resources/splunk-dashboards"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/resources/splunk-dashboards#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
+  "license": "MIT"
+}

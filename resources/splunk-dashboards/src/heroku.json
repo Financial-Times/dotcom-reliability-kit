@@ -1,0 +1,268 @@
+{
+	"title": "Reliability Kit: Heroku App With Log Drains",
+	"description": "A dashboard to view issues with apps which use Reliability Kit and Heroku Log Drains.",
+	"visualizations": {
+		"viz_common_errors": {
+			"type": "splunk.table",
+			"dataSources": {
+				"primary": "ds_search_table_grouped_errors"
+			},
+			"title": "Common errors",
+			"description": "A grouping of most common errors grouped by name, code, and error stack",
+			"options": {
+				"count": 5
+			}
+		},
+		"viz_md_general_origin_health": {
+			"type": "splunk.markdown",
+			"options": {
+				"markdown": "---\n\n# General origin health\n\nThe following charts illustrate the general health of the system, mostly based on Heroku router and API logs."
+			}
+		},
+		"viz_error_response_statuses": {
+			"type": "splunk.area",
+			"dataSources": {
+				"primary": "ds_search_router_error_response_status"
+			},
+			"title": "HTTP Error Response Statuses",
+			"description": "Graph showing HTTP response status at origin over time. Sourced from Heroku Router logs.",
+			"options": {
+				"stackMode": "stacked",
+				"yAxisTitleText": "Number of responses served",
+				"xAxisTitleText": "Time",
+				"legendDisplay": "bottom"
+			}
+		},
+		"viz_md_error_information": {
+			"type": "splunk.markdown",
+			"options": {
+				"markdown": "---\n\n# Error Information\n\nThe following charts break down the errors that this system logs by different properties so that we can spot and fix common issues."
+			}
+		},
+		"viz_operational_errors": {
+			"type": "splunk.area",
+			"dataSources": {
+				"primary": "ds_search_operational_vs_nonoperational"
+			},
+			"title": "Operational vs Non-Operational Errors",
+			"description": "Of all errors logged by the system, how many are operational (known about) vs non-operational (unknown)",
+			"options": {
+				"xAxisTitleText": "Time",
+				"yAxisTitleText": "Number of errors logged",
+				"stackMode": "stacked",
+				"legendDisplay": "bottom"
+			}
+		},
+		"viz_error_names": {
+			"type": "splunk.area",
+			"dataSources": {
+				"primary": "ds_search_error_names"
+			},
+			"title": "Logged error names",
+			"description": "What is the name property of all logged errors.",
+			"options": {
+				"xAxisTitleText": "Time",
+				"yAxisTitleText": "Number of errors logged",
+				"stackMode": "stacked",
+				"legendDisplay": "bottom"
+			}
+		},
+		"viz_error_systems": {
+			"type": "splunk.area",
+			"dataSources": {
+				"primary": "ds_search_error_related_systems"
+			},
+			"title": "Logged error related systems",
+			"description": "Which systems do errors relate to.",
+			"options": {
+				"xAxisTitleText": "Time",
+				"yAxisTitleText": "Number of errors logged",
+				"stackMode": "stacked",
+				"legendDisplay": "bottom"
+			}
+		},
+		"viz_error_codes": {
+			"type": "splunk.area",
+			"dataSources": {
+				"primary": "ds_search_error_codes"
+			},
+			"title": "Logged error codes",
+			"description": "What is the code property of all logged errors.",
+			"options": {
+				"xAxisTitleText": "Time",
+				"yAxisTitleText": "Number of errors logged",
+				"stackMode": "stacked",
+				"legendDisplay": "bottom"
+			}
+		}
+	},
+	"dataSources": {
+		"ds_search_router_error_response_status": {
+			"type": "ds.search",
+			"options": {
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:router\" status>=400 status<600\n| timechart count by status",
+				"queryParameters": {
+					"earliest": "$global_time.earliest$",
+					"latest": "$global_time.latest$"
+				}
+			},
+			"name": "search_router_error_response_status"
+		},
+		"ds_search_operational_vs_nonoperational": {
+			"type": "ds.search",
+			"options": {
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\"\n| fillnull value=false error.isOperational\n| timechart count by error.isOperational"
+			},
+			"name": "search_operational_vs_nonoperational"
+		},
+		"ds_search_error_codes": {
+			"type": "ds.search",
+			"options": {
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" error.code=*\n| timechart count by error.code"
+			},
+			"name": "search_error_codes"
+		},
+		"ds_search_error_names": {
+			"type": "ds.search",
+			"options": {
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" error.name=*\n| timechart count by error.name"
+			},
+			"name": "search_error_names"
+		},
+		"ds_search_error_related_systems": {
+			"type": "ds.search",
+			"options": {
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" error.isOperational=*\n| rename error.relatesToSystems{} as relatedSystem \n| search relatedSystem=*\n| timechart count by relatedSystem"
+			},
+			"name": "search_error_related_systems"
+		},
+		"ds_search_table_grouped_errors": {
+			"type": "ds.search",
+			"options": {
+				"enableSmartSources": true,
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" level=error\n| rex field=error.stack \"(?<stackTraceHeader>[^\\r\\n]+[\\r\\n]+[^\\r\\n]+)\"\n| rex field=error.stack \"[^\\r\\n]+[\\r\\n]+[^\\r\\n\\(]*\\((?<filePointer>[^\\)]+)\\)\" \n| rename error.name as name, error.code as code, error.message as message\n| eval hash=md5(name.\"__\".code.\"__\".stackTraceHeader)\n| stats sparkline() as timeline count by hash, name, code, message, filePointer \n| table count timeline name code message filePointer\n| sort count desc"
+			},
+			"name": "search_table_grouped_errors"
+		}
+	},
+	"defaults": {
+		"dataSources": {
+			"ds.search": {
+				"options": {
+					"queryParameters": {
+						"latest": "$global_time.latest$",
+						"earliest": "$global_time.earliest$"
+					}
+				}
+			}
+		}
+	},
+	"inputs": {
+		"input_global_trp": {
+			"type": "input.timerange",
+			"options": {
+				"token": "global_time",
+				"defaultValue": "-24h@h,now"
+			},
+			"title": "Time range"
+		},
+		"input_system_code": {
+			"options": {
+				"defaultValue": "next-topic-tracker-api",
+				"token": "text_system_code"
+			},
+			"title": "System code",
+			"type": "input.text"
+		}
+	},
+	"layout": {
+		"type": "grid",
+		"options": {},
+		"structure": [
+			{
+				"item": "viz_common_errors",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 0,
+					"w": 1200,
+					"h": 350
+				}
+			},
+			{
+				"item": "viz_md_general_origin_health",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 350,
+					"w": 1200,
+					"h": 150
+				}
+			},
+			{
+				"item": "viz_error_response_statuses",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 500,
+					"w": 1200,
+					"h": 350
+				}
+			},
+			{
+				"item": "viz_md_error_information",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 850,
+					"w": 1200,
+					"h": 150
+				}
+			},
+			{
+				"item": "viz_operational_errors",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 1000,
+					"w": 600,
+					"h": 350
+				}
+			},
+			{
+				"item": "viz_error_names",
+				"type": "block",
+				"position": {
+					"x": 600,
+					"y": 1000,
+					"w": 600,
+					"h": 350
+				}
+			},
+			{
+				"item": "viz_error_systems",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 1350,
+					"w": 600,
+					"h": 350
+				}
+			},
+			{
+				"item": "viz_error_codes",
+				"type": "block",
+				"position": {
+					"x": 600,
+					"y": 1350,
+					"w": 600,
+					"h": 350
+				}
+			}
+		],
+		"globalInputs": [
+			"input_global_trp",
+			"input_system_code"
+		]
+	}
+}
