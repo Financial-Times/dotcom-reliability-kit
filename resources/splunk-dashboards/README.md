@@ -14,12 +14,16 @@ This package includes JSON files which can be used to create Splunk dashboards. 
 
   * **[Heroku](./src/heroku.json):** A dashboard to view issues with apps which use Reliability Kit and Heroku Log Drains. This template includes an input to set system code, so there's no need to create your own copy of this dashboard – just use the [live dashboard](https://financialtimes.splunkcloud.com/en-US/app/search/reliability_kit_heroku) and change the system code.
 
+If you're set on creating your own dashboard using these templates, then you can [create a dashboard in Splunk here](https://financialtimes.splunkcloud.com/en-US/app/search/dashboards), making sure to select "Dashboard Studio" when asked how you want to build your dashboard.
+
+Once you have a dashboard on the edit view (the one that opens by default), you can click the "Source" button in the toolbar (the last one which has angle brackets inside a window icon). Paste the relevant template JSON into the new JSON editing view that opens.
+
 
 ## Contributing
 
 See the [central contributing guide for Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit/blob/main/docs/contributing.md) for the basics. There are also some additional requirements for working with Splunk dashboards.
 
-If you make edits using the Splunk UI, make sure that only the changes you require are actually pasted back into this repo. This includes making sure that you don't accidentally break data source linking etc. It's a good idea to rename the IDs that the Splunk UI generates so that it's easier to see what the dashboard is doing.
+If you make edits using the Splunk UI (see [usage section](#usage) for details), make sure that only the changes you require are actually pasted back into this repo. This includes making sure that you don't accidentally break data source linking etc. It's a good idea to rename the IDs that the Splunk UI generates so that it's easier to see what the dashboard is doing.
 
 
 ## License
