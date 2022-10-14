@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.5...errors-v1.2.6) (2022-10-14)
+
+
+### Bug Fixes
+
+* don't allow implicit overrides ([8101f98](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8101f982daa03e63b9b90353958b05a92f8dbb03))
+
 ## [1.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.4...errors-v1.2.5) (2022-10-12)
 
 
