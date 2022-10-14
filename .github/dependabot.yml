@@ -16,7 +16,7 @@ updates:
       timezone: "Europe/London"
 
   - package-ecosystem: "npm"
-    directory: "/logos"
+    directory: "/resources/logos"
     schedule:
       interval: "daily"
       time: "09:00"

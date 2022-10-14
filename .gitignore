@@ -1,5 +1,5 @@
 *.d.ts
 *.d.ts.map
-logos/dist
+resources/logos/dist
 node_modules/
 coverage
