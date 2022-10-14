@@ -6,9 +6,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
-    "directory": "logos"
+    "directory": "resources/logos"
   },
-  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/logos#readme",
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/resources/logos#readme",
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues",
   "license": "MIT",
   "engines": {
