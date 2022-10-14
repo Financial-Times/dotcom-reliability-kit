@@ -1,6 +1,6 @@
 {
   "packages/app-info": "1.0.3",
-  "packages/errors": "1.2.5",
+  "packages/errors": "1.2.6",
   "packages/log-error": "1.3.8",
   "packages/middleware-log-errors": "1.2.9",
   "packages/middleware-render-error-info": "1.1.7",
