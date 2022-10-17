@@ -44,7 +44,7 @@ To understand the design decisions we made when building this project, [read the
 
 ## Contributing
 
-[The contributing guide is available here](docs/contributing.md).
+[The contributing guide is available here](docs/contributing.md). You can find a [roadmap with planned work here](https://github.com/orgs/Financial-Times/projects/111).
 
 
 ## License

@@ -10,6 +10,7 @@ This document outlines the design decisions made in this project.
     * [Testing](#testing)
     * [Monorepo management](#monorepo-management)
     * [Release management](#release-management)
+  * [Issues](#issues)
 
 
 ## Languages
@@ -60,3 +61,14 @@ We decided that [npm workspaces](https://docs.npmjs.com/cli/v8/using-npm/workspa
 ### Release management
 
 We opted for [Conventional Commits](https://www.conventionalcommits.org/) as this allows us to programatically determine package version numbers and automate a lot of the release tasks related to managing a monorepo. As none of the team at the time were in the habit of writing commits this way, we adopted [commitlint](https://commitlint.js.org/) in order to enforce the rules. There is more information on [how to commit](./contributing.md#committing) in the contributing guide.
+
+
+## Issues
+
+We opted to use [GitHub issues](https://github.com/Financial-Times/dotcom-reliability-kit/issues) and a [project board](https://github.com/orgs/Financial-Times/projects/111) to track work that needs to be done on Reliability Kit. This is for several reasons:
+
+  1. The project board can easily be public to match the repo. This allows people who aren't members of the Financial-Times GitHub org to contribute. The issues and progress tracking also lives alongside the code
+
+  2. By using GitHub we don't have to manage access separately – all our engineers have access by default and anyone with a GitHub account can comment without needing to take up a license seat
+
+  3. We can more easily manage issue and PR templates to suit our needs, as well as being able to add custom fields and views on our data
