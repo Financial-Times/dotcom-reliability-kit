@@ -24,6 +24,7 @@ We're glad you want to contribute to Reliability Kit!
   * [Releasing](#releasing)
     * [Generated files](#generated-files)
     * [Correcting releases](#correcting-releases)
+  * [Issue management](#issue-management)
 
 
 ## Requirements
@@ -238,3 +239,17 @@ npx release-please release-pr --token="XXXXXX" --repo-url="Financial-Times/dotco
 In this command, change `XXXXXX` to a GitHub token with write access to the Reliability Kit repo. This can be a personal or bot token, but it's best to use the one defined in the [Dotcom Reliability Kit vault](https://vault.in.ft.com:8080/ui/vault/secrets/secret/show/teams/next/dotcom-reliability-kit/continuous-integration) as `RELEASE_PLEASE_GITHUB_TOKEN`.
 
 [There's an example of a PR which we did this for here](https://github.com/Financial-Times/dotcom-reliability-kit/pull/116).
+
+
+## Issue management
+
+We use [GitHub issues](https://github.com/Financial-Times/dotcom-reliability-kit/issues) and a [project board](https://github.com/orgs/Financial-Times/projects/111) to track work that needs to be done on Reliability Kit.
+
+You can track the work that we're doing in the roadmap on our project board, and feel free to open new bug reports and feature requests on the repo.
+
+If you're managing issues, we have a [suite of labels](https://github.com/Financial-Times/dotcom-reliability-kit/labels). As well as the usual `bug` or `enhancement` labels, we also use the following to help us categorise and prioritise work:
+
+| **label**  | when to use |
+| ----- | ----- |
+| `package: <NAME>` | Used to help us filter bugs and issues by package. Add these labels to an issue so we can see if a particular package is causing us more problems over time |
+| `requested` | Used to indicate that a team outside of the maintainers of Reliability Kit have requested this feature, which helps us prioritise it against other work |
