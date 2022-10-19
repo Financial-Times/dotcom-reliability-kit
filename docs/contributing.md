@@ -12,6 +12,10 @@ We're glad you want to contribute to Reliability Kit!
     * [Package dependencies](#package-dependencies)
     * [Depending on other Reliability Kit packages](#depending-on-other-reliability-kit-packages)
   * [Testing](#testing)
+    * [Node.js support](#nodejs-support)
+      * [Supporting a new Node.js version](#supporting-a-new-nodejs-version)
+      * [Switching the default LTS Node.js version](#TODO)
+      * [Dropping support for a Node.js version](#dropping-support-for-a-nodejs-version)
     * [Linters](#linters)
     * [Type safety](#type-safety)
     * [Unit tests](#unit-tests)
@@ -108,6 +112,46 @@ npm install --workspace=packages/<PACKAGE_NAME> @dotcom-reliability-kit/errors
 ## Testing
 
 Reliability Kit includes some tooling to ensure that code quality and consistency is high.
+
+### Node.js support
+
+Reliability Kit aims to support all versions of Node.js which are in the "Active <abbr title="Long Term Support">LTS</abbr>" or "Maintenance" [release phase](https://github.com/nodejs/Release#release-phases). We run all linting and tests on all the versions of Node.js that we support and we document the supported versions in the `package.json` `engines.node` field for the project and for each individual package.
+
+As well as the LTS versions of Node.js, we also try to immediately support Node.js versions in the "Current" release phase as long as they're an even major version number. We never support odd version numbered Node.js as these do not transition into LTS or Maintenance phases.
+
+#### Supporting a new Node.js version
+
+We aim to support new even Node.js versions as soon as they're released, but we need to wait until we can automate testing for that version. That relies on a new [CircleCI node image](https://circleci.com/developer/images/image/cimg/node) being published.
+
+Once that's done, you need to do the following:
+
+  1. Add the new Node.js version to all `package.json` files in the repo under the `engines.node` property. You must add new versions with a double pipe and follow the `MAJOR.x` format, e.g. append the existing engines with ` || 28.x`.
+
+  2. Update the [CircleCI config](../.circleci/config.yml) matrix builds to add the new Node.js version to the array of versions. For this you'll need the full version number, e.g. `28.0.0`. Find all instances of `node-version: ` and update the array. 
+
+  3. Commit your changes under a `feat: support Node.js XXX` commit ([see committing guide](#committing)) and open a pull request. We consider officially supporting a new version of Node.js to be a feature-level release.
+
+#### Switching the default LTS Node.js version
+
+When a new version of Node.js moves from the "Current" to "Active LTS" release phase, we set that version of Node.js to be the default version for the project. You can do this by:
+
+  1. Update the [CircleCI config](../.circleci/config.yml) default Node.js version to the new Active LTS version of Node.js. Find an instance of `node-version` with a `default` property and set that string to the new version.
+
+  2. Update the Volta config in [`package.json`](../package.json) so that we use the latest LTS version of Node.js when developing locally.
+
+  3. Commit your changes under a `chore: switch active LTS versions` commit ([see committing guide](#committing)) and open a pull request. We consider switching the default version of Node.js as a chore-level commit, because it has no impact on our actual Node.js support – we still test against all other versions.
+
+#### Dropping support for a Node.js version
+
+When a Node.js version reaches end-of-life and is no longer maintained, we can consider dropping support for it in Reliability Kit. This should be a discussion – just because a version is end-of-life it doesn't mean we've fully migrated away from it. When dropping support for a Node.js version in Reliability Kit you should consider all of the users we support.
+
+If we decide to drop support for a Node.js version, e.g. we want to start using features available only in later versions, then do the following:
+
+  1. Remove the Node.js version from the `engines.node` property in all `package.json` files in the repo. Remove the version as well as the double pipe which separates it from the next version.
+
+  2. Update the [CircleCI config](../.circleci/config.yml) Node.js versions in each matrix to remove the old Node.js version. Find instances of `node-version` with an array and remove the relevant items.
+
+  3. Commit your changes under a `chore!: drop support for Node.js XXX` commit ([see committing guide](#committing)) and open a pull request. We consider removing a Node.js version to be a breaking chore because it requires changes in dependent apps – they are forced to migrate Node.js versions.
 
 ### Linters
 
