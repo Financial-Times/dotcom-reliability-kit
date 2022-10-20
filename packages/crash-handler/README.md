@@ -34,7 +34,12 @@ const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
 
 ### `registerCrashHandler`
 
-The `registerCrashHandler` function can be used to bind an event handler to the [Node.js `process.uncaughtException` event](https://nodejs.org/api/process.html#event-uncaughtexception). This ensures that your application logs a final message before crashing in the event on an unexpected error or promise rejection. This function should only ever be called once in your app, normally alongside all your setup code (e.g. alongside creating an Express app).
+The `registerCrashHandler` function can be used to bind an event handler to the [Node.js `process.uncaughtException` event](https://nodejs.org/api/process.html#event-uncaughtexception). This ensures that your application logs a final message before crashing in the event on an unexpected error or promise rejection.
+
+This function should only ever be called once in your app, normally alongside all your setup code (e.g. alongside creating an Express app).
+
+> **Note**
+> It's not a requirement, but generally the earlier the better with registering an uncaught exception handler – the sooner you register it the more likely you are to catch uncaught exceptions.
 
 ```js
 registerCrashHandler();
