@@ -30,6 +30,13 @@ updates:
       timezone: "Europe/London"
 
   - package-ecosystem: "npm"
+    directory: "/packages/crash-handler"
+    schedule:
+      interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+
+  - package-ecosystem: "npm"
     directory: "/packages/log-error"
     schedule:
       interval: "daily"
