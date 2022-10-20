@@ -171,8 +171,27 @@ app.get('/fruit/:name', async (request, response, next) => {
 
 ## Unhandled errors
 
-**:construction: Under construction:** this part of the documentation relates to a planned feature.<br/>
-[See the discussion here for more information on unhandled errors](https://github.com/Financial-Times/dotcom-reliability-kit/discussions/32).
+There are times where an unexpected error can occur in your app and your code is not designed to handle that error. This is OK, and it's where the [Node.js `uncaughtException` event](https://nodejs.org/api/process.html#event-uncaughtexception) comes in.
+
+Uncaught exception handling should never attempt to keep the app alive. If an error is thrown in a place where no handling is present then it's correct for the application to crash, _however_ if the app is crashing then we need to be sure that the fatal error is logged somewhere:
+
+> **Note**
+> This code examples is illustrative, you should not use this in your application but it helps us explain how logging fatal errors works. For a production solution, see the later examples under this heading.
+
+```js
+process.on('uncaughtException', (error) => {
+    console.log(`The app is crashing because ${error.message}`);
+    process.exit(1);
+});
+```
+
+[`@dotcom-reliability-kit/crash-handler`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/crash-handler#readme) offers a way to register a consistent error handler in your apps, which [provides as much error information as possible](#extracting-logging-information). Using this will make fatal errors in your app a lot easier to debug.
+
+It abstracts the actual uncaught exception handling code away into a neat function call:
+
+```js
+registerCrashHandler({ process });
+```
 
 
 
