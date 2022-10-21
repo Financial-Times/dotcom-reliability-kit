@@ -176,7 +176,7 @@ There are times where an unexpected error can occur in your app and your code is
 Uncaught exception handling should never attempt to keep the app alive. If an error is thrown in a place where no handling is present then it's correct for the application to crash, _however_ if the app is crashing then we need to be sure that the fatal error is logged somewhere:
 
 > **Note**
-> This code examples is illustrative, you should not use this in your application but it helps us explain how logging fatal errors works. For a production solution, see the later examples under this heading.
+> This code example is illustrative, you should not use this in your application but it helps us explain how logging fatal errors works. For a production solution, see the later example under this heading.
 
 ```js
 process.on('uncaughtException', (error) => {
