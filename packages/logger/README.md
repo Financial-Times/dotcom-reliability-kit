@@ -12,6 +12,7 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
     * [`Logger` configuration options](#logger-configuration-options)
       * [`options.baseLogData`](#optionsbaselogdata)
       * [`options.logLevel`](#optionsloglevel)
+      * [`options.transforms`](#optionstransforms)
       * [`options.withTimestamps`](#optionswithtimestamps)
     * [`logger.log()` and shortcut methods](#loggerlog-and-shortcut-methods)
     * [`logger.flush()`](#loggerflush)
@@ -143,6 +144,45 @@ It's also possible to set this option as an environment variable, which is how y
 
   * `LOG_LEVEL`: The preferred way to set log level in an environment variable
   * `SPLUNK_LOG_LEVEL`: The legacy way to set log level, to maintain compatibility with [n-logger](https://github.com/Financial-Times/n-logger)
+
+#### `options.transforms`
+
+An array of functions which are called on log data before logs are output. This allows you to apply transformations to the final log object before it's sent.
+
+Each log transform must be a function which accepts a single object argument and returns an object. Expressed as TypeScript types:
+
+```ts
+type LogData = {[x: string]: any};
+type Tranform = (logData: LogData) => LogData
+```
+
+You can pass as many transforms as you need, though you must consider performance – each function will be called on every log that's sent.
+
+```js
+function uppercaseProperties(logData) {
+    const entries = Object.entries(logData).map(([property, value]) => {
+        return [property.toUpperCase(), value];
+    });
+    return Object.fromEntries(entries);
+}
+
+const logger = new Logger({
+    transforms: [
+        uppercaseProperties
+    ]
+});
+
+logger.info({
+    time: 1234567890,
+    message: 'Hello World'
+});
+// Outputs:
+// {
+//     "LEVEL": "info",
+//     "MESSAGE": "This is a log",
+//     "TIME": 1234567890
+// }
+```
 
 #### `options.withTimestamps`
 

@@ -17,6 +17,8 @@ const { default: structuredClone } = require('@ungap/structured-clone');
  * @property {LogLevel} [logLevel = "debug"]
  *     The maximum log level to output during logging. Logs at levels
  *     beneath this will be ignored.
+ * @property {Array<LogTransform>} [transforms = []]
+ *     Transforms to apply to logs before sending.
  * @property {boolean} [withTimestamps = true]
  *     Whether to send the timestamp that each log method was called.
  */
@@ -25,6 +27,14 @@ const { default: structuredClone } = require('@ungap/structured-clone');
  * @typedef {object} PrivateLoggerOptions
  * @property {LogTransport} [_transport]
  *     A transport used to perform logging. This is only for internal use.
+ */
+
+/**
+ * @callback LogTransform
+ * @param {Object<string, any>} logData
+ *     The log data to transform.
+ * @returns {Object<string, any>}
+ *     Returns the transformed log data.
  */
 
 /**
@@ -87,6 +97,11 @@ class Logger {
 	#baseLogData = {};
 
 	/**
+	 * @type {Array<LogTransform>}
+	 */
+	#transforms = [];
+
+	/**
 	 * @type {LogTransport}
 	 */
 	#logTransport;
@@ -118,6 +133,21 @@ class Logger {
 		if (logLevelOption) {
 			const { logLevel } = Logger.getLogLevelInfo(logLevelOption);
 			this.#logLevel = logLevel;
+		}
+
+		// Default and set the transforms option
+		if (options.transforms) {
+			if (
+				!Array.isArray(options.transforms) ||
+				!options.transforms.every(
+					(transform) => typeof transform === 'function'
+				)
+			) {
+				throw new TypeError(
+					'The `transforms` option must be an array of functions'
+				);
+			}
+			this.#transforms = options.transforms;
 		}
 
 		// Default and set the timestamps option.
@@ -183,7 +213,8 @@ class Logger {
 		return new Logger({
 			_transport: this.transport,
 			baseLogData: Object.assign({}, this.#baseLogData, baseLogData),
-			logLevel: this.#logLevel
+			logLevel: this.#logLevel,
+			transforms: this.#transforms
 		});
 	}
 
@@ -268,8 +299,17 @@ class Logger {
 				sanitizedLogData.message = null;
 			}
 
+			// Transform the log data
+			let transformedLogData = structuredClone(sanitizedLogData);
+			if (this.#transforms.length) {
+				transformedLogData = this.#transforms.reduce(
+					(logData, transform) => transform(logData),
+					transformedLogData
+				);
+			}
+
 			// Send the log
-			this.transport[logLevel](sanitizedLogData);
+			this.transport[logLevel](transformedLogData);
 
 			// If the log level is deprecated, then log a warning about that
 			if (isDeprecated && !this.#deprecatedMethodTracker.includes(level)) {
