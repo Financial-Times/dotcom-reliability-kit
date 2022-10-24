@@ -470,6 +470,113 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
+		describe('when a `transforms` option is set', () => {
+			let mockTransforms;
+
+			beforeEach(() => {
+				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+					logLevel: 'mockCanonicalLevel',
+					isDeprecated: false
+				});
+				jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+					isMockZippedData: true,
+					message: 'mock zipped message'
+				});
+				mockPinoLogger.mockCanonicalLevel.mockClear();
+				mockTransforms = [jest.fn(() => ({ isTransformedLogData: true }))];
+				logger = new Logger({
+					transforms: mockTransforms
+				});
+			});
+
+			describe('.log(level, ...logData)', () => {
+				beforeEach(() => {
+					logger.log('mockLevel', 'mock message', { mockData: true });
+				});
+
+				it('calls the log transform with the zipped log data', () => {
+					expect(mockTransforms[0]).toBeCalledTimes(1);
+					expect(mockTransforms[0]).toBeCalledWith({
+						isMockZippedData: true,
+						message: 'mock zipped message'
+					});
+				});
+
+				it('calls the relevant log transport method with the transformed log data', () => {
+					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
+					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+						isTransformedLogData: true
+					});
+				});
+			});
+
+			describe('when multiple transforms are used', () => {
+				beforeEach(() => {
+					mockPinoLogger.mockCanonicalLevel.mockClear();
+					mockTransforms = [
+						...mockTransforms,
+						jest.fn(() => ({ isSecondTransformedLogData: true }))
+					];
+					logger = new Logger({
+						transforms: mockTransforms
+					});
+				});
+
+				describe('.log(level, ...logData)', () => {
+					beforeEach(() => {
+						logger.log('mockLevel', 'mock message', { mockData: true });
+					});
+
+					it('calls each of the log transform with the log data, passing the result of each transform onto the next', () => {
+						expect(mockTransforms[0]).toBeCalledTimes(1);
+						expect(mockTransforms[0]).toBeCalledWith({
+							isMockZippedData: true,
+							message: 'mock zipped message'
+						});
+						expect(mockTransforms[1]).toBeCalledTimes(1);
+						expect(mockTransforms[1]).toBeCalledWith({
+							isTransformedLogData: true
+						});
+					});
+
+					it('calls the relevant log transport method with the final transformed log data', () => {
+						expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
+						expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+							isSecondTransformedLogData: true
+						});
+					});
+				});
+			});
+
+			describe('when the transforms option is not an array', () => {
+				it('throws a type error', () => {
+					expect(() => {
+						logger = new Logger({
+							transforms: {}
+						});
+					}).toThrowError(
+						new TypeError(
+							'The `transforms` option must be an array of functions'
+						)
+					);
+				});
+			});
+
+			describe('when one of the transforms is not a function', () => {
+				it('throws a type error', () => {
+					expect(() => {
+						logger = new Logger({
+							transforms: [() => {}, 'nope']
+						});
+					}).toThrowError(
+						new TypeError(
+							'The `transforms` option must be an array of functions'
+						)
+					);
+				});
+			});
+		});
+
 		describe('when a `transport` option is set', () => {
 			beforeEach(() => {
 				pino.mockClear();
