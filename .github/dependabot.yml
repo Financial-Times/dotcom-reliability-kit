@@ -7,6 +7,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/examples/express"
@@ -14,6 +17,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/resources/logos"
@@ -21,6 +27,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/packages/errors"
@@ -28,6 +37,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/packages/crash-handler"
@@ -35,6 +47,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/packages/log-error"
@@ -42,6 +57,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/packages/middleware-log-errors"
@@ -49,6 +67,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/packages/middleware-render-error-info"
@@ -56,6 +77,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/packages/serialize-error"
@@ -63,6 +87,9 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
 
   - package-ecosystem: "npm"
     directory: "/packages/serialize-request"
@@ -70,3 +97,6 @@ updates:
       interval: "daily"
       time: "09:00"
       timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"
