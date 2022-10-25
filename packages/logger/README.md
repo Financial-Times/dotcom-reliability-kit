@@ -20,6 +20,9 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
       * [`logger.addContext()`](#loggeraddcontext)
       * [`logger.setContext()`](#loggersetcontext)
       * [`logger.clearContext()`](#loggerclearcontext)
+    * [Log data serialization](#log-data-serialization)
+      * [How different data is serialized](#how-different-data-is-serialized)
+      * [Order of precedence](#order-of-precedence)
     * [Local development usage](#local-development-usage)
     * [Production usage](#production-usage)
     * [Compatibility](#compatibility)
@@ -306,6 +309,92 @@ logger.info('Example');
 // {
 //     "level": "info",
 //     "message": "Example"
+// }
+```
+
+### Log data serialization
+
+The logger can accept data in a variety of formats, and it combines all the different data you give it into a single object which is then stringified as JSON. Each logging method can accept any number of objects, strings, and errors as log data:
+
+```js
+logger.info('This is a string', { thisIsData: true }, { thisIsMoreData: true });
+// Outputs:
+// {
+//     "level": "info",
+//     "message": "This is a string",
+//     "thisIsData": true,
+//     "thisIsMoreData": true
+// }
+```
+
+#### How different data is serialized
+
+Different types of data are serialized differently before being output as JSON:
+
+  * **Objects** are left as they are, all of their properties are extracted and logged as regular JSON. E.g.
+
+      ```js
+      logger.info({ hello: 'world' });
+      // Outputs:
+      // {
+      //     "level": "info",
+      //     "hello": "world"
+      // }
+      ```
+
+  * **Strings** are moved into the `message` property of the output log. E.g.
+
+      ```js
+      logger.info('Hello world');
+      // Outputs:
+      // {
+      //     "level": "info",
+      //     "message": "Hello World!"
+      // }
+      ```
+
+  * **Errors** are moved into the `error` property of the output log and serialized using the [Reliability Kit `serializeError` method](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-error#readme). E.g.
+
+      ```js
+      logger.info(new Error('Oops'));
+      // Outputs:
+      // {
+      //     "level": "info",
+      //     "error": {
+      //         "name": "Error",
+      //         "message": "Oops",
+      //         ...etc
+      //     }
+      // }
+      ```
+
+      Errors found in sub-properties of the log data are _not_ serialized like this. This is for performance reasons: looping over every nested property to check if it's an error is expensive. Do **not** do this:
+
+      ```js
+      logger.info({ err: new Error('Oops') });
+      // Outputs:
+      // {
+      //     "level": "info",
+      //     "err": {}
+      // }
+      ```
+
+      If you _need_ to pass error objects as a property, you must serialize it yourself:
+
+      ```js
+      logger.info({ err: serializeError(new Error('Oops')) });
+      ```
+
+#### Order of precedence
+
+The order of the log data items is meaningful, and when a property is encountered the first instance of it will be used. This is the opposite behaviour to JavaScript's [`Object.assign`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign):
+
+```js
+logger.info({ example: 1 }, { example: 2 }, { example: 3 });
+// Outputs:
+// {
+//     "level": "info",
+//     "example": 1
 // }
 ```
 
