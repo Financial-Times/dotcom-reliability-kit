@@ -12,6 +12,13 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-error bumped from ^1.1.0 to ^1.1.1
 
+## [1.3.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.8...log-error-v1.3.9) (2022-10-25)
+
+
+### Bug Fixes
+
+* bump @financial-times/n-logger from 10.3.0 to 10.3.1 ([349bcf5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/349bcf54bdf9c9727bd27dc5cf4cea9a1b81119f))
+
 ## [1.3.8](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.7...log-error-v1.3.8) (2022-10-12)
 
 
