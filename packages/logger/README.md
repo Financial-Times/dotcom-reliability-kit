@@ -110,7 +110,7 @@ Base log data which is added to every log output made by the [logging methods](#
 const logger = new Logger({
     baseLogData: {
         app: {
-            region: process.env.REGION
+            version: '1.2.3'
         }
     }
 });
@@ -121,7 +121,7 @@ logger.info('This is a log');
 //     "level": "info",
 //     "message": "This is a log",
 //     "app": {
-//         "region": "EU"
+//         "version": '1.2.3'
 //     }
 // }
 ```
@@ -248,7 +248,7 @@ const logger = new Logger({
 });
 
 logger.addContext({
-    appRegion: process.env.REGION
+    myExtraData: 'extra data'
 });
 
 logger.info('Example');
@@ -257,7 +257,7 @@ logger.info('Example');
 //     "level": "info",
 //     "message": "Example",
 //     "appName": "my-app",
-//     "appRegion": "EU"
+//     "myExtraData": "extra data"
 // }
 ```
 
@@ -272,7 +272,7 @@ Add a `context` property to the logger's [base log data](#optionsbaselogdata). Y
 const logger = new Logger();
 
 logger.setContext({
-    appRegion: process.env.REGION
+    myExtraData: 'extra data'
 });
 
 logger.info('Example');
@@ -281,7 +281,7 @@ logger.info('Example');
 //     "level": "info",
 //     "message": "Example",
 //     "context": {
-//         "appRegion": "EU"
+//         "myExtraData": "extra data"
 //     }
 // }
 ```
