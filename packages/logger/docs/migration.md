@@ -18,17 +18,22 @@ Emoji           | Label             | Meaning
     * [Log level changes](#n-logger-log-level-changes)
     * [Logger method changes](#n-logger-method-changes)
     * [Environment variable changes](#n-logger-environment-variable-changes)
+  * [Migrating from n-mask-logger](#migrating-from-n-mask-logger)
+    * [API changes](#n-mask-logger-api-changes)
+    * [where logs get sent](#n-mask-logger-where-logs-get-sent)
+    * [log timestamps](#n-mask-logger-log-timestamps)
+    * [method changes](#n-mask-logger-method-changes)
+    * [environment variable changes](#n-mask-logger-environment-variable-changes)
   * [Migrating from n-serverless-logger](#migrating-from-n-serverless-logger)
     * [Where logs get sent](#n-serverless-logger-where-logs-get-sent)
     * [Error serialization changes](#n-serverless-logger-error-serialization-changes)
     * [Logger property changes](#n-serverless-logger-property-changes)
     * [Logger method changes](#n-serverless-logger-method-changes)
     * [Environment variable changes](#n-serverless-logger-environment-variable-changes)
-  * [Migrating from n-mask-logger](#migrating-from-n-mask-logger)
 
 ## Migrating from n-logger
 
-We tried to maintain as much compatibility with [n-logger](https://github.com/Financial-Times/n-logger) as possible to make switching relatively easy. This guide covers the differences and how to migrate your application.
+We tried to maintain as much compatibility with [n-logger](https://github.com/Financial-Times/n-logger) as possible to make switching relatively easy. This guide covers the differences and how to migrate your application. This guide assumes you're using the latest major version of n-logger.
 
 ### n-logger: where logs get sent
 
@@ -129,9 +134,65 @@ The following environment variables have been deprecated.
   * **`SPLUNK_LOG_LEVEL`:** This environment variable will be used if a `LOG_LEVEL` environment variable is not present, however it may be removed in a later version of the Reliability Kit logger. It's best to migrate to `LOG_LEVEL` early.
 
 
+## Migrating from n-mask-logger
+
+We tried to maintain as much compatibility with [n-mask-logger](https://github.com/Financial-Times/n-mask-logger) as possible to make switching relatively easy. This guide covers the differences and how to migrate your application. This guide assumes you're using the latest major version of n-mask-logger.
+
+### n-mask-logger: API changes
+
+**:red_circle: Breaking:** n-mask-logger's public API has been completely revised, and you'll need to make code changes in order to migrate to the Reliability Kit logger. We've tried to keep this as minimal as possible. For basic n-mask-logger usage, you'll need to replace as follows:
+
+```diff
+- const MaskLogger = require('@financial-times/n-mask-logger');
++ const { Logger, transforms } = require('@dotcom-reliability-kit/logger');
+
+- const logger = new MaskLogger();
++ const logger = new Logger({
++     transforms: [
++         transforms.legacyMask()
++     ]
++ });
+```
+
+If you're using arguments to configure n-mask-logger, you'll need to switch those to named options on the legacy mask transform:
+
+```diff
+- const logger = new MaskLogger(
+-     ['example', 'deny', 'list'],
+-     ['example', 'allow', 'list'],
+-     'example mask string'
+- );
++ const logger = new Logger({
++     transforms: [
++         transforms.legacyMask({
++             denyList: ['example', 'deny', 'list'],
++             allowList: ['example', 'allow', 'list'],
++             maskString: 'example mask string'
++         })
++     ]
++ });
+```
+
+### n-mask-logger: where logs get sent
+
+**:orange_circle: Possibly Breaking:** n-mask-logger uses n-logger under the hood, so [the same breaking changes potentially apply](#n-logger-where-logs-get-sent). As with n-logger, if your app is on Heroku and you've migrated to use Heroku Log Drains, then this change will not impact you.
+
+### n-mask-logger: log timestamps
+
+**:orange_circle: Possibly Breaking:** As with n-logger, we now add a `time` property to logs. This is potentially a breaking change. See the [migration guide for n-logger](#n-logger-log-timestamps) for more information.
+
+### n-mask-logger: method changes
+
+**:red_circle: Breaking:** The `logger.mask` method has been removed and is no longer available. We could not find any use of this method across our systems so you should be safe, but check just in case.
+
+### n-mask-logger: environment variable changes
+
+**:yellow_circle: Deprecation:** n-mask-logger reads the same environment variables as n-logger, please refer to the [n-logger migration guide](#n-logger-environment-variable-changes) for more information.
+
+
 ## Migrating from n-serverless-logger
 
-We tried to maintain as much compatibility with [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger) as possible to make switching relatively easy. This guide covers the differences and how to migrate your application.
+We tried to maintain as much compatibility with [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger) as possible to make switching relatively easy. This guide covers the differences and how to migrate your application. This guide assumes you're using the latest major version of n-serverless-logger.
 
 ### n-serverless-logger: where logs get sent
 
@@ -197,8 +258,3 @@ logger.info('Hello');
 The following environment variables have been deprecated.
 
   * **`SPLUNK_LOG_LEVEL`:** This environment variable will be used if a `LOG_LEVEL` environment variable is not present, however it may be removed in a later version of the Reliability Kit logger. It's best to migrate to `LOG_LEVEL` early.
-
-
-## Migrating from n-mask-logger
-
-**:construction: Under construction:** this part of the documentation relates to a planned feature.

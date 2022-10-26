@@ -16,6 +16,8 @@ function cleanLogFortesting(log) {
 	// consistent between machines or local vs CI
 	delete log.error?.stack;
 	delete log.error_stack;
+	delete log.nestedError?.stack;
+	delete log.stack;
 
 	// The `time` property cannot be tested because it's always
 	// going to be different

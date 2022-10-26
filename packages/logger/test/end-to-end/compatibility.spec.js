@@ -36,6 +36,19 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 				});
 			}
 
+			if (expectedOutput.nextMaskLogger) {
+				it('outputs the expected n-mask-logger logs', () => {
+					const log = findLogWithPropertyValue(
+						logs,
+						'_logger',
+						'nextMaskLogger'
+					);
+					expect(log).toBeTruthy();
+					const cleanLog = cleanLogForTesting(log);
+					expect(cleanLog).toEqual(expectedOutput.nextMaskLogger);
+				});
+			}
+
 			if (expectedOutput.reliabilityKit) {
 				it('outputs the expected reliability-kit logs', () => {
 					const log = findLogWithPropertyValue(
@@ -46,6 +59,19 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 					expect(log).toBeTruthy();
 					const cleanLog = cleanLogForTesting(log);
 					expect(cleanLog).toEqual(expectedOutput.reliabilityKit);
+				});
+			}
+
+			if (expectedOutput.reliabilityKitMaskLogger) {
+				it('outputs the expected reliability-kit masked logs', () => {
+					const log = findLogWithPropertyValue(
+						logs,
+						'_logger',
+						'reliabilityKitMaskLogger'
+					);
+					expect(log).toBeTruthy();
+					const cleanLog = cleanLogForTesting(log);
+					expect(cleanLog).toEqual(expectedOutput.reliabilityKitMaskLogger);
 				});
 			}
 
