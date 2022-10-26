@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.0.3...serialize-request-v1.0.4) (2022-10-26)
+
+
+### Bug Fixes
+
+* loosen serialize-request type requirements ([3845a9a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3845a9a0c463c0ca281c2dfaf2cbdb0d456c1c41))
+
 ## [1.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.0.2...serialize-request-v1.0.3) (2022-10-12)
 
 
