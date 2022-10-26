@@ -1,5 +1,23 @@
 /**
- * @typedef {import('express').Request | import('http').IncomingMessage & {route: object, params: object}} Request
+ * @typedef {import('express').Request} ExpressRequest
+ */
+
+/**
+ * @typedef {import('http').IncomingMessage} HttpIncomingMessage
+ */
+
+/**
+ * @typedef {object} BasicRequest
+ * @property {Object<string, string>} [headers]
+ *     The request HTTP headers.
+ * @property {string} [method]
+ *     The request HTTP method.
+ * @property {string} [url]
+ *     The request URL.
+ */
+
+/**
+ * @typedef {BasicRequest & Record<string, any> | ExpressRequest | HttpIncomingMessage & Record<string, any>} Request
  */
 
 /**
@@ -35,7 +53,7 @@
  * @property {SerializedRequestHeaders} headers
  *     A subset of HTTP headers which came with the request.
  * @property {SerializedRequestRoute} [route]
- *     A subset of HTTP headers which came with the request.
+ *     The express route details.
  */
 
 /**
@@ -50,9 +68,10 @@ const DEFAULT_INCLUDED_HEADERS = ['accept', 'content-type'];
  * Serialize a request object so that it can be consistently logged or output as JSON.
  *
  * @public
- * @param {(string | Request)} request
- *     The request object to serialize. Either an Express Request object or a
- *     built-in Node.js IncomingMessage object.
+ * @param {string | Request} request
+ *     The request object to serialize. Either an Express Request object, a
+ *     built-in Node.js IncomingMessage object, or an object with the expected
+ *     `headers`, `method`, and `url` properties.
  * @param {SerializeRequestOptions} [options = {}]
  *     Options to configure the serialization.
  * @returns {SerializedRequest}
@@ -114,8 +133,7 @@ function serializeRequest(request, options = {}) {
 	}
 
 	// If the request route is present and valid, add it
-	const routePath = request.route?.path;
-	if (routePath && typeof routePath === 'string') {
+	if (request.route && typeof request.route.path === 'string') {
 		requestProperties.route = {
 			path: request.route.path,
 			params: request.params || {}
