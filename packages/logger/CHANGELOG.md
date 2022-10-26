@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.0...logger-v0.1.1) (2022-10-26)
+
+
+### Features
+
+* add the ability to transform log data ([db3087b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/db3087becd29339f34982cb2205cae0a7f725dd0))
+
 ## 0.1.0 (2022-10-25)
 
 
