@@ -21,6 +21,11 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
       * [`logger.addContext()`](#loggeraddcontext)
       * [`logger.setContext()`](#loggersetcontext)
       * [`logger.clearContext()`](#loggerclearcontext)
+    * [Built-in transforms](#built-in-transforms)
+      * [`legacyMask` transform](#legacymask-transform)
+        * [`legacyMaskOptions.denyList`](#legacymaskoptionsdenylist)
+        * [`legacyMaskOptions.allowList`](#legacymaskoptionsallowlist)
+        * [`legacyMaskOptions.maskString`](#legacymaskoptionsmaskstring)
     * [Log data serialization](#log-data-serialization)
       * [How different data is serialized](#how-different-data-is-serialized)
       * [Order of precedence](#order-of-precedence)
@@ -28,6 +33,7 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
     * [Production usage](#production-usage)
     * [Compatibility](#compatibility)
       * [Migrating from n-logger](./docs/migration.md#migrating-from-n-logger)
+      * [Migrating from n-mask-logger](./docs/migration.md#migrating-from-n-mask-logger)
       * [Migrating from n-serverless-logger](./docs/migration.md#migrating-from-n-serverless-logger)
   * [Contributing](#contributing)
   * [License](#license)
@@ -183,6 +189,8 @@ logger.info({
 //     "TIME": 1234567890
 // }
 ```
+
+You can also use [built-in transforms](#built-in-transforms) to do things like mask sensitive data.
 
 #### `options.withTimestamps`
 
@@ -352,6 +360,79 @@ logger.info('Example');
 // }
 ```
 
+### Built-in transforms
+
+As well as writing your own [log transforms](#optionstransforms), you can use the ones provided as part of this package. All built-in transforms are provided as properties of the `transforms` object:
+
+```js
+const { transforms } = require('@dotcom-reliability-kit/logger');
+```
+
+#### `legacyMask` transform
+
+The legacy mask transform applies the same masking behaviour to the logger as [n-mask-logger](https://github.com/Financial-Times/n-mask-logger), replicating the behaviour exactly. It masks a list of fields you specify so that we don't accidentally log sensitive information in our apps. You can use it like this:
+
+```js
+const { Logger, transforms } = require('@dotcom-reliability-kit/logger');
+
+const logger = new Logger({
+    transforms: [
+        transforms.legacyMask()
+    ]
+});
+
+logger.info({
+    email: 'oops@ft.com'
+});
+// Outputs:
+// {
+//     "level": "info",
+//     "email": "*****"
+// }
+```
+
+You can configure the legacy mask transform by passing in an options object:
+
+```js
+const logger = new Logger({
+    transforms: [
+        transforms.legacyMask({
+            // options go here
+        })
+    ]
+});
+```
+
+##### `legacyMaskOptions.denyList`
+
+An array of strings which indicate the property names in the logs which should have their values masked. Adding new items to the deny list does not alter the default set of property names: `firstName`, `ft-backend-key`, `ft-session-id`, `FTSession_s`, `FTSession`, `lastName`, `password`, `phone`, `postcode`, `primaryTelephone`, `session`, and `sessionId`:
+
+```js
+transforms.legacyMask({
+    denyList: [ 'myEmailProperty', 'myPasswordProperty' ]
+})
+```
+
+##### `legacyMaskOptions.allowList`
+
+An array of strings which indicate the property names in the logs which should **not** have their values masked. This is used to override the default fields in cases where you want to log potentially sensitive data. E.g. if your `email` property actually contains a `boolean` indicating whether a user is opted into email, then you might want to do this:
+
+```js
+transforms.legacyMask({
+    allowList: [ 'email' ]
+})
+```
+
+##### `legacyMaskOptions.maskString`
+
+A string which is used as the replacement when a property is masked. This defaults to `*****`:
+
+```js
+transforms.legacyMask({
+    maskString: '🙈🙉🙊'
+})
+```
+
 ### Log data serialization
 
 The logger can accept data in a variety of formats, and it combines all the different data you give it into a single object which is then stringified as JSON. Each logging method can accept any number of objects, strings, and errors as log data:
@@ -460,7 +541,7 @@ Using `@dotcom-reliability-kit/logger` in production requires that your applicat
 
 ### Compatibility
 
-`@dotcom-reliability-kit/logger` is compatible with most use cases of [n-logger](https://github.com/Financial-Times/n-logger) and [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger). We tried hard to make migration as easy as possible from these libraries. The full list of differences are available in the [Migration Guide](./docs/migration.md) as well as tips on migrating.
+`@dotcom-reliability-kit/logger` is compatible with most use cases of [n-logger](https://github.com/Financial-Times/n-logger), [n-mask-logger](https://github.com/Financial-Times/n-mask-logger), and [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger). We tried hard to make migration as easy as possible from these libraries. The full list of differences are available in the [Migration Guide](./docs/migration.md) as well as tips on migrating.
 
 
 ## Contributing

@@ -173,6 +173,108 @@ module.exports = [
 		}
 	},
 
+	// Test cases based on the n-mask-logger documentation
+	// https://github.com/Financial-Times/n-mask-logger#usage
+	{
+		id: 'n-mask-logger-docs-1',
+		description: '.info() with user information (n-mask-logger docs)',
+		call: {
+			method: 'info',
+			args: [
+				{
+					name: 'L. Ogger',
+					age: 32,
+					email: 'logger@ft.com',
+					password: 'passw0rd',
+					role: 'Developer'
+				}
+			]
+		},
+		// DIFFERENCE:
+		// Reliability kit does not send the `message` as an empty string
+		// if one is not present – it explicitly sets it to `null`.
+		expectedOutput: {
+			nextMaskLogger: {
+				level: 'info',
+				name: 'L. Ogger',
+				age: 32,
+				email: '*****',
+				password: '*****',
+				role: 'Developer',
+				message: ''
+			},
+			reliabilityKitMaskLogger: {
+				level: 'info',
+				name: 'L. Ogger',
+				age: 32,
+				email: '*****',
+				password: '*****',
+				role: 'Developer',
+				message: null
+			}
+		}
+	},
+	{
+		id: 'n-mask-logger-docs-2',
+		description: '.info() with user info in sub-fields (n-mask-logger docs)',
+		call: {
+			method: 'info',
+			args: [
+				{
+					foo: 'bar',
+					inner: {
+						some: 'field',
+						deep: { password: 'passw0rd' },
+						email: 'logger@ft.com'
+					}
+				}
+			]
+		},
+		// DIFFERENCE:
+		// Reliability kit does not send the `message` as an empty string
+		// if one is not present – it explicitly sets it to `null`.
+		expectedOutput: {
+			nextMaskLogger: {
+				level: 'info',
+				foo: 'bar',
+				inner: {
+					some: 'field',
+					deep: { password: '*****' },
+					email: '*****'
+				},
+				message: ''
+			},
+			reliabilityKitMaskLogger: {
+				level: 'info',
+				foo: 'bar',
+				inner: {
+					some: 'field',
+					deep: { password: '*****' },
+					email: '*****'
+				},
+				message: null
+			}
+		}
+	},
+	{
+		id: 'n-mask-logger-docs-3',
+		description: '.info() with user data in message (n-mask-logger docs)',
+		call: {
+			method: 'info',
+			args: ['Oh look password = 123abc']
+		},
+		expectedOutput: {
+			nextMaskLogger: {
+				level: 'info',
+				message: 'Oh look password = *****'
+			},
+			reliabilityKitMaskLogger: {
+				level: 'info',
+				message: 'Oh look password = *****'
+			}
+		}
+	},
+
 	// Test cases for all non-deprecated methods
 	{
 		id: 'non-deprecated-debug',
@@ -477,6 +579,108 @@ module.exports = [
 			}
 		}
 	},
+	{
+		id: 'edge-case-masking-arrays',
+		description: '.info() with array objects which contain masked fields',
+		call: {
+			method: 'info',
+			args: [
+				{
+					message: 'Test message',
+					list: [
+						{
+							email: 'logger@ft.com',
+							subList: [
+								{
+									postcode: 'EC4M 9BT'
+								}
+							]
+						},
+						'password = abc123'
+					]
+				}
+			]
+		},
+		expectedOutput: {
+			nextMaskLogger: {
+				level: 'info',
+				message: 'Test message',
+				list: [
+					{
+						email: '*****',
+						subList: [
+							{
+								postcode: '*****'
+							}
+						]
+					},
+					'password = *****'
+				]
+			},
+			reliabilityKitMaskLogger: {
+				level: 'info',
+				message: 'Test message',
+				list: [
+					{
+						email: '*****',
+						subList: [
+							{
+								postcode: '*****'
+							}
+						]
+					},
+					'password = *****'
+				]
+			}
+		}
+	},
+	{
+		id: 'edge-case-masking-errors',
+		description: '.info() with error objects which contain masked fields',
+		call: {
+			method: 'info',
+			args: [
+				new Error('password = abc123'),
+				{
+					nestedError: new Error('email = logger@ft.com')
+				}
+			]
+		},
+		// DIFFERENCE:
+		// Reliability kit uses the @dotcom-reliability-kit/serialize-error package
+		// when it encounters an error object, whereas n-logger serializes basic
+		// properties only. Reliability Kit also doesn't deal with errors found in
+		// other properties, this is for backwards compatibility with n-logger.
+		expectedOutput: {
+			nextMaskLogger: {
+				level: 'info',
+				message: 'password = *****',
+				name: 'Error',
+				nestedError: {
+					message: 'email = *****',
+					name: 'Error'
+				}
+			},
+			reliabilityKitMaskLogger: {
+				level: 'info',
+				message: null,
+				error: {
+					cause: null,
+					code: 'UNKNOWN',
+					data: {},
+					isOperational: false,
+					message: 'password = *****',
+					name: 'Error',
+					relatesToSystems: [],
+					statusCode: null
+				},
+				nestedError: {
+					message: 'email = *****',
+					name: 'Error'
+				}
+			}
+		}
+	},
 
 	// Test cases based on real-world usage of n-logger
 	{
@@ -605,6 +809,103 @@ module.exports = [
 				event: 'FAILED_TO_GET_FT_LIVE_EVENT',
 				message: null,
 				error: {} // Empty object because this is invalid, it says so in the n-logger docs
+			}
+		}
+	},
+
+	// Test cases based on real-world usage of n-mask-logger
+	{
+		id: 'next-profile-1',
+		description:
+			'.info() with message and data, no masked fields (next-profile)',
+		call: {
+			method: 'info',
+			args: [
+				'updateProfile',
+				{
+					result: 'success',
+					userId: 'abc123',
+					apiEnv: 'PROD'
+				}
+			]
+		},
+		expectedOutput: {
+			nextMaskLogger: {
+				level: 'info',
+				message: 'updateProfile',
+				result: 'success',
+				userId: 'abc123',
+				apiEnv: 'PROD'
+			},
+			reliabilityKitMaskLogger: {
+				level: 'info',
+				message: 'updateProfile',
+				result: 'success',
+				userId: 'abc123',
+				apiEnv: 'PROD'
+			}
+		}
+	},
+	{
+		id: 'next-profile-2',
+		description: '.error() with additional response data (next-profile)',
+		// Note: this is semi-theoretical based on looking through the way we log failed requests
+		// to our APIs. If the API returned any user information on a failure state we'd get this log
+		call: {
+			method: 'error',
+			args: [
+				{
+					message: 'editBillingDetails',
+					error: {
+						url: '/example',
+						status: 500,
+						method: 'post',
+						responseBody: {
+							user: {
+								email: 'abc@example.com'
+							}
+						},
+						headers: {
+							'X-Request-Id': '123'
+						}
+					}
+				}
+			]
+		},
+		expectedOutput: {
+			nextMaskLogger: {
+				level: 'error',
+				message: 'editBillingDetails',
+				error: {
+					url: '/example',
+					status: 500,
+					method: 'post',
+					responseBody: {
+						user: {
+							email: '*****'
+						}
+					},
+					headers: {
+						'X-Request-Id': '123'
+					}
+				}
+			},
+			reliabilityKitMaskLogger: {
+				level: 'error',
+				message: 'editBillingDetails',
+				error: {
+					url: '/example',
+					status: 500,
+					method: 'post',
+					responseBody: {
+						user: {
+							email: '*****'
+						}
+					},
+					headers: {
+						'X-Request-Id': '123'
+					}
+				}
 			}
 		}
 	}

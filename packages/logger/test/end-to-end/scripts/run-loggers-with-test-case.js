@@ -4,8 +4,14 @@ process.env.MIGRATE_TO_HEROKU_LOG_DRAINS = 'true';
 process.env.SPLUNK_LOG_LEVEL = 'silly';
 
 const nLogger = require('@financial-times/n-logger').default;
-const reliabilityKitLogger = require('../../../lib').default;
+const MaskLogger = require('@financial-times/n-mask-logger');
+const reliabilityKitLogger = require('../../../lib');
 const testCases = require('../compatibility-test-cases');
+
+const nMaskLogger = new MaskLogger();
+const reliabilityKitMaskLogger = new reliabilityKitLogger.Logger({
+	transforms: [reliabilityKitLogger.transforms.legacyMask()]
+});
 
 // The test case ID is passed as an additional argument on the command.
 // We use this to find the test case in order to perform logging.
@@ -24,4 +30,16 @@ if (nLogger[method]) {
 // Run reliability kit logger
 if (reliabilityKitLogger[method]) {
 	reliabilityKitLogger[method](...args, { _logger: 'reliabilityKit' });
+}
+
+// Run n-mask-logger
+if (nMaskLogger[method]) {
+	nMaskLogger[method](...args, { _logger: 'nextMaskLogger' });
+}
+
+// Run reliability kit masked logger
+if (reliabilityKitMaskLogger[method]) {
+	reliabilityKitMaskLogger[method](...args, {
+		_logger: 'reliabilityKitMaskLogger'
+	});
 }
