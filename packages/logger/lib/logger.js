@@ -1,6 +1,7 @@
 const pino = require('pino').default;
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const { default: structuredClone } = require('@ungap/structured-clone');
+const appInfo = require('@dotcom-reliability-kit/app-info');
 
 /**
  * @typedef {"silly" | "data" | "debug" | "verbose" | "info" | "warn" | "error" | "fatal"} LogLevel
@@ -81,6 +82,34 @@ const logLevelToTransportMethodMap = {
 	verbose: { logLevel: 'debug', isDeprecated: true },
 	warn: { logLevel: 'warn', isDeprecated: false }
 };
+
+/**
+ * Whether log prettification is available. This is based
+ * on two things: the pino-pretty module being installed
+ * in the application, and the `NODE_ENV` environment
+ * variable being undefined or "development".
+ *
+ * @type {boolean}
+ */
+const PRETTIFICATION_AVAILABLE = (() => {
+	try {
+		// We have to `require` here rather than `require.resolve`
+		// which is less than ideal but otherwise this is actually
+		// impossible to test with Jest. Both technically do the
+		// same file system work though, and it's only done once
+		// when the module first loads. It's also safe to ts-ignore
+		// this one because it's never actually used directly.
+		// @ts-ignore
+		require('pino-pretty');
+
+		// If we get to this point, pino-pretty is installed because
+		// otherwise it would have errored. So we can just check for
+		// the environment being "development"
+		return appInfo.environment === 'development';
+	} catch (_) {
+		return false;
+	}
+})();
 
 /**
  * Class representing a logger.
@@ -171,6 +200,15 @@ class Logger {
 				messageKey: 'message', // This is for backwards compatibility with our existing logs
 				timestamp: withTimestamps
 			};
+			if (PRETTIFICATION_AVAILABLE) {
+				pinoOptions.transport = {
+					target: 'pino-pretty',
+					options: {
+						colorize: true,
+						messageKey: 'message'
+					}
+				};
+			}
 			this.#logTransport = pino(pinoOptions);
 			this.#logTransport.level = this.#logLevel;
 		}

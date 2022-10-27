@@ -440,19 +440,17 @@ logger.info({ example: 1 }, { example: 2 }, { example: 3 });
 
 ### Local development usage
 
-`@dotcom-reliability-kit/logger` does not format or colourize logs, which can make reading them in local development more difficult. If reading raw JSON isn't your thing then we suggest using [pino-pretty](https://github.com/pinojs/pino-pretty#readme) in local development to colourize and format log lines.
+In local development `@dotcom-reliability-kit/logger` does not format or colourize logs by default. You may want to enable this to make reading logs in local development more easy.
 
-You can do this by installing pino-pretty as a development dependency:
+To get formatted and colourised logs locally, you need to meet two conditions:
 
-```sh
-npm install -D pino-pretty
-```
+  1. Have the `NODE_ENV` environment variable set to either `development` or don't have it set at all.
 
-and then piping your application start into the `pino-pretty` binary. The following ensures that the log message appears as the top highlighted line:
+  2. Install [pino-pretty](https://github.com/pinojs/pino-pretty#readme) as a **development dependency** in your project. It's very important that this is a development dependency rather than a production one, otherwise you risk prettifying logs in production which makes them appear incorrectly in Splunk:
 
-```sh
-npm start | pino-pretty --messageKey message
-```
+      ```sh
+      npm install -D pino-pretty
+      ```
 
 ### Production usage
 

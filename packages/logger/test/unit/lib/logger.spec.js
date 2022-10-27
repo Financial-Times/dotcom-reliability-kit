@@ -13,6 +13,11 @@ jest.mock('pino', () => ({
 const { default: pino, mockPinoLogger } = require('pino');
 pino.mockReturnValue(mockPinoLogger);
 
+jest.mock('@dotcom-reliability-kit/app-info', () => ({
+	environment: 'production'
+}));
+const appInfo = require('@dotcom-reliability-kit/app-info');
+
 jest.mock('@dotcom-reliability-kit/serialize-error', () => jest.fn());
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 
@@ -20,7 +25,7 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
 delete process.env.LOG_LEVEL;
 delete process.env.SPLUNK_LOG_LEVEL;
 
-const Logger = require('../../../lib/logger');
+let Logger = require('../../../lib/logger');
 
 describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 	afterEach(() => {
@@ -45,7 +50,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			expect(pino).toBeCalledTimes(1);
 		});
 
-		it('configures the created Pino logger', () => {
+		it('configures the created Pino logger with no prettifier', () => {
 			const pinoOptions = pino.mock.calls[0][0];
 			expect(typeof pinoOptions).toStrictEqual('object');
 			expect(pinoOptions.base).toEqual({});
@@ -57,6 +62,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			expect(pinoOptions.formatters.level('mock-level')).toEqual({
 				level: 'mock-level'
 			});
+
+			expect(pinoOptions.transport).toBeUndefined();
 		});
 
 		it('sets the Pino logger level to "debug"', () => {
@@ -668,6 +675,86 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('gets the log level information based on the environment variable', () => {
 				expect(Logger.getLogLevelInfo).toBeCalledTimes(1);
 				expect(Logger.getLogLevelInfo).toBeCalledWith('mockEnvSplunkLogLevel');
+			});
+		});
+
+		describe('when pino-pretty is installed and the environment is "development"', () => {
+			beforeEach(() => {
+				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });
+				appInfo.environment = 'development';
+
+				// We have to reset all modules because the checks for pino-pretty are done
+				// on module load for performance reasons. This resets the cache and reloads
+				// everything with a new environment.
+				jest.isolateModules(() => {
+					Logger = require('../../../lib/logger');
+				});
+
+				pino.mockClear();
+				logger = new Logger();
+			});
+
+			afterEach(() => {
+				jest.unmock('pino-pretty');
+			});
+
+			it('configures the created Pino logger with prettification', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(typeof pinoOptions.transport).toStrictEqual('object');
+				expect(pinoOptions.transport).toEqual({
+					target: 'pino-pretty',
+					options: {
+						colorize: true,
+						messageKey: 'message'
+					}
+				});
+			});
+		});
+
+		describe('when pino-pretty is installed and the environment is anything other than "development"', () => {
+			beforeEach(() => {
+				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });
+				appInfo.environment = 'test';
+
+				// We have to reset all modules because the checks for pino-pretty are done
+				// on module load for performance reasons. This resets the cache and reloads
+				// everything with a new environment.
+				jest.isolateModules(() => {
+					Logger = require('../../../lib/logger');
+				});
+
+				pino.mockClear();
+				logger = new Logger();
+			});
+
+			afterEach(() => {
+				jest.unmock('pino-pretty');
+			});
+
+			it('does not configure the created Pino logger with prettification', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(pinoOptions.transport).toBeUndefined();
+			});
+		});
+
+		describe('when pino-pretty is not installed and the environment is "development"', () => {
+			beforeEach(() => {
+				appInfo.environment = 'development';
+
+				// We have to reset all modules because the checks for pino-pretty are done
+				// on module load for performance reasons. This resets the cache and reloads
+				// everything with a new environment.
+				jest.isolateModules(() => {
+					Logger = require('../../../lib/logger');
+				});
+
+				pino.mockClear();
+				logger = new Logger();
+			});
+
+			it('configures the created Pino logger without prettification', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(pinoOptions.transport).toBeUndefined();
 			});
 		});
 	});
