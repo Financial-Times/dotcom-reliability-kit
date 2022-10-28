@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.1...logger-v0.1.2) (2022-10-28)
+
+
+### Features
+
+* add a mask transform ([e46c5b1](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e46c5b155345cbb8a78e853e37b889a5b0869e26))
+* add prettification to logs in local dev ([f1ac445](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f1ac44583c1964380821cc0088daef407cbf9a5a))
+
 ## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.0...logger-v0.1.1) (2022-10-26)
 
 
