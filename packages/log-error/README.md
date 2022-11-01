@@ -155,8 +155,21 @@ logRecoverableError({
 
 #### `options.includeHeaders`
 
-An array of request headers to include in the serialized request object (if one is provided with `options.request`). This must be an `Array` of `String`s, with each string being a header name. It's important that you do not include headers which include personally-identifiable-information, API keys, or other privileged information. This defaults to `['accept', 'content-type']`. This option gets passed directly into [`dotcom-reliability-kit/serialize-request`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-request#readme) which has further documentation.
+An array of request headers to include in the serialized request object (if one is provided with `options.request`). This must be an `Array` of `String`s, with each string being a header name. It's important that you do not include headers which include personally-identifiable-information, API keys, or other privileged information. This option gets passed directly into [`dotcom-reliability-kit/serialize-request`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-request#readme) which has further documentation.
 
+This option defaults to:
+```js
+[
+    'accept',
+    'accept-encoding',
+    'accept-language',
+    'content-type',
+    'referer',
+    'user-agent'
+]
+```
+
+Example of usage:
 ```js
 logRecoverableError({
     // ...other required options
