@@ -18,6 +18,13 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-request bumped from ^1.0.3 to ^1.0.4
 
+## [1.3.11](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.10...log-error-v1.3.11) (2022-11-01)
+
+
+### Bug Fixes
+
+* correct ESM exports ([9964686](https://github.com/Financial-Times/dotcom-reliability-kit/commit/996468686dfc62db95e7bea4b2028a28dfb28621))
+
 ## [1.3.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.8...log-error-v1.3.9) (2022-10-25)
 
 

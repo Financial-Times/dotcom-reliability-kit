@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.6...errors-v1.2.7) (2022-11-01)
+
+
+### Bug Fixes
+
+* correct ESM exports ([9964686](https://github.com/Financial-Times/dotcom-reliability-kit/commit/996468686dfc62db95e7bea4b2028a28dfb28621))
+
 ## [1.2.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.5...errors-v1.2.6) (2022-10-14)
 
 
