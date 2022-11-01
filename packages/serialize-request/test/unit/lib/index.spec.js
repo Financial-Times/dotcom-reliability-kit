@@ -16,8 +16,12 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				url: '/mock-url',
 				headers: {
 					accept: '*/*',
+					'accept-encoding': 'gzip',
+					'accept-language': 'en-US',
 					'content-type': 'application/json',
 					'mock-header': 'mock-param-value',
+					referer: 'https://foo.com',
+					'user-agent': 'Mozilla/5.0',
 					'x-request-id': 'mock-id'
 				}
 			};
@@ -30,7 +34,11 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				url: '/mock-url',
 				headers: {
 					accept: '*/*',
-					'content-type': 'application/json'
+					'accept-encoding': 'gzip',
+					'accept-language': 'en-US',
+					'content-type': 'application/json',
+					referer: 'https://foo.com',
+					'user-agent': 'Mozilla/5.0'
 				}
 			});
 		});
@@ -45,7 +53,11 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				url: '/mock-url',
 				headers: {
 					accept: '*/*',
+					'accept-encoding': 'gzip',
+					'accept-language': 'en-US',
 					'content-type': 'application/json',
+					referer: 'https://foo.com',
+					'user-agent': 'Mozilla/5.0',
 					'mock-header': 'mock-param-value',
 					'x-request-id': 'mock-id'
 				},
@@ -65,7 +77,11 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				url: '/mock-url',
 				headers: {
 					accept: '*/*',
-					'content-type': 'application/json'
+					'accept-encoding': 'gzip',
+					'accept-language': 'en-US',
+					'content-type': 'application/json',
+					referer: 'https://foo.com',
+					'user-agent': 'Mozilla/5.0'
 				},
 				route: {
 					path: '/mock-route-path',

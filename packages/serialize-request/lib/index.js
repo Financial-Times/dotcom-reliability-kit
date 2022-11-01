@@ -62,7 +62,14 @@
  * @private
  * @type {Array<string>}
  */
-const DEFAULT_INCLUDED_HEADERS = ['accept', 'content-type'];
+const DEFAULT_INCLUDED_HEADERS = [
+	'accept',
+	'accept-encoding',
+	'accept-language',
+	'content-type',
+	'referer',
+	'user-agent'
+];
 
 /**
  * Serialize a request object so that it can be consistently logged or output as JSON.

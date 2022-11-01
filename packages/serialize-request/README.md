@@ -77,8 +77,21 @@ serializeRequest(request, {
 
 #### `options.includeHeaders`
 
-An array of request headers to include in the serialized request object. This must be an `Array` of `String`s, with each string being a header name. It's important that you do not include headers which include personally-identifiable-information, API keys, or other privileged information. This defaults to `['accept', 'content-type']`.
+An array of request headers to include in the serialized request object. This must be an `Array` of `String`s, with each string being a header name. It's important that you do not include headers which include personally-identifiable-information, API keys, or other privileged information.
 
+This option defaults to:
+```js
+[
+    'accept',
+    'accept-encoding',
+    'accept-language',
+    'content-type',
+    'referer',
+    'user-agent'
+]
+```
+
+Example of usage:
 ```js
 serializeRequest(request, {
     includeHeaders: [
