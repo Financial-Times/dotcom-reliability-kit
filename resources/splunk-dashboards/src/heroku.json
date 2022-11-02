@@ -140,7 +140,7 @@
 			"type": "ds.search",
 			"options": {
 				"enableSmartSources": true,
-				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" level=error\n| rex field=error.stack \"(?<stackTraceHeader>[^\\r\\n]+[\\r\\n]+[^\\r\\n]+)\"\n| rex field=error.stack \"[^\\r\\n]+[\\r\\n]+[^\\r\\n\\(]*\\((?<filePointer>[^\\)]+)\\)\" \n| rename error.name as name, error.code as code, error.message as message\n| eval hash=md5(name.\"__\".code.\"__\".stackTraceHeader)\n| stats sparkline() as timeline count by hash, name, code, message, filePointer \n| table count timeline name code message filePointer\n| sort count desc"
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" level=error\n| rex field=error.stack \"(?<stackTraceHeader>[^\\r\\n]+[\\r\\n]+[^\\r\\n]+)\"\n| rex field=error.stack \"[^\\r\\n]+[\\r\\n]+[^\\r\\n\\(]*\\((?<filePointer>[^\\)]+)\\)\" \n| rename error.name as name, error.code as code, error.message as message\n| eval hash=md5(name.\"__\".code.\"__\".stackTraceHeader)\n| eval isCrash=if(event=\"UNHANDLED_ERROR\",\"true\",\"false\")\n| stats sparkline() as timeline count by hash, name, code, message, isCrash, filePointer \n| table count timeline name code isCrash message filePointer\n| sort count desc"
 			},
 			"name": "search_table_grouped_errors"
 		}
