@@ -103,6 +103,18 @@ serializeRequest(request, {
 });
 ```
 
+The default set of headers is also available to use, so that you don't need to repeat them if you want to add new included headers. It can be accessed as `serializeRequest.DEFAULT_INCLUDED_HEADERS`:
+
+```js
+serializeRequest(request, {
+    includeHeaders: [
+        ...serializeRequest.DEFAULT_INCLUDED_HEADERS,
+        'my-custom-header'
+    ]
+});
+```
+
+
 ### `SerializedRequest` type
 
 The `SerializedRequest` type documents the return value of the [`serializeRequest` function](#serializerequest). It will have the following properties, extracting them from a given request object.

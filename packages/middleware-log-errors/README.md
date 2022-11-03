@@ -113,6 +113,19 @@ app.use(createErrorLogger({
 }));
 ```
 
+The default set of headers is also available to use, so that you don't need to repeat them if you want to add new included headers. You'll need to import `@dotcom-reliability-kit/serialize-request`, then these headers are available:
+
+```js
+const { DEFAULT_INCLUDED_HEADERS } = require('@dotcom-reliability-kit/serialize-request');
+
+app.use(createErrorLogger({
+    includeHeaders: [
+        ...DEFAULT_INCLUDED_HEADERS,
+        'my-custom-header'
+    ]
+}));
+```
+
 > **Note**
 > There's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
 
