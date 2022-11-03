@@ -18,7 +18,7 @@ updates:
       time: "09:00"
       timezone: "Europe/London"
     commit-message:
-      prefix: "fix:"
+      prefix: "chore:"
       prefix-development: "chore:"
 
   - package-ecosystem: "npm"
