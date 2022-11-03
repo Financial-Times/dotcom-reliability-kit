@@ -7,6 +7,28 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 		});
 	});
 
+	describe('.DEFAULT_INCLUDED_HEADERS', () => {
+		it('is an array of included headers', () => {
+			expect(serializeRequest.DEFAULT_INCLUDED_HEADERS).toEqual([
+				'accept',
+				'accept-encoding',
+				'accept-language',
+				'content-type',
+				'referer',
+				'user-agent'
+			]);
+		});
+
+		it('is readonly', () => {
+			expect(() => {
+				serializeRequest.DEFAULT_INCLUDED_HEADERS.push('nope');
+			}).toThrowError(TypeError);
+
+			serializeRequest.DEFAULT_INCLUDED_HEADERS[0] = 'nope';
+			expect(serializeRequest.DEFAULT_INCLUDED_HEADERS[0]).not.toEqual('nope');
+		});
+	});
+
 	describe('when called with an `http.IncomingMessage` object', () => {
 		let request;
 
