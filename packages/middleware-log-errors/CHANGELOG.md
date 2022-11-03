@@ -36,6 +36,21 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.10 to ^1.3.11
 
+## [1.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.12...middleware-log-errors-v1.3.0) (2022-11-03)
+
+
+### Features
+
+* expand list of default headers included in serialized requests ([e004ac6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e004ac6ae12437ea0c3258df29b5d41f80c24e08))
+* expose the default serialized headers ([a8612ad](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a8612ad88ebe8d18b9795dbcd089ba55c03ec7c3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.11 to ^1.4.0
+
 ## [1.2.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.8...middleware-log-errors-v1.2.9) (2022-10-12)
 
 

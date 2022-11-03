@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.0.4...serialize-request-v1.1.0) (2022-11-03)
+
+
+### Features
+
+* expand list of default headers included in serialized requests ([e004ac6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e004ac6ae12437ea0c3258df29b5d41f80c24e08))
+* expose the default serialized headers ([a8612ad](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a8612ad88ebe8d18b9795dbcd089ba55c03ec7c3))
+
 ## [1.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.0.3...serialize-request-v1.0.4) (2022-10-26)
 
 
