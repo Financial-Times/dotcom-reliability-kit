@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.2...logger-v0.1.3) (2022-11-03)
+
+
+### Bug Fixes
+
+* add proper types for the default logger ([e9b8682](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e9b86825a21d64d42dfaf9c14c7480c73e870520))
+
 ## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.1...logger-v0.1.2) (2022-10-28)
 
 
