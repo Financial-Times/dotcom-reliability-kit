@@ -1,9 +1,6 @@
 
 # @dotcom-reliability-kit/crash-handler
 
-> **Warning**
-> This Reliability Kit package is **experimental** and should be used with caution in production applications. Please also let the Customer Products Reliability team know if you intend on using this.
-
 A method to bind an uncaught exception handler to ensure that fatal application errors are logged. It is a replacement for Sentry fatal error logging. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
   * [Usage](#usage)
@@ -75,21 +72,7 @@ registerCrashHandler({
 
 ### Migrating from Sentry
 
-The Reliability Kit crash handler is a replacement for Sentry's uncaught exception handling, which your app is likely using. You'll need to migrate away from Sentry in order to use this module. You can do so by:
-
-  1. Remove any references to [n-raven](https://github.com/Financial-Times/n-raven) in your codebase. You may be importing this module yourself, and if you do then `registerCrashHandler` will not work as expected.
-
-  2. If you're using n-express, it must be on [v26.3.0](https://github.com/Financial-Times/n-express/releases/tag/v26.3.0) or higher. This version of n-express introduces the ability to turn off Sentry.
-
-  3. Configure n-express to disable Sentry by setting the [`withSentry` option](https://github.com/Financial-Times/n-express#optional) to `false`. Find your n-express setup and add the option:
-
-      ```js
-      express({
-          withSentry: false
-      });
-      ```
-
-  4. Follow the instructions in the [usage guide](#usage) to set up Reliability Kit's crash handler.
+The Reliability Kit crash handler is a replacement for Sentry's uncaught exception handling, which your app is likely to be using. You'll need to migrate away from Sentry in order to use this module. [We maintain a migration guide for this on Confluence](https://financialtimes.atlassian.net/l/cp/eeTWSAxe).
 
 
 ## Contributing

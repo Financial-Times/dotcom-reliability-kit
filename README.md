@@ -16,6 +16,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/app-info](./packages/app-info/#readme):**<br/>
       A utility to get application information (e.g. the system code) in a consistent way
 
+    * **[@dotcom-reliability-kit/crash-handler](./packages/crash-handler/#readme):**<br/>
+      A method to bind an uncaught exception handler to ensure that fatal application errors are logged. It is a replacement for Sentry fatal error logging.
+
     * **[@dotcom-reliability-kit/errors](./packages/errors/#readme):**<br/>
       A suite of error classes which help you throw the most appropriate error in any situation
 
