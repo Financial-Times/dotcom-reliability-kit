@@ -1,6 +1,6 @@
 {
   "packages/app-info": "1.0.3",
-  "packages/crash-handler": "0.1.4",
+  "packages/crash-handler": "1.0.0",
   "packages/errors": "1.2.7",
   "packages/log-error": "1.4.0",
   "packages/logger": "0.1.3",

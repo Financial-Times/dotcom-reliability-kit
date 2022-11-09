@@ -24,6 +24,13 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.11 to ^1.4.0
 
+## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v0.1.4...crash-handler-v1.0.0) (2022-11-09)
+
+
+### Features
+
+* indicate that the crash handler is stable ([63c694c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/63c694c14d261f545efa91edbcf1454658e355fa))
+
 ## 0.1.0 (2022-10-21)
 
 
