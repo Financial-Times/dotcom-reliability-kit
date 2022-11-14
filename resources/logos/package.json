@@ -20,10 +20,10 @@
   },
   "dependencies": {
     "sharp": "^0.31.2",
-    "svgo": "^2.8.0"
+    "svgo": "^3.0.1"
   },
   "devDependencies": {
     "@types/sharp": "^0.31.0",
-    "@types/svgo": "^2.6.4"
+    "@types/svgo": "^3.0.0"
   }
 }
