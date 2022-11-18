@@ -3,14 +3,15 @@
 
 A method to bind an uncaught exception handler to ensure that fatal application errors are logged. It is a replacement for Sentry fatal error logging. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
-  * [Usage](#usage)
-    * [`registerCrashHandler`](#registercrashhandler)
-    * [configuration options](#configuration-options)
-      * [`process`](#optionsprocess)
-  * [Compatibility](#compatibility)
-    * [Migrating from Sentry](#migrating-from-sentry)
-  * [Contributing](#contributing)
-  * [License](#license)
+* [Usage](#usage)
+  * [`registerCrashHandler`](#registercrashhandler)
+  * [Configuration options](#configuration-options)
+    * [`options.logger`](#optionslogger)
+    * [`options.process`](#optionsprocess)
+* [Compatibility](#compatibility)
+  * [Migrating from Sentry](#migrating-from-sentry)
+* [Contributing](#contributing)
+* [License](#license)
 
 
 ## Usage
@@ -56,6 +57,16 @@ registerCrashHandler({
     // Config options go here
 });
 ```
+
+#### `options.logger`
+
+A logger object which implements two methods, `error` and `warn`, which have the following permissive signature:
+
+```ts
+type LogMethod = (...logData: any) => any;
+```
+
+This is passed directly onto the relevant log-error method, [see the documentation for that package for more details](../log-error/README.md#optionslogger).
 
 #### `options.process`
 

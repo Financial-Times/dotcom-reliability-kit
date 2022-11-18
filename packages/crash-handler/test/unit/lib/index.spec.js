@@ -68,6 +68,36 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 		});
 
+		describe('when `options.logger` is set', () => {
+			beforeEach(() => {
+				mockProcess.on.mockReset();
+				logUnhandledError.mockReset();
+				registerCrashHandler({
+					logger: 'mock-logger',
+					process: mockProcess
+				});
+			});
+
+			describe('uncaughtExceptionHandler(error)', () => {
+				let error;
+				let uncaughtExceptionHandler;
+
+				beforeEach(() => {
+					error = new Error('mock error');
+					uncaughtExceptionHandler = mockProcess.on.mock.calls[0][1];
+					uncaughtExceptionHandler(error);
+				});
+
+				it('logs the error as being unhandled with the custom logger', () => {
+					expect(logUnhandledError).toBeCalledTimes(1);
+					expect(logUnhandledError).toBeCalledWith({
+						error,
+						logger: 'mock-logger'
+					});
+				});
+			});
+		});
+
 		describe('when `options.process` is undefined', () => {
 			let mockGlobalProcess;
 			let originalProcess;

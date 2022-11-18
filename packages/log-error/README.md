@@ -1,18 +1,19 @@
 
-## @dotcom-reliability-kit/log-error
+# @dotcom-reliability-kit/log-error
 
 A method to consistently log error object with optional request information. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
-  * [Usage](#usage)
-    * [`logHandledError`](#loghandlederror)
-    * [`logRecoverableError`](#logrecoverableerror)
-    * [`logUnhandledError`](#logunhandlederror)
-    * [configuration options](#configuration-options)
-      * [`error`](#optionserror)
-      * [`includeHeaders`](#optionsincludeheaders)
-      * [`request`](#optionsrequest)
-  * [Contributing](#contributing)
-  * [License](#license)
+* [Usage](#usage)
+  * [`logHandledError`](#loghandlederror)
+  * [`logRecoverableError`](#logrecoverableerror)
+  * [`logUnhandledError`](#logunhandlederror)
+  * [Configuration options](#configuration-options)
+    * [`options.error`](#optionserror)
+    * [`options.includeHeaders`](#optionsincludeheaders)
+    * [`options.logger`](#optionslogger)
+    * [`options.request`](#optionsrequest)
+* [Contributing](#contributing)
+* [License](#license)
 
 
 ## Usage
@@ -198,6 +199,28 @@ logRecoverableError({
 
 > **Note**
 > There's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
+
+#### `options.logger`
+
+A logger object which implements two methods: `error` and `warn`. It may implement other methods but they're not used. The methods have a very permissive signature:
+
+```ts
+type LogMethod = (...logData: any) => any;
+```
+
+Though it's best if they can accept a single object and output results as JSON.
+
+This option defaults to [n-logger](https://github.com/Financial-Times/n-logger) and is compatible with [n-mask-logger](https://github.com/Financial-Times/n-mask-logger):
+
+```js
+const {logRecoverableError} = require('@dotcom-reliability-kit/log-error');
+const MaskLogger = require('@financial-times/n-mask-logger');
+
+logRecoverableError({
+    error: new Error('Oops'),
+    logger: new MaskLogger()
+});
+```
 
 #### `options.request`
 

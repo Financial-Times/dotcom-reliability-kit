@@ -1,14 +1,15 @@
 
-## @dotcom-reliability-kit/middleware-log-errors
+# @dotcom-reliability-kit/middleware-log-errors
 
 Express middleware to consistently log errors. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
-  * [Usage](#usage)
-    * [`createErrorLogger`](#createerrorlogger)
-    * [configuration options](#configuration-options)
-      * [`includeHeaders`](#optionsincludeheaders)
-  * [Contributing](#contributing)
-  * [License](#license)
+* [Usage](#usage)
+  * [`createErrorLogger`](#createerrorlogger)
+  * [Configuration options](#configuration-options)
+    * [`options.includeHeaders`](#optionsincludeheaders)
+    * [`options.logger`](#optionslogger)
+* [Contributing](#contributing)
+* [License](#license)
 
 
 ## Usage
@@ -128,6 +129,16 @@ app.use(createErrorLogger({
 
 > **Note**
 > There's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
+
+#### `options.logger`
+
+A logger object which implements two methods, `error` and `warn`, which have the following permissive signature:
+
+```ts
+type LogMethod = (...logData: any) => any;
+```
+
+This is passed directly onto the relevant log-error method, [see the documentation for that package for more details](../log-error/README.md#optionslogger).
 
 
 ## Contributing

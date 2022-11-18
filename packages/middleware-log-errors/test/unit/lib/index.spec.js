@@ -90,6 +90,23 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 		});
 
+		describe('when the logger option is set', () => {
+			beforeEach(() => {
+				middleware = createErrorLoggingMiddleware({
+					logger: 'mock-logger'
+				});
+				middleware(error, request, response, next);
+			});
+
+			it('passes on the custom logger to the log method', () => {
+				expect(logHandledError).toBeCalledWith({
+					error,
+					request,
+					logger: 'mock-logger'
+				});
+			});
+		});
+
 		describe('when logging fails', () => {
 			beforeEach(() => {
 				logHandledError.mockImplementation(() => {

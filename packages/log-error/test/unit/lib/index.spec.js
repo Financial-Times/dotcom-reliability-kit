@@ -2,7 +2,10 @@ const logError = require('../../../lib');
 const { logHandledError, logRecoverableError, logUnhandledError } = logError;
 
 jest.mock('@financial-times/n-logger', () => ({
-	default: { log: jest.fn() }
+	default: {
+		error: jest.fn(),
+		warn: jest.fn()
+	}
 }));
 const logger = require('@financial-times/n-logger').default;
 
@@ -33,7 +36,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 	afterEach(() => {
 		serializeError.mockClear();
 		serializeRequest.mockClear();
-		logger.log.mockClear();
+		logger.error.mockClear();
+		logger.warn.mockClear();
 	});
 
 	describe('.default', () => {
@@ -64,7 +68,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.log).toBeCalledWith('error', {
+			expect(logger.error).toBeCalledWith({
 				event: 'HANDLED_ERROR',
 				message: 'MockError: mock error',
 				error: {
@@ -99,7 +103,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs without an app name', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -138,7 +142,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -172,7 +176,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -200,7 +204,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'Error: mock error',
 					error: {
@@ -228,7 +232,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError',
 					error: {
@@ -243,6 +247,103 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						releaseDate: 'mock-release-date'
 					}
 				});
+			});
+		});
+
+		describe('when the logger option is set', () => {
+			let customLogger;
+
+			beforeEach(() => {
+				customLogger = {
+					error: jest.fn(),
+					warn: jest.fn()
+				};
+				logHandledError({
+					error,
+					request,
+					logger: customLogger
+				});
+			});
+
+			it('logs the serialized error, request, and app details with the custom logger', () => {
+				expect(customLogger.error).toBeCalledWith({
+					event: 'HANDLED_ERROR',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						commit: 'mock-commit-hash',
+						name: 'mock-system-code',
+						nodeVersion: process.versions.node,
+						region: 'mock-region',
+						releaseDate: 'mock-release-date'
+					}
+				});
+			});
+		});
+
+		describe('when logging fails', () => {
+			let loggingError;
+
+			beforeEach(() => {
+				loggingError = new Error('mock logging error');
+				jest.spyOn(console, 'log').mockImplementation(() => {});
+				serializeError.mockClear();
+				serializeError.mockReturnValueOnce({
+					name: 'MockError',
+					message: 'mock error'
+				});
+				serializeError.mockReturnValueOnce({
+					name: 'MockLoggingError',
+					message: 'mock logging error'
+				});
+				logger.error.mockImplementation(() => {
+					throw loggingError;
+				});
+				logHandledError({
+					error,
+					request
+				});
+			});
+
+			it('logs the serialized error, request, and app details with `console.log`', () => {
+				// eslint-disable-next-line no-console
+				expect(console.log).toBeCalledWith(
+					JSON.stringify({
+						event: 'HANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date'
+						},
+						request: 'mock-serialized-request'
+					})
+				);
+			});
+
+			it('logs that an error occurred with the logger using `console.log`', () => {
+				// eslint-disable-next-line no-console
+				expect(console.log).toBeCalledWith(
+					JSON.stringify({
+						level: 'error',
+						event: 'LOG_METHOD_FAILURE',
+						message: "Failed to log at level 'error'",
+						error: {
+							name: 'MockLoggingError',
+							message: 'mock logging error'
+						}
+					})
+				);
 			});
 		});
 	});
@@ -269,7 +370,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.log).toBeCalledWith('warn', {
+			expect(logger.warn).toBeCalledWith({
 				event: 'RECOVERABLE_ERROR',
 				message: 'MockError: mock error',
 				error: {
@@ -307,7 +408,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.log).toBeCalledWith('warn', {
+				expect(logger.warn).toBeCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -341,7 +442,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.log).toBeCalledWith('warn', {
+				expect(logger.warn).toBeCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -369,7 +470,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.log).toBeCalledWith('warn', {
+				expect(logger.warn).toBeCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'Error: mock error',
 					error: {
@@ -397,7 +498,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.log).toBeCalledWith('warn', {
+				expect(logger.warn).toBeCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'MockError',
 					error: {
@@ -412,6 +513,103 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						releaseDate: 'mock-release-date'
 					}
 				});
+			});
+		});
+
+		describe('when the logger option is set', () => {
+			let customLogger;
+
+			beforeEach(() => {
+				customLogger = {
+					error: jest.fn(),
+					warn: jest.fn()
+				};
+				logRecoverableError({
+					error,
+					request,
+					logger: customLogger
+				});
+			});
+
+			it('logs the serialized error, request, and app details with the custom logger', () => {
+				expect(customLogger.warn).toBeCalledWith({
+					event: 'RECOVERABLE_ERROR',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						commit: 'mock-commit-hash',
+						name: 'mock-system-code',
+						nodeVersion: process.versions.node,
+						region: 'mock-region',
+						releaseDate: 'mock-release-date'
+					}
+				});
+			});
+		});
+
+		describe('when logging fails', () => {
+			let loggingError;
+
+			beforeEach(() => {
+				loggingError = new Error('mock logging error');
+				jest.spyOn(console, 'log').mockImplementation(() => {});
+				serializeError.mockClear();
+				serializeError.mockReturnValueOnce({
+					name: 'MockError',
+					message: 'mock error'
+				});
+				serializeError.mockReturnValueOnce({
+					name: 'MockLoggingError',
+					message: 'mock logging error'
+				});
+				logger.warn.mockImplementation(() => {
+					throw loggingError;
+				});
+				logRecoverableError({
+					error,
+					request
+				});
+			});
+
+			it('logs the serialized error, request, and app details with `console.log`', () => {
+				// eslint-disable-next-line no-console
+				expect(console.log).toBeCalledWith(
+					JSON.stringify({
+						event: 'RECOVERABLE_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date'
+						},
+						request: 'mock-serialized-request'
+					})
+				);
+			});
+
+			it('logs that an error occurred with the logger using `console.log`', () => {
+				// eslint-disable-next-line no-console
+				expect(console.log).toBeCalledWith(
+					JSON.stringify({
+						level: 'error',
+						event: 'LOG_METHOD_FAILURE',
+						message: "Failed to log at level 'warn'",
+						error: {
+							name: 'MockLoggingError',
+							message: 'mock logging error'
+						}
+					})
+				);
 			});
 		});
 	});
@@ -438,7 +636,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.log).toBeCalledWith('error', {
+			expect(logger.error).toBeCalledWith({
 				event: 'UNHANDLED_ERROR',
 				message: 'MockError: mock error',
 				error: {
@@ -476,7 +674,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -510,7 +708,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -538,7 +736,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'Error: mock error',
 					error: {
@@ -566,7 +764,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.log).toBeCalledWith('error', {
+				expect(logger.error).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError',
 					error: {
@@ -581,6 +779,103 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						releaseDate: 'mock-release-date'
 					}
 				});
+			});
+		});
+
+		describe('when the logger option is set', () => {
+			let customLogger;
+
+			beforeEach(() => {
+				customLogger = {
+					error: jest.fn(),
+					warn: jest.fn()
+				};
+				logUnhandledError({
+					error,
+					request,
+					logger: customLogger
+				});
+			});
+
+			it('logs the serialized error, request, and app details with the custom logger', () => {
+				expect(customLogger.error).toBeCalledWith({
+					event: 'UNHANDLED_ERROR',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						commit: 'mock-commit-hash',
+						name: 'mock-system-code',
+						nodeVersion: process.versions.node,
+						region: 'mock-region',
+						releaseDate: 'mock-release-date'
+					}
+				});
+			});
+		});
+
+		describe('when logging fails', () => {
+			let loggingError;
+
+			beforeEach(() => {
+				loggingError = new Error('mock logging error');
+				jest.spyOn(console, 'log').mockImplementation(() => {});
+				serializeError.mockClear();
+				serializeError.mockReturnValueOnce({
+					name: 'MockError',
+					message: 'mock error'
+				});
+				serializeError.mockReturnValueOnce({
+					name: 'MockLoggingError',
+					message: 'mock logging error'
+				});
+				logger.error.mockImplementation(() => {
+					throw loggingError;
+				});
+				logUnhandledError({
+					error,
+					request
+				});
+			});
+
+			it('logs the serialized error, request, and app details with `console.log`', () => {
+				// eslint-disable-next-line no-console
+				expect(console.log).toBeCalledWith(
+					JSON.stringify({
+						event: 'UNHANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date'
+						},
+						request: 'mock-serialized-request'
+					})
+				);
+			});
+
+			it('logs that an error occurred with the logger using `console.log`', () => {
+				// eslint-disable-next-line no-console
+				expect(console.log).toBeCalledWith(
+					JSON.stringify({
+						level: 'error',
+						event: 'LOG_METHOD_FAILURE',
+						message: "Failed to log at level 'error'",
+						error: {
+							name: 'MockLoggingError',
+							message: 'mock logging error'
+						}
+					})
+				);
 			});
 		});
 	});
