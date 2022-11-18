@@ -1,7 +1,19 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
-const logger = require('@financial-times/n-logger').default;
+const nLogger = require('@financial-times/n-logger').default;
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
+
+/**
+ * @typedef {(...logData: any) => any} LogMethod
+ */
+
+/**
+ * @typedef {object} Logger
+ * @property {LogMethod} error
+ *     A function to log an error.
+ * @property {LogMethod} warn
+ *     A function to log a warning.
+ */
 
 /**
  * @typedef {object} ErrorLoggingOptions
@@ -9,6 +21,8 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  *     The error to log.
  * @property {Array<string>} [includeHeaders]
  *     An array of request headers to include in the log.
+ * @property {Logger & Object<string, any>} [logger]
+ *     The logger to use to output errors. Defaults to n-logger.
  * @property {(string | import('@dotcom-reliability-kit/serialize-request').Request)} [request]
  *     An request object to include in the log.
  */
@@ -29,7 +43,14 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  *     The data to log.
  * @returns {void}
  */
-function logError({ error, event, includeHeaders, level = 'error', request }) {
+function logError({
+	error,
+	event,
+	includeHeaders,
+	level = 'error',
+	logger = nLogger,
+	request
+}) {
 	const serializedError = serializeError(error);
 	const logData = {
 		event,
@@ -47,7 +68,24 @@ function logError({ error, event, includeHeaders, level = 'error', request }) {
 		logData.request = serializeRequest(request, { includeHeaders });
 	}
 
-	logger.log(level, logData);
+	try {
+		logger[level](logData);
+	} catch (/** @type {any} */ loggingError) {
+		// We allow use of `console.log` here to ensure that critical
+		// logging failures are caught and logged. This ensures that we
+		// know if an app has broken logging.
+		// eslint-disable-next-line no-console
+		console.log(
+			JSON.stringify({
+				level: 'error',
+				event: 'LOG_METHOD_FAILURE',
+				message: `Failed to log at level '${level}'`,
+				error: serializeError(loggingError)
+			})
+		);
+		// eslint-disable-next-line no-console
+		console.log(JSON.stringify(logData));
+	}
 }
 
 /**
@@ -73,11 +111,12 @@ function extractErrorMessage(serializedError) {
  *     The data to log.
  * @returns {void}
  */
-function logHandledError({ error, includeHeaders, request }) {
+function logHandledError({ error, includeHeaders, logger, request }) {
 	logError({
 		error,
 		event: 'HANDLED_ERROR',
 		includeHeaders,
+		logger,
 		request
 	});
 }
@@ -90,12 +129,13 @@ function logHandledError({ error, includeHeaders, request }) {
  *     The data to log.
  * @returns {void}
  */
-function logRecoverableError({ error, includeHeaders, request }) {
+function logRecoverableError({ error, includeHeaders, logger, request }) {
 	logError({
 		error,
 		event: 'RECOVERABLE_ERROR',
 		includeHeaders,
 		level: 'warn',
+		logger,
 		request
 	});
 }
@@ -108,11 +148,12 @@ function logRecoverableError({ error, includeHeaders, request }) {
  *     The data to log.
  * @returns {void}
  */
-function logUnhandledError({ error, includeHeaders, request }) {
+function logUnhandledError({ error, includeHeaders, logger, request }) {
 	logError({
 		error,
 		event: 'UNHANDLED_ERROR',
 		includeHeaders,
+		logger,
 		request
 	});
 }

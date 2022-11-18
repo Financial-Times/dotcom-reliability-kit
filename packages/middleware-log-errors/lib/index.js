@@ -4,6 +4,8 @@ const { logHandledError } = require('@dotcom-reliability-kit/log-error');
  * @typedef {object} ErrorLoggingOptions
  * @property {Array<string>} [includeHeaders]
  *     An array of request headers to include in the log.
+ * @property {import('@dotcom-reliability-kit/log-error').Logger & Object<string, any>} [logger]
+ *     The logger to use to output errors. Defaults to n-logger.
  */
 
 /**
@@ -37,6 +39,7 @@ function createErrorLoggingMiddleware(options = {}) {
 			logHandledError({
 				error,
 				includeHeaders,
+				logger: options.logger,
 				request
 			});
 
