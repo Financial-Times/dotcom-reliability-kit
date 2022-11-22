@@ -24,6 +24,20 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.11 to ^1.4.0
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.0.0...crash-handler-v1.1.0) (2022-11-22)
+
+
+### Features
+
+* add the ability to set a custom logger ([d34152b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d34152b77b89269aeedb35c01c92964645679e2e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.4.0 to ^1.5.0
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v0.1.4...crash-handler-v1.0.0) (2022-11-09)
 
 
