@@ -18,6 +18,13 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-request bumped from ^1.0.3 to ^1.0.4
 
+## [1.5.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.4.0...log-error-v1.5.0) (2022-11-22)
+
+
+### Features
+
+* add the ability to set a custom logger ([d34152b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d34152b77b89269aeedb35c01c92964645679e2e))
+
 ## [1.4.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v1.3.11...log-error-v1.4.0) (2022-11-03)
 
 

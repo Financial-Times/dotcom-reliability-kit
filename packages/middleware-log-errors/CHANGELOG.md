@@ -36,6 +36,25 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.3.10 to ^1.3.11
 
+## [1.4.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.3.0...middleware-log-errors-v1.4.0) (2022-11-22)
+
+
+### Features
+
+* add the ability to set a custom logger ([d34152b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d34152b77b89269aeedb35c01c92964645679e2e))
+
+
+### Bug Fixes
+
+* bump @financial-times/n-express from 26.3.3 to 26.3.4 ([4776fce](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4776fcebe2b781e43d0160b580e532dd4bc7b48b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.4.0 to ^1.5.0
+
 ## [1.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.2.12...middleware-log-errors-v1.3.0) (2022-11-03)
 
 
