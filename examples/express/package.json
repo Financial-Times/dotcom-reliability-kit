@@ -24,6 +24,6 @@
     "@dotcom-reliability-kit/log-error": "*",
     "@dotcom-reliability-kit/middleware-log-errors": "*",
     "@dotcom-reliability-kit/middleware-render-error-info": "*",
-    "@financial-times/n-express": "^26.3.7"
+    "@financial-times/n-express": "^26.3.8"
   }
 }
