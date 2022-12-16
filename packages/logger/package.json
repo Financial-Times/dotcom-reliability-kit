@@ -19,7 +19,7 @@
     "@dotcom-reliability-kit/app-info": "^1.0.3",
     "@dotcom-reliability-kit/serialize-error": "^1.1.4",
     "@ungap/structured-clone": "^1.0.1",
-    "pino": "^8.7.0"
+    "pino": "^8.8.0"
   },
   "devDependencies": {
     "@financial-times/n-logger": "^10.3.0",
