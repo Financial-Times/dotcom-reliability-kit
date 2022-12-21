@@ -53,7 +53,11 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	commitHash: process.env.HEROKU_SLUG_COMMIT || process.env.GIT_COMMIT || null,
+	commitHash:
+		process.env.HEROKU_SLUG_COMMIT ||
+		process.env.GIT_COMMIT_LONG ||
+		process.env.GIT_COMMIT ||
+		null,
 
 	/**
 	 * The application environment.
