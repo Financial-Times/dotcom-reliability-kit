@@ -34,7 +34,11 @@ The `appInfo` object has several properties which can be used to access applicat
 
 ### `appInfo.commitHash`
 
-Get the commit hash that the application last deployed. This will be a string (if `process.env.HEROKU_SLUG_COMMIT` is defined) or `null` otherwise. This relies on the [Heroku Dyno metadata labs feature](https://devcenter.heroku.com/articles/dyno-metadata) and will not be present in local development.
+Get the commit hash that the application last deployed. This will be a string (if `process.env.HEROKU_SLUG_COMMIT` or `process.env.GIT_COMMIT` is defined) or `null` otherwise.
+
+For Heroku, this relies on the [Dyno Metadata labs feature](https://devcenter.heroku.com/articles/dyno-metadata) and will not be present in local development.
+
+For AWS Lambda, you can set the `GIT_COMMIT` environment variable using a plugin, e.g. [serverless-plugin-git-variables](https://www.npmjs.com/package/serverless-plugin-git-variables).
 
 ### `appInfo.environment`
 
@@ -42,15 +46,19 @@ Get the application environment, normally either `development` or `production`. 
 
 ### `appInfo.region`
 
-Get the application Heroku region. This will be a string (if `process.env.REGION` is defined) or `null` otherwise.
+Get the region that the application is running in. This will be a string (if `process.env.REGION` or `process.env.AWS_REGION` is defined) or `null` otherwise.
 
 ### `appInfo.releaseDate`
 
-Get the application Heroku release date. This will be a string (if `process.env.HEROKU_RELEASE_CREATED_AT` is defined) or `null` otherwise. This relies on the [Heroku Dyno metadata labs feature](https://devcenter.heroku.com/articles/dyno-metadata) and will not be present in local development.
+Get the application Heroku release date. This will be a string (if `process.env.HEROKU_RELEASE_CREATED_AT` is defined) or `null` otherwise.
+
+For Heroku, this relies on the [Dyno Metadata labs feature](https://devcenter.heroku.com/articles/dyno-metadata) and will not be present in local development.
 
 ### `appInfo.releaseVersion`
 
-Get the application Heroku release version. This will be a string (if `process.env.HEROKU_RELEASE_VERSION` is defined) or `null` otherwise. This relies on the [Heroku Dyno metadata labs feature](https://devcenter.heroku.com/articles/dyno-metadata) and will not be present in local development.
+Get the application Heroku release version. This will be a string (if `process.env.HEROKU_RELEASE_VERSION` or `process.env.AWS_LAMBDA_FUNCTION_VERSION` is defined) or `null` otherwise.
+
+For Heroku, this relies on the [Dyno Metadata labs feature](https://devcenter.heroku.com/articles/dyno-metadata) and will not be present in local development.
 
 ### `appInfo.systemCode`
 
