@@ -6,6 +6,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		process.env.AWS_LAMBDA_FUNCTION_VERSION = 'mock-aws-release-version';
 		process.env.AWS_REGION = 'mock-aws-region';
 		process.env.GIT_COMMIT = 'mock-git-commit';
+		process.env.GIT_COMMIT_LONG = 'mock-git-commit-long';
 		process.env.HEROKU_RELEASE_CREATED_AT = 'mock-heroku-release-date';
 		process.env.HEROKU_RELEASE_VERSION = 'mock-heroku-release-version';
 		process.env.HEROKU_SLUG_COMMIT = 'mock-heroku-commit-hash';
@@ -33,15 +34,29 @@ describe('@dotcom-reliability-kit/app-info', () => {
 				appInfo = require('../../../lib');
 			});
 
+			it('is set to `process.env.GIT_COMMIT_LONG`', () => {
+				expect(appInfo.commitHash).toBe('mock-git-commit-long');
+			});
+		});
+
+		describe('when both `process.env.HEROKU_SLUG_COMMIT` and `process.env.GIT_COMMIT_LONG` are not defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.GIT_COMMIT_LONG;
+				delete process.env.HEROKU_SLUG_COMMIT;
+				appInfo = require('../../../lib');
+			});
+
 			it('is set to `process.env.GIT_COMMIT`', () => {
 				expect(appInfo.commitHash).toBe('mock-git-commit');
 			});
 		});
 
-		describe('when neither environment variable is defined', () => {
+		describe('when no commit-related environment variable is defined', () => {
 			beforeEach(() => {
 				jest.resetModules();
 				delete process.env.GIT_COMMIT;
+				delete process.env.GIT_COMMIT_LONG;
 				delete process.env.HEROKU_SLUG_COMMIT;
 				appInfo = require('../../../lib');
 			});

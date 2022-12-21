@@ -34,11 +34,11 @@ The `appInfo` object has several properties which can be used to access applicat
 
 ### `appInfo.commitHash`
 
-Get the commit hash that the application last deployed. This will be a string (if `process.env.HEROKU_SLUG_COMMIT` or `process.env.GIT_COMMIT` is defined) or `null` otherwise.
+Get the commit hash that the application last deployed. This will be a string (if `process.env.HEROKU_SLUG_COMMIT`, `process.env.GIT_COMMIT_LONG`, or `process.env.GIT_COMMIT` is defined) or `null` otherwise.
 
 For Heroku, this relies on the [Dyno Metadata labs feature](https://devcenter.heroku.com/articles/dyno-metadata) and will not be present in local development.
 
-For AWS Lambda, you can set the `GIT_COMMIT` environment variable using a plugin, e.g. [serverless-plugin-git-variables](https://www.npmjs.com/package/serverless-plugin-git-variables).
+For AWS Lambda, you can use a plugin like [serverless-plugin-git-variables](https://www.npmjs.com/package/serverless-plugin-git-variables) to provide this data or set the `GIT_COMMIT` environment variable during deployment.
 
 ### `appInfo.environment`
 
