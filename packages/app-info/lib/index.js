@@ -1,5 +1,11 @@
 const path = require('path');
 
+// This package relies on Heroku and AWS Lambda environment variables.
+// Documentation for these variables is available here:
+//
+//   - Heroku: https://devcenter.heroku.com/articles/dyno-metadata
+//   - Lambda: https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html
+
 /**
  * Get the application system code from a package.json file.
  *
@@ -47,7 +53,7 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	commitHash: process.env.HEROKU_SLUG_COMMIT || null,
+	commitHash: process.env.HEROKU_SLUG_COMMIT || process.env.GIT_COMMIT || null,
 
 	/**
 	 * The application environment.
@@ -63,7 +69,7 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	region: process.env.REGION || null,
+	region: process.env.REGION || process.env.AWS_REGION || null,
 
 	/**
 	 * The date and time that the application was last released at.
@@ -79,7 +85,10 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	releaseVersion: process.env.HEROKU_RELEASE_VERSION || null,
+	releaseVersion:
+		process.env.HEROKU_RELEASE_VERSION ||
+		process.env.AWS_LAMBDA_FUNCTION_VERSION ||
+		null,
 
 	/**
 	 * The application system code.

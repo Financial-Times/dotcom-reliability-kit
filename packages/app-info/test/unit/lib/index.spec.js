@@ -3,9 +3,12 @@ describe('@dotcom-reliability-kit/app-info', () => {
 
 	beforeEach(() => {
 		jest.spyOn(process, 'cwd').mockReturnValue('/mock-cwd');
-		process.env.HEROKU_RELEASE_CREATED_AT = 'mock-release-date';
-		process.env.HEROKU_RELEASE_VERSION = 'mock-release-version';
-		process.env.HEROKU_SLUG_COMMIT = 'mock-commit-hash';
+		process.env.AWS_LAMBDA_FUNCTION_VERSION = 'mock-aws-release-version';
+		process.env.AWS_REGION = 'mock-aws-region';
+		process.env.GIT_COMMIT = 'mock-git-commit';
+		process.env.HEROKU_RELEASE_CREATED_AT = 'mock-heroku-release-date';
+		process.env.HEROKU_RELEASE_VERSION = 'mock-heroku-release-version';
+		process.env.HEROKU_SLUG_COMMIT = 'mock-heroku-commit-hash';
 		process.env.NODE_ENV = 'mock-environment';
 		process.env.REGION = 'mock-region';
 		process.env.SYSTEM_CODE = 'mock-system-code';
@@ -20,12 +23,25 @@ describe('@dotcom-reliability-kit/app-info', () => {
 
 	describe('.commitHash', () => {
 		it('is set to `process.env.HEROKU_SLUG_COMMIT`', () => {
-			expect(appInfo.commitHash).toBe('mock-commit-hash');
+			expect(appInfo.commitHash).toBe('mock-heroku-commit-hash');
 		});
 
 		describe('when `process.env.HEROKU_SLUG_COMMIT` is not defined', () => {
 			beforeEach(() => {
 				jest.resetModules();
+				delete process.env.HEROKU_SLUG_COMMIT;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to `process.env.GIT_COMMIT`', () => {
+				expect(appInfo.commitHash).toBe('mock-git-commit');
+			});
+		});
+
+		describe('when neither environment variable is defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.GIT_COMMIT;
 				delete process.env.HEROKU_SLUG_COMMIT;
 				appInfo = require('../../../lib');
 			});
@@ -66,6 +82,19 @@ describe('@dotcom-reliability-kit/app-info', () => {
 				appInfo = require('../../../lib');
 			});
 
+			it('is set to `process.env.AWS_REGION`', () => {
+				expect(appInfo.region).toBe('mock-aws-region');
+			});
+		});
+
+		describe('when neither environment variable is defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.AWS_REGION;
+				delete process.env.REGION;
+				appInfo = require('../../../lib');
+			});
+
 			it('is set to null', () => {
 				expect(appInfo.region).toBe(null);
 			});
@@ -74,7 +103,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 
 	describe('.releaseDate', () => {
 		it('is set to `process.env.HEROKU_RELEASE_CREATED_AT`', () => {
-			expect(appInfo.releaseDate).toBe('mock-release-date');
+			expect(appInfo.releaseDate).toBe('mock-heroku-release-date');
 		});
 
 		describe('when `process.env.HEROKU_RELEASE_CREATED_AT` is not defined', () => {
@@ -92,12 +121,25 @@ describe('@dotcom-reliability-kit/app-info', () => {
 
 	describe('.releaseVersion', () => {
 		it('is set to `process.env.HEROKU_RELEASE_VERSION`', () => {
-			expect(appInfo.releaseVersion).toBe('mock-release-version');
+			expect(appInfo.releaseVersion).toBe('mock-heroku-release-version');
 		});
 
 		describe('when `process.env.HEROKU_RELEASE_VERSION` is not defined', () => {
 			beforeEach(() => {
 				jest.resetModules();
+				delete process.env.HEROKU_RELEASE_VERSION;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to `process.env.AWS_LAMBDA_FUNCTION_VERSION`', () => {
+				expect(appInfo.releaseVersion).toBe('mock-aws-release-version');
+			});
+		});
+
+		describe('when neither environment variable is defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.AWS_LAMBDA_FUNCTION_VERSION;
 				delete process.env.HEROKU_RELEASE_VERSION;
 				appInfo = require('../../../lib');
 			});
