@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.0.3...app-info-v1.1.0) (2022-12-22)
+
+
+### Features
+
+* use AWS environment variables in app-info ([d5cd535](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d5cd535cdf678366ec885f99d33e01b6268db4b2))
+
+
+### Bug Fixes
+
+* use GIT_COMMIT_LONG ([f4fb427](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f4fb427b50302ae6d25b800d9688a4c6013f5752))
+
 ## [1.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.0.2...app-info-v1.0.3) (2022-10-12)
 
 
