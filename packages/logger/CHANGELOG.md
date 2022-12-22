@@ -1,5 +1,11 @@
 # Changelog
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
+
 ## [0.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.3...logger-v0.1.4) (2022-12-16)
 
 

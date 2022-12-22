@@ -1,11 +1,11 @@
 {
-  "packages/app-info": "1.0.3",
-  "packages/crash-handler": "1.1.0",
+  "packages/app-info": "1.1.0",
+  "packages/crash-handler": "1.1.1",
   "packages/errors": "1.2.7",
-  "packages/log-error": "1.5.0",
-  "packages/logger": "0.1.4",
-  "packages/middleware-log-errors": "1.4.0",
-  "packages/middleware-render-error-info": "1.1.12",
+  "packages/log-error": "1.5.1",
+  "packages/logger": "0.1.5",
+  "packages/middleware-log-errors": "1.4.1",
+  "packages/middleware-render-error-info": "1.1.13",
   "packages/serialize-error": "1.1.4",
   "packages/serialize-request": "1.1.0"
 }
