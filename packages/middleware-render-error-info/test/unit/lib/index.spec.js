@@ -64,6 +64,9 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		let response;
 
 		beforeEach(() => {
+			// The error page template contains the current year
+			jest.useFakeTimers().setSystemTime(new Date('1888-01-09'));
+
 			error = new Error('mock error');
 			request = {
 				method: 'mock request method',
