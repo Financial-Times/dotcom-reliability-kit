@@ -2,4 +2,4 @@
 *.d.ts.map
 resources/logos/dist
 node_modules/
-coverage
+coverage.git/
