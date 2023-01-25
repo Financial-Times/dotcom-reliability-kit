@@ -25,6 +25,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/log-error](./packages/log-error/#readme):**<br/>
       A method to consistently log error object with optional request information
 
+    * **[@dotcom-reliability-kit/logger](./packages/logger/#readme):**<br/>
+      A simple and fast logger based on [Pino](https://getpino.io/), with FT preferences baked in
+
     * **[@dotcom-reliability-kit/middleware-log-errors](./packages/middleware-log-errors/#readme):**<br/>
       Express middleware to consistently log errors
 

@@ -1,9 +1,6 @@
 
 ## @dotcom-reliability-kit/logger
 
-> **Warning**
-> This Reliability Kit package is **experimental** and should not be used in critical production applications until we've reached a stable version (the latest major version is greater than `0`).
-
 A simple and fast logger based on [Pino](https://getpino.io/), with FT preferences baked in. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
   * [Usage](#usage)
