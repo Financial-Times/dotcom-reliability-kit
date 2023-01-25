@@ -43,6 +43,13 @@
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
     * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
 
+## [1.1.14](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.13...middleware-render-error-info-v1.1.14) (2023-01-25)
+
+
+### Bug Fixes
+
+* use fake timers in middleware rendering snapshot test ([6fabcce](https://github.com/Financial-Times/dotcom-reliability-kit/commit/6fabcce57d19102a8dfa78442a83cb60f7cb323f))
+
 ## [1.1.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.6...middleware-render-error-info-v1.1.7) (2022-10-12)
 
 

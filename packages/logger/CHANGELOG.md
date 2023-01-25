@@ -6,6 +6,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.5...logger-v1.0.0) (2023-01-25)
+
+
+### Features
+
+* mark the logger package as stable ([57c5f65](https://github.com/Financial-Times/dotcom-reliability-kit/commit/57c5f65272692bf416c7f1777b240f2276e02e9d))
+
 ## [0.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.3...logger-v0.1.4) (2022-12-16)
 
 
