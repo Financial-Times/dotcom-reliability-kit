@@ -2,7 +2,7 @@
 
 const { OperationalError } = require('@dotcom-reliability-kit/errors');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
-const logger = require('@financial-times/n-serverless-logger').default;
+const logger = require('@dotcom-reliability-kit/logger');
 
 module.exports.example = async (event) => {
 	if (event.status === 'bad') {
