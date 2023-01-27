@@ -24,7 +24,7 @@
     "@dotcom-reliability-kit/logger": "*"
   },
   "devDependencies": {
-    "serverless": "3.26.0"
+    "serverless": "3.27.0"
   },
   "volta": {
     "node": "16.18.1"
