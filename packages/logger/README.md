@@ -80,7 +80,7 @@ The valid levels are:
 
   * `debug`: The lowest log level. This is for high-volume information which isn't critical to monitoring and running the app, but may be useful when debugging in local development. E.g. logging transformed article information before rendering.
 
-  * `info`: The highest _informational_ log level. This is for key information which is important debugging an application in production. E.g. when the application is ready to recieve HTTP traffic.
+  * `info`: The highest _informational_ log level. This is for key information which is important debugging an application in production. E.g. when the application is ready to receive HTTP traffic.
 
   * `warn`: The lowest _error_ log level. This is for when something _may_ cause an issue but it does not have a large impact on the end user. E.g. a deprecated method is being used which may be removed the next time a dependency is updated.
 
