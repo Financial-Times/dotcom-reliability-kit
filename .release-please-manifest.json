@@ -3,7 +3,7 @@
   "packages/crash-handler": "1.1.1",
   "packages/errors": "1.2.7",
   "packages/log-error": "1.5.1",
-  "packages/logger": "1.0.0",
+  "packages/logger": "1.0.1",
   "packages/middleware-log-errors": "1.4.1",
   "packages/middleware-render-error-info": "1.1.14",
   "packages/serialize-error": "1.1.4",
