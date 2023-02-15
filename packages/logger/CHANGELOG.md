@@ -6,6 +6,14 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [1.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.0.1...logger-v1.0.2) (2023-02-15)
+
+
+### Bug Fixes
+
+* bump @ungap/structured-clone from 1.0.1 to 1.0.2 ([c5a3628](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c5a3628a8bfef8e28aa0d381aeed8e74fe530426))
+* bump pino from 8.9.0 to 8.10.0 ([f1f8692](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f1f8692eabd541c9aa81eb99a3a1a59c8a1f362d))
+
 ## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.0.0...logger-v1.0.1) (2023-02-07)
 
 
