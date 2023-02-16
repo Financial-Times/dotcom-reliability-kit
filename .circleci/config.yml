@@ -76,7 +76,7 @@ jobs:
       - checkout
       - *restore_cache
       - node/install-npm:
-          version: '8'
+          version: '8.19.2'
       - run:
           name: Install project dependencies
           command: npm install

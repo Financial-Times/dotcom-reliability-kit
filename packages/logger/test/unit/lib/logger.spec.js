@@ -1,17 +1,18 @@
 jest.mock('pino', () => ({
 	default: jest.fn(),
-	mockPinoLogger: {
-		flush: jest.fn(),
-		mockCanonicalLevel: jest.fn(),
-		mockDeprecatedCanonocalLevel: jest.fn(),
-		mockErroringLevel: jest.fn().mockImplementation(() => {
-			throw new Error('mock error');
-		}),
-		warn: jest.fn()
+	createMockPinoLogger() {
+		return {
+			flush: jest.fn(),
+			mockCanonicalLevel: jest.fn(),
+			mockDeprecatedCanonocalLevel: jest.fn(),
+			mockErroringLevel: jest.fn().mockImplementation(() => {
+				throw new Error('mock error');
+			}),
+			warn: jest.fn()
+		};
 	}
 }));
-const { default: pino, mockPinoLogger } = require('pino');
-pino.mockReturnValue(mockPinoLogger);
+const { default: pino, createMockPinoLogger } = require('pino');
 
 jest.mock('@dotcom-reliability-kit/app-info', () => ({
 	environment: 'production'
@@ -28,6 +29,13 @@ delete process.env.SPLUNK_LOG_LEVEL;
 let Logger = require('../../../lib/logger');
 
 describe('@dotcom-reliability-kit/logger/lib/logger', () => {
+	let mockPinoLogger;
+
+	beforeEach(() => {
+		mockPinoLogger = createMockPinoLogger();
+		pino.mockReturnValue(mockPinoLogger);
+	});
+
 	afterEach(() => {
 		jest.restoreAllMocks();
 	});
