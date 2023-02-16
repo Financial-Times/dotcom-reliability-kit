@@ -3,12 +3,15 @@
 
 Logging when errors occur is important when it comes to debugging an issue with your app. Doing your error logging consistently per app (and across all our apps) helps to make debugging more efficient: if you know how to find the information to debug one app then you _should_ also be able to help debug any other app.
 
-  * [What to log](#what-to-log)
-    * [What not to log](#what-not-to-log)
-    * [Extracting logging information](#extracting-logging-information)
-  * [Appropriate logging levels](#appropriate-logging-levels)
-  * [One way of logging](#one-way-of-logging)
-  * [Unhandled errors](#unhandled-errors)
+* [What to log](#what-to-log)
+  * [What not to log](#what-not-to-log)
+  * [Extracting logging information](#extracting-logging-information)
+* [Appropriate logging levels](#appropriate-logging-levels)
+* [One way of logging](#one-way-of-logging)
+  * [Centralised logging in Express](#centralised-logging-in-express)
+  * [Centralised logging in AWS Lambda](#centralised-logging-in-aws-lambda)
+  * [Logging recoverable errors](#logging-recoverable-errors)
+* [Unhandled errors](#unhandled-errors)
 
 
 ## What to log
@@ -110,7 +113,9 @@ When logging errors it's important to consider the level of the log you send. Th
 
 ## One way of logging
 
-If you're handling errors correctly and have read through [bubbling up in Express](./handling-errors.md#bubbling-up-in-express), then you know that moving our error handling to a centralised place is a sensible way to avoid boilerplate code and make sure that everything we do is consistent.
+If you're handling errors correctly and have read through [bubbling up in Express](./handling-errors.md#bubbling-up-in-express) or [bubbling up in AWS Lambda](./handling-errors.md#bubbling-up-in-aws-lambda), then you know that moving our error handling to a centralised place is a sensible way to avoid boilerplate code and make sure that everything we do is consistent.
+
+### Centralised logging in Express
 
 Reliability Kit has a package which helps you with this if you're running an Express application: [`@dotcom-reliability-kit/middleware-log-errors`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-log-errors#readme) is a middleware which logs error, request, and application information. You can register it _after_ your application routes like this:
 
@@ -136,6 +141,29 @@ app.get('/fruit/:name', async (request, response, next) => {
     }
 });
 ```
+
+### Centralised logging in AWS Lambda
+
+In [handling errors](./handling-errors.md#bubbling-up-in-aws-lambda) we advised that you have a top-level try/catch block in your Lambda function so that error handling happens in one place. Reliability Kit provides a [set of functions](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/log-error#readme) to ensure that errors are logged consistently.
+
+The format of these errors also matches up to the way we log with Express, so there's a single shared format for error logging.
+
+```js
+import { logHandledError } from '@dotcom-reliability-kit/log-error';
+
+module.exports.handler = async function handler(request) {
+	try {
+		return {
+			statusCode: 200,
+			body: 'Hello World!'
+		};
+	} catch (error) {
+		logHandledError({ error, request });
+	}
+};
+```
+
+### Logging recoverable errors
 
 Reliability Kit also provides methods to log errors which are [recoverable](./handling-errors.md#handling-recoverable-errors), you can do this with the [`@dotcom-reliability-kit/log-error`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/log-error#readme) package. It's best to use these centralised methods for logging as they ensure that:
 
