@@ -1,16 +1,17 @@
 
 # Getting started: handling errors
 
-We've covered creating and throwing good errors, now let's talk about handling errors. The way you handle errors, particularly in Express, is important. You can end up writing a lot of code in different parts of your app if you're not careful. More code isn't always bad, but duplicated error handling can lead to your errors not being surfaced to where they're needed.
+We've covered creating and throwing good errors, now let's talk about handling errors. The way you handle errors is important. You can end up writing a lot of code in different parts of your app if you're not careful. More code isn't always bad, but duplicated error handling can lead to your errors not being surfaced to where they're needed.
 
-  * [Bubbling up in Express](#bubbling-up-in-express)
-    * [Synchronous handlers](#synchronous-handlers)
-    * [Asynchronous handlers](#asynchronous-handlers)
-    * [Registering error handlers](#registering-error-handlers)
-  * [Don't fear the try/catch block](#dont-fear-the-trycatch-block)
-    * [Error checking](#error-checking)
-    * [Multiple try/catch blocks](#multiple-trycatch-blocks)
-  * [Handling recoverable errors](#handling-recoverable-errors)
+* [Bubbling up in Express](#bubbling-up-in-express)
+  * [Synchronous handlers](#synchronous-handlers)
+  * [Asynchronous handlers](#asynchronous-handlers)
+  * [Registering error handlers](#registering-error-handlers)
+* [Bubbling up in AWS Lambda](#bubbling-up-in-aws-lambda)
+* [Don't fear the try/catch block](#dont-fear-the-trycatch-block)
+  * [Error checking](#error-checking)
+  * [Multiple try/catch blocks](#multiple-trycatch-blocks)
+* [Handling recoverable errors](#handling-recoverable-errors)
 
 
 ## Bubbling up in Express
@@ -94,11 +95,28 @@ This way of handling async errors will also be [built-in in Express v5](https://
 The Express documentation covers [writing centralised error handlers](https://expressjs.com/en/guide/error-handling.html#writing-error-handlers), but Reliability Kit provides some of it's own which can be used to [log errors in a consistent and centralised way](./logging-errors.md). It's generally better to rely on these than to write your own error handlers for your app.
 
 
+## Bubbling up in AWS Lambda
+
+In a Lambda-based application, a lot of the same principles apply [as in Express](#bubbling-up-in-express). Regular Lambda functions don't have the concept of a `next` function you can pass errors to, but you should ensure that even errors you don't expect are caught and handled at the top level:
+
+```js
+module.exports.handler = async function handler() {
+	try {
+		// All your code goes here
+	} catch (error) {
+		// Here's your central error handling
+	}
+};
+```
+
+In the top-level catch you could add some [consistent error logging](./logging-errors.md), send some metrics, and ensure that your team is immediately aware of any unexpected errors.
+
+
 ## Don't fear the try/catch block
 
-One of the tools we have to make sure [thrown errors are specific](./throwing-errors.md#being-specific) is the `try`/`catch` block. In previous examples we've wrapped all our code in a single `try`/`catch` block and sent the error on to the Express error handler. If we want to be _really_ specific about what went wrong in our code, then this is often not enough.
+One of the tools we have to make sure [thrown errors are specific](./throwing-errors.md#being-specific) is the `try`/`catch` block. In previous examples, we've wrapped all our code in a single `try`/`catch` block so that we can handle all errors consistently. If we want to be _really_ specific about what went wrong in our code, then this is often not enough.
 
-We have a couple of different ways that we update our `try`/`catch` to help us to handle errors and rethrow more specific ones. We can use either or both of these.
+We have a couple of different ways that we update our `try`/`catch` to help us to handle errors and rethrow more specific ones. We can use either or both of these. The examples in this section use Express (because the majority of our apps use this) but the principals also apply to AWS Lambda or any other underlying framework.
 
 ### Error checking
 
@@ -289,7 +307,7 @@ With this checking and multiple `try`/`catch` blocks in place you can be confide
 
 Sometimes an error in your code is recoverable, and a page can continue to be rendered even if something failed. We call these recoverable errors. Even when an error is recoverable, it's still useful to have logs to help us understand how frequently certain parts of a website are missing.
 
-An error we recover from might look something like this (back to using our fruit API example). **This is a poor example because we lose a lot of error information by logging very little**:
+An error we recover from might look something like this (back to using our Express fruit API example). **This is a poor example because we lose a lot of error information by logging very little**:
 
 ```js
 // E.g. GET https://your-app/fruit/feijoa

@@ -3,19 +3,21 @@
 
 Throwing good errors is key to producing a reliable application. Most of Reliability Kit's packages rely on sensible errors being thrown if a fault is encountered in your app, and without reviewing your existing errors you won't get as much value from using it.
 
-  * [Types of error](#types-of-error)
-    * [Operational errors](#operational-errors)
-    * [Programmer errors](#programmer-errors)
-  * [Types of error in code](#types-of-error-in-code)
-    * [Operational errors in library code](#operational-errors-in-library-code)
-  * [What does a good error look like?](#what-does-a-good-error-look-like)
-    * [Using error objects](#using-error-objects)
-    * [Making errors human readable](#making-errors-human-readable)
-    * [Making errors machine readable](#making-errors-machine-readable)
-      * [Error codes](#error-codes)
-      * [Error classes](#error-classes)
-    * [Adding more data](#adding-more-data)
-    * [Being specific](#being-specific)
+The examples in this file assume Express, but the same principles of throwing well-structured errors apply to AWS Lambda or any other framework you're using.
+
+* [Types of error](#types-of-error)
+  * [Operational errors](#operational-errors)
+  * [Programmer errors](#programmer-errors)
+* [Types of error in code](#types-of-error-in-code)
+  * [Operational errors in library code](#operational-errors-in-library-code)
+* [What does a good error look like?](#what-does-a-good-error-look-like)
+  * [Using error objects](#using-error-objects)
+  * [Making errors human readable](#making-errors-human-readable)
+  * [Making errors machine readable](#making-errors-machine-readable)
+    * [Error codes](#error-codes)
+    * [Error classes](#error-classes)
+  * [Adding more data](#adding-more-data)
+  * [Being specific](#being-specific)
 
 
 ## Types of error
