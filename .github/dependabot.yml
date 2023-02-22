@@ -12,26 +12,6 @@ updates:
       prefix-development: "chore:"
 
   - package-ecosystem: "npm"
-    directory: "/examples/express"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "chore:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/examples/serverless"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "chore:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
     directory: "/resources/logos"
     schedule:
       interval: "daily"

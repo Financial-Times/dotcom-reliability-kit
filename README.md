@@ -40,8 +40,13 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/serialize-request](./packages/serialize-request/#readme):**<br/>
       A utility function to serialize a request object in a way that's friendly to loggers, view engines, and converting to JSON
 
-  * **The [code examples](./examples/)** illustrate more real-world examples of how to use Reliability Kit
+  * **Example projects** illustrate more real-world examples of how to use Reliability Kit. These live in separate repositories:
 
+    * **[Express example](https://github.com/Financial-Times/reliability-kit-example-express#readme):**<br/>
+      An example of how to use Reliability Kit with an [Express](https://expressjs.com/)-based application
+
+    * **[Serverless example](https://github.com/Financial-Times/reliability-kit-example-serverless#readme):**<br/>
+      An example of how to use Reliability Kit with a [Serverless](https://www.serverless.com/) application
 
 ## Design
 
