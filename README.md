@@ -58,9 +58,12 @@ To understand the design decisions we made when building this project, [read the
 [The contributing guide is available here](docs/contributing.md). You can find a [roadmap with planned work here](https://github.com/orgs/Financial-Times/projects/111).
 
 
-## License
+## Support
 
-This library is intended for use by engineers in Customer Products, a group of engineers at The Financial Times. We don't actively support use of this library outside of Customer Products.
+[The support that we aim to offer is available here](docs/support.md).
+
+
+## License
 
 Licensed under the [MIT](LICENSE) license.<br/>
 Copyright &copy; 2022, The Financial Times Ltd.
