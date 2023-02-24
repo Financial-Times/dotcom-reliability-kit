@@ -14,7 +14,9 @@ The Reliability team is always available to work with teams in Customer Products
 sure that FT.com, our iOS and Android apps and our Data Journalism work are available to our subscribers.
 
 Please contact us in [#cp-reliability on Slack](https://financialtimes.slack.com/archives/C02B89GEQHF) with
-any bug reports, feature ideas or requests for collaboration.
+any bug reports, feature ideas or requests for help.
+
+If you're experiencing an issue in production, message [#ft-next-support](https://financialtimes.slack.com/archives/C042NBBTM) and tag `@cp_reliability` so that we see it immediately.
 
 ### …to other teams at the FT
 
@@ -24,6 +26,8 @@ users at the FT. This could include:
 - reviewing minor code changes that will make these packages work better for you
 - meeting with you to discuss features that you would like to add
 - pairing with you on implementing larger features
+
+Please create an issue on this repo and we'll be in touch with you to discuss your needs.
 
 ### …to users outside the FT
 
