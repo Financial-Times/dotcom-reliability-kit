@@ -41,6 +41,8 @@ users at the FT. This could include:
 
 Please create an issue on this repo and we'll be in touch with you to discuss your needs.
 
+We aim to give pull requests on Reliability Kit a first review within 3 working days.
+
 ### …to users outside the FT
 
 Unfortunately we're unable to offer any guarantees of support to users outside the FT.
