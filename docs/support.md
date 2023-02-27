@@ -33,9 +33,11 @@ If you're experiencing an issue in production, message [#ft-next-support](https:
 Where time allows, we would love to improve Reliability Kit so that it better meets the needs of other
 users at the FT. This could include:
 
-- reviewing minor code changes that will make these packages work better for you
+- reviewing minor code changes that will make these packages work better for you (please read the [contributing guide][] before opening pull requests)
 - meeting with you to discuss features that you would like to add
 - pairing with you on implementing larger features
+
+[contributing guide]: https://github.com/Financial-Times/dotcom-reliability-kit/blob/main/docs/contributing.md
 
 Please create an issue on this repo and we'll be in touch with you to discuss your needs.
 
