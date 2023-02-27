@@ -6,6 +6,16 @@ It's been designed to make our user-facing systems easier to support in producti
 
 However, we hope that it will be useful to other teams at the FT.
 
+## Releases and semantic versioning
+
+We follow [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html).
+
+This means that we will not make breaking changes to Reliability Kit without a corresponding major
+release (like moving from `v1.0.0` to `v2.0.0`). These changes will be documented in a way that helps
+users migrate. We will consider the scale of these migrations and try to minimise the impact on the
+teams using this library and, where possible, we will mark features as deprecated some time ahead
+of a major release.
+
 ## The support we provide
 
 ### …within Customer Products
