@@ -71,4 +71,14 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 			});
 		});
 	});
+
+	describe('GET /error-filtered', () => {
+		beforeAll(async () => {
+			await fetch(`${baseUrl}/error-filtered`);
+		});
+
+		it('does not log error information to stdout', () => {
+			expect(stderr).not.toContain('FILTERED_ERROR');
+		});
+	});
 });

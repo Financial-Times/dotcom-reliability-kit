@@ -1,9 +1,13 @@
 const createErrorLoggingMiddleware = require('../../../lib/index');
 
 jest.mock('@dotcom-reliability-kit/log-error', () => ({
-	logHandledError: jest.fn().mockReturnValue('mock-serialized-error')
+	logHandledError: jest.fn(),
+	logRecoverableError: jest.fn()
 }));
-const { logHandledError } = require('@dotcom-reliability-kit/log-error');
+const {
+	logHandledError,
+	logRecoverableError
+} = require('@dotcom-reliability-kit/log-error');
 
 describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 	let middleware;
@@ -49,6 +53,116 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 
 		it('calls `next` with the original error', () => {
 			expect(next).toBeCalledWith(error);
+		});
+
+		describe('when the filter option is set', () => {
+			let filter;
+
+			beforeEach(() => {
+				logHandledError.mockReset();
+				next.mockReset();
+			});
+
+			describe('when the filter returns `true`', () => {
+				beforeEach(() => {
+					filter = jest.fn().mockReturnValue(true);
+					middleware = createErrorLoggingMiddleware({
+						filter
+					});
+					middleware(error, request, response, next);
+				});
+
+				it('logs the error and request', () => {
+					expect(logHandledError).toBeCalledWith({
+						error,
+						request
+					});
+				});
+
+				it('does not log a recoverable error', () => {
+					expect(logRecoverableError).toBeCalledTimes(0);
+				});
+
+				it('calls `next` with the original error', () => {
+					expect(next).toBeCalledWith(error);
+				});
+			});
+
+			describe('when the filter returns `false`', () => {
+				beforeEach(() => {
+					filter = jest.fn().mockReturnValue(false);
+					middleware = createErrorLoggingMiddleware({
+						filter
+					});
+					middleware(error, request, response, next);
+				});
+
+				it('does not log the error and request', () => {
+					expect(logHandledError).toBeCalledTimes(0);
+				});
+
+				it('does not log a recoverable error', () => {
+					expect(logRecoverableError).toBeCalledTimes(0);
+				});
+
+				it('calls `next` with the original error', () => {
+					expect(next).toBeCalledWith(error);
+				});
+			});
+
+			describe('when the filter throws an error', () => {
+				let filterError;
+
+				beforeEach(() => {
+					filterError = new Error('Bad Filter!');
+					filter = jest.fn().mockImplementation(() => {
+						throw filterError;
+					});
+					middleware = createErrorLoggingMiddleware({
+						filter
+					});
+					middleware(error, request, response, next);
+				});
+
+				it('logs the error and request', () => {
+					expect(logHandledError).toBeCalledWith({
+						error,
+						request
+					});
+				});
+
+				it('logs a recoverable error indicating that the filter failed', () => {
+					const expectedError = new Error('Log filtering failed');
+					expectedError.code = 'LOG_FILTER_FAILURE';
+					expectedError.cause = filterError;
+					expect(logRecoverableError).toBeCalledWith({
+						error: expectedError,
+						request
+					});
+				});
+
+				it('calls `next` with the original error', () => {
+					expect(next).toBeCalledWith(error);
+				});
+			});
+		});
+
+		describe('when the filter option is set incorrectly', () => {
+			it('throws an error', () => {
+				const expectedError = new TypeError(
+					'The `filter` option must be a function'
+				);
+				expect(() => {
+					createErrorLoggingMiddleware({
+						filter: {}
+					});
+				}).toThrowError(expectedError);
+				expect(() => {
+					createErrorLoggingMiddleware({
+						filter: 'string'
+					});
+				}).toThrowError(expectedError);
+			});
 		});
 
 		describe('when the includeHeaders option is set', () => {

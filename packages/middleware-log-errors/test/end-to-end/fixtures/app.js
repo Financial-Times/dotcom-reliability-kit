@@ -21,7 +21,23 @@ app.get('/error', () => {
 	throw error;
 });
 
-app.use(createErrorLogger());
+app.get('/error-filtered', () => {
+	const error = new Error('example filtered error');
+	error.stack = 'mock stack';
+	error.code = 'FILTERED_ERROR';
+	throw error;
+});
+
+app.use(
+	createErrorLogger({
+		filter: (error) => {
+			if (error?.code === 'FILTERED_ERROR') {
+				return false;
+			}
+			return true;
+		}
+	})
+);
 
 app.listen(undefined).then((server) => {
 	if (process.send) {
