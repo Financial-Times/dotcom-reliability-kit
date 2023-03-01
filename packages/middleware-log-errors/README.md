@@ -86,6 +86,34 @@ app.use(createErrorLogger({
 }));
 ```
 
+#### `options.filter`
+
+A function used to determine whether a particular error or request should be logged. This must be a `Function` which returns a `Boolean` and accepts both an error object and an Express Request object:
+
+```ts
+type ErrorLoggingFilter = (error: any, request: express.Request) => boolean;
+```
+
+If the function returns `true` then the error and request details will be logged. Otherwise no logs will be output.
+
+> **Warning**
+> This option can be dangerous, misconfiguring it can result in a loss of log information. Consider whether you _definitely_ need to filter logs before using, sometimes it's better to have a few too many logs than miss an important one.
+
+Example of usage:
+```js
+app.use(createErrorLogger({
+    filter: (error, request) => {
+        if (request.url === '/deliberate-erroring-endpoint') {
+            return false;
+        }
+        if (error?.code === 'ERROR_WE_DO_NOT_CARE_ABOUT') {
+            return false;
+        }
+        return true;
+    }
+}));
+```
+
 #### `options.includeHeaders`
 
 An array of request headers to include in the serialized request object. This must be an `Array` of `String`s, with each string being a header name. It's important that you do not include headers which include personally-identifiable-information, API keys, or other privileged information. This option gets passed directly into [`dotcom-reliability-kit/serialize-request`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-request#readme) which has further documentation.
