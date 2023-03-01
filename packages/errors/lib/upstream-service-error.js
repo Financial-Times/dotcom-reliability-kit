@@ -15,7 +15,7 @@ class UpstreamServiceError extends HttpError {
 	/**
 	 * Create an upstream service error.
 	 *
-	 * @param {(string | number | HttpError.HttpErrorData & import('./operational-error').OperationalErrorData & Record<string, any>)} [data = {}]
+	 * @param {string | number | HttpError.HttpErrorData} [data = {}]
 	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
 	 *     information if an object.
 	 */

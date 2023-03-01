@@ -1,5 +1,5 @@
 /**
- * @typedef {object} OperationalErrorData
+ * @typedef {object} OperationalErrorStrictData
  * @property {string} [code]
  *     A machine-readable error code which identifies the specific type of error.
  * @property {string} [message]
@@ -8,6 +8,10 @@
  *     An array of FT system codes which are related to this error.
  * @property {Error|null} [cause]
  *     The root cause error instance.
+ */
+
+/**
+ * @typedef {OperationalErrorStrictData & Record<string, any>} OperationalErrorData
  */
 
 /**
@@ -71,7 +75,7 @@ class OperationalError extends Error {
 	/**
 	 * Create an operational error.
 	 *
-	 * @param {(string | OperationalErrorData & Record<string, any>)} [data = {}]
+	 * @param {string | OperationalErrorData} [data]
 	 *     The error message if it's a string, or full error information if an object.
 	 */
 	constructor(data = {}) {
