@@ -65,7 +65,7 @@ function createErrorLoggingMiddleware(options = {}) {
 						return next(error);
 					}
 				} catch (/** @type {any} */ filterError) {
-					// If the filtering fails we just log the reguler error as-is but
+					// If the filtering fails we just log the regular error as-is but
 					// also log that the filtering failed
 					logRecoverableError({
 						// This is not an operational error because the filtering
