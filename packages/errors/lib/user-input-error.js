@@ -15,7 +15,7 @@ class UserInputError extends HttpError {
 	/**
 	 * Create a user input error.
 	 *
-	 * @param {(string | HttpError.HttpErrorData & import('./operational-error').OperationalErrorData & Record<string, any>)} [data = {}]
+	 * @param {string | HttpError.HttpErrorData} [data = {}]
 	 *     The error message if it's a string or full error information if an object.
 	 */
 	constructor(data = {}) {

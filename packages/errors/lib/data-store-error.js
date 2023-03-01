@@ -15,7 +15,7 @@ class DataStoreError extends OperationalError {
 	/**
 	 * Create a data store error.
 	 *
-	 * @param {(string | OperationalError.OperationalErrorData & Record<string, any>)} [data = {}]
+	 * @param {string | OperationalError.OperationalErrorData} [data = {}]
 	 *     The error message if it's a string, or full error information if an object.
 	 */
 	constructor(data = {}) {

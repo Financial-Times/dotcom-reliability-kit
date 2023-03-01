@@ -11,9 +11,13 @@ const OperationalError = require('./operational-error');
 const STATUS_CODES = require('http').STATUS_CODES;
 
 /**
- * @typedef {object} HttpErrorData
+ * @typedef {object} HttpErrorStrictData
  * @property {number} [statusCode]
  *     An HTTP status code.
+ */
+
+/**
+ * @typedef {HttpErrorStrictData & OperationalError.OperationalErrorData} HttpErrorData
  */
 
 /**
@@ -53,7 +57,7 @@ class HttpError extends OperationalError {
 	/**
 	 * Create an HTTP error.
 	 *
-	 * @param {(string | number | HttpErrorData & OperationalError.OperationalErrorData & Record<string, any>)} [data = {}]
+	 * @param {string | number | HttpErrorData} [data = {}]
 	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
 	 *     information if an object.
 	 */
