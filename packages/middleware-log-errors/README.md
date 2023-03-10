@@ -6,6 +6,7 @@ Express middleware to consistently log errors. This module is part of [FT.com Re
 * [Usage](#usage)
   * [`createErrorLogger`](#createerrorlogger)
   * [Configuration options](#configuration-options)
+    * [`options.filter`](#optionsfilter)
     * [`options.includeHeaders`](#optionsincludeheaders)
     * [`options.logger`](#optionslogger)
 * [Contributing](#contributing)
