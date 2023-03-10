@@ -42,6 +42,13 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
 
+## [1.5.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.4.1...middleware-log-errors-v1.5.0) (2023-03-10)
+
+
+### Features
+
+* add filter option to the logging middleware ([5a64b13](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5a64b1376dfe037f7eb721b2be7ff1d1525fc806))
+
 ## [1.4.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.3.0...middleware-log-errors-v1.4.0) (2022-11-22)
 
 
