@@ -3,8 +3,8 @@
   "packages/crash-handler": "1.1.1",
   "packages/errors": "1.2.7",
   "packages/log-error": "1.5.1",
-  "packages/logger": "1.0.2",
-  "packages/middleware-log-errors": "1.4.1",
+  "packages/logger": "1.0.3",
+  "packages/middleware-log-errors": "1.5.0",
   "packages/middleware-render-error-info": "1.1.14",
   "packages/serialize-error": "1.1.4",
   "packages/serialize-request": "1.1.0"
