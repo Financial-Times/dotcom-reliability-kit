@@ -75,12 +75,16 @@ class OperationalError extends Error {
 	/**
 	 * Create an operational error.
 	 *
-	 * @param {string | OperationalErrorData} [data]
+	 * @param {string | OperationalErrorData} [message]
 	 *     The error message if it's a string, or full error information if an object.
+	 * @param {OperationalErrorData} [data]
+	 *     Additional error information if `message` is a string.
 	 */
-	constructor(data = {}) {
-		if (typeof data === 'string') {
-			data = { message: data };
+	constructor(message, data = {}) {
+		if (typeof message === 'string') {
+			data.message = message;
+		} else {
+			data = message || data;
 		}
 		super(data.message || 'An operational error occurred');
 

@@ -281,6 +281,88 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		});
 	});
 
+	describe('new HttpError(message, data)', () => {
+		let instance;
+
+		beforeEach(() => {
+			jest
+				.spyOn(OperationalError, 'normalizeErrorCode')
+				.mockReturnValue('MOCK_CODE');
+			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
+			instance = new HttpError('mock message', {
+				code: 'mock_code',
+				statusCode: 567
+			});
+		});
+
+		it('normalizes the passed in error code', () => {
+			expect(HttpError.normalizeErrorCode).toBeCalledWith('mock_code');
+		});
+
+		it('normalizes the passed in status code', () => {
+			expect(HttpError.normalizeErrorStatusCode).toBeCalledWith(567);
+		});
+
+		describe('.code', () => {
+			it('is set to the normalized error code', () => {
+				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to the data.message property', () => {
+				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+
+		describe('.statusCode', () => {
+			it('is set to the normalized status code', () => {
+				expect(instance.statusCode).toStrictEqual(456);
+			});
+		});
+	});
+
+	describe('new HttpError(statusCode, data)', () => {
+		let instance;
+
+		beforeEach(() => {
+			jest
+				.spyOn(OperationalError, 'normalizeErrorCode')
+				.mockReturnValue('MOCK_CODE');
+			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
+			instance = new HttpError(567, {
+				message: 'mock message',
+				code: 'mock_code'
+			});
+		});
+
+		it('normalizes the passed in error code', () => {
+			expect(HttpError.normalizeErrorCode).toBeCalledWith('mock_code');
+		});
+
+		it('normalizes the passed in status code', () => {
+			expect(HttpError.normalizeErrorStatusCode).toBeCalledWith(567);
+		});
+
+		describe('.code', () => {
+			it('is set to the normalized error code', () => {
+				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to the data.message property', () => {
+				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+
+		describe('.statusCode', () => {
+			it('is set to the normalized status code', () => {
+				expect(instance.statusCode).toStrictEqual(456);
+			});
+		});
+	});
+
 	describe('.normalizeErrorStatusCode(statusCode)', () => {
 		describe('when the status code is a valid error code', () => {
 			it('returns the passed in status code', () => {

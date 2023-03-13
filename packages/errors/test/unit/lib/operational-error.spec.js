@@ -197,6 +197,36 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 	});
 
+	describe('new OperationalError(message, data)', () => {
+		let instance;
+
+		beforeEach(() => {
+			jest
+				.spyOn(OperationalError, 'normalizeErrorCode')
+				.mockReturnValue('MOCK_CODE');
+
+			instance = new OperationalError('mock message', {
+				code: 'mock_code'
+			});
+		});
+
+		it('normalizes the passed in error code', () => {
+			expect(OperationalError.normalizeErrorCode).toBeCalledWith('mock_code');
+		});
+
+		describe('.code', () => {
+			it('is set to the normalized error code', () => {
+				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to the message parameter', () => {
+				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+	});
+
 	describe('isErrorMarkedAsOperational(error)', () => {
 		describe('when called with an OperationalError instance', () => {
 			it('returns `true`', () => {
