@@ -243,6 +243,68 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 		});
 	});
 
+	describe('new UpstreamServiceError(message, data)', () => {
+		let instance;
+
+		beforeEach(() => {
+			jest.spyOn(HttpError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
+			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
+			instance = new UpstreamServiceError('mock message', {
+				code: 'mock_code',
+				statusCode: 567
+			});
+		});
+
+		describe('.code', () => {
+			it('is set to the normalized error code', () => {
+				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to the data.message property', () => {
+				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+
+		describe('.statusCode', () => {
+			it('is set to the normalized status code', () => {
+				expect(instance.statusCode).toStrictEqual(456);
+			});
+		});
+	});
+
+	describe('new UpstreamServiceError(message, data)', () => {
+		let instance;
+
+		beforeEach(() => {
+			jest.spyOn(HttpError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
+			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
+			instance = new UpstreamServiceError(567, {
+				message: 'mock message',
+				code: 'mock_code'
+			});
+		});
+
+		describe('.code', () => {
+			it('is set to the normalized error code', () => {
+				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to the data.message property', () => {
+				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+
+		describe('.statusCode', () => {
+			it('is set to the normalized status code', () => {
+				expect(instance.statusCode).toStrictEqual(456);
+			});
+		});
+	});
+
 	describe('.default', () => {
 		it('aliases the module exports', () => {
 			expect(UpstreamServiceError.default).toStrictEqual(UpstreamServiceError);

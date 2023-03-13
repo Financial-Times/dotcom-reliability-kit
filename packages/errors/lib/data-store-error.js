@@ -15,11 +15,13 @@ class DataStoreError extends OperationalError {
 	/**
 	 * Create a data store error.
 	 *
-	 * @param {string | OperationalError.OperationalErrorData} [data = {}]
+	 * @param {string | OperationalError.OperationalErrorData} [message]
 	 *     The error message if it's a string, or full error information if an object.
+	 * @param {OperationalError.OperationalErrorData} [data]
+	 *     Additional error information if `message` is a string.
 	 */
-	constructor(data = {}) {
-		super(data);
+	constructor(message, data = {}) {
+		super(message, data);
 	}
 }
 

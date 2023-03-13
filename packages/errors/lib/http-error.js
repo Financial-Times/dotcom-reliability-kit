@@ -57,16 +57,19 @@ class HttpError extends OperationalError {
 	/**
 	 * Create an HTTP error.
 	 *
-	 * @param {string | number | HttpErrorData} [data = {}]
+	 * @param {string | number | HttpErrorData} [message]
 	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
 	 *     information if an object.
+	 * @param {HttpErrorData} [data]
+	 *     Additional error information if `message` is a string or number.
 	 */
-	constructor(data = {}) {
-		if (typeof data === 'string') {
-			data = { message: data };
-		}
-		if (typeof data === 'number') {
-			data = { statusCode: data };
+	constructor(message, data = {}) {
+		if (typeof message === 'string') {
+			data.message = message;
+		} else if (typeof message === 'number') {
+			data.statusCode = message;
+		} else {
+			data = message || data;
 		}
 
 		// Make sure that we don't modify the original data object

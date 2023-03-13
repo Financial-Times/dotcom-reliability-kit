@@ -65,6 +65,14 @@ error.message // example message
 error.code // EXAMPLE_CODE
 ```
 
+You can also combine these two ways of constructing errors, passing in both a message as well as additional options. This applies to all error types:
+
+```js
+throw new OperationalError('example message', {
+    code: 'EXAMPLE_CODE'
+});
+```
+
 You may also pass additional properties into an error object, these will be collected and stored on a `data` property on the error:
 
 ```js

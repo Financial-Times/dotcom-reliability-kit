@@ -15,12 +15,19 @@ class UserInputError extends HttpError {
 	/**
 	 * Create a user input error.
 	 *
-	 * @param {string | HttpError.HttpErrorData} [data = {}]
-	 *     The error message if it's a string or full error information if an object.
+	 * @param {string | number | HttpError.HttpErrorData} [message]
+	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
+	 *     information if an object.
+	 * @param {HttpError.HttpErrorData} [data]
+	 *     Additional error information if `message` is a string or number.
 	 */
-	constructor(data = {}) {
-		if (typeof data === 'string') {
-			data = { message: data };
+	constructor(message, data = {}) {
+		if (typeof message === 'string') {
+			data.message = message;
+		} else if (typeof message === 'number') {
+			data.statusCode = message;
+		} else {
+			data = message || data;
 		}
 
 		// Make sure that we don't modify the original data object

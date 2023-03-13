@@ -122,6 +122,31 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 		});
 	});
 
+	describe('new DataStoreError(message, data)', () => {
+		let instance;
+
+		beforeEach(() => {
+			jest
+				.spyOn(OperationalError, 'normalizeErrorCode')
+				.mockReturnValue('MOCK_CODE');
+			instance = new DataStoreError('mock message', {
+				code: 'mock_code'
+			});
+		});
+
+		describe('.code', () => {
+			it('is set to the normalized error code', () => {
+				expect(instance.code).toStrictEqual('MOCK_CODE');
+			});
+		});
+
+		describe('.message', () => {
+			it('is set to the data.message property', () => {
+				expect(instance.message).toStrictEqual('mock message');
+			});
+		});
+	});
+
 	describe('.default', () => {
 		it('aliases the module exports', () => {
 			expect(DataStoreError.default).toStrictEqual(DataStoreError);
