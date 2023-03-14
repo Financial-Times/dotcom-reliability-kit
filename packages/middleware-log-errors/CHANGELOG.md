@@ -42,6 +42,13 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
 
+## [1.5.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.5.0...middleware-log-errors-v1.5.1) (2023-03-14)
+
+
+### Documentation Changes
+
+* update the table of contents ([07c44a0](https://github.com/Financial-Times/dotcom-reliability-kit/commit/07c44a0522c509c75f9879ff7669f5cbce40e19f))
+
 ## [1.5.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v1.4.1...middleware-log-errors-v1.5.0) (2023-03-10)
 
 

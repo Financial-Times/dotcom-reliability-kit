@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/middleware-log-errors",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Express middleware to consistently log errors",
   "repository": {
     "type": "git",

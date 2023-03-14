@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.7...errors-v1.3.0) (2023-03-14)
+
+
+### Features
+
+* support Node.js 18 error signatures ([203a92a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/203a92ab44b3864638c21445fadc019fc33d4e9d))
+
+
+### Bug Fixes
+
+* simplify and tidy up the error types ([77004c9](https://github.com/Financial-Times/dotcom-reliability-kit/commit/77004c9801e3075f47805ac38d3219a43097dac5))
+
 ## [1.2.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.6...errors-v1.2.7) (2022-11-01)
 
 
