@@ -191,14 +191,16 @@ function createSerializedRequest(properties) {
 	);
 }
 
-exports = module.exports = serializeRequest;
+module.exports = serializeRequest;
 
 // We freeze this object so that we avoid any side-effects
 // introduced by the way Node.js caches modules. If this
 // array is edited within a dependent app, then any changes
 // will apply to _all_ uses of `serializeRequest`. This
 // could cause some weird issues so we lock it down.
-exports.DEFAULT_INCLUDED_HEADERS = Object.freeze([...DEFAULT_INCLUDED_HEADERS]);
+module.exports.DEFAULT_INCLUDED_HEADERS = Object.freeze([
+	...DEFAULT_INCLUDED_HEADERS
+]);
 
 // @ts-ignore
 module.exports.default = module.exports;
