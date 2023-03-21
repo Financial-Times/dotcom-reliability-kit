@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.1.0...serialize-request-v1.1.1) (2023-03-21)
+
+
+### Bug Fixes
+
+* correct a broken exports ([47b8712](https://github.com/Financial-Times/dotcom-reliability-kit/commit/47b8712edc097cf888faf2bb8445be87b84f219d))
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v1.0.4...serialize-request-v1.1.0) (2022-11-03)
 
 

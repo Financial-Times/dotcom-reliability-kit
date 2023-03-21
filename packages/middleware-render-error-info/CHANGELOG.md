@@ -43,6 +43,12 @@
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
     * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.1 to ^1.5.2
+
 ## [1.1.14](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.13...middleware-render-error-info-v1.1.14) (2023-01-25)
 
 
