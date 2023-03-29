@@ -42,7 +42,7 @@
     "jest": "^29.5.0",
     "lint-staged": "^13.2.0",
     "prettier": "^2.8.7",
-    "release-please": "^15.9.1",
+    "release-please": "^15.9.2",
     "typescript": "^5.0.2"
   },
   "engines": {
