@@ -686,7 +686,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the environment is "development"', () => {
+		describe('when pino-pretty is installed and the environment is not "production" - e.g. "development', () => {
 			beforeEach(() => {
 				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });
 				appInfo.environment = 'development';
@@ -719,10 +719,43 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the environment is anything other than "development"', () => {
+		describe('when pino-pretty is installed and the environment is not "production" - e.g. "test', () => {
 			beforeEach(() => {
 				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });
 				appInfo.environment = 'test';
+
+				// We have to reset all modules because the checks for pino-pretty are done
+				// on module load for performance reasons. This resets the cache and reloads
+				// everything with a new environment.
+				jest.isolateModules(() => {
+					Logger = require('../../../lib/logger');
+				});
+
+				pino.mockClear();
+				logger = new Logger();
+			});
+
+			afterEach(() => {
+				jest.unmock('pino-pretty');
+			});
+
+			it('configures the created Pino logger with prettification', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(typeof pinoOptions.transport).toStrictEqual('object');
+				expect(pinoOptions.transport).toEqual({
+					target: 'pino-pretty',
+					options: {
+						colorize: true,
+						messageKey: 'message'
+					}
+				});
+			});
+		});
+
+		describe('when pino-pretty is installed and the environment is "production"', () => {
+			beforeEach(() => {
+				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });
+				appInfo.environment = 'production';
 
 				// We have to reset all modules because the checks for pino-pretty are done
 				// on module load for performance reasons. This resets the cache and reloads
