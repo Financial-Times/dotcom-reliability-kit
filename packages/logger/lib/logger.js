@@ -105,7 +105,7 @@ const PRETTIFICATION_AVAILABLE = (() => {
 		// If we get to this point, pino-pretty is installed because
 		// otherwise it would have errored. So we can just check for
 		// the environment not being "production" (which implies
-		// "development", "test" or a similar pre-production term)
+		// "development", "test" or a similar pre-production term).
 		return appInfo.environment !== 'production';
 	} catch (_) {
 		return false;
