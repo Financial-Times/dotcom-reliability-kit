@@ -1,0 +1,78 @@
+{
+	"title": "Reliability Kit: Crashes",
+	"description": "A dashboard to view unhandled errors across apps which use Reliability Kit.",
+	"visualizations": {
+		"viz_common_errors": {
+			"type": "splunk.table",
+			"dataSources": {
+				"primary": "ds_search_table_grouped_errors"
+			},
+			"title": "Common crashing errors",
+			"description": "Crashing errors grouped by system, name, code, and error stack",
+			"options": {
+				"count": 0,
+				"headerVisibility": "fixed"
+			}
+		}
+	},
+	"dataSources": {
+		"ds_search_table_grouped_errors": {
+			"type": "ds.search",
+			"options": {
+				"enableSmartSources": true,
+				"query": "index=\"heroku\" sourcetype=\"heroku:app\" event=\"UNHANDLED_ERROR\" source=*\n| rex field=error.stack \"(?<stackTraceHeader>[^\\r\\n]+[\\r\\n]+[^\\r\\n]+)\"\n| rex field=error.stack \"[^\\r\\n]+[\\r\\n]+[^\\r\\n\\(]*\\((?<filePointer>[^\\)]+)\\)\" \n| rename error.name as name, error.code as code, error.message as message\n| eval hash=md5(name.\"__\".code.\"__\".stackTraceHeader)\n| stats sparkline() as timeline count by hash, source, name, code, message, filePointer \n| table count timeline source name code message filePointer\n| sort count desc"
+			},
+			"name": "search_table_grouped_errors"
+		}
+	},
+	"defaults": {
+		"dataSources": {
+			"ds.search": {
+				"options": {
+					"queryParameters": {
+						"latest": "$global_time.latest$",
+						"earliest": "$global_time.earliest$"
+					}
+				}
+			}
+		}
+	},
+	"inputs": {
+		"input_global_trp": {
+			"type": "input.timerange",
+			"options": {
+				"token": "global_time",
+				"defaultValue": "-7d@h,now"
+			},
+			"title": "Time range"
+		},
+		"input_text_filter": {
+			"options": {
+				"defaultValue": "source=*",
+				"token": "text_filter"
+			},
+			"title": "Filter",
+			"type": "input.text"
+		}
+	},
+	"layout": {
+		"type": "grid",
+		"options": {},
+		"structure": [
+			{
+				"item": "viz_common_errors",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 0,
+					"w": 1200,
+					"h": 600
+				}
+			}
+		],
+		"globalInputs": [
+			"input_global_trp",
+			"input_text_filter"
+		]
+	}
+}
