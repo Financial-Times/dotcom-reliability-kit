@@ -14,6 +14,8 @@ This package includes JSON files which can be used to create Splunk dashboards. 
 
   * **[Heroku](./src/heroku.json):** A dashboard to view issues with apps which use Reliability Kit and Heroku Log Drains. This template includes an input to set system code, so there's no need to create your own copy of this dashboard – just use the [live dashboard](https://financialtimes.splunkcloud.com/en-US/app/search/reliability_kit_heroku) and change the system code.
 
+  * **[Crashes](./src/crashes.json):** A dashboard to view crashing errors across all applications based on an optional filter. You can use the [live dashboard](https://financialtimes.splunkcloud.com/en-US/app/search/reliability_kit_crashes) and change the filter to suit your team or group's needs.
+
 If you're set on creating your own dashboard using these templates, then you can [create a dashboard in Splunk here](https://financialtimes.splunkcloud.com/en-US/app/search/dashboards), making sure to select "Dashboard Studio" when asked how you want to build your dashboard.
 
 Once you have a dashboard on the edit view (the one that opens by default), you can click the "Source" button in the toolbar (the last one which has angle brackets inside a window icon). Paste the relevant template JSON into the new JSON editing view that opens.
