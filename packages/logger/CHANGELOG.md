@@ -6,6 +6,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.0.3...logger-v1.1.0) (2023-04-03)
+
+
+### Features
+
+* allow for NODE_ENV that is not "production" or "development" ([b34a053](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b34a05323c873b71b33376fdfb986f423a7f06ca))
+
 ## [1.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.0.2...logger-v1.0.3) (2023-03-10)
 
 
