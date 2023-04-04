@@ -4,6 +4,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 	beforeEach(() => {
 		jest.spyOn(process, 'cwd').mockReturnValue('/mock-cwd');
 		process.env.AWS_LAMBDA_FUNCTION_VERSION = 'mock-aws-release-version';
+		process.env.AWS_LAMBDA_FUNCTION_NAME = 'mock-aws-process-type';
 		process.env.AWS_REGION = 'mock-aws-region';
 		process.env.GIT_COMMIT = 'mock-git-commit';
 		process.env.GIT_COMMIT_LONG = 'mock-git-commit-long';
@@ -13,6 +14,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		process.env.NODE_ENV = 'mock-environment';
 		process.env.REGION = 'mock-region';
 		process.env.SYSTEM_CODE = 'mock-system-code';
+		process.env.DYNO = 'mock-heroku-process-type.1';
 		appInfo = require('../../../lib');
 	});
 
@@ -239,6 +241,37 @@ describe('@dotcom-reliability-kit/app-info', () => {
 
 			it('is set to `null`', () => {
 				expect(appInfo.systemCode).toBe(null);
+			});
+		});
+	});
+
+	describe('.processType', () => {
+		it('is set to `process.env.AWS_LAMBDA_FUNCTION_NAME`', () => {
+			expect(appInfo.processType).toBe('mock-aws-process-type');
+		});
+
+		describe('when `process.env.DYNO` is defined and `process.env.AWS_LAMBDA_FUNCTION_NAME` is not', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.AWS_LAMBDA_FUNCTION_NAME;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to the part of `process.env.DYNO` before the dot', () => {
+				expect(appInfo.processType).toBe('mock-heroku-process-type');
+			});
+		});
+
+		describe('when neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.DYNO` are defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.DYNO;
+				delete process.env.AWS_LAMBDA_FUNCTION_NAME;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to null', () => {
+				expect(appInfo.processType).toBe(null);
 			});
 		});
 	});

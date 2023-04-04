@@ -43,8 +43,25 @@ function normalizePackageName(name) {
 	return name.replace(/^ft-/, '');
 }
 
+/**
+ * Extract the proceess type from a Heroku dyno name.
+ *
+ * @param {string} dyno
+ *     The dyno name to normalize.
+ * @returns {string}
+ *     Returns the process type of a dyno, e.g. `web` for a dyno called `web.1`.
+ */
+function normalizeHerokuProcessType(dyno) {
+	return dyno.split('.')[0];
+}
+
 const systemCode =
 	process.env.SYSTEM_CODE || getSystemCodeFromPackage(process.cwd()) || null;
+
+const processType =
+	process.env.AWS_LAMBDA_FUNCTION_NAME ||
+	(process.env.DYNO && normalizeHerokuProcessType(process.env.DYNO)) ||
+	null;
 
 module.exports = {
 	/**
@@ -100,7 +117,15 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	systemCode
+	systemCode,
+
+	/**
+	 * The dyno process type.
+	 *
+	 * @readonly
+	 * @type {string | null}
+	 */
+	processType
 };
 
 // @ts-ignore
