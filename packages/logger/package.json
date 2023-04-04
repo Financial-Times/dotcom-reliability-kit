@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/logger",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A simple and fast logger based on Pino, with FT preferences baked in",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   },
   "main": "lib",
   "dependencies": {
-    "@dotcom-reliability-kit/app-info": "^1.1.0",
+    "@dotcom-reliability-kit/app-info": "^1.2.0",
     "@dotcom-reliability-kit/serialize-error": "^1.1.4",
     "@ungap/structured-clone": "^1.0.2",
     "pino": "^8.11.0"

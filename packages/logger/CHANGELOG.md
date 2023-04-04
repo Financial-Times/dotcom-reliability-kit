@@ -6,6 +6,25 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.1.0...logger-v1.1.1) (2023-04-04)
+
+
+### Bug Fixes
+
+* match n-logger's function serialization ([5f9b493](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5f9b4930b3882512d88160f4a7156c9197aca3b8))
+
+
+### Documentation Changes
+
+* add a note on function serialization ([9997836](https://github.com/Financial-Times/dotcom-reliability-kit/commit/99978367eb7296dc695d45b80587f3e95f1c0fc5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.1.0 to ^1.2.0
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.0.3...logger-v1.1.0) (2023-04-03)
 
 
