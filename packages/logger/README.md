@@ -460,6 +460,9 @@ Different types of data are serialized differently before being output as JSON:
       // }
       ```
 
+    > **Warning:**
+    > It's important to note that only properties that are [serializable as JSON](https://www.rfc-editor.org/rfc/rfc7159) can be logged. Any non-serializable properties (e.g. functions) will not be output.
+
   * **Strings** are moved into the `message` property of the output log. E.g.
 
       ```js
