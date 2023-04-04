@@ -10,6 +10,7 @@ A utility to get application information (e.g. the system code) in a consistent 
     * [`appInfo.releaseDate`](#appinforeleasedate)
     * [`appInfo.releaseVersion`](#appinforeleaseversion)
     * [`appInfo.systemCode`](#appinfosystemcode)
+    * [`appInfo.processType`](#appinfoprocesstype)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -66,6 +67,15 @@ Get the application's [Biz Ops](https://biz-ops.in.ft.com/) system code. This wi
 
 If the system code is read from the application's `package.json` file then it will be stripped of any `"ft-"` prefix – this is a legacy name and our app system codes do not begin with it.
 
+### `appInfo.processType`
+
+Get the type of the running process, which is the name for the current process within an application.
+
+For AWS Lambda, this is the name of the function, read from `process.env.AWS_LAMBDA_FUNCTION_NAME`.
+
+For Heroku, this is derived from the first part of `process.env.DYNO`, which is set to by Heroku, e.g. a dyno called `web.1` will have `processType` set to `web`. The process types in an application are defined by the application's `Procfile`.
+
+If neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.DYNO` are set, this property will be `null`
 
 ## Contributing
 
