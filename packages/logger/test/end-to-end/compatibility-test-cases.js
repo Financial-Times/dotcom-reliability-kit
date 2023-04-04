@@ -681,6 +681,29 @@ module.exports = [
 			}
 		}
 	},
+	{
+		id: 'edge-case-function-serialization',
+		description: '.info() with function in log object',
+		call: {
+			method: 'info',
+			args: [
+				'mock message',
+				{ example: () => 'hello', nested: { fn: () => {} } }
+			]
+		},
+		expectedOutput: {
+			nextLogger: {
+				level: 'info',
+				message: 'mock message',
+				nested: {}
+			},
+			reliabilityKit: {
+				level: 'info',
+				message: 'mock message',
+				nested: {}
+			}
+		}
+	},
 
 	// Test cases based on real-world usage of n-logger
 	{
