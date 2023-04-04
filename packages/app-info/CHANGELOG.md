@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.1.0...app-info-v1.2.0) (2023-04-04)
+
+
+### Features
+
+* add processType property to app-info ([ca65f00](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ca65f00f3ae7173899989d6a178233fe9996182f))
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.0.3...app-info-v1.1.0) (2022-12-22)
 
 
