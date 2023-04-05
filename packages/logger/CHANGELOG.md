@@ -6,6 +6,20 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.1.1...logger-v1.1.2) (2023-04-05)
+
+
+### Bug Fixes
+
+* correct manually published versions ([5a014f1](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5a014f1b0b6b6ad741253d1215b630d418a196eb))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.2.0 to ^1.2.1
+
 ## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.1.0...logger-v1.1.1) (2023-04-04)
 
 
