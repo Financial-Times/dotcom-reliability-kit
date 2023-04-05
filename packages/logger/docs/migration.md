@@ -18,6 +18,7 @@ Emoji           | Label             | Meaning
     * [Log level changes](#n-logger-log-level-changes)
     * [Logger method changes](#n-logger-method-changes)
     * [Environment variable changes](#n-logger-environment-variable-changes)
+    * [Proxy incompatibility](#n-logger-proxy-incompatibility)
   * [Migrating from n-mask-logger](#migrating-from-n-mask-logger)
     * [API changes](#n-mask-logger-api-changes)
     * [where logs get sent](#n-mask-logger-where-logs-get-sent)
@@ -132,6 +133,12 @@ logger.info('Hello');
 The following environment variables have been deprecated.
 
   * **`SPLUNK_LOG_LEVEL`:** This environment variable will be used if a `LOG_LEVEL` environment variable is not present, however it may be removed in a later version of the Reliability Kit logger. It's best to migrate to `LOG_LEVEL` early.
+
+### n-logger: proxy incompatibility
+
+**:red_circle: Breaking:** due to our use of [private class features](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_class_fields) in the new logger, using [Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy) objects is no longer possible. This is a known JavaScript incompatibility between private fields and proxies.
+
+We decided to continue using private fields because `Proxy` use at the FT is uncommon and private fields allow us to ensure internal APIs aren't used in places that they shouldn't be.
 
 
 ## Migrating from n-mask-logger
