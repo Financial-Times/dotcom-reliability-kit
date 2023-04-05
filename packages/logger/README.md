@@ -489,7 +489,33 @@ Different types of data are serialized differently before being output as JSON:
       // }
       ```
 
-      Errors found in sub-properties of the log data are _not_ serialized like this. This is for performance reasons: looping over every nested property to check if it's an error is expensive. Do **not** do this:
+    Also note that errors found in sub-properties or as top-level errors are now automatically serialized as well:
+
+      ```js
+      logger.info({ error: new Error('Oops') });
+      // Outputs:
+      // {
+      //     "level": "info",
+      //     "error": {
+      //        "cause": null,
+      //		"code": "UNKNOWN",
+      //		"data": {},
+      //		"isOperational": false,
+      //		"message": "Oops",
+      //		"name": "Error",
+      //		"relatesToSystems": [],
+      //		"statusCode": null
+      //     }
+      // }
+      ```
+
+      Be mindful of passing in errors with an `err` property, as you'll have to serialize them yourself like below:
+
+      ```js
+      logger.info({ err: serializeError(new Error('Oops')) });
+      ```
+
+      ... else you'll get the following output:
 
       ```js
       logger.info({ err: new Error('Oops') });
@@ -498,12 +524,6 @@ Different types of data are serialized differently before being output as JSON:
       //     "level": "info",
       //     "err": {}
       // }
-      ```
-
-      If you _need_ to pass error objects as a property, you must serialize it yourself:
-
-      ```js
-      logger.info({ err: serializeError(new Error('Oops')) });
       ```
 
 #### Order of precedence

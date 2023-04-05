@@ -68,7 +68,6 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  * A map of log levels to the underlying log method that
  * should be called when a log of that level is sent, as
  * well as the deprecation status of the log level.
- *
  * @type {Object<string, LogLevelInfo>}
  */
 const logLevelToTransportMethodMap = {
@@ -88,7 +87,6 @@ const logLevelToTransportMethodMap = {
  * on two things: the pino-pretty module being installed
  * in the application, and the `NODE_ENV` environment
  * variable being undefined or "development".
- *
  * @type {boolean}
  */
 const PRETTIFICATION_AVAILABLE = (() => {
@@ -143,7 +141,6 @@ class Logger {
 
 	/**
 	 * Create a logger.
-	 *
 	 * @param {LoggerOptions & PrivateLoggerOptions} [options = {}]
 	 *     Options to configure the logger.
 	 */
@@ -241,7 +238,6 @@ class Logger {
 
 	/**
 	 * Create a child logger with additional base log data.
-	 *
 	 * @public
 	 * @param {LogData} baseLogData
 	 *     The base log data to add.
@@ -259,7 +255,6 @@ class Logger {
 
 	/**
 	 * Add additional log data to all subsequent log calls.
-	 *
 	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
 	 * @public
 	 * @param {LogData} extraLogData
@@ -280,7 +275,6 @@ class Logger {
 
 	/**
 	 * Set the `context` property for all subsequent log calls.
-	 *
 	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
 	 * @public
 	 * @param {LogData} contextData
@@ -301,7 +295,6 @@ class Logger {
 
 	/**
 	 * Clear the `context` property for all subsequent log calls.
-	 *
 	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
 	 * @public
 	 * @returns {void}
@@ -320,7 +313,6 @@ class Logger {
 
 	/**
 	 * Send a log.
-	 *
 	 * @public
 	 * @param {LogLevel} level
 	 *     The log level to output the log as.
@@ -336,6 +328,10 @@ class Logger {
 			const sanitizedLogData = Logger.zipLogData(...logData, this.#baseLogData);
 			if (!sanitizedLogData.message) {
 				sanitizedLogData.message = null;
+			}
+
+			if (sanitizedLogData.error && sanitizedLogData.error instanceof Error) {
+				sanitizedLogData.error = serializeError(sanitizedLogData.error);
 			}
 
 			// Transform the log data
@@ -380,7 +376,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "data".
-	 *
 	 * @deprecated Please use a log level of "debug" instead.
 	 * @public
 	 * @param {...LogData} logData
@@ -393,7 +388,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "debug".
-	 *
 	 * @public
 	 * @param {...LogData} logData
 	 *     The log data.
@@ -405,7 +399,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "error".
-	 *
 	 * @public
 	 * @param {...LogData} logData
 	 *     The log data.
@@ -417,7 +410,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "fatal".
-	 *
 	 * @public
 	 * @param {...LogData} logData
 	 *     The log data.
@@ -429,7 +421,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "info".
-	 *
 	 * @public
 	 * @param {...LogData} logData
 	 *     The log data.
@@ -441,7 +432,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "silly".
-	 *
 	 * @deprecated Please use a log level of "debug" instead.
 	 * @public
 	 * @param {...LogData} logData
@@ -454,7 +444,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "verbose".
-	 *
 	 * @deprecated Please use a log level of "debug" instead.
 	 * @public
 	 * @param {...LogData} logData
@@ -467,7 +456,6 @@ class Logger {
 
 	/**
 	 * Send a log with a level of "warn".
-	 *
 	 * @public
 	 * @param {...LogData} logData
 	 *     The log data.
@@ -479,7 +467,6 @@ class Logger {
 
 	/**
 	 * Flush any asynchronous logs in the queue when an async transport is used.
-	 *
 	 * @public
 	 * @returns {void}
 	 */
@@ -491,7 +478,6 @@ class Logger {
 
 	/**
 	 * Get information on a given log level.
-	 *
 	 * @private
 	 * @param {string} level
 	 *     The log level to get information for.
@@ -507,7 +493,6 @@ class Logger {
 
 	/**
 	 * Combine multiple log data into a single zipped object.
-	 *
 	 * @private
 	 * @param {...LogData} logData
 	 *     The log data.

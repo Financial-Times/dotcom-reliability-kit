@@ -831,7 +831,16 @@ module.exports = [
 				level: 'error',
 				event: 'FAILED_TO_GET_FT_LIVE_EVENT',
 				message: null,
-				error: {} // Empty object because this is invalid, it says so in the n-logger docs
+				error: {
+					cause: null,
+					code: 'UNKNOWN',
+					data: {},
+					isOperational: false,
+					message: 'Oops',
+					name: 'Error',
+					relatesToSystems: [],
+					statusCode: null
+				}
 			}
 		}
 	},

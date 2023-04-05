@@ -330,6 +330,33 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 			});
 
+			describe('when the log data has an error property as a sub-property', () => {
+				beforeEach(() => {
+					mockPinoLogger.mockCanonicalLevel.mockClear();
+					jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+						error: new Error('mock error'),
+						isMockZippedData: true
+					});
+					serializeError.mockClear();
+					serializeError.mockReturnValueOnce('mock serialized error');
+					logger.log('mockLevel', 'mock message', { mockData: true });
+				});
+
+				it('serializes the contents of the error sub-property', () => {
+					expect(serializeError).toBeCalledTimes(1);
+					expect(serializeError).toBeCalledWith(new Error('mock error'));
+				});
+
+				it('calls the relevant log transport method with a error sub-property which is set to the serialized error', () => {
+					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
+					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+						isMockZippedData: true,
+						message: null,
+						error: 'mock serialized error'
+					});
+				});
+			});
+
 			describe('when the given level is deprecated', () => {
 				beforeEach(() => {
 					mockPinoLogger.mockDeprecatedCanonocalLevel.mockClear();
