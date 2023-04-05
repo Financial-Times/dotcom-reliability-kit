@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.2.0...app-info-v1.2.1) (2023-04-05)
+
+
+### Bug Fixes
+
+* correct manually published versions ([5a014f1](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5a014f1b0b6b6ad741253d1215b630d418a196eb))
+
 ## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.1.0...app-info-v1.2.0) (2023-04-04)
 
 
