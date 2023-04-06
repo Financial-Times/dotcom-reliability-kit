@@ -65,9 +65,11 @@ The name of the package must be lowercase with words hyphen-delimited.
 npm run create-package <NAME>
 ```
 
-You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
-
 You'll also need to manually add an entry for the package to [the Dependabot config](../.github/dependabot.yml) so that dependency update pull requests can be opened.
+
+It's important that you run `npm install` before committing. This ensures that the new package is registered in the main `package-lock.json`.
+
+You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
 
 
 ## Installing dependencies
