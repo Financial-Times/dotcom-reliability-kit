@@ -27,6 +27,7 @@ We're glad you want to contribute to Reliability Kit!
     * [Merging pull requests](#merging-pull-requests)
   * [Releasing](#releasing)
     * [Generated files](#generated-files)
+    * [Hard-coding the release version](#hard-coding-the-release-version)
     * [Correcting releases](#correcting-releases)
   * [Issue management](#issue-management)
 
@@ -70,6 +71,9 @@ You'll also need to manually add an entry for the package to [the Dependabot con
 It's important that you run `npm install` before committing. This ensures that the new package is registered in the main `package-lock.json`.
 
 You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
+
+> **Note**
+> Wherever the package version appears, you should leave it as `0.0.0` to allow Release Please to correctly bump and release the first version. If you want the first release of the new package to be a pre-release (e.g. `0.1.0`) then you can [hard-code the release version in a commit](#hard-coding-the-release-version).
 
 
 ## Installing dependencies
@@ -271,6 +275,18 @@ If a release has caused issues with Type hinting or TypeScript-based projects co
 ```
 npm run build
 ```
+
+### Hard-coding the release version
+
+Sometimes it's necessary to hard-code a release version, for example if commits have been pushed to `main` which don't match our [commit format](#commit-type-prefixes). A more common reason to do this is when you want to publish a prerelease package to experiment before marking it as stable (e.g. publishing a `v0.1.0` before `v1.0.0`).
+
+You can override the version that Release Please will release by adding a footer to one of the commits in a pull request:
+
+```
+Release-As: 0.1.0
+```
+
+[See the Release Please documentation for more information](https://github.com/googleapis/release-please#how-do-i-change-the-version-number).
 
 ### Correcting releases
 
