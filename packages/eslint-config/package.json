@@ -1,0 +1,18 @@
+{
+  "name": "@dotcom-reliability-kit/eslint-config",
+  "version": "0.0.0",
+  "description": "A prototype linting config, specifically focussed on enhancing code quality and proactively catching errors/bugs before they make it into production",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "packages/eslint-config"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/eslint-config#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: eslint-config\"",
+  "license": "MIT",
+  "engines": {
+    "node": "16.x || 18.x",
+    "npm": "7.x || 8.x"
+  },
+  "main": "lib"
+}
