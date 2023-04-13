@@ -38,6 +38,7 @@
 		"packages/middleware-log-errors": {},
 		"packages/middleware-render-error-info": {},
 		"packages/serialize-error": {},
-		"packages/serialize-request": {}
+		"packages/serialize-request": {},
+		"packages/eslint-config": {}
 	}
 }

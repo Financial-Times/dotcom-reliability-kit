@@ -7,5 +7,6 @@
   "packages/middleware-log-errors": "2.0.0",
   "packages/middleware-render-error-info": "2.0.0",
   "packages/serialize-error": "2.0.0",
-  "packages/serialize-request": "2.0.0"
+  "packages/serialize-request": "2.0.0",
+  "packages/eslint-config": "0.0.0"
 }
