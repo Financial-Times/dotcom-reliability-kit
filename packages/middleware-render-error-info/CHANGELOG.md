@@ -63,6 +63,13 @@
     * @dotcom-reliability-kit/app-info bumped from ^1.2.0 to ^1.2.1
     * @dotcom-reliability-kit/log-error bumped from ^1.5.3 to ^1.5.4
 
+## [1.1.18](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.17...middleware-render-error-info-v1.1.18) (2023-04-17)
+
+
+### Bug Fixes
+
+* bump entities from 4.4.0 to 4.5.0 ([f6ca40d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f6ca40de6ab72794774b22a1458cc3cf481b518f))
+
 ## [1.1.14](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.13...middleware-render-error-info-v1.1.14) (2023-01-25)
 
 
