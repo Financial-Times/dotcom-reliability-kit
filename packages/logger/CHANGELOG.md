@@ -6,6 +6,14 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [1.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.1.2...logger-v1.1.3) (2023-04-17)
+
+
+### Documentation Changes
+
+* add details on end-to-end tests ([3375171](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3375171da18c7b0a1508ec38de397f7e5a3e5378))
+* explain incompatibilities with proxy objects ([b968832](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b96883237046fd23996a80e93086bf7b7180d749))
+
 ## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.1.1...logger-v1.1.2) (2023-04-05)
 
 
