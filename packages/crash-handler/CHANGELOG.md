@@ -48,6 +48,24 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.5.3 to ^1.5.4
 
+## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.1.4...crash-handler-v2.0.0) (2023-04-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node.js 14
+
+### Miscellaneous
+
+* drop support for Node.js 14 ([e5d3920](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e5d392023e23b105049d8b09403b3db7699a37a1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.4 to ^2.0.0
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.0.0...crash-handler-v1.1.0) (2022-11-22)
 
 

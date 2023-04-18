@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/middleware-render-error-info",
-  "version": "1.1.18",
+  "version": "2.0.0",
   "description": "Express middleware to render error information in a way that makes local debugging easier.",
   "repository": {
     "type": "git",
@@ -16,9 +16,9 @@
   },
   "main": "lib",
   "dependencies": {
-    "@dotcom-reliability-kit/app-info": "^1.2.1",
-    "@dotcom-reliability-kit/log-error": "^1.5.4",
-    "@dotcom-reliability-kit/serialize-error": "^1.1.4",
+    "@dotcom-reliability-kit/app-info": "^2.0.0",
+    "@dotcom-reliability-kit/log-error": "^2.0.0",
+    "@dotcom-reliability-kit/serialize-error": "^2.0.0",
     "entities": "^4.5.0"
   },
   "devDependencies": {

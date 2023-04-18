@@ -6,6 +6,25 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.1.3...logger-v2.0.0) (2023-04-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node.js 14
+
+### Miscellaneous
+
+* drop support for Node.js 14 ([e5d3920](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e5d392023e23b105049d8b09403b3db7699a37a1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.2.1 to ^2.0.0
+    * @dotcom-reliability-kit/serialize-error bumped from ^1.1.4 to ^2.0.0
+
 ## [1.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v1.1.2...logger-v1.1.3) (2023-04-17)
 
 
