@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.3.0...errors-v2.0.0) (2023-04-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node.js 14
+
+### Miscellaneous
+
+* drop support for Node.js 14 ([e5d3920](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e5d392023e23b105049d8b09403b3db7699a37a1))
+
 ## [1.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v1.2.7...errors-v1.3.0) (2023-03-14)
 
 
