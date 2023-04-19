@@ -39,9 +39,6 @@ We maintain documentation in this repo:
   - **[@dotcom-reliability-kit/serialize-request](./packages/serialize-request/#readme):**<br/>
     A utility function to serialize a request object in a way that's friendly to loggers, view engines, and converting to JSON
 
-  - **[@dotcom-reliability-kit/eslint-config](./packages/eslint-config/#readme):**<br/>
-    A prototype linting config, specifically focussed on enhancing code quality and proactively catching errors/bugs before they make it into production
-
 - **Example projects** illustrate more real-world examples of how to use Reliability Kit. These live in separate repositories:
 
   - **[Express example](https://github.com/Financial-Times/reliability-kit-example-express#readme):**<br/>
