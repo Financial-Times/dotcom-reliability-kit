@@ -14,5 +14,8 @@
     "node": "16.x || 18.x",
     "npm": "7.x || 8.x"
   },
-  "main": "lib"
+  "main": "lib",
+  "peerDependencies": {
+    "eslint": ">=8.27.0"
+  }
 }
