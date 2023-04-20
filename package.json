@@ -46,12 +46,12 @@
     "typescript": "^5.0.4"
   },
   "engines": {
-    "node": "16.x || 18.x",
+    "node": "16.x || 18.x || 20.x",
     "npm": "7.x || 8.x"
   },
   "volta": {
-    "node": "18.13.0",
-    "npm": "8.19.2"
+    "node": "20.0.0",
+    "npm": "9.6.4"
   },
   "lint-staged": {
     "**/*.js": [
