@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v2.0.0...app-info-v2.0.1) (2023-04-24)
+
+
+### Bug Fixes
+
+* start running builds on Node.js 20 ([62491a6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/62491a60b07dfd044a90bb4adeece33c6be00c20))
+
 ## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v1.2.1...app-info-v2.0.0) (2023-04-18)
 
 
