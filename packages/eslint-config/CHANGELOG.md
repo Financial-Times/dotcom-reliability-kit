@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v0.1.1...eslint-config-v0.1.2) (2023-04-24)
+
+
+### Bug Fixes
+
+* start running builds on Node.js 20 ([62491a6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/62491a60b07dfd044a90bb4adeece33c6be00c20))
+
 ## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v0.1.0...eslint-config-v0.1.1) (2023-04-19)
 
 

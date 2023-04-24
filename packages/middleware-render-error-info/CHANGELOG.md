@@ -63,6 +63,22 @@
     * @dotcom-reliability-kit/app-info bumped from ^1.2.0 to ^1.2.1
     * @dotcom-reliability-kit/log-error bumped from ^1.5.3 to ^1.5.4
 
+## [2.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v2.0.0...middleware-render-error-info-v2.0.1) (2023-04-24)
+
+
+### Bug Fixes
+
+* start running builds on Node.js 20 ([62491a6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/62491a60b07dfd044a90bb4adeece33c6be00c20))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.0.0 to ^2.0.1
+    * @dotcom-reliability-kit/log-error bumped from ^2.0.0 to ^2.0.1
+    * @dotcom-reliability-kit/serialize-error bumped from ^2.0.0 to ^2.0.1
+
 ## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.18...middleware-render-error-info-v2.0.0) (2023-04-18)
 
 
