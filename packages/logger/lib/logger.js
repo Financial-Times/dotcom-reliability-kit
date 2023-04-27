@@ -83,6 +83,25 @@ const logLevelToTransportMethodMap = {
 	warn: { logLevel: 'warn', isDeprecated: false }
 };
 
+// IMPORTANT: increasing this hard-coded value is a breaking
+// change, because apps which currently use a pino-pretty
+// version lower than the new value will have to upgrade
+const PINO_PRETTY_MIN_VERSION = 10;
+
+/**
+ * Send a backup log using `console.log`, for when all else fails.
+ *
+ * @param {Object<string, any>} logData
+ *     The information to log.
+ */
+function sendBackupLog(logData) {
+	// We allow use of `console.log` here to ensure that critical
+	// logging failures are caught and logged. This ensures that we
+	// know if an app has broken logging.
+	// eslint-disable-next-line no-console
+	console.log(JSON.stringify(logData));
+}
+
 /**
  * Whether log prettification is available. This is based
  * on two things: the pino-pretty module being installed
@@ -93,14 +112,35 @@ const logLevelToTransportMethodMap = {
  */
 const PRETTIFICATION_AVAILABLE = (() => {
 	try {
-		// We have to `require` here rather than `require.resolve`
-		// which is less than ideal but otherwise this is actually
-		// impossible to test with Jest. Both technically do the
-		// same file system work though, and it's only done once
-		// when the module first loads. It's also safe to ts-ignore
-		// this one because it's never actually used directly.
-		// @ts-ignore
-		require('pino-pretty');
+		// We have to `require` here so that we can inspect the manifest
+		// for pino-pretty to be sure it's a version that we support.
+		// See https://github.com/Financial-Times/dotcom-reliability-kit/issues/516#issuecomment-1511117413
+		const pinoPrettyManifest = require('pino-pretty/package.json');
+
+		// Check if we have a version of pino-pretty installed that we
+		// actually support
+		if (typeof pinoPrettyManifest?.version !== 'string') {
+			return false;
+		}
+		const pinoPrettyMajorVersion = Number(
+			pinoPrettyManifest?.version.split('.')[0]
+		);
+		if (Number.isNaN(pinoPrettyMajorVersion)) {
+			sendBackupLog({
+				level: 'warn',
+				event: 'LOG_PRETTIFIER_FAILURE',
+				message: 'Could not determine the version of pino-pretty installed'
+			});
+			return false;
+		}
+		if (pinoPrettyMajorVersion < PINO_PRETTY_MIN_VERSION) {
+			sendBackupLog({
+				level: 'warn',
+				event: 'LOG_PRETTIFIER_FAILURE',
+				message: `The installed version of pino-pretty (v${pinoPrettyMajorVersion}) is not compatible. Please use v${PINO_PRETTY_MIN_VERSION} or above`
+			});
+			return false;
+		}
 
 		// If we get to this point, pino-pretty is installed because
 		// otherwise it would have errored. So we can just check for
@@ -363,18 +403,12 @@ class Logger {
 				});
 			}
 		} catch (/** @type {any} */ error) {
-			// We allow use of `console.log` here to ensure that critical
-			// logging failures are caught and logged. This ensures that we
-			// know if an app has broken logging.
-			// eslint-disable-next-line no-console
-			console.log(
-				JSON.stringify({
-					level: 'error',
-					event: 'LOG_METHOD_FAILURE',
-					message: `Failed to log at level '${level}'`,
-					error: serializeError(error)
-				})
-			);
+			sendBackupLog({
+				level: 'error',
+				event: 'LOG_METHOD_FAILURE',
+				message: `Failed to log at level '${level}'`,
+				error: serializeError(error)
+			});
 		}
 	}
 
