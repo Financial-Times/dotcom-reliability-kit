@@ -19,7 +19,7 @@
     "build": "./scripts/build.js"
   },
   "dependencies": {
-    "sharp": "^0.32.0",
+    "sharp": "^0.32.1",
     "svgo": "^3.0.2"
   },
   "devDependencies": {
