@@ -342,6 +342,10 @@ class Logger {
 				sanitizedLogData.error = serializeError(sanitizedLogData.error);
 			}
 
+			if (sanitizedLogData.err && sanitizedLogData.err instanceof Error) {
+				sanitizedLogData.err = serializeError(sanitizedLogData.err);
+			}
+
 			// Transform the log data
 			let transformedLogData = clone(sanitizedLogData, {
 				lossy: true
