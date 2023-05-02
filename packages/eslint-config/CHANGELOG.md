@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v0.1.2...eslint-config-v0.1.3) (2023-05-02)
+
+
+### Features
+
+* add support for npm 9 ([a51cd4f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a51cd4fa717c4ec8b5057be694dc99d5459df7db))
+
 ## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v0.1.1...eslint-config-v0.1.2) (2023-04-24)
 
 
