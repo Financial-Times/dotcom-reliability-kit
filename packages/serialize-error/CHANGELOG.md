@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.0.1...serialize-error-v2.1.0) (2023-05-02)
+
+
+### Features
+
+* add support for npm 9 ([a51cd4f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a51cd4fa717c4ec8b5057be694dc99d5459df7db))
+
 ## [2.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.0.0...serialize-error-v2.0.1) (2023-04-24)
 
 
