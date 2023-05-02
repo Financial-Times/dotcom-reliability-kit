@@ -20,6 +20,8 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  *     beneath this will be ignored.
  * @property {Array<LogTransform>} [transforms = []]
  *     Transforms to apply to logs before sending.
+ * @property {boolean} [withPrettifier = true]
+ *     Whether to prettify log output if it's possible.
  * @property {boolean} [withTimestamps = true]
  *     Whether to send the timestamp that each log method was called.
  */
@@ -180,6 +182,12 @@ class Logger {
 			this.#transforms = options.transforms;
 		}
 
+		// Default and set the prettifier option
+		const withPrettifier =
+			typeof options.withPrettifier === 'boolean'
+				? options.withPrettifier
+				: !Boolean(process.env.LOG_DISABLE_PRETTIFIER);
+
 		// Default and set the timestamps option.
 		const withTimestamps = options.withTimestamps !== false;
 
@@ -201,7 +209,7 @@ class Logger {
 				messageKey: 'message', // This is for backwards compatibility with our existing logs
 				timestamp: withTimestamps
 			};
-			if (PRETTIFICATION_AVAILABLE) {
+			if (withPrettifier && PRETTIFICATION_AVAILABLE) {
 				pinoOptions.transport = {
 					target: 'pino-pretty',
 					options: {

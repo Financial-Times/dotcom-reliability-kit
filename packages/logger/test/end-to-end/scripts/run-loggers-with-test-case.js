@@ -3,6 +3,10 @@
 process.env.MIGRATE_TO_HEROKU_LOG_DRAINS = 'true';
 process.env.SPLUNK_LOG_LEVEL = 'silly';
 
+// This environment variable is required to ensure that Reliability
+// Kit logger outputs JSON regardless of NODE_ENV
+process.env.LOG_DISABLE_PRETTIFIER = 'true';
+
 const nLogger = require('@financial-times/n-logger').default;
 const MaskLogger = require('@financial-times/n-mask-logger');
 const reliabilityKitLogger = require('../../../lib');

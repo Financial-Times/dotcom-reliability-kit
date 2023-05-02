@@ -806,6 +806,59 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
+		describe('when pino-pretty is installed and the `withPrettifier` option is set to `false`', () => {
+			beforeEach(() => {
+				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });
+				appInfo.environment = 'development';
+
+				// We have to reset all modules because the checks for pino-pretty are done
+				// on module load for performance reasons. This resets the cache and reloads
+				// everything with a new environment.
+				jest.isolateModules(() => {
+					Logger = require('../../../lib/logger');
+				});
+
+				pino.mockClear();
+				logger = new Logger({ withPrettifier: false });
+			});
+
+			afterEach(() => {
+				jest.unmock('pino-pretty');
+			});
+
+			it('does not configure the created Pino logger with prettification', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(pinoOptions.transport).toBeUndefined();
+			});
+		});
+
+		describe('when pino-pretty is installed and the `LOG_DISABLE_PRETTIFIER` environment variable is set', () => {
+			beforeEach(() => {
+				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });
+				appInfo.environment = 'development';
+				process.env.LOG_DISABLE_PRETTIFIER = 'true';
+
+				// We have to reset all modules because the checks for pino-pretty are done
+				// on module load for performance reasons. This resets the cache and reloads
+				// everything with a new environment.
+				jest.isolateModules(() => {
+					Logger = require('../../../lib/logger');
+				});
+
+				pino.mockClear();
+				logger = new Logger();
+			});
+
+			afterEach(() => {
+				jest.unmock('pino-pretty');
+			});
+
+			it('does not configure the created Pino logger with prettification', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(pinoOptions.transport).toBeUndefined();
+			});
+		});
+
 		describe('when pino-pretty is installed and the environment is "production"', () => {
 			beforeEach(() => {
 				jest.mock('pino-pretty', () => 'mock pino pretty', { virtual: true });

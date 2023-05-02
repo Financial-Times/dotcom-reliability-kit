@@ -10,6 +10,7 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
       * [`options.baseLogData`](#optionsbaselogdata)
       * [`options.logLevel`](#optionsloglevel)
       * [`options.transforms`](#optionstransforms)
+      * [`options.withPrettifier`](#optionswithprettifier)
       * [`options.withTimestamps`](#optionswithtimestamps)
     * [`logger.log()` and shortcut methods](#loggerlog-and-shortcut-methods)
     * [`logger.flush()`](#loggerflush)
@@ -188,6 +189,14 @@ logger.info({
 ```
 
 You can also use [built-in transforms](#built-in-transforms) to do things like mask sensitive data.
+
+####  `options.withPrettifier`
+
+Whether to send prettified logs if available. This option has no effect if you have the `NODE_ENV` environment variable set to either `production` or if you have not installed [pino-pretty](https://github.com/pinojs/pino-pretty#readme). See [local development usage](#local-development-usage) for more information.
+
+Must be a `Boolean` and defaults to `true`.
+
+It's also possible to set this option as an environment variable, which is how you configure the default logger. Set the `LOG_DISABLE_PRETTIFIER` environment variable to `true` if you want to force the prettifier not to load.
 
 #### `options.withTimestamps`
 
@@ -552,6 +561,8 @@ To get formatted and colourised logs locally, you need to meet two conditions:
       ```sh
       npm install -D pino-pretty
       ```
+
+  3. Ensure you don't disable prettification via the [`withPrettifier` option](#optionswithprettifier).
 
 ### Production usage
 
