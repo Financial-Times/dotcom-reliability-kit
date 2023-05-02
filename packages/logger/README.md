@@ -515,13 +515,13 @@ Different types of data are serialized differently before being output as JSON:
     //     "level": "info",
     //     "error": {
     //         "cause": null,
-    //		   "code": "UNKNOWN",
-    //		   "data": {},
-    //		   "isOperational": false,
-    //		   "message": "Oops",
-    //		   "name": "Error",
-    //		   "relatesToSystems": [],
-    //		   "statusCode": null
+    //		"code": "UNKNOWN",
+    //		"data": {},
+    //		"isOperational": false,
+    //		"message": "Oops",
+    //		"name": "Error",
+    //		"relatesToSystems": [],
+    //		"statusCode": null
     //     }
     // }
     ```
