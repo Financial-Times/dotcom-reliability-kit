@@ -489,42 +489,42 @@ Different types of data are serialized differently before being output as JSON:
       // }
       ```
 
-    Also note that errors found in sub-properties or as top-level errors are now automatically serialized as well:
+    Errors found in sub-properties of the log data are _not_ serialized like this due to performance reasons: looping over every nested property to check if it's an error is expensive (do **not** do this). Also, be mindful of passing in errors with a custom error property e.g. `myErrorProperty`, as you'll have to serialize them yourself like below:
+
+    ```js
+    logger.info({ myErrorProperty: serializeError(new Error('Oops')) });
+    ```
+
+    ... if not, you'll get the following output:
+
+    ```js
+    logger.info({ myErrorProperty: new Error('Oops') });
+    // Outputs:
+    // {
+    //     "level": "info",
+    //     "myErrorProperty": {}
+    // }
+    ```
+    
+    The exception to this is if the sub-property name is either `error` or `err`, as these are automatically serialized. E.g.
 
       ```js
-      logger.info({ error: new Error('Oops') });
-      // Outputs:
-      // {
-      //     "level": "info",
-      //     "error": {
-      //        "cause": null,
-      //		"code": "UNKNOWN",
-      //		"data": {},
-      //		"isOperational": false,
-      //		"message": "Oops",
-      //		"name": "Error",
-      //		"relatesToSystems": [],
-      //		"statusCode": null
-      //     }
-      // }
-      ```
-
-      Be mindful of passing in errors with an `err` property, as you'll have to serialize them yourself like below:
-
-      ```js
-      logger.info({ err: serializeError(new Error('Oops')) });
-      ```
-
-      ... else you'll get the following output:
-
-      ```js
-      logger.info({ err: new Error('Oops') });
-      // Outputs:
-      // {
-      //     "level": "info",
-      //     "err": {}
-      // }
-      ```
+    logger.info({ error: new Error('Oops') });
+    // Outputs:
+    // {
+    //     "level": "info",
+    //     "error": {
+    //         "cause": null,
+    //		   "code": "UNKNOWN",
+    //		   "data": {},
+    //		   "isOperational": false,
+    //		   "message": "Oops",
+    //		   "name": "Error",
+    //		   "relatesToSystems": [],
+    //		   "statusCode": null
+    //     }
+    // }
+    ```
 
 #### Order of precedence
 
