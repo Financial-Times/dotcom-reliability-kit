@@ -6,6 +6,26 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.1.0...logger-v2.2.0) (2023-05-03)
+
+
+### Features
+
+* allow disabling log prettification ([338b914](https://github.com/Financial-Times/dotcom-reliability-kit/commit/338b914842d582c0f9eb1cae1d8405a647dd1888))
+* serialize errors passed to the logger as error objects ([15ad0ae](https://github.com/Financial-Times/dotcom-reliability-kit/commit/15ad0aec85e6d7a01446c88811558eea00ec9445))
+
+
+### Bug Fixes
+
+* bump pino from 8.11.0 to 8.12.0 ([df3aaa7](https://github.com/Financial-Times/dotcom-reliability-kit/commit/df3aaa74da412344c2f83fb943584b4bac79ada5))
+* introduce pino-pretty as a peer dependency ([c5ea655](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c5ea655fa35515923973cd3d86dcf936b5af2b0f))
+
+
+### Documentation Changes
+
+* clarified sub-property serilization explanation ([551ec8d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/551ec8d13046acf5c273aae4b7d4f9bb0db00bc6))
+* removed extra whitespace ([e3d4b21](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e3d4b21e74ca9b55b543a689b99ac2a17115488e))
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.0.1...logger-v2.1.0) (2023-05-02)
 
 
