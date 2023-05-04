@@ -19,7 +19,7 @@
     "@dotcom-reliability-kit/app-info": "^2.1.0",
     "@dotcom-reliability-kit/serialize-error": "^2.1.0",
     "@ungap/structured-clone": "^1.2.0",
-    "pino": "^8.12.0"
+    "pino": "^8.12.1"
   },
   "peerDependencies": {
     "pino-pretty": "^10.0.0"
