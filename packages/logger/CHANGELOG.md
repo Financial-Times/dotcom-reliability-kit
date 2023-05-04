@@ -6,6 +6,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.2.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.1...logger-v2.2.2) (2023-05-04)
+
+
+### Bug Fixes
+
+* widen the pino-pretty version range ([b28d25b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b28d25b9ed9f360b4129f4661894057cf58ac2a7))
+
 ## [2.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.0...logger-v2.2.1) (2023-05-04)
 
 
