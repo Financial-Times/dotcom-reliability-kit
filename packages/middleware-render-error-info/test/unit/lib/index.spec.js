@@ -81,7 +81,6 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				}
 			};
 			response = {
-				status: 'mock response status',
 				send: jest.fn(),
 				set: jest.fn(),
 				status: jest.fn()
@@ -178,7 +177,6 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				appInfo.environment = 'production';
 				middleware = createErrorRenderingMiddleware();
 				response = {
-					status: 'mock response status',
 					send: jest.fn(),
 					set: jest.fn(),
 					status: jest.fn()
