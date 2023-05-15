@@ -4,6 +4,7 @@
 	},
 	"extends": [
 		"@financial-times/eslint-config-next",
+		"@dotcom-reliability-kit/eslint-config",
 		"plugin:jsdoc/recommended"
 	],
 	"parser": "@babel/eslint-parser",
