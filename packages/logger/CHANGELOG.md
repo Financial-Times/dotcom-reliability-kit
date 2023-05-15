@@ -6,6 +6,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.2...logger-v2.2.3) (2023-05-15)
+
+
+### Bug Fixes
+
+* bump pino from 8.12.1 to 8.14.1 ([41060ff](https://github.com/Financial-Times/dotcom-reliability-kit/commit/41060ff6203abfc0c6153c7232b925a61880411b))
+
 ## [2.2.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.1...logger-v2.2.2) (2023-05-04)
 
 
