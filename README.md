@@ -22,6 +22,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/errors](./packages/errors/#readme):**<br/>
       A suite of error classes which help you throw the most appropriate error in any situation
 
+    * **[@dotcom-reliability-kit/eslint-config](./packages/eslint-config/#readme):**<br/>
+    A linting config, specifically focussed on enhancing code quality and proactively catching errors/bugs before they make it into production.
+
     * **[@dotcom-reliability-kit/log-error](./packages/log-error/#readme):**<br/>
       A method to consistently log error object with optional request information
 
