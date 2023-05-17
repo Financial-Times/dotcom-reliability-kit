@@ -1,6 +1,6 @@
 ## @dotcom-reliability-kit/eslint-config
 
-A prototype linting config, specifically focussed on enhancing code quality and proactively catching errors/bugs before they make it into production. This is not a replacement for the [@financial-times/eslint-config-next](https://github.com/Financial-Times/eslint-config-next), but it can be installed alongside it or as an extension in it's config. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
+A linting config, specifically focussed on enhancing code quality and proactively catching errors/bugs before they make it into production. This is not a replacement for the [@financial-times/eslint-config-next](https://github.com/Financial-Times/eslint-config-next), but it can be installed alongside it or as an extension in it's config. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
 - [Usage](#usage)
   - [Static Code Analysis](#static-code-analysis)
