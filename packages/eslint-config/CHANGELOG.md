@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v0.1.3...eslint-config-v1.0.0) (2023-05-17)
+
+
+### Features
+
+* indicate that the eslint-config package is stable ([c3a6e5b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c3a6e5b1450fbfaba321a20deb435abce6366b6d))
+
 ## [0.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v0.1.2...eslint-config-v0.1.3) (2023-05-02)
 
 
