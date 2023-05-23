@@ -1,3 +1,6 @@
+/**
+ * @type {import('eslint').ESLint.ConfigData}
+ */
 const config = {
 	env: {
 		browser: true,
