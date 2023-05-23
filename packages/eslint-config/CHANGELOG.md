@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v1.0.0...eslint-config-v2.0.0) (2023-05-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* add new rules from eslint-config-next
+
+### Features
+
+* add new rules from eslint-config-next ([2860c3c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2860c3cb82cdeef1bfe09f48389696e8a6f6afbc))
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v0.1.3...eslint-config-v1.0.0) (2023-05-17)
 
 

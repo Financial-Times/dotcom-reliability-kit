@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/eslint-config",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A linting config, specifically focussed on enhancing code quality and proactively catching errors/bugs before they make it into production",
   "repository": {
     "type": "git",
