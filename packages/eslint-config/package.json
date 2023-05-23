@@ -17,5 +17,8 @@
   "main": "lib",
   "peerDependencies": {
     "eslint": ">=8.27.0"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.40.0"
   }
 }
