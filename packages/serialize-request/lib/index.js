@@ -8,7 +8,7 @@
 
 /**
  * @typedef {object} BasicRequest
- * @property {Object<string, string>} [headers]
+ * @property {Headers | Object<string, string> | Iterable<[string, string]>} [headers]
  *     The request HTTP headers.
  * @property {string} [method]
  *     The request HTTP method.
@@ -127,11 +127,13 @@ function serializeRequest(request, options = {}) {
 	}
 
 	// Serialize the headers
-	if (
-		request.headers &&
+	const headersIsObject =
 		typeof request.headers === 'object' &&
 		!Array.isArray(request.headers) &&
-		request.headers !== null
+		request.headers !== null;
+	if (
+		request.headers &&
+		(headersIsObject || isIterableHeadersObject(request.headers))
 	) {
 		requestProperties.headers = serializeHeaders(
 			request.headers,
@@ -154,7 +156,7 @@ function serializeRequest(request, options = {}) {
  * Serialize request headers.
  *
  * @private
- * @param {Record<string, any>} headers
+ * @param {Headers | Record<string, any> | Iterable<[string, string]>} headers
  *     The headers object to serialize.
  * @param {Array<string>} includeHeaders
  *     An array of request headers to include.
@@ -162,8 +164,20 @@ function serializeRequest(request, options = {}) {
  *     Returns the serialized request headers.
  */
 function serializeHeaders(headers, includeHeaders) {
+	const headersObject = {};
+	let iterableHeaders =
+		Array.isArray(headers) || isIterableHeadersObject(headers)
+			? headers
+			: Object.entries(headers);
+
+	for (const [header, value] of iterableHeaders) {
+		if (typeof header === 'string' && typeof value === 'string') {
+			headersObject[header.toLowerCase()] = value;
+		}
+	}
+
 	return Object.fromEntries(
-		Object.entries(headers).filter(([header]) =>
+		Object.entries(headersObject).filter(([header]) =>
 			includeHeaders.includes(header)
 		)
 	);
@@ -189,6 +203,16 @@ function createSerializedRequest(properties) {
 		},
 		properties
 	);
+}
+
+/**
+ * @param {any} value
+ *     The value to test.
+ * @returns {value is Iterable<[string, string]>}
+ *     Returns whether a value is iterable.
+ */
+function isIterableHeadersObject(value) {
+	return value && typeof value?.[Symbol.iterator] === 'function';
 }
 
 module.exports = serializeRequest;

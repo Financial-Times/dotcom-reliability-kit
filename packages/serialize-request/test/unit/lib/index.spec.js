@@ -220,6 +220,33 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				});
 			});
 		});
+		describe('when `request.headers` is iterable', () => {
+			beforeEach(() => {
+				request.headers = new Map([
+					['Content-Type', 'application/json'],
+					['Authorization', 'Bearer token']
+				]);
+			});
+			it('should handle headers as an iterable', () => {
+				expect(serializeRequest(request)).toMatchObject({
+					headers: { 'content-type': 'application/json' }
+				});
+			});
+		});
+
+		describe('when `request.headers` is iterable but has non-string values', () => {
+			beforeEach(() => {
+				request.headers = new Map([
+					['Content-Type', 123],
+					['accept', {}]
+				]);
+			});
+			it('should ignore the headers with non-string values', () => {
+				expect(serializeRequest(request)).toMatchObject({
+					headers: {}
+				});
+			});
+		});
 
 		describe('when `request.route.path` is not a string', () => {
 			beforeEach(() => {
