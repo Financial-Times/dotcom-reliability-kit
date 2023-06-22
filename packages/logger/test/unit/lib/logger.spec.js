@@ -1027,6 +1027,19 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
+		describe('when an object has an Error instance as a property', () => {
+			it('does not have additional error information wiped', () => {
+				const mockError = new Error('mock error');
+				mockError.name = 'MockError';
+				expect(Logger.zipLogData({ error: mockError })).toEqual({
+					error: mockError
+				});
+				expect(Logger.zipLogData({ error: mockError }).error.name).toEqual(
+					'MockError'
+				);
+			});
+		});
+
 		describe('when one of the log data items is a string', () => {
 			it('adds it as a `message` property', () => {
 				expect(Logger.zipLogData('mock message', { a: 1 })).toEqual({
