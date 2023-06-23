@@ -6,6 +6,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.3...logger-v2.2.4) (2023-06-23)
+
+
+### Documentation Changes
+
+* link to the CloudWatch documentation ([86d1a7a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/86d1a7ae0dd4b75ea9d2de74dcdb6ae440d7c768))
+
 ## [2.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.2...logger-v2.2.3) (2023-05-15)
 
 
