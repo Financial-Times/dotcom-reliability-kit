@@ -30,10 +30,10 @@ Avoid using .eslintrc file format (without a file extension), as [this has been 
 Add the following command to the `scripts` object in your repository's package.json:
 
 ```
-"lint:js": "eslint '**/*.{js,jsx,json,yml,yaml}'"
+"lint:js": "eslint ."
 ```
 
-To lint a specific file (or the entire repository), run that command in your terminal. Any linting errors found by the config will be displayed in your terminal, with helpful suggestions on how to resolve them.
+Run that command in your terminal to lint your files (either cd into the relevant directory or run from root). Any linting errors found by the config will be displayed in your terminal, with helpful suggestions on how to resolve them.
 
 ## Contributing
 
