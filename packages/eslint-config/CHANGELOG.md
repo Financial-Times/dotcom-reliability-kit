@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v2.0.0...eslint-config-v2.0.1) (2023-06-23)
+
+
+### Bug Fixes
+
+* set require-atomic-updates to warn level ([6f9b2d3](https://github.com/Financial-Times/dotcom-reliability-kit/commit/6f9b2d3bd27c7e9ef941fa9707d2d9436e7634b6))
+
+
+### Documentation Changes
+
+* update script command to be used in package.json ([1dfebc5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1dfebc5150bb003a0f1255d187e2ffc58687be9f))
+
 ## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/eslint-config-v1.0.0...eslint-config-v2.0.0) (2023-05-23)
 
 

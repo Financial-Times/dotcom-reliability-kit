@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v2.1.0...serialize-request-v2.2.0) (2023-06-23)
+
+
+### Features
+
+* add request headers seriealization ([ed23fc6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ed23fc6503f6e944ef2456d3de3296e338c91d4c))
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v2.0.1...serialize-request-v2.1.0) (2023-05-02)
 
 
