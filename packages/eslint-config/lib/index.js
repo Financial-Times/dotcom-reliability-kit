@@ -49,7 +49,7 @@ const config = {
 		'no-unsafe-optional-chaining': 'error',
 		'no-unused-private-class-members': 'error',
 		'no-unused-vars': 'error',
-		'require-atomic-updates': 'error',
+		'require-atomic-updates': 'warn',
 		'use-isnan': 'error',
 		'valid-typeof': 'error',
 		'no-global-assign': 'error',
