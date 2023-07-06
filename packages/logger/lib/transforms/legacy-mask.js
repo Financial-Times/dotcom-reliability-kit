@@ -16,6 +16,8 @@
  *     A regular expression which applies masking to a string.
  * @property {string} maskString
  *     The mask string to apply to discovered sensitive values.
+ * @property {WeakSet} references
+ *     An internal store of references used to avoid masking the same object infinitely.
  */
 
 /**
@@ -69,6 +71,15 @@ function mask(value, settings) {
 	if (typeof value === 'string') {
 		return maskString(value, settings);
 	}
+
+	// Handle circular references
+	if (value && typeof value === 'object') {
+		if (settings.references.has(value)) {
+			return value;
+		}
+		settings.references.add(value);
+	}
+
 	if (Array.isArray(value)) {
 		return value.map((item) => mask(item, settings));
 	}
@@ -177,7 +188,8 @@ function createLegacyMaskTransform({
 		return maskObject(logData, {
 			maskedFields,
 			maskRegExp,
-			maskString
+			maskString,
+			references: new WeakSet()
 		});
 	};
 }
