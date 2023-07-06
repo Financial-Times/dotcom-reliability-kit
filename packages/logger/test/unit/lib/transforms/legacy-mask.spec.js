@@ -217,6 +217,18 @@ describe('@dotcom-reliability-kit/logger', () => {
 					expect(transform({ mock: 123 })).toEqual({ mock: 123 });
 				});
 			});
+
+			describe('when called with an object that references itself', () => {
+				it('does not recurse infinitely', () => {
+					const logData = {
+						email: 'mock'
+					};
+					logData.naughtyLittleSelfReference = logData;
+					const result = transform(logData);
+					expect(result.email).toEqual('*****');
+					expect(result.naughtyLittleSelfReference.email).toEqual('*****');
+				});
+			});
 		});
 
 		describe('when `options.denyList` is set', () => {
