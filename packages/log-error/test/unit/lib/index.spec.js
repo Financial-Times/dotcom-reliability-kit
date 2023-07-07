@@ -3,6 +3,7 @@ const { logHandledError, logRecoverableError, logUnhandledError } = logError;
 
 jest.mock('@dotcom-reliability-kit/logger', () => ({
 	error: jest.fn(),
+	fatal: jest.fn(),
 	warn: jest.fn()
 }));
 const logger = require('@dotcom-reliability-kit/logger');
@@ -254,6 +255,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			beforeEach(() => {
 				customLogger = {
 					error: jest.fn(),
+					fatal: jest.fn(),
 					warn: jest.fn()
 				};
 				logHandledError({
@@ -520,6 +522,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			beforeEach(() => {
 				customLogger = {
 					error: jest.fn(),
+					fatal: jest.fn(),
 					warn: jest.fn()
 				};
 				logRecoverableError({
@@ -634,7 +637,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.error).toBeCalledWith({
+			expect(logger.fatal).toBeCalledWith({
 				event: 'UNHANDLED_ERROR',
 				message: 'MockError: mock error',
 				error: {
@@ -672,7 +675,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.fatal).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -706,7 +709,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.fatal).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -734,7 +737,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.fatal).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'Error: mock error',
 					error: {
@@ -762,7 +765,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.fatal).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError',
 					error: {
@@ -786,6 +789,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			beforeEach(() => {
 				customLogger = {
 					error: jest.fn(),
+					fatal: jest.fn(),
 					warn: jest.fn()
 				};
 				logUnhandledError({
@@ -796,6 +800,41 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger', () => {
+				expect(customLogger.fatal).toBeCalledWith({
+					event: 'UNHANDLED_ERROR',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						commit: 'mock-commit-hash',
+						name: 'mock-system-code',
+						nodeVersion: process.versions.node,
+						region: 'mock-region',
+						releaseDate: 'mock-release-date'
+					}
+				});
+			});
+		});
+
+		describe('when the logger does not have a `fatal` method', () => {
+			let customLogger;
+
+			beforeEach(() => {
+				customLogger = {
+					error: jest.fn(),
+					warn: jest.fn()
+				};
+				logUnhandledError({
+					error,
+					request,
+					logger: customLogger
+				});
+			});
+
+			it('logs the serialized error, request, and app details with the custom logger error method', () => {
 				expect(customLogger.error).toBeCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
@@ -830,7 +869,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					name: 'MockLoggingError',
 					message: 'mock logging error'
 				});
-				logger.error.mockImplementation(() => {
+				logger.fatal.mockImplementation(() => {
 					throw loggingError;
 				});
 				logUnhandledError({
@@ -867,7 +906,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					JSON.stringify({
 						level: 'error',
 						event: 'LOG_METHOD_FAILURE',
-						message: "Failed to log at level 'error'",
+						message: "Failed to log at level 'fatal'",
 						error: {
 							name: 'MockLoggingError',
 							message: 'mock logging error'
