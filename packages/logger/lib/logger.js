@@ -337,6 +337,9 @@ class Logger {
 	 * @returns {void}
 	 */
 	log(level, ...logData) {
+		if (typeof level !== 'string') {
+			throw new TypeError('The log `level` argument must be a string');
+		}
 		try {
 			const { logLevel, isDeprecated } = Logger.getLogLevelInfo(level);
 

@@ -462,6 +462,14 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					);
 				});
 			});
+
+			describe('when `level` is not a string', () => {
+				it('throws a type error', () => {
+					expect(() => logger.log({})).toThrow(
+						new TypeError('The log `level` argument must be a string')
+					);
+				});
+			});
 		});
 
 		const logMethods = [
