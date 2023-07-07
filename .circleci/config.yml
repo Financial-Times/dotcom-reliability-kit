@@ -157,21 +157,21 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - test:
           requires:
             - build-v<< matrix.node-version >>
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - lint:
           requires:
             - build-v<< matrix.node-version >>
           name: lint-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - release-please:
           filters:
             <<: *filters_only_main
@@ -189,7 +189,7 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - test:
           filters:
             <<: *filters_release_build
@@ -198,7 +198,7 @@ workflows:
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - lint:
           filters:
             <<: *filters_release_build
@@ -207,7 +207,7 @@ workflows:
           name: lint-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - publish:
           context: npm-publish-token
           filters:
@@ -226,7 +226,7 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - test:
           filters:
             <<: *filters_prerelease_build
@@ -235,7 +235,7 @@ workflows:
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - lint:
           filters:
             <<: *filters_prerelease_build
@@ -244,7 +244,7 @@ workflows:
           name: lint-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - prepublish:
           context: npm-publish-token
           filters:
@@ -267,7 +267,7 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
       - test:
           requires:
             - build-v<< matrix.node-version >>
@@ -275,4 +275,4 @@ workflows:
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "20.0", "18.16", "16.20" ]
+              node-version: [ "20.0", "18.16" ]
