@@ -1,13 +1,11 @@
 const logError = require('../../../lib');
 const { logHandledError, logRecoverableError, logUnhandledError } = logError;
 
-jest.mock('@financial-times/n-logger', () => ({
-	default: {
-		error: jest.fn(),
-		warn: jest.fn()
-	}
+jest.mock('@dotcom-reliability-kit/logger', () => ({
+	error: jest.fn(),
+	warn: jest.fn()
 }));
-const logger = require('@financial-times/n-logger').default;
+const logger = require('@dotcom-reliability-kit/logger');
 
 jest.mock('@dotcom-reliability-kit/serialize-error', () =>
 	jest.fn().mockReturnValue({

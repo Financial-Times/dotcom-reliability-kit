@@ -4,13 +4,21 @@ const renderErrorPage = require('./render-error-page');
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 
 /**
+ * @typedef {object} ErrorRenderingOptions
+ * @property {import('@dotcom-reliability-kit/log-error').Logger & Object<string, any>} [logger]
+ *     The logger to use to output errors. Defaults to Reliability Kit logger.
+ */
+
+/**
  * Create a middleware function to render an error info page.
  *
  * @public
+ * @param {ErrorRenderingOptions} [options]
+ *     Options to configure the middleware.
  * @returns {import('express').ErrorRequestHandler}
  *     Returns error info rendering middleware.
  */
-function createErrorRenderingMiddleware() {
+function createErrorRenderingMiddleware(options = {}) {
 	// Only render the error info page if we're not in production.
 	// Note: if we ever want to get this working in production, we
 	// will need to make this middleware play nicely with
@@ -36,6 +44,7 @@ function createErrorRenderingMiddleware() {
 			} catch (/** @type {any} */ renderingError) {
 				logRecoverableError({
 					error: renderingError,
+					logger: options.logger,
 					request
 				});
 			}
