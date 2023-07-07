@@ -1029,13 +1029,25 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when an object has an Error instance as a property', () => {
 			it('does not have additional error information wiped', () => {
-				const mockError = new Error('mock error');
-				mockError.name = 'MockError';
+				class MockError extends Error {
+					name = 'MockError';
+					constructor(message) {
+						super(message);
+						this.code = 'MOCK_ERROR';
+					}
+				}
+				const mockError = new MockError('mock error');
 				expect(Logger.zipLogData({ error: mockError })).toEqual({
 					error: mockError
 				});
+				expect(Logger.zipLogData({ error: mockError }).error).toBeInstanceOf(
+					MockError
+				);
 				expect(Logger.zipLogData({ error: mockError }).error.name).toEqual(
 					'MockError'
+				);
+				expect(Logger.zipLogData({ error: mockError }).error.code).toEqual(
+					'MOCK_ERROR'
 				);
 			});
 		});
