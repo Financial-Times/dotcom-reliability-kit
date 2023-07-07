@@ -11,6 +11,8 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  * @typedef {object} Logger
  * @property {LogMethod} error
  *     A function to log an error.
+ * @property {LogMethod} [fatal]
+ *     A function to log a fatal error.
  * @property {LogMethod} warn
  *     A function to log a warning.
  */
@@ -31,8 +33,8 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  * @typedef {object} InternalErrorLoggingOptions
  * @property {string} event
  *     The event to log.
- * @property {("error" | "warn")} [level="error"]
- *     The log level to use. One of "error" or "warn".
+ * @property {("error" | "fatal" | "warn")} level
+ *     The log level to use. One of "error", "fatal", or "warn".
  */
 
 /**
@@ -47,7 +49,7 @@ function logError({
 	error,
 	event,
 	includeHeaders,
-	level = 'error',
+	level,
 	logger = reliabilityKitLogger,
 	request
 }) {
@@ -69,7 +71,8 @@ function logError({
 	}
 
 	try {
-		logger[level](logData);
+		const logMethod = logger[level] || logger.error;
+		logMethod(logData);
 	} catch (/** @type {any} */ loggingError) {
 		// We allow use of `console.log` here to ensure that critical
 		// logging failures are caught and logged. This ensures that we
@@ -116,6 +119,7 @@ function logHandledError({ error, includeHeaders, logger, request }) {
 		error,
 		event: 'HANDLED_ERROR',
 		includeHeaders,
+		level: 'error',
 		logger,
 		request
 	});
@@ -153,6 +157,7 @@ function logUnhandledError({ error, includeHeaders, logger, request }) {
 		error,
 		event: 'UNHANDLED_ERROR',
 		includeHeaders,
+		level: 'fatal',
 		logger,
 		request
 	});
