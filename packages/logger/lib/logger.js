@@ -1,6 +1,6 @@
 const pino = require('pino').default;
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
-const { default: clone } = require('@ungap/structured-clone');
+const clone = require('lodash.clonedeep');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 
 /**
@@ -146,7 +146,7 @@ class Logger {
 	/**
 	 * Create a logger.
 	 *
-	 * @param {LoggerOptions & PrivateLoggerOptions} [options = {}]
+	 * @param {LoggerOptions & PrivateLoggerOptions} [options]
 	 *     Options to configure the logger.
 	 */
 	constructor(options = {}) {
@@ -154,7 +154,7 @@ class Logger {
 		if (options.baseLogData) {
 			// TODO when we remove `setContext` and `clearContext` we can freeze this
 			// object with `Object.freeze` to prevent any editing after instantiation
-			this.#baseLogData = clone(options.baseLogData, { lossy: true });
+			this.#baseLogData = clone(options.baseLogData);
 		}
 
 		// Default and set the log level option. We default the log level to the
@@ -355,9 +355,7 @@ class Logger {
 			}
 
 			// Transform the log data
-			let transformedLogData = clone(sanitizedLogData, {
-				lossy: true
-			});
+			let transformedLogData = clone(sanitizedLogData);
 			if (this.#transforms.length) {
 				transformedLogData = this.#transforms.reduce(
 					(logData, transform) => transform(logData),
@@ -544,8 +542,7 @@ class Logger {
 					return Object.assign(collect, { error: serializeError(item) });
 				}
 				return Object.assign(collect, item);
-			}, {}),
-			{ lossy: true }
+			}, {})
 		);
 	}
 }
