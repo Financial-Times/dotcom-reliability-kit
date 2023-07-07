@@ -3,13 +3,16 @@ const { fork } = require('child_process');
 
 describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	let child;
-	let stderr = '';
+	let stdout = '';
 	let baseUrl;
 
 	beforeAll((done) => {
 		child = fork(`${__dirname}/fixtures/app.js`, { stdio: 'pipe' });
+		child.stdout.on('data', (chunk) => {
+			stdout += chunk.toString();
+		});
 		child.stderr.on('data', (chunk) => {
-			stderr += chunk.toString();
+			stdout += chunk.toString();
 		});
 		child.on('message', (message) => {
 			if (message?.ready) {
@@ -29,7 +32,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 		});
 
 		it('logs error information to stdout', () => {
-			const jsonLogs = stderr.split('\n').map((line) => {
+			const jsonLogs = stdout.split('\n').map((line) => {
 				try {
 					return JSON.parse(line);
 				} catch (error) {
@@ -78,7 +81,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 		});
 
 		it('does not log error information to stdout', () => {
-			expect(stderr).not.toContain('FILTERED_ERROR');
+			expect(stdout).not.toContain('FILTERED_ERROR');
 		});
 	});
 });

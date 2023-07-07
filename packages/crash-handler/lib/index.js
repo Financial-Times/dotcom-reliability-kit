@@ -6,7 +6,7 @@ const {
 /**
  * @typedef {object} CrashHandlerOptions
  * @property {import('@dotcom-reliability-kit/log-error').Logger & {[key: string]: any}} [logger]
- *     The logger to use to output errors. Defaults to n-logger.
+ *     The logger to use to output errors. Defaults to Reliability Kit logger.
  * @property {import('process')} [process]
  *     The Node.js process to add crash handlers for.
  */
