@@ -1,5 +1,5 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
-const nLogger = require('@financial-times/n-logger').default;
+const reliabilityKitLogger = require('@dotcom-reliability-kit/logger');
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 
@@ -22,7 +22,7 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  * @property {string[]} [includeHeaders]
  *     An array of request headers to include in the log.
  * @property {Logger & {[key: string]: any}} [logger]
- *     The logger to use to output errors. Defaults to n-logger.
+ *     The logger to use to output errors. Defaults to Reliability Kit logger.
  * @property {(string | import('@dotcom-reliability-kit/serialize-request').Request)} [request]
  *     An request object to include in the log.
  */
@@ -48,7 +48,7 @@ function logError({
 	event,
 	includeHeaders,
 	level = 'error',
-	logger = nLogger,
+	logger = reliabilityKitLogger,
 	request
 }) {
 	const serializedError = serializeError(error);

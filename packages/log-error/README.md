@@ -34,7 +34,7 @@ const {logRecoverableError} = require('@dotcom-reliability-kit/log-error');
 
 ### `logHandledError`
 
-The `logHandledError` function can be used to log errors consistently to the console and Splunk via [n-logger](https://github.com/Financial-Times/n-logger). This method is used to indicate that the error being logged has been correctly handled and the application can continue to run.
+The `logHandledError` function can be used to log errors consistently to the console and Splunk via [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger). This method is used to indicate that the error being logged has been correctly handled and the application can continue to run.
 
 ```js
 logHandledError({
@@ -68,7 +68,7 @@ This will automatically [serialize error objects](https://github.com/Financial-T
 
 ### `logRecoverableError`
 
-The `logRecoverableError` function can be used to log errors consistently to the console and Splunk via [n-logger](https://github.com/Financial-Times/n-logger). This method is used to indicate that the error being logged was completely recoverable, with no error page sent to a user.
+The `logRecoverableError` function can be used to log errors consistently to the console and Splunk via [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger). This method is used to indicate that the error being logged was completely recoverable, with no error page sent to a user.
 
 ```js
 logRecoverableError({
@@ -102,7 +102,7 @@ The information logged looks like this:
 
 ### `logUnhandledError`
 
-The `logUnhandledError` function can be used to log errors consistently to the console and Splunk via [n-logger](https://github.com/Financial-Times/n-logger). This method is used to indicate that the error being logged was not recoverable and resulted in an application crashing.
+The `logUnhandledError` function can be used to log errors consistently to the console and Splunk via [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger). This method is used to indicate that the error being logged was not recoverable and resulted in an application crashing.
 
 ```js
 logUnhandledError({
@@ -210,17 +210,7 @@ type LogMethod = (...logData: any) => any;
 
 Though it's best if they can accept a single object and output results as JSON.
 
-This option defaults to [n-logger](https://github.com/Financial-Times/n-logger) and is compatible with [n-mask-logger](https://github.com/Financial-Times/n-mask-logger):
-
-```js
-const {logRecoverableError} = require('@dotcom-reliability-kit/log-error');
-const MaskLogger = require('@financial-times/n-mask-logger');
-
-logRecoverableError({
-    error: new Error('Oops'),
-    logger: new MaskLogger()
-});
-```
+This option defaults to [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger).
 
 #### `options.request`
 

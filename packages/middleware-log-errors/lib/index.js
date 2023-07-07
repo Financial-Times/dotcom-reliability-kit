@@ -20,7 +20,7 @@ const {
  * @property {ErrorLoggingFilter} [filter]
  *     A filter function to determine whether an error should be logged.
  * @property {import('@dotcom-reliability-kit/log-error').Logger & {[key: string]: any}} [logger]
- *     The logger to use to output errors. Defaults to n-logger.
+ *     The logger to use to output errors. Defaults to Reliability Kit logger.
  */
 
 /**

@@ -212,12 +212,30 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				expect(logRecoverableError).toBeCalledTimes(1);
 				expect(logRecoverableError).toBeCalledWith({
 					error: renderingError,
-					request
+					request,
+					logger: undefined
 				});
 			});
 
 			it('calls `next` with the original error', () => {
 				expect(next).toBeCalledWith(error);
+			});
+
+			describe('when the logger option is set', () => {
+				beforeEach(() => {
+					middleware = createErrorRenderingMiddleware({
+						logger: 'mock-logger'
+					});
+					middleware(error, request, response, next);
+				});
+
+				it('passes on the custom logger to the log method', () => {
+					expect(logRecoverableError).toBeCalledWith({
+						error: renderingError,
+						request,
+						logger: 'mock-logger'
+					});
+				});
 			});
 		});
 	});
