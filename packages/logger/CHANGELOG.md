@@ -6,6 +6,15 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.4...logger-v2.2.5) (2023-07-10)
+
+
+### Bug Fixes
+
+* address logging infinite recursion issue ([1eed362](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1eed3620dd3674559bf61056f6f822abaa5f8993))
+* properly clone error instances ([f73c985](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f73c985529dc3466c9f5f9abd61fb7493ce84c59))
+* throw an error when log level is not a string ([b148699](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b148699decd2c2a45adffe8c6c465b1046f22cdf))
+
 ## [2.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.3...logger-v2.2.4) (2023-06-23)
 
 
