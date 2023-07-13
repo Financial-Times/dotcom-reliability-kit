@@ -42,7 +42,7 @@ class OperationalError extends Error {
 	 * @public
 	 * @type {string}
 	 */
-	code = 'UNKNOWN';
+	code = OperationalError.defaultCode;
 
 	/**
 	 * An array of valid FT system codes (found in Biz Ops) which this error is related to.
@@ -105,7 +105,7 @@ class OperationalError extends Error {
 		} else {
 			data = message || data;
 		}
-		super(data.message || 'An operational error occurred');
+		super(data.message || OperationalError.defaultMessage);
 
 		if (typeof data.code === 'string') {
 			this.code = OperationalError.normalizeErrorCode(data.code);
@@ -138,6 +138,20 @@ class OperationalError extends Error {
 	 * @type {Array<string>}
 	 */
 	static reservedKeys = ['code', 'message', 'relatesToSystems', 'cause'];
+
+	/**
+	 * @protected
+	 * @readonly
+	 * @type {string}
+	 */
+	static defaultCode = 'UNKNOWN';
+
+	/**
+	 * @protected
+	 * @readonly
+	 * @type {string}
+	 */
+	static defaultMessage = 'An operational error occurred';
 
 	/**
 	 * Get whether an error object is marked as operational (it has a truthy `isOperational` property).

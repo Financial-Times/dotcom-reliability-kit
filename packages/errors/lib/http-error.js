@@ -37,14 +37,14 @@ class HttpError extends OperationalError {
 	 * @public
 	 * @type {number}
 	 */
-	statusCode = 500;
+	statusCode;
 
 	/**
 	 * @readonly
 	 * @public
 	 * @type {string}
 	 */
-	statusMessage = STATUS_CODES[500];
+	statusMessage;
 
 	/**
 	 * @public
@@ -99,32 +99,25 @@ class HttpError extends OperationalError {
 		} else {
 			data = message || data;
 		}
+		super(data);
 
-		// Make sure that we don't modify the original data object
-		// by shallow-cloning it
-		data = { ...data };
-
-		// Default the status code
-		data.statusCode =
+		// Set the status code and message
+		this.statusCode =
 			typeof data.statusCode === 'number'
 				? HttpError.normalizeErrorStatusCode(data.statusCode)
-				: 500;
+				: // @ts-ignore TypeScript does not properly infer the constructor
+				  this.constructor.defaultStatusCode;
+		this.statusMessage = HttpError.getMessageForStatusCode(this.statusCode);
 
-		// Default the error code
-		data.code =
-			typeof data.code === 'string' ? data.code : `HTTP_${data.statusCode}`;
+		// Default the error code to one that includes the HTTP status
+		if (this.code === OperationalError.defaultCode) {
+			this.code = `HTTP_${this.statusCode}`;
+		}
 
-		// Default the error message
-		data.message =
-			typeof data.message === 'string'
-				? data.message
-				: HttpError.getMessageForStatusCode(data.statusCode);
-
-		// Message and code are set by the parent class, but we need
-		// to set the status code and message properties ourselves
-		super(data);
-		this.statusCode = data.statusCode;
-		this.statusMessage = HttpError.getMessageForStatusCode(data.statusCode);
+		// Default the error message to the status message
+		if (this.message === OperationalError.defaultMessage) {
+			this.message = this.statusMessage;
+		}
 	}
 
 	/**
@@ -139,6 +132,13 @@ class HttpError extends OperationalError {
 		'statusCode',
 		'statusMessage'
 	];
+
+	/**
+	 * @protected
+	 * @readonly
+	 * @type {number}
+	 */
+	static defaultStatusCode = 500;
 
 	/**
 	 * Normalize an HTTP status code.
