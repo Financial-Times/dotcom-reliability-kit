@@ -73,8 +73,27 @@ class OperationalError extends Error {
 	data = {};
 
 	/**
-	 * Create an operational error.
+	 * Create an error with no arguments.
 	 *
+	 * @overload
+	 */
+	/**
+	 * Create an error with error data.
+	 *
+	 * @overload
+	 * @param {OperationalErrorData} data
+	 *     Additional error information.
+	 */
+	/**
+	 * Create an error with a message and optional error data.
+	 *
+	 * @overload
+	 * @param {string} message
+	 *     The error message.
+	 * @param {OperationalErrorData} [data]
+	 *     Additional error information.
+	 */
+	/**
 	 * @param {string | OperationalErrorData} [message]
 	 *     The error message if it's a string, or full error information if an object.
 	 * @param {OperationalErrorData} [data]
