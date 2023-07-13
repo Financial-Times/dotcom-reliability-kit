@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v2.1.0...errors-v2.1.1) (2023-07-13)
+
+
+### Bug Fixes
+
+* simplify the DataStoreError class ([fecb088](https://github.com/Financial-Times/dotcom-reliability-kit/commit/fecb0880ea7c38f89be144cf74935ccd5c19c8e9))
+* simplify upstream service & user input errors ([622ba70](https://github.com/Financial-Times/dotcom-reliability-kit/commit/622ba70fa8ab4df2c3e8630aa51a84bccc8ebe33))
+* use overloads for error constructors ([aca1c64](https://github.com/Financial-Times/dotcom-reliability-kit/commit/aca1c6430dd5aa48f19bb62effa18c3d8557191e))
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v2.0.1...errors-v2.1.0) (2023-05-02)
 
 
