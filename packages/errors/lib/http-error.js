@@ -55,8 +55,36 @@ class HttpError extends OperationalError {
 	}
 
 	/**
-	 * Create an HTTP error.
+	 * Create an error with no arguments.
 	 *
+	 * @overload
+	 */
+	/**
+	 * Create an error with error data.
+	 *
+	 * @overload
+	 * @param {HttpErrorData} data
+	 *     Additional error information.
+	 */
+	/**
+	 * Create an error with a message and optional error data.
+	 *
+	 * @overload
+	 * @param {string} message
+	 *     The error message.
+	 * @param {HttpErrorData} [data]
+	 *     Additional error information.
+	 */
+	/**
+	 * Create an error with a status and optional error data.
+	 *
+	 * @overload
+	 * @param {number} status
+	 *     The error HTTP status code.
+	 * @param {HttpErrorData} [data]
+	 *     Additional error information.
+	 */
+	/**
 	 * @param {string | number | HttpErrorData} [message]
 	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
 	 *     information if an object.
