@@ -1,0 +1,567 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "DataStoreError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with cause matches the snapshot 1`] = `
+{
+  "cause": [Error: mock cause],
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "DataStoreError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "DataStoreError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with extra data matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {
+    "mockData": 123,
+  },
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "DataStoreError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with message and code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "DataStoreError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "DataStoreError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with related systems matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "DataStoreError",
+  "relatesToSystems": [
+    "mock-system",
+  ],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_500",
+  "data": {},
+  "isOperational": true,
+  "message": "Internal Server Error",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 500,
+  "statusMessage": "Internal Server Error",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with cause matches the snapshot 1`] = `
+{
+  "cause": [Error: mock cause],
+  "code": "HTTP_500",
+  "data": {},
+  "isOperational": true,
+  "message": "Internal Server Error",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 500,
+  "statusMessage": "Internal Server Error",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "Internal Server Error",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 500,
+  "statusMessage": "Internal Server Error",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with extra data matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_500",
+  "data": {
+    "mockData": 123,
+  },
+  "isOperational": true,
+  "message": "Internal Server Error",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 500,
+  "statusMessage": "Internal Server Error",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with message and code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 500,
+  "statusMessage": "Internal Server Error",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_500",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 500,
+  "statusMessage": "Internal Server Error",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with related systems matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_500",
+  "data": {},
+  "isOperational": true,
+  "message": "Internal Server Error",
+  "name": "HttpError",
+  "relatesToSystems": [
+    "mock-system",
+  ],
+  "statusCode": 500,
+  "statusMessage": "Internal Server Error",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with status code as message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_404",
+  "data": {},
+  "isOperational": true,
+  "message": "Not Found",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 404,
+  "statusMessage": "Not Found",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end HttpError with status code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_404",
+  "data": {},
+  "isOperational": true,
+  "message": "Not Found",
+  "name": "HttpError",
+  "relatesToSystems": [],
+  "statusCode": 404,
+  "statusMessage": "Not Found",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end OperationalError matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "OperationalError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with cause matches the snapshot 1`] = `
+{
+  "cause": [Error: mock cause],
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "OperationalError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "OperationalError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with extra data matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {
+    "mockData": 123,
+  },
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "OperationalError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with message and code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "OperationalError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "OperationalError",
+  "relatesToSystems": [],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with related systems matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": true,
+  "message": "An operational error occurred",
+  "name": "OperationalError",
+  "relatesToSystems": [
+    "mock-system",
+  ],
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_502",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Gateway",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 502,
+  "statusMessage": "Bad Gateway",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with cause matches the snapshot 1`] = `
+{
+  "cause": [Error: mock cause],
+  "code": "HTTP_502",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Gateway",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 502,
+  "statusMessage": "Bad Gateway",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Gateway",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 502,
+  "statusMessage": "Bad Gateway",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with extra data matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_502",
+  "data": {
+    "mockData": 123,
+  },
+  "isOperational": true,
+  "message": "Bad Gateway",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 502,
+  "statusMessage": "Bad Gateway",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with message and code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 502,
+  "statusMessage": "Bad Gateway",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_502",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 502,
+  "statusMessage": "Bad Gateway",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with related systems matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_502",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Gateway",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [
+    "mock-system",
+  ],
+  "statusCode": 502,
+  "statusMessage": "Bad Gateway",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with status code as message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_404",
+  "data": {},
+  "isOperational": true,
+  "message": "Not Found",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 404,
+  "statusMessage": "Not Found",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with status code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_404",
+  "data": {},
+  "isOperational": true,
+  "message": "Not Found",
+  "name": "UpstreamServiceError",
+  "relatesToSystems": [],
+  "statusCode": 404,
+  "statusMessage": "Not Found",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_400",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Request",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 400,
+  "statusMessage": "Bad Request",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with cause matches the snapshot 1`] = `
+{
+  "cause": [Error: mock cause],
+  "code": "HTTP_400",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Request",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 400,
+  "statusMessage": "Bad Request",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Request",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 400,
+  "statusMessage": "Bad Request",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with extra data matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_400",
+  "data": {
+    "mockData": 123,
+  },
+  "isOperational": true,
+  "message": "Bad Request",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 400,
+  "statusMessage": "Bad Request",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with message and code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 400,
+  "statusMessage": "Bad Request",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_400",
+  "data": {},
+  "isOperational": true,
+  "message": "mock message",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 400,
+  "statusMessage": "Bad Request",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with related systems matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_400",
+  "data": {},
+  "isOperational": true,
+  "message": "Bad Request",
+  "name": "UserInputError",
+  "relatesToSystems": [
+    "mock-system",
+  ],
+  "statusCode": 400,
+  "statusMessage": "Bad Request",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with status code as message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_404",
+  "data": {},
+  "isOperational": true,
+  "message": "Not Found",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 404,
+  "statusMessage": "Not Found",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with status code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "HTTP_404",
+  "data": {},
+  "isOperational": true,
+  "message": "Not Found",
+  "name": "UserInputError",
+  "relatesToSystems": [],
+  "statusCode": 404,
+  "statusMessage": "Not Found",
+}
+`;
