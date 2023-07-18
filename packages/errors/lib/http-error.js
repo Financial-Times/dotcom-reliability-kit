@@ -125,7 +125,7 @@ class HttpError extends OperationalError {
 	 *
 	 * @override
 	 * @protected
-	 * @type {Array<string>}
+	 * @type {string[]}
 	 */
 	static reservedKeys = [
 		...OperationalError.reservedKeys,

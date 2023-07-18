@@ -18,7 +18,7 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  * @property {LogLevel} [logLevel = "debug"]
  *     The maximum log level to output during logging. Logs at levels
  *     beneath this will be ignored.
- * @property {Array<LogTransform>} [transforms = []]
+ * @property {LogTransform[]} [transforms = []]
  *     Transforms to apply to logs before sending.
  * @property {boolean} [withPrettifier = true]
  *     Whether to prettify log output if it's possible.
@@ -129,7 +129,7 @@ class Logger {
 	#baseLogData = {};
 
 	/**
-	 * @type {Array<LogTransform>}
+	 * @type {LogTransform[]}
 	 */
 	#transforms = [];
 
@@ -139,7 +139,7 @@ class Logger {
 	#logTransport;
 
 	/**
-	 * @type {Array<string>}
+	 * @type {string[]}
 	 */
 	#deprecatedMethodTracker = [];
 

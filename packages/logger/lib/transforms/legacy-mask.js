@@ -1,8 +1,8 @@
 /**
  * @typedef {object} LegacyMaskTransformOptions
- * @property {Array<string>} [denyList]
+ * @property {string[]} [denyList]
  *     Additional field names to apply masking to.
- * @property {Array<string>} [allowList]
+ * @property {string[]} [allowList]
  *     Field names to allow from the default deny list.
  * @property {string} [maskString]
  *     The mask string to apply to discovered sensitive values.
@@ -24,7 +24,7 @@
  * The default masked fields.
  *
  * @private
- * @type {Array<string>}
+ * @type {string[]}
  */
 const DEFAULT_MASKED_FIELDS = [
 	'email',
@@ -46,7 +46,7 @@ const DEFAULT_MASKED_FIELDS = [
  * Properties of an error object we need to mask.
  *
  * @private
- * @type {Array<string>}
+ * @type {string[]}
  */
 const ERROR_OBJECT_PROPERTIES = [
 	'name',

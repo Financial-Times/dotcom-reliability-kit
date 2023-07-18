@@ -14,7 +14,7 @@
  *     The method and arguments to call on each logging library.
  * @property {string} call.method
  *     The log method to call.
- * @property {Array<any>} call.args
+ * @property {any[]} call.args
  *     An array of arguments to call the method with.
  * @property {object} expectedOutput
  *     The outputs expected for each logging library.
@@ -25,7 +25,7 @@
  */
 
 /**
- * @type {Array<CompatibilityTestCase>}
+ * @type {CompatibilityTestCase[]}
  */
 module.exports = [
 	// Test cases based on the n-logger documentation

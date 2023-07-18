@@ -22,7 +22,7 @@
 
 /**
  * @typedef {object} SerializeRequestOptions
- * @property {Array<string>} [includeHeaders]
+ * @property {string[]} [includeHeaders]
  *     An array of request headers to include.
  */
 
@@ -60,7 +60,7 @@
  * The default request headers to include in the serialization.
  *
  * @public
- * @type {Array<string>}
+ * @type {string[]}
  */
 const DEFAULT_INCLUDED_HEADERS = [
 	'accept',
@@ -158,7 +158,7 @@ function serializeRequest(request, options = {}) {
  * @private
  * @param {Headers | Record<string, any> | Iterable<[string, string]>} headers
  *     The headers object to serialize.
- * @param {Array<string>} includeHeaders
+ * @param {string[]} includeHeaders
  *     An array of request headers to include.
  * @returns {SerializedRequestHeaders}
  *     Returns the serialized request headers.

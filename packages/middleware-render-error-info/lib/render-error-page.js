@@ -232,7 +232,7 @@ function renderResponse(response) {
  *     The section id.
  * @param {string} section.title
  *     The section title.
- * @param {Array<Field>} section.fields
+ * @param {Field[]} section.fields
  *     The fields to render in the section.
  * @param {string} [section.body]
  *     The section body content.
@@ -343,7 +343,7 @@ function renderBoolean(
  * Render a list of systems, linking them to Biz Ops.
  *
  * @private
- * @param {Array<string>} systems
+ * @param {string[]} systems
  *     An array of system codes.
  * @returns {string}
  *     Returns the rendered systems.

@@ -2,7 +2,7 @@
  * Find the first log in an array of logs which has the
  * specified `property` set to `value`.
  *
- * @param {Array<object>} logs
+ * @param {{[key: string]: any}[]} logs
  *     The logs to search.
  * @param {string} property
  *     The property to search on.
