@@ -3,7 +3,7 @@
  *
  * @param {string} logString
  *     The log string to parse.
- * @returns {Array<Object<string, any>>}
+ * @returns {Array<{[key: string]: any}>}
  *     Returns the parsed JSON logs as an array of log objects.
  */
 function splitAndParseJsonLogs(logString) {

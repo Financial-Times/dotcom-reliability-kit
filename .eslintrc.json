@@ -20,6 +20,7 @@
 		"jsdoc/check-access": "error",
 		"jsdoc/require-description-complete-sentence": "error",
 		"jsdoc/tag-lines": ["warn", "any", { "startLines": 1 }],
+		"jsdoc/no-undefined-types": ["error", {"definedTypes": ["Iterable"]}],
 		"prettier/prettier": "error",
 		"quotes": 0,
 		"space-before-function-paren": 0

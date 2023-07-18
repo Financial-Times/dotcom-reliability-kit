@@ -2,7 +2,7 @@ const { logUnhandledError } = require('@dotcom-reliability-kit/log-error');
 
 /**
  * @typedef {object} CrashHandlerOptions
- * @property {import('@dotcom-reliability-kit/log-error').Logger & Object<string, any>} [logger]
+ * @property {import('@dotcom-reliability-kit/log-error').Logger & {[key: string]: any}} [logger]
  *     The logger to use to output errors. Defaults to n-logger.
  * @property {import('process')} [process]
  *     The Node.js process to add crash handlers for.
@@ -12,7 +12,7 @@ const { logUnhandledError } = require('@dotcom-reliability-kit/log-error');
  * Register a crash handler on a process.
  *
  * @public
- * @param {CrashHandlerOptions} [options = {}]
+ * @param {CrashHandlerOptions} [options]
  *     Options to configure the crash handler.
  */
 function registerCrashHandler(options = {}) {

@@ -68,7 +68,7 @@ class OperationalError extends Error {
 	 *
 	 * @readonly
 	 * @public
-	 * @type {Object<string, any>}
+	 * @type {{[key: string]: any}}
 	 */
 	data = {};
 
