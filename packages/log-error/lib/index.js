@@ -19,7 +19,7 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  * @typedef {object} ErrorLoggingOptions
  * @property {(string | Error & Record<string, any>)} error
  *     The error to log.
- * @property {Array<string>} [includeHeaders]
+ * @property {string[]} [includeHeaders]
  *     An array of request headers to include in the log.
  * @property {Logger & {[key: string]: any}} [logger]
  *     The logger to use to output errors. Defaults to n-logger.

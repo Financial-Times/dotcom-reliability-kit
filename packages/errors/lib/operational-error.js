@@ -4,7 +4,7 @@
  *     A machine-readable error code which identifies the specific type of error.
  * @property {string} [message]
  *     A human readable message which describes the error.
- * @property {Array<string>} [relatesToSystems]
+ * @property {string[]} [relatesToSystems]
  *     An array of FT system codes which are related to this error.
  * @property {Error|null} [cause]
  *     The root cause error instance.
@@ -50,7 +50,7 @@ class OperationalError extends Error {
 	 *
 	 * @readonly
 	 * @public
-	 * @type {Array<string>}
+	 * @type {string[]}
 	 */
 	relatesToSystems = [];
 
@@ -135,7 +135,7 @@ class OperationalError extends Error {
 	 * Reserved keys that should not appear in `OperationalError.prototype.data`.
 	 *
 	 * @protected
-	 * @type {Array<string>}
+	 * @type {string[]}
 	 */
 	static reservedKeys = ['code', 'message', 'relatesToSystems', 'cause'];
 

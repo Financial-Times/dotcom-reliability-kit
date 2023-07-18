@@ -8,7 +8,7 @@
  *     A human readable message which describes the error.
  * @property {boolean} isOperational
  *     Whether the error is operational, as in it's an error we expect sometimes as part of running the application.
- * @property {Array<string>} relatesToSystems
+ * @property {string[]} relatesToSystems
  *     An array of FT system codes which are related to this error.
  * @property {(Error | null)} cause
  *     The root cause error instance.

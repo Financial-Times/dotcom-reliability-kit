@@ -15,7 +15,7 @@ const {
 
 /**
  * @typedef {object} ErrorLoggingOptions
- * @property {Array<string>} [includeHeaders]
+ * @property {string[]} [includeHeaders]
  *     An array of request headers to include in the log.
  * @property {ErrorLoggingFilter} [filter]
  *     A filter function to determine whether an error should be logged.

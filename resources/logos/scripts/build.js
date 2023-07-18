@@ -23,7 +23,7 @@ const sharp = require('sharp');
 	 *
 	 * @param {string} name
 	 *     The name of the logo within the `src` directory.
-	 * @param {Array<number>} pngSizes
+	 * @param {number[]} pngSizes
 	 *     The pixel sizes to export PNG files at.
 	 * @returns {Promise<void>}
 	 */
