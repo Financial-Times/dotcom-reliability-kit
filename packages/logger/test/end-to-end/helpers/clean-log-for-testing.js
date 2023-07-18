@@ -2,9 +2,9 @@
  * Remove properties from a log object which cause
  * issues in testing.
  *
- * @param {Object<string, any>} log
+ * @param {{[key: string]: any}} log
  *     The log object to clean.
- * @returns {Object<string, any>}
+ * @returns {{[key: string]: any}}
  *     Returns the cleaned log.
  */
 function cleanLogFortesting(log) {

@@ -19,7 +19,7 @@ const {
  *     An array of request headers to include in the log.
  * @property {ErrorLoggingFilter} [filter]
  *     A filter function to determine whether an error should be logged.
- * @property {import('@dotcom-reliability-kit/log-error').Logger & Object<string, any>} [logger]
+ * @property {import('@dotcom-reliability-kit/log-error').Logger & {[key: string]: any}} [logger]
  *     The logger to use to output errors. Defaults to n-logger.
  */
 
@@ -27,7 +27,7 @@ const {
  * Create a middleware function to log errors.
  *
  * @public
- * @param {ErrorLoggingOptions} [options = {}]
+ * @param {ErrorLoggingOptions} [options]
  *     Options to configure the middleware.
  * @returns {import('express').ErrorRequestHandler}
  *     Returns error logging middleware.

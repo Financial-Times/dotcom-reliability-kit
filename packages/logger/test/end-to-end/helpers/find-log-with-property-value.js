@@ -8,7 +8,7 @@
  *     The property to search on.
  * @param {any} value
  *     The property value to find.
- * @returns {Object<string, any>|null}
+ * @returns {{[key: string]: any}|null}
  *     Returns the found log or null if one isn't found.
  */
 function findLogWithPropertyValue(logs, property, value) {

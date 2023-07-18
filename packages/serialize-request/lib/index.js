@@ -8,7 +8,7 @@
 
 /**
  * @typedef {object} BasicRequest
- * @property {Headers | Object<string, string> | Iterable<[string, string]>} [headers]
+ * @property {Headers | {[key: string]: string} | Iterable<[string, string]>} [headers]
  *     The request HTTP headers.
  * @property {string} [method]
  *     The request HTTP method.
@@ -27,11 +27,11 @@
  */
 
 /**
- * @typedef {Object<string, string>} SerializedRequestHeaders
+ * @typedef {{[key: string]: string}} SerializedRequestHeaders
  */
 
 /**
- * @typedef {Object<string, string>} SerializedRequestRouteParams
+ * @typedef {{[key: string]: string}} SerializedRequestRouteParams
  */
 
 /**
@@ -79,7 +79,7 @@ const DEFAULT_INCLUDED_HEADERS = [
  *     The request object to serialize. Either an Express Request object, a
  *     built-in Node.js IncomingMessage object, or an object with the expected
  *     `headers`, `method`, and `url` properties.
- * @param {SerializeRequestOptions} [options = {}]
+ * @param {SerializeRequestOptions} [options]
  *     Options to configure the serialization.
  * @returns {SerializedRequest}
  *     Returns the serialized request object.

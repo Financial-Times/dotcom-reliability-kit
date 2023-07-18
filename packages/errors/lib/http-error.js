@@ -6,7 +6,7 @@ const OperationalError = require('./operational-error');
  * is a string. If we don't do this then TypeScript will complain.
  *
  * @see HttpError.getMessageForStatusCode
- * @type {Object<any, string>}
+ * @type {{[key: string]: any}}
  */
 const STATUS_CODES = require('http').STATUS_CODES;
 

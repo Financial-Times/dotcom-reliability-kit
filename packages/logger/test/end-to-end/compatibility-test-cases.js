@@ -18,9 +18,9 @@
  *     An array of arguments to call the method with.
  * @property {object} expectedOutput
  *     The outputs expected for each logging library.
- * @property {Object<string, any>} [expectedOutput.nextLogger]
+ * @property {{[key: string]: any}} [expectedOutput.nextLogger]
  *     What the expected output is for n-logger when called with the given arguments.
- * @property {Object<string, any>} [expectedOutput.reliabilityKit]
+ * @property {{[key: string]: any}} [expectedOutput.reliabilityKit]
  *     What the expected output is for Reliability Kit logger when called with the given arguments.
  */
 

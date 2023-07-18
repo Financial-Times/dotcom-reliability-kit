@@ -16,7 +16,7 @@
  *     The full error stack.
  * @property {(number | null)} statusCode
  *     An HTTP status code to represent the error.
- * @property {Object<string, any>} data
+ * @property {{[key: string]: any}} data
  *     Any additional error information.
  */
 

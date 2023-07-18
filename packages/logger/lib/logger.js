@@ -34,9 +34,9 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
 
 /**
  * @callback LogTransform
- * @param {Object<string, any>} logData
+ * @param {{[key: string]: any}} logData
  *     The log data to transform.
- * @returns {Object<string, any>}
+ * @returns {{[key: string]: any}}
  *     Returns the transformed log data.
  */
 
@@ -71,7 +71,7 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  * should be called when a log of that level is sent, as
  * well as the deprecation status of the log level.
  *
- * @type {Object<string, LogLevelInfo>}
+ * @type {{[key: string]: LogLevelInfo}}
  */
 const logLevelToTransportMethodMap = {
 	data: { logLevel: 'debug', isDeprecated: true },
@@ -528,7 +528,7 @@ class Logger {
 	 * @private
 	 * @param {...LogData} logData
 	 *     The log data.
-	 * @returns {Object<string, any>}
+	 * @returns {{[key: string]: any}}
 	 *     Returns a single zipped object containing all log data.
 	 */
 	static zipLogData(...logData) {
