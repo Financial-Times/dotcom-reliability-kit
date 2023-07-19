@@ -104,8 +104,8 @@ class BaseError extends Error {
 		}
 
 		for (const [key, value] of Object.entries(data)) {
-			// @ts-ignore TypeScript does not properly infer the constructor
-			if (!this.constructor.reservedKeys.includes(key)) {
+			const self = /** @type {typeof BaseError} */ (this.constructor);
+			if (!self.reservedKeys.includes(key)) {
 				this.data[key] = value;
 			}
 		}
