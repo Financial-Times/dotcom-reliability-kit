@@ -1,23 +1,19 @@
+const BaseError = require('./base-error');
+
 /**
  * @typedef {object} OperationalErrorStrictData
- * @property {string} [code]
- *     A machine-readable error code which identifies the specific type of error.
- * @property {string} [message]
- *     A human readable message which describes the error.
  * @property {string[]} [relatesToSystems]
  *     An array of FT system codes which are related to this error.
- * @property {Error|null} [cause]
- *     The root cause error instance.
  */
 
 /**
- * @typedef {OperationalErrorStrictData & Record<string, any>} OperationalErrorData
+ * @typedef {OperationalErrorStrictData & BaseError.ErrorData} OperationalErrorData
  */
 
 /**
  * Class representing an operational error.
  */
-class OperationalError extends Error {
+class OperationalError extends BaseError {
 	/**
 	 * @override
 	 * @readonly
@@ -29,20 +25,12 @@ class OperationalError extends Error {
 	/**
 	 * Whether the error is operational.
 	 *
+	 * @override
 	 * @readonly
 	 * @public
 	 * @type {boolean}
 	 */
 	isOperational = true;
-
-	/**
-	 * A machine-readable error code which identifies the specific type of error.
-	 *
-	 * @readonly
-	 * @public
-	 * @type {string}
-	 */
-	code = OperationalError.defaultCode;
 
 	/**
 	 * An array of valid FT system codes (found in Biz Ops) which this error is related to.
@@ -53,24 +41,6 @@ class OperationalError extends Error {
 	 * @type {string[]}
 	 */
 	relatesToSystems = [];
-
-	/**
-	 * The root cause error instance.
-	 *
-	 * @readonly
-	 * @public
-	 * @type {Error|null}
-	 */
-	cause = null;
-
-	/**
-	 * Additional error information.
-	 *
-	 * @readonly
-	 * @public
-	 * @type {{[key: string]: any}}
-	 */
-	data = {};
 
 	/**
 	 * Create an error with no arguments.
@@ -105,10 +75,10 @@ class OperationalError extends Error {
 		} else {
 			data = message || data;
 		}
-		super(data.message || OperationalError.defaultMessage);
+		super(data);
 
-		if (typeof data.code === 'string') {
-			this.code = OperationalError.normalizeErrorCode(data.code);
+		if (this.message === BaseError.defaultMessage) {
+			this.message = OperationalError.defaultMessage;
 		}
 
 		if (data.relatesToSystems) {
@@ -118,71 +88,24 @@ class OperationalError extends Error {
 				this.relatesToSystems = [data.relatesToSystems];
 			}
 		}
-
-		if (data.cause instanceof Error) {
-			this.cause = data.cause;
-		}
-
-		for (const [key, value] of Object.entries(data)) {
-			// @ts-ignore TypeScript does not properly infer the constructor
-			if (!this.constructor.reservedKeys.includes(key)) {
-				this.data[key] = value;
-			}
-		}
 	}
 
 	/**
 	 * Reserved keys that should not appear in `OperationalError.prototype.data`.
 	 *
+	 * @override
 	 * @protected
 	 * @type {string[]}
 	 */
-	static reservedKeys = ['code', 'message', 'relatesToSystems', 'cause'];
+	static reservedKeys = [...BaseError.reservedKeys, 'relatesToSystems'];
 
 	/**
-	 * @protected
-	 * @readonly
-	 * @type {string}
-	 */
-	static defaultCode = 'UNKNOWN';
-
-	/**
+	 * @override
 	 * @protected
 	 * @readonly
 	 * @type {string}
 	 */
 	static defaultMessage = 'An operational error occurred';
-
-	/**
-	 * Get whether an error object is marked as operational (it has a truthy `isOperational` property).
-	 *
-	 * @public
-	 * @param {Error} error
-	 *     The error object to check.
-	 * @returns {boolean}
-	 *     Returns whether the error is operational.
-	 */
-	static isErrorMarkedAsOperational(error) {
-		// @ts-ignore Error.prototype.isOperational does not exist, but it's OK to check in this
-		// case as we're manually casting `undefined` to a Boolean
-		return Boolean(error.isOperational);
-	}
-
-	/**
-	 * Normalize a machine-readable error code.
-	 *
-	 * @private
-	 * @param {string} code
-	 *     The error code to normalize.
-	 * @returns {string}
-	 *     Returns the normalized error code.
-	 */
-	static normalizeErrorCode(code) {
-		return code
-			.trim()
-			.toUpperCase()
-			.replace(/[^a-z0-9_]+/gi, '_');
-	}
 }
 
 module.exports = OperationalError;

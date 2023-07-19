@@ -1,3 +1,4 @@
+const BaseError = require('../../../lib/base-error');
 const HttpError = require('../../../lib/http-error');
 const OperationalError = require('../../../lib/operational-error');
 
@@ -208,9 +209,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(OperationalError, 'normalizeErrorCode')
-				.mockReturnValue('MOCK_CODE');
+			jest.spyOn(BaseError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
 			jest
 				.spyOn(HttpError, 'getMessageForStatusCode')
@@ -285,9 +284,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(OperationalError, 'normalizeErrorCode')
-				.mockReturnValue('MOCK_CODE');
+			jest.spyOn(BaseError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
 			instance = new HttpError('mock message', {
 				code: 'mock_code',
@@ -326,9 +323,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(OperationalError, 'normalizeErrorCode')
-				.mockReturnValue('MOCK_CODE');
+			jest.spyOn(BaseError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
 			instance = new HttpError(567, {
 				message: 'mock message',
