@@ -1,27 +1,27 @@
 const BaseError = require('../../../lib/base-error');
 const OperationalError = require('../../../lib/operational-error');
 
-describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
+describe('@dotcom-reliability-kit/errors/lib/base-error', () => {
 	afterEach(() => {
 		jest.restoreAllMocks();
 	});
 
 	it('exports a class', () => {
-		expect(OperationalError).toBeInstanceOf(Function);
+		expect(BaseError).toBeInstanceOf(Function);
 		expect(() => {
-			OperationalError();
+			BaseError();
 		}).toThrow(/class constructor/i);
 	});
 
-	it('extends the BaseError class', () => {
-		expect(OperationalError.prototype).toBeInstanceOf(BaseError);
+	it('extends the global Error class', () => {
+		expect(BaseError.prototype).toBeInstanceOf(Error);
 	});
 
-	describe('new OperationalError()', () => {
+	describe('new BaseError()', () => {
 		let instance;
 
 		beforeEach(() => {
-			instance = new OperationalError();
+			instance = new BaseError();
 		});
 
 		describe('.code', () => {
@@ -37,26 +37,20 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 
 		describe('.isOperational', () => {
-			it('is set to true', () => {
-				expect(instance.isOperational).toStrictEqual(true);
+			it('is set to false', () => {
+				expect(instance.isOperational).toStrictEqual(false);
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to a default value', () => {
-				expect(instance.message).toStrictEqual('An operational error occurred');
+				expect(instance.message).toStrictEqual('An error occurred');
 			});
 		});
 
 		describe('.name', () => {
-			it('is set to "OperationalError"', () => {
-				expect(instance.name).toStrictEqual('OperationalError');
-			});
-		});
-
-		describe('.relatesToSystems', () => {
-			it('is set to an empty array', () => {
-				expect(instance.relatesToSystems).toStrictEqual([]);
+			it('is set to "BaseError"', () => {
+				expect(instance.name).toStrictEqual('BaseError');
 			});
 		});
 
@@ -67,29 +61,11 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 	});
 
-	describe('new OperationalError(message)', () => {
+	describe('new BaseError(message)', () => {
 		let instance;
 
 		beforeEach(() => {
-			instance = new OperationalError('mock message');
-		});
-
-		describe('.code', () => {
-			it('is set to "UNKNOWN"', () => {
-				expect(instance.code).toStrictEqual('UNKNOWN');
-			});
-		});
-
-		describe('.data', () => {
-			it('is set to an empty object', () => {
-				expect(instance.data).toEqual({});
-			});
-		});
-
-		describe('.isOperational', () => {
-			it('is set to true', () => {
-				expect(instance.isOperational).toStrictEqual(true);
-			});
+			instance = new BaseError('mock message');
 		});
 
 		describe('.message', () => {
@@ -97,27 +73,9 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 				expect(instance.message).toStrictEqual('mock message');
 			});
 		});
-
-		describe('.name', () => {
-			it('is set to "OperationalError"', () => {
-				expect(instance.name).toStrictEqual('OperationalError');
-			});
-		});
-
-		describe('.relatesToSystems', () => {
-			it('is set to an empty array', () => {
-				expect(instance.relatesToSystems).toStrictEqual([]);
-			});
-		});
-
-		describe('.cause', () => {
-			it('is set to null', () => {
-				expect(instance.cause).toStrictEqual(null);
-			});
-		});
 	});
 
-	describe('new OperationalError(data)', () => {
+	describe('new BaseError(data)', () => {
 		let instance;
 		let rootCauseErrorInstance;
 
@@ -126,17 +84,16 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 
 			rootCauseErrorInstance = new Error('mock root cause error message');
 
-			instance = new OperationalError({
+			instance = new BaseError({
 				message: 'mock message',
 				code: 'mock_code',
 				extra: 'mock extra data',
-				relatesToSystems: ['system-one', 'system-two'],
 				cause: rootCauseErrorInstance
 			});
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(OperationalError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(BaseError.normalizeErrorCode).toBeCalledWith('mock_code');
 		});
 
 		describe('.code', () => {
@@ -154,8 +111,8 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 
 		describe('.isOperational', () => {
-			it('is set to true', () => {
-				expect(instance.isOperational).toStrictEqual(true);
+			it('is set to false', () => {
+				expect(instance.isOperational).toStrictEqual(false);
 			});
 		});
 
@@ -166,26 +123,8 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 
 		describe('.name', () => {
-			it('is set to "OperationalError"', () => {
-				expect(instance.name).toStrictEqual('OperationalError');
-			});
-		});
-
-		describe('.relatesToSystems', () => {
-			it('is an array', () => {
-				expect(instance.relatesToSystems).toStrictEqual([
-					'system-one',
-					'system-two'
-				]);
-			});
-
-			it('will store a string as an array', () => {
-				let singleSystemError = new OperationalError({
-					relatesToSystems: 'system-one'
-				});
-				expect(singleSystemError.relatesToSystems).toStrictEqual([
-					'system-one'
-				]);
+			it('is set to "BaseError"', () => {
+				expect(instance.name).toStrictEqual('BaseError');
 			});
 		});
 
@@ -196,19 +135,19 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 	});
 
-	describe('new OperationalError(message, data)', () => {
+	describe('new BaseError(message, data)', () => {
 		let instance;
 
 		beforeEach(() => {
 			jest.spyOn(BaseError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 
-			instance = new OperationalError('mock message', {
+			instance = new BaseError('mock message', {
 				code: 'mock_code'
 			});
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(OperationalError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(BaseError.normalizeErrorCode).toBeCalledWith('mock_code');
 		});
 
 		describe('.code', () => {
@@ -225,10 +164,18 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 	});
 
 	describe('isErrorMarkedAsOperational(error)', () => {
+		describe('when called with a BaseError instance', () => {
+			it('returns `false`', () => {
+				expect(
+					BaseError.isErrorMarkedAsOperational(new BaseError('mock message'))
+				).toStrictEqual(false);
+			});
+		});
+
 		describe('when called with an OperationalError instance', () => {
 			it('returns `true`', () => {
 				expect(
-					OperationalError.isErrorMarkedAsOperational(
+					BaseError.isErrorMarkedAsOperational(
 						new OperationalError('mock message')
 					)
 				).toStrictEqual(true);
@@ -238,7 +185,7 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		describe('when called with an Error instance', () => {
 			it('returns `false`', () => {
 				expect(
-					OperationalError.isErrorMarkedAsOperational(new Error('mock message'))
+					BaseError.isErrorMarkedAsOperational(new Error('mock message'))
 				).toStrictEqual(false);
 			});
 		});
@@ -247,24 +194,22 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 			it('returns `true`', () => {
 				const error = new Error('mock message');
 				error.isOperational = true;
-				expect(
-					OperationalError.isErrorMarkedAsOperational(error)
-				).toStrictEqual(true);
+				expect(BaseError.isErrorMarkedAsOperational(error)).toStrictEqual(true);
 			});
 		});
 	});
 
 	describe('.normalizeErrorCode(code)', () => {
 		it('uppercases and normalizes spacing in the code', () => {
-			expect(
-				OperationalError.normalizeErrorCode(' ABC-123_foo   bar ')
-			).toStrictEqual('ABC_123_FOO_BAR');
+			expect(BaseError.normalizeErrorCode(' ABC-123_foo   bar ')).toStrictEqual(
+				'ABC_123_FOO_BAR'
+			);
 		});
 	});
 
 	describe('.default', () => {
 		it('aliases the module exports', () => {
-			expect(OperationalError.default).toStrictEqual(OperationalError);
+			expect(BaseError.default).toStrictEqual(BaseError);
 		});
 	});
 });

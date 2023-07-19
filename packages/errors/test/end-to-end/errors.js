@@ -1,4 +1,5 @@
 const {
+	BaseError,
 	DataStoreError,
 	HttpError,
 	OperationalError,
@@ -7,6 +8,22 @@ const {
 } = require('../../lib');
 
 module.exports = {
+	// BaseError tests
+	BaseError: new BaseError(),
+	'BaseError with message': new BaseError('mock message'),
+	'BaseError with code': new BaseError({
+		code: 'mock_code'
+	}),
+	'BaseError with message and code': new BaseError('mock message', {
+		code: 'mock_code'
+	}),
+	'BaseError with cause': new BaseError({
+		cause: new Error('mock cause')
+	}),
+	'BaseError with extra data': new BaseError({
+		mockData: 123
+	}),
+
 	// DataStoreError tests
 	DataStoreError: new DataStoreError(),
 	'DataStoreError with message': new DataStoreError('mock message'),

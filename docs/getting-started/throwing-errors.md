@@ -108,7 +108,7 @@ function uppercaseAll(array) {
 
 In this case `OperationalError` is **not** the correct error type to use. This is because you, as the publisher of this library, do not know whether a consuming application actually knows how to recover from this error. You can't assume that an error like this is operational – it could easily be a programmer error.
 
-In the above case, you should use JavaScript's built-in errors so that the engineers who maintain the consuming application can catch them and decide for themselves whether they're operational or not:
+In the above case, you should use JavaScript's built-in errors (or Reliability Kit's [BaseError class](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#baseerror)) so that the engineers who maintain the consuming application can catch them and decide for themselves whether they're operational or not:
 
 ```js
 function uppercaseAll(array) {

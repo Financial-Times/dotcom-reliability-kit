@@ -1,5 +1,73 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`@dotcom-reliability-kit/errors end-to-end BaseError matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": false,
+  "message": "An error occurred",
+  "name": "BaseError",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end BaseError with cause matches the snapshot 1`] = `
+{
+  "cause": [Error: mock cause],
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": false,
+  "message": "An error occurred",
+  "name": "BaseError",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end BaseError with code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": false,
+  "message": "An error occurred",
+  "name": "BaseError",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end BaseError with extra data matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {
+    "mockData": 123,
+  },
+  "isOperational": false,
+  "message": "An error occurred",
+  "name": "BaseError",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end BaseError with message and code matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "MOCK_CODE",
+  "data": {},
+  "isOperational": false,
+  "message": "mock message",
+  "name": "BaseError",
+}
+`;
+
+exports[`@dotcom-reliability-kit/errors end-to-end BaseError with message matches the snapshot 1`] = `
+{
+  "cause": null,
+  "code": "UNKNOWN",
+  "data": {},
+  "isOperational": false,
+  "message": "mock message",
+  "name": "BaseError",
+}
+`;
+
 exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError matches the snapshot 1`] = `
 {
   "cause": null,

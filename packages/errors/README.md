@@ -13,6 +13,7 @@ A suite of error classes which help you throw the most appropriate error in any 
     * [`DataStoreError`](#datastoreerror)
     * [`UpstreamServiceError`](#upstreamserviceerror)
     * [`UserInputError`](#userinputerror)
+    * [`BaseError`](#baseerror)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -197,6 +198,25 @@ You can alternatively construct a user input error with a data object. You can u
 throw new UserInputError({
     code: 'REGISTRATION_INFO_INVALID',
     message: 'An invalid email address was input'
+});
+```
+
+### `BaseError`
+
+Our getting started guide talks about [Operational vs Programmer errors](../../docs/getting-started/throwing-errors.md#types-of-error). The rest of the errors in this library provide operational errors, but they all extend a base class named `BaseError`. This class offers up some of the conveniences of `OperationalError` but it's marked as non-operational:
+
+```js
+const error = new BaseError('This is an error');
+error.isOperational === false; // true;
+```
+
+This allows you to use Reliability Kit errors in library code, where it doesn't make sense to throw an operational error. The `code`, `message`, and `cause` properties work in the same way as an `OperationalError`:
+
+```js
+throw new BaseError({
+    message: 'example message',
+    code: 'EXAMPLE_CODE',
+    cause: new TypeError('example cause')
 });
 ```
 

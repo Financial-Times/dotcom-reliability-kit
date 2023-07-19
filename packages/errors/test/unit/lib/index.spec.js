@@ -1,5 +1,6 @@
 const errors = require('../../..');
 
+jest.mock('../../../lib/base-error', () => 'mock-base-error');
 jest.mock('../../../lib/data-store-error', () => 'mock-data-store-error');
 jest.mock('../../../lib/http-error', () => 'mock-http-error');
 jest.mock('../../../lib/operational-error', () => 'mock-operational-error');
@@ -13,6 +14,12 @@ describe('@dotcom-reliability-kit/errors', () => {
 	describe('.default', () => {
 		it('aliases the module exports', () => {
 			expect(errors.default).toStrictEqual(errors);
+		});
+	});
+
+	describe('.BaseError', () => {
+		it('aliases lib/base-error', () => {
+			expect(errors.BaseError).toStrictEqual('mock-base-error');
 		});
 	});
 

@@ -1,3 +1,4 @@
+exports.BaseError = require('./base-error');
 exports.DataStoreError = require('./data-store-error');
 exports.HttpError = require('./http-error');
 exports.OperationalError = require('./operational-error');
