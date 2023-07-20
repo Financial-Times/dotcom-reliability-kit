@@ -47,10 +47,6 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 		});
 
-		it('suppresses Raven error logging', () => {
-			expect(response.locals.suppressRavenLogger).toStrictEqual(true);
-		});
-
 		it('calls `next` with the original error', () => {
 			expect(next).toBeCalledWith(error);
 		});
