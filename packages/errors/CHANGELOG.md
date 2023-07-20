@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v2.1.1...errors-v2.2.0) (2023-07-20)
+
+
+### Features
+
+* add a BaseError class ([62caf4e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/62caf4e9b25a71f600b0e6efd0597fe51b197f63))
+
 ## [2.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v2.1.0...errors-v2.1.1) (2023-07-13)
 
 

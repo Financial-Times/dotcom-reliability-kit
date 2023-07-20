@@ -54,6 +54,13 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^2.1.0 to ^2.1.1
 
+## [2.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v2.1.1...crash-handler-v2.1.2) (2023-07-20)
+
+
+### Bug Fixes
+
+* avoid double-registering Crash Handler ([e18c8b3](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e18c8b34adefa0ff3dfe38db9c4261ca77ae86de))
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v2.0.1...crash-handler-v2.1.0) (2023-05-02)
 
 
