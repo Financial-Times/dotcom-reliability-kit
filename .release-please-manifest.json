@@ -1,7 +1,7 @@
 {
   "packages/app-info": "2.1.0",
-  "packages/crash-handler": "2.1.1",
-  "packages/errors": "2.1.1",
+  "packages/crash-handler": "2.1.2",
+  "packages/errors": "2.2.0",
   "packages/log-error": "2.1.1",
   "packages/logger": "2.2.5",
   "packages/middleware-log-errors": "2.1.1",
