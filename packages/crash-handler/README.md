@@ -45,9 +45,6 @@ registerCrashHandler();
 
 If an error is thrown which will crash your application, error information will be logged and then the process will exit with the value of `process.exitCode` or `1`.
 
-> **Warning**
-> This function will not work as expected if your app is using [n-raven](https://github.com/Financial-Times/n-raven) or n-express without [the `withSentry` option](https://github.com/Financial-Times/n-express#optional) set to `false`. This is because the way we set up Sentry prevents registering any other uncaught exception handlers. You'll need to [migrate away from Sentry](#migrating-from-sentry) to use this module.
-
 ### Configuration options
 
 Config options can be passed into the `registerCrashHandler` function as an object with any of the keys below.

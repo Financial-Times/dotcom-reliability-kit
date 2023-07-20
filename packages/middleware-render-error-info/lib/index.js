@@ -20,10 +20,6 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
  */
 function createErrorRenderingMiddleware(options = {}) {
 	// Only render the error info page if we're not in production.
-	// Note: if we ever want to get this working in production, we
-	// will need to make this middleware play nicely with
-	// Sentry/n-raven – right now it will render a page and skip
-	// any later middleware so Sentry will never run.
 	const performRendering = appInfo.environment === 'development';
 
 	return function errorRenderingMiddleware(error, request, response, next) {
