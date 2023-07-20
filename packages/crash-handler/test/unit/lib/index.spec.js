@@ -1,9 +1,13 @@
 const registerCrashHandler = require('../../../lib');
 
 jest.mock('@dotcom-reliability-kit/log-error', () => ({
+	logHandledError: jest.fn(),
 	logUnhandledError: jest.fn()
 }));
-const { logUnhandledError } = require('@dotcom-reliability-kit/log-error');
+const {
+	logHandledError,
+	logUnhandledError
+} = require('@dotcom-reliability-kit/log-error');
 
 describe('@dotcom-reliability-kit/crash-handler', () => {
 	describe('.default', () => {
@@ -18,7 +22,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		beforeEach(() => {
 			mockProcess = {
 				exit: jest.fn(),
-				on: jest.fn()
+				on: jest.fn(),
+				listeners: jest.fn().mockReturnValue([])
 			};
 
 			registerCrashHandler({
@@ -105,7 +110,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			beforeEach(() => {
 				originalProcess = global.process;
 				global.process = mockGlobalProcess = {
-					on: jest.fn()
+					on: jest.fn(),
+					listeners: jest.fn().mockReturnValue([])
 				};
 
 				registerCrashHandler({});
@@ -131,7 +137,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			beforeEach(() => {
 				originalProcess = global.process;
 				global.process = mockGlobalProcess = {
-					on: jest.fn()
+					on: jest.fn(),
+					listeners: jest.fn().mockReturnValue([])
 				};
 
 				registerCrashHandler();
@@ -147,6 +154,31 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 					'uncaughtException',
 					expect.any(Function)
 				);
+			});
+		});
+
+		describe('when the procss already has an uncaughtExceptionHandler', () => {
+			beforeEach(() => {
+				mockProcess.on.mockReset();
+				mockProcess.listeners.mockReturnValue(['mockHandler']);
+				logHandledError.mockReset();
+				registerCrashHandler({
+					process: mockProcess,
+					logger: 'mock-logger'
+				});
+			});
+
+			it('does not bind a handler to the process `uncaughtException` event', () => {
+				expect(mockProcess.on).toBeCalledTimes(0);
+			});
+
+			it('logs a warning that the Crash Handler has not been registered', () => {
+				expect(logHandledError).toBeCalledTimes(1);
+				const call = logHandledError.mock.calls[0][0];
+				expect(call).toBeInstanceOf(Object);
+				expect(call.logger).toStrictEqual('mock-logger');
+				expect(call.error).toBeInstanceOf(Error);
+				expect(call.error.code).toStrictEqual('CRASH_HANDLER_NOT_REGISTERED');
 			});
 		});
 	});
