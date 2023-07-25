@@ -493,6 +493,18 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				it(`calls .log() with a level of '${levelMethod}'`, () => {
 					expect(logger.log).toBeCalledTimes(1);
 				});
+
+				describe(`when the method is detatched from the logger instance`, () => {
+					beforeEach(() => {
+						logger.log.mockReset();
+						const detatchedLogMethod = logger[levelMethod];
+						detatchedLogMethod('mock message', { mockData: true });
+					});
+
+					it(`calls .log() with a level of '${levelMethod}'`, () => {
+						expect(logger.log).toBeCalledTimes(1);
+					});
+				});
 			});
 		}
 
