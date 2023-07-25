@@ -6,6 +6,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.2.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.5...logger-v2.2.6) (2023-07-25)
+
+
+### Bug Fixes
+
+* allow log methods to be called without `this` ([28f3cd7](https://github.com/Financial-Times/dotcom-reliability-kit/commit/28f3cd7992b48a431de3123d8f71fb5b5745128f))
+
 ## [2.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.4...logger-v2.2.5) (2023-07-10)
 
 
