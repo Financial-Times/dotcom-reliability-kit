@@ -86,6 +86,13 @@ const logLevelToTransportMethodMap = {
 };
 
 /**
+ * A list of supported log levels.
+ *
+ * @type {string[]}
+ */
+const logLevels = Object.keys(logLevelToTransportMethodMap);
+
+/**
  * Whether log prettification is available. This is based
  * on two things: the pino-pretty module being installed
  * in the application, and the `NODE_ENV` environment
@@ -220,6 +227,14 @@ class Logger {
 			}
 			this.#logTransport = pino(pinoOptions);
 			this.#logTransport.level = this.#logLevel;
+		}
+
+		// Bind the log level methods so that they can be used without
+		// the `this` context, e.g. as event handlers
+		for (const logLevel of logLevels) {
+			if (typeof this[logLevel] === 'function') {
+				this[logLevel] = this[logLevel].bind(this);
+			}
 		}
 	}
 
