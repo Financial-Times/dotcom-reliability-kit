@@ -15,14 +15,16 @@ const legacyMask = require('./transforms/legacy-mask');
  *     Built-in log transforms.
  */
 
-/**
- * @type {Logger & DefaultLogger}
- */
-module.exports = new Logger();
+/** @type {Transforms} */
+const transforms = { legacyMask };
 
-module.exports.Logger = Logger;
+/** @type {Logger & DefaultLogger} */
+const defaultLogger = Object.assign(new Logger(), {
+	Logger,
+	transforms
+});
 
-module.exports.transforms = { legacyMask };
+module.exports = defaultLogger;
 
 // @ts-ignore
 module.exports.default = module.exports;
