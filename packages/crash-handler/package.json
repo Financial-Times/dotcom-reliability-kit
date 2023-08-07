@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/crash-handler",
-  "version": "2.1.2",
+  "version": "3.0.0",
   "description": "A method to bind an uncaught exception handler to ensure that fatal application errors are logged",
   "repository": {
     "type": "git",
@@ -16,6 +16,6 @@
   },
   "main": "lib",
   "dependencies": {
-    "@dotcom-reliability-kit/log-error": "^2.1.1"
+    "@dotcom-reliability-kit/log-error": "^3.0.0"
   }
 }

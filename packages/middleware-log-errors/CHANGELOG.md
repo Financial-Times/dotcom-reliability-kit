@@ -66,6 +66,30 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^2.1.0 to ^2.1.1
 
+## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v2.1.1...middleware-log-errors-v3.0.0) (2023-08-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove Sentry workarounds
+* switch to Reliability Kit logger
+
+### Features
+
+* switch to Reliability Kit logger ([b51f1ed](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b51f1ed510ae2754676025630e1bf82283adbf77))
+
+
+### Bug Fixes
+
+* remove Sentry workarounds ([2d69064](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2d69064920c35d7bd65c7e88c8f7cf066aa2589c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^2.1.1 to ^3.0.0
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v2.0.1...middleware-log-errors-v2.1.0) (2023-05-02)
 
 
