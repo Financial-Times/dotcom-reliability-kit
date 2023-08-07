@@ -48,6 +48,26 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-request bumped from ^2.1.0 to ^2.2.0
 
+## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v2.1.1...log-error-v3.0.0) (2023-08-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* log unhandled errors with a level of "fatal"
+* switch to Reliability Kit logger
+
+### Features
+
+* log unhandled errors with a level of "fatal" ([7dfb2a6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/7dfb2a67d2b46df267584dcbceff5a6c05ffd9c1))
+* switch to Reliability Kit logger ([b51f1ed](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b51f1ed510ae2754676025630e1bf82283adbf77))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/logger bumped from ^2.2.6 to ^2.2.7
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v2.0.1...log-error-v2.1.0) (2023-05-02)
 
 
