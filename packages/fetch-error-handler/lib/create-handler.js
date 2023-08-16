@@ -72,7 +72,11 @@ function createFetchErrorHandler(options = {}) {
 				try {
 					const url = new URL(response.url);
 					responseHostName = url.hostname;
-				} catch (_) {}
+				} catch (_) {
+					// We ignore this error because having a valid URL isn't essential – it
+					// just helps debug if we do have one. If someone's using a weird non-standard
+					// `fetch` implementation or mocking then this error could be fired
+				}
 			}
 
 			// Some common error options which we'll include in any that are thrown
