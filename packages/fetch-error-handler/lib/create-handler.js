@@ -32,7 +32,7 @@ const {
 /* eslint-enable jsdoc/valid-types */
 
 /**
- * Create an fetch error handler function.
+ * Create a fetch error handler function.
  *
  * @param {ErrorHandlerOptions} [options]
  *     Configuration options for the handler.
