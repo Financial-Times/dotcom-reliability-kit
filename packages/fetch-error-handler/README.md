@@ -128,7 +128,7 @@ Config options can be passed into the `createFetchErrorHandler` function to chan
 
 #### `options.upstreamSystemCode`
 
-Attribute any fetch errors to a given [Biz Ops system](https://biz-ops.in.ft.com/list/Systems). This allows you to easily spot in your logs when an upstream system is the cause of an error. This must be an `String` and a valid [system code](https://tech.in.ft.com/tech-topics/operability/biz-ops/unique-identifiers).
+Attribute any fetch errors to a given [Biz Ops system](https://biz-ops.in.ft.com/list/Systems). This allows you to easily spot in your logs when an upstream system is the cause of an error. This must be a `String` and a valid [system code](https://tech.in.ft.com/tech-topics/operability/biz-ops/unique-identifiers).
 
 ```js
 const handleFetchErrors = createFetchErrorHandler({
