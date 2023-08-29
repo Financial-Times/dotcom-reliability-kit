@@ -72,7 +72,7 @@ function logError({
 
 	try {
 		const logMethod = logger[level] || logger.error;
-		logMethod(logData);
+		logMethod.call(logger, logData);
 	} catch (/** @type {any} */ loggingError) {
 		// We allow use of `console.log` here to ensure that critical
 		// logging failures are caught and logged. This ensures that we
