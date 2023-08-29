@@ -1,13 +1,13 @@
 {
   "packages/app-info": "2.1.0",
-  "packages/crash-handler": "3.0.0",
+  "packages/crash-handler": "3.0.1",
   "packages/errors": "2.2.0",
   "packages/eslint-config": "2.0.1",
   "packages/fetch-error-handler": "0.1.0",
-  "packages/log-error": "3.0.0",
-  "packages/logger": "2.2.7",
-  "packages/middleware-log-errors": "3.0.0",
-  "packages/middleware-render-error-info": "3.0.0",
+  "packages/log-error": "3.0.1",
+  "packages/logger": "2.2.8",
+  "packages/middleware-log-errors": "3.0.1",
+  "packages/middleware-render-error-info": "3.0.1",
   "packages/serialize-error": "2.1.0",
   "packages/serialize-request": "2.2.0"
 }

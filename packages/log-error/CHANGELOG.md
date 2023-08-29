@@ -48,6 +48,20 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-request bumped from ^2.1.0 to ^2.2.0
 
+## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v3.0.0...log-error-v3.0.1) (2023-08-29)
+
+
+### Bug Fixes
+
+* stop requiring bound log methods ([58c15e7](https://github.com/Financial-Times/dotcom-reliability-kit/commit/58c15e7ffae25efb8d0522b00490120e45432304))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/logger bumped from ^2.2.7 to ^2.2.8
+
 ## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v2.1.1...log-error-v3.0.0) (2023-08-07)
 
 
