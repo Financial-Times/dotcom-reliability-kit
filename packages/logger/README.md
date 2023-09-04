@@ -29,6 +29,7 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
       * [Order of precedence](#order-of-precedence)
     * [Local development usage](#local-development-usage)
     * [Production usage](#production-usage)
+    * [Testing](#testing)
     * [Compatibility](#compatibility)
       * [Migrating from n-logger](./docs/migration.md#migrating-from-n-logger)
       * [Migrating from n-mask-logger](./docs/migration.md#migrating-from-n-mask-logger)
@@ -567,6 +568,26 @@ To get formatted and colourised logs locally, you need to meet two conditions:
 ### Production usage
 
 Using `@dotcom-reliability-kit/logger` in production requires that your application can handle logs to `stdout` and sends these logs to somewhere more permanent. On Heroku this means you're required to have [migrated to Log Drains](https://financialtimes.atlassian.net/wiki/spaces/DS/pages/7883555001/Migrating+an+app+to+Heroku+log+drains). On AWS Lambda it means you must be sending logs to CloudWatch ([see tech hub documentation](https://tech.in.ft.com/tech-topics/logging/amazon-cloudwatch-logs#cloudformation-code-for-forwarding-lambda-logs-to-splunk)).
+
+### Testing
+
+If you're using [Jest](https://jestjs.io/) to test your code, you may encounter issues with the tests not exiting when you're mocking `@dotcom-reliability-kit/logger`. You can't rely on Jest's automatic mocking:
+
+```js
+jest.mock('@dotcom-reliability-kit/logger');
+```
+
+This is because, in order to mock the logger, Jest will still load the original module which creates a fully fledged logger with bindings to `process.stdout`. You can get around this by providing your own manual mock logger, either as a second argument to `jest.mock` or as a file in `__mocks__/@dotcom-reliability-kit/logger.js`. E.g.
+
+```js
+jest.mock('@dotcom-reliability-kit/logger', () => ({
+    debug: jest.fn(),
+    error: jest.fn(),
+    fatal: jest.fn(),
+    info: jest.fn(),
+    warn: jest.fn()
+}));
+```
 
 ### Compatibility
 
