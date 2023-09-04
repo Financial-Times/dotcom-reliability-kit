@@ -43,7 +43,7 @@
     "lint-staged": "^14.0.0",
     "prettier": "^3.0.1",
     "release-please": "^15.12.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.2.2"
   },
   "engines": {
     "node": "16.x || 18.x || 20.x",
