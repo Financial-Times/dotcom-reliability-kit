@@ -48,6 +48,6 @@ const sharp = require('sharp');
 		console.log(`✅  ${name}: done\n`);
 	}
 })().catch((error) => {
-	console.error(error.message);
+	console.error({ cause: error });
 	process.exitCode = 1;
 });

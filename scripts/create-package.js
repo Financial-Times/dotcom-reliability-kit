@@ -99,6 +99,6 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 		JSON.stringify(releasePleaseManifest, null, '\t')
 	);
 })().catch((error) => {
-	console.error(error.message);
+	console.error({ cause: error });
 	process.exitCode = 1;
 });
