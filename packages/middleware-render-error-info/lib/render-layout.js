@@ -1,5 +1,5 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
-const fs = require('fs');
+const fs = require('node:fs');
 
 const buildServiceBaseUrl = 'https://www.ft.com/__origami/service/build/v3';
 const buildServiceComponents = [

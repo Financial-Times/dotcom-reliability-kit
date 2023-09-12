@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('node:path');
 
 // This package relies on Heroku and AWS Lambda environment variables.
 // Documentation for these variables is available here:
