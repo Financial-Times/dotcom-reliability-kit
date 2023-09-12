@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 
-const { mkdir, readFile, writeFile } = require('fs/promises');
-const path = require('path');
+const { mkdir, readFile, writeFile } = require('node:fs/promises');
+const path = require('node:path');
 const { optimize: optimizeSvg } = require('svgo');
 const sharp = require('sharp');
 

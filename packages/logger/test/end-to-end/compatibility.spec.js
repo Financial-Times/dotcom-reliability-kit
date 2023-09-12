@@ -1,5 +1,5 @@
 const cleanLogForTesting = require('./helpers/clean-log-for-testing');
-const { exec } = require('child_process');
+const { exec } = require('node:child_process');
 const findLogWithPropertyValue = require('./helpers/find-log-with-property-value');
 const testCases = require('./compatibility-test-cases');
 const splitAndParseJsonLogs = require('./helpers/split-and-parse-json-logs');
