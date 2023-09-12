@@ -30,6 +30,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		appInfo.region = 'mock-region';
 		appInfo.releaseDate = 'mock-release-date';
 		appInfo.systemCode = 'mock-system-code';
+		appInfo.processType = 'mock-process-type';
 	});
 
 	afterEach(() => {
@@ -80,7 +81,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					name: 'mock-system-code',
 					nodeVersion: process.versions.node,
 					region: 'mock-region',
-					releaseDate: 'mock-release-date'
+					releaseDate: 'mock-release-date',
+					processType: 'mock-process-type'
 				}
 			});
 		});
@@ -115,7 +117,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: null,
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -154,7 +157,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -187,7 +191,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -215,7 +220,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -243,7 +249,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -279,7 +286,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -324,7 +332,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 							name: 'mock-system-code',
 							nodeVersion: process.versions.node,
 							region: 'mock-region',
-							releaseDate: 'mock-release-date'
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
 						},
 						request: 'mock-serialized-request'
 					})
@@ -383,7 +392,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					name: 'mock-system-code',
 					nodeVersion: process.versions.node,
 					region: 'mock-region',
-					releaseDate: 'mock-release-date'
+					releaseDate: 'mock-release-date',
+					processType: 'mock-process-type'
 				}
 			});
 		});
@@ -421,7 +431,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -454,7 +465,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -482,7 +494,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -510,7 +523,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -546,7 +560,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -591,7 +606,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 							name: 'mock-system-code',
 							nodeVersion: process.versions.node,
 							region: 'mock-region',
-							releaseDate: 'mock-release-date'
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
 						},
 						request: 'mock-serialized-request'
 					})
@@ -650,7 +666,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					name: 'mock-system-code',
 					nodeVersion: process.versions.node,
 					region: 'mock-region',
-					releaseDate: 'mock-release-date'
+					releaseDate: 'mock-release-date',
+					processType: 'mock-process-type'
 				}
 			});
 		});
@@ -688,7 +705,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -721,7 +739,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -749,7 +768,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -777,7 +797,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -813,7 +834,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -848,7 +870,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
-						releaseDate: 'mock-release-date'
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
 					}
 				});
 			});
@@ -893,7 +916,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 							name: 'mock-system-code',
 							nodeVersion: process.versions.node,
 							region: 'mock-region',
-							releaseDate: 'mock-release-date'
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
 						},
 						request: 'mock-serialized-request'
 					})

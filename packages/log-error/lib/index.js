@@ -63,7 +63,8 @@ function logError({
 			name: appInfo.systemCode,
 			nodeVersion: process.versions.node,
 			region: appInfo.region,
-			releaseDate: appInfo.releaseDate
+			releaseDate: appInfo.releaseDate,
+			processType: appInfo.processType
 		}
 	};
 	if (request) {
