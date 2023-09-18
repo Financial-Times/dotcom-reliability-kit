@@ -140,6 +140,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 		});
 
 		describe('fetchErrorHandler(responsePromise)', () => {
+			let mockError;
 			let mockResponse;
 			let resolvedValue;
 
@@ -165,6 +166,175 @@ describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 						await fetchErrorHandler(Promise.resolve(mockResponse));
 					} catch (error) {
 						expect(error).toBeInstanceOf(Error);
+					}
+				});
+			});
+
+			describe('when the promise rejects', () => {
+				it('rejects with an error', async () => {
+					expect.assertions(1);
+					try {
+						mockError = new Error('mock fetch error');
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a DNS error', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock DNS error'), {
+							code: 'ENOTFOUND'
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('OperationalError');
+						expect(error.code).toStrictEqual('FETCH_DNS_LOOKUP_ERROR');
+						expect(error.message).toStrictEqual('Cound not resolve DNS entry');
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a DNS error that has a hostname', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock DNS error'), {
+							code: 'ENOTFOUND',
+							hostname: 'mockhost'
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.message).toStrictEqual(
+							'Cound not resolve DNS entry for host mockhost'
+						);
+					}
+				});
+			});
+
+			describe('when the promise rejects with an error that has a DNS error as the cause', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock outer error'), {
+							cause: Object.assign(new Error('mock DNS error'), {
+								code: 'ENOTFOUND',
+								hostname: 'mockhost'
+							})
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('OperationalError');
+						expect(error.code).toStrictEqual('FETCH_DNS_LOOKUP_ERROR');
+						expect(error.message).toStrictEqual(
+							'Cound not resolve DNS entry for host mockhost'
+						);
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a abort error', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock abort error'), {
+							name: 'AbortError'
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('OperationalError');
+						expect(error.code).toStrictEqual('FETCH_ABORT_ERROR');
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a timeout error', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock timeout error'), {
+							name: 'TimeoutError'
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('OperationalError');
+						expect(error.code).toStrictEqual('FETCH_TIMEOUT_ERROR');
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a fetch request-timeout error', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock timeout error'), {
+							name: 'FetchError',
+							type: 'request-timeout'
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('OperationalError');
+						expect(error.code).toStrictEqual('FETCH_TIMEOUT_ERROR');
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a socket error', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock socket error'), {
+							code: 'ECONNRESET'
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('UpstreamServiceError');
+						expect(error.code).toStrictEqual('FETCH_SOCKET_HANGUP_ERROR');
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a socket error as the cause', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock error'), {
+							cause: Object.assign(new Error('mock socket error'), {
+								code: 'ECONNRESET'
+							})
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('UpstreamServiceError');
+						expect(error.code).toStrictEqual('FETCH_SOCKET_HANGUP_ERROR');
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when the promise rejects with a SocketError instance as the cause', () => {
+				it('rejects with an augmented error', async () => {
+					expect.hasAssertions();
+					try {
+						mockError = Object.assign(new Error('mock error'), {
+							cause: Object.assign(new Error('mock socket error'), {
+								name: 'SocketError'
+							})
+						});
+						await fetchErrorHandler(Promise.reject(mockError));
+					} catch (error) {
+						expect(error.name).toStrictEqual('UpstreamServiceError');
+						expect(error.code).toStrictEqual('FETCH_SOCKET_HANGUP_ERROR');
+						expect(error.cause).toStrictEqual(mockError);
 					}
 				});
 			});
