@@ -1,5 +1,6 @@
 const {
 	HttpError,
+	OperationalError,
 	UpstreamServiceError
 } = require('@dotcom-reliability-kit/errors');
 
@@ -47,9 +48,70 @@ function createFetchErrorHandler(options = {}) {
 	return async function handleFetchErrors(input) {
 		let response = input;
 
-		// If input is a promise, resolve it
-		if (input instanceof Promise) {
-			response = await input;
+		// If input is a promise, resolve it. We also handle
+		// more errors this way.
+		if (isPromise(input)) {
+			try {
+				response = await input;
+			} catch (/** @type {any} */ error) {
+				const errorCode = error?.code || error?.cause?.code;
+
+				// Handle DNS errors
+				if (errorCode === 'ENOTFOUND') {
+					const hostname = error?.hostname || error?.cause?.hostname;
+					const dnsLookupErrorMessage = `Cound not resolve DNS entry${
+						hostname ? ` for host ${hostname}` : ''
+					}`;
+					throw new OperationalError({
+						code: 'FETCH_DNS_LOOKUP_ERROR',
+						message: dnsLookupErrorMessage,
+						relatesToSystems,
+						cause: error
+					});
+				}
+
+				// Handle standardised abort and timeout errors
+				const abortErrorMessage =
+					'The fetch was aborted before the upstream service could respond';
+				if (error?.name === 'AbortError' || error?.name === 'TimeoutError') {
+					throw new OperationalError({
+						code:
+							error.name === 'AbortError'
+								? 'FETCH_ABORT_ERROR'
+								: 'FETCH_TIMEOUT_ERROR',
+						message: abortErrorMessage,
+						relatesToSystems,
+						cause: error
+					});
+				}
+
+				// Handle non-standardised timeout errors
+				if (error?.name === 'FetchError' && error?.type === 'request-timeout') {
+					throw new OperationalError({
+						code: 'FETCH_TIMEOUT_ERROR',
+						message: abortErrorMessage,
+						relatesToSystems,
+						cause: error
+					});
+				}
+
+				// Handle socket hangups
+				if (
+					errorCode === 'ECONNRESET' ||
+					error?.cause?.name === 'SocketError'
+				) {
+					throw new UpstreamServiceError({
+						code: 'FETCH_SOCKET_HANGUP_ERROR',
+						message: 'The connection to the upstream service was terminated',
+						relatesToSystems,
+						cause: error
+					});
+				}
+
+				// We don't know what to do with this error so
+				// we throw it as-is
+				throw error;
+			}
 		}
 
 		// Check whether the value we were given is a valid response object
@@ -121,6 +183,16 @@ function createFetchErrorHandler(options = {}) {
 
 		return response;
 	};
+}
+
+/**
+ * @param {any} value
+ *     The value to test.
+ * @returns {value is Promise}
+ *     Returns `true` if the value is a promise.
+ */
+function isPromise(value) {
+	return value instanceof Promise || typeof value?.then === 'function';
 }
 
 /**

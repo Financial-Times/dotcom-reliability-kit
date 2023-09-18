@@ -7,9 +7,15 @@ Properly handle fetch errors and avoid a lot of boilerplate in your app. This mo
 > This package is in beta and hasn't been tested extensively in production yet. Feel free to use, and any feedback is greatly appreciated.
 
   * [Usage](#usage)
+    * [Wrap the fetch function](#wrap-the-fetch-function)
+    * [Handle errors with `.then`](#handle-errors-with-then)
+    * [Handle the response object](#handle-the-response-object)
     * [Errors thrown](#errors-thrown)
       * [Client errors](#client-errors)
       * [Server errors](#server-errors)
+      * [DNS errors](#dns-errors)
+      * [Abort and timeout errors](#abort-and-timeout-errors)
+      * [Socket errors](#socket-errors)
       * [Unknown errors](#unknown-errors)
     * [Creating your own handler](#creating-your-own-handler)
     * [`createFetchErrorHandler` configuration options](#createfetcherrorhandler-configuration-options)
@@ -36,25 +42,40 @@ const { handleFetchErrors } = require('@dotcom-reliability-kit/fetch-error-handl
 
 You can use this function with any `fetch` call to throw appropriate errors based on the [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) that you get back.
 
-There are many ways to use it, as long as it is `await`ed and is called with either a `Response` object or a `Promise` that resolves to a `Response`. The function is asynchronous and resolves with the `Response` that it was called with:
+There are several ways to use it, as long as it is `await`ed and is called with either a `Response` object or a `Promise` that resolves to a `Response`.
+
+Some of the options below result in more errors being caught, you can weigh this up when implementing in your own code.
+
+In all of the APIs below, if the reponse `ok` property is `false`, i.e. when the status code is `400` or greater, then errors will be thrown.
+
+### Wrap the fetch function
+
+This is the recommended API as this will allow you to handle the most errors (even DNS and timeout errors) correctly:
 
 ```js
-// Pass the function into the `then` function of a `fetch`.
-// Note: this must be `then` and not `catch`
-const response = await fetch('https://httpbin.org/status/500').then(handleFetchErrors);
-
-// Wrap the fetch function. You can do this safely without
-// awaiting the fetch itself
 const response = await handleFetchErrors(
     fetch('https://httpbin.org/status/500')
 );
+```
 
-// Pass in a response manually:
+You **must not** `await` the `fetch` call itself if you want to handle DNS and timeout errors. This is safe to do and will not result in unhandled promise rejections – `handleFetchErrors` takes care of them all.
+
+### Handle errors with `.then`
+
+This API allows you to handle most errors based on the HTTP response, but it will not allow you to handle errors which occur _before_  a valid response is returned, e.g. DNS or timeout errors.
+
+```js
+const response = await fetch('https://httpbin.org/status/500').then(handleFetchErrors);
+```
+
+### Handle the response object
+
+This API is for when you already have an HTTP response object, but it will not allow you to handle errors which occur _before_  a valid response is returned, e.g. DNS or timeout errors.
+
+```js
 const response = await fetch('https://httpbin.org/status/500');
 await handleFetchErrors(response);
 ```
-
-If the reponse `ok` property is `false`, i.e. when the status code is `400` or greater, then errors will be thrown.
 
 ### Errors thrown
 
@@ -81,6 +102,42 @@ error.code // FETCH_SERVER_ERROR
 error.data.upstreamUrl // The URL that was fetched
 error.data.upstreamStatusCode // The status code that the URL responded with
 ```
+
+#### DNS errors
+
+If the hostname of the URL you fetched cannot be resolved, a DNS error will be thrown, it'll be an [`OperationalError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#operationalerror). This error will have the following properties to help you debug:
+
+```js
+error.code // FETCH_DNS_LOOKUP_ERROR
+error.cause // The underlying DNS error that was caught
+```
+
+> [!NOTE]  
+> This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
+
+#### Abort and timeout errors
+
+If the request times out or is aborted via [`AbortSignal`](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal), _or_ the non-standard `timeout` option in [node-fetch](https://github.com/node-fetch/node-fetch) is used, then we throw an [`OperationalError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#operationalerror). This error will have the following properties to help you debug:
+
+```js
+error.code // FETCH_ABORT_ERROR or FETCH_TIMEOUT_ERROR
+error.cause // The underlying abort or timeout error that was caught
+```
+
+> [!NOTE]  
+> This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
+
+#### Socket errors
+
+If the connection is closed early by the server then we throw an [`UpstreamServiceError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#upstreamserviceerror). This error will have the following properties to help you debug:
+
+```js
+error.code // FETCH_SOCKET_HANGUP_ERROR
+error.cause // The underlying socket error that was caught
+```
+
+> [!NOTE]  
+> This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
 
 #### Unknown errors
 
@@ -111,15 +168,7 @@ Create and use your own handler (the handler supports all the same usage methods
 const handleFetchErrors = createFetchErrorHandler({
     upstreamSystemCode: 'httpbin'
 });
-const response = await fetch('https://httpbin.org/status/500').then(handleFetchErrors);
-```
-
-If you want a custom handler just for one `fetch` call, then you can shorten the above example to:
-
-```js
-const response = await fetch('https://httpbin.org/status/500').then(createFetchErrorHandler({
-    upstreamSystemCode: 'httpbin'
-}))
+const response = await handleFetchErrors(fetch('https://httpbin.org/status/500'));
 ```
 
 ### `createFetchErrorHandler` configuration options
