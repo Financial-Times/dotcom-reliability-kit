@@ -46,7 +46,7 @@ There are several ways to use it, as long as it is `await`ed and is called with 
 
 Some of the options below result in more errors being caught, you can weigh this up when implementing in your own code.
 
-In all of the APIs below, if the reponse `ok` property is `false`, i.e. when the status code is `400` or greater, then errors will be thrown.
+In all of the APIs below, if the response `ok` property is `false`, i.e. when the status code is `400` or greater, then errors will be thrown.
 
 ### Wrap the fetch function
 
