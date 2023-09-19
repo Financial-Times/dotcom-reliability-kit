@@ -6,6 +6,18 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
+## [2.2.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.8...logger-v2.2.9) (2023-09-19)
+
+
+### Bug Fixes
+
+* bump pino from 8.15.0 to 8.15.1 ([2f3bfcb](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2f3bfcbdcd5a0e9c11013d47ec2424050a3923d3))
+
+
+### Documentation Changes
+
+* add a note on testing with Jest ([5a2d24c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5a2d24c78e1efe274b7f53d1877c8b386c91dbb5))
+
 ## [2.2.8](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.7...logger-v2.2.8) (2023-08-29)
 
 
