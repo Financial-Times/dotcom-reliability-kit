@@ -48,6 +48,20 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-request bumped from ^2.1.0 to ^2.2.0
 
+## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v3.0.1...log-error-v3.1.0) (2023-09-19)
+
+
+### Features
+
+* add processType property to error logger ([dee3f6c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/dee3f6ca005bec92cff346856031e8d7e67907bd))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/logger bumped from ^2.2.8 to ^2.2.9
+
 ## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v3.0.0...log-error-v3.0.1) (2023-08-29)
 
 
