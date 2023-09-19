@@ -238,7 +238,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 				});
 			});
 
-			describe('when the promise rejects with a abort error', () => {
+			describe('when the promise rejects with an abort error', () => {
 				it('rejects with an augmented error', async () => {
 					expect.hasAssertions();
 					try {
