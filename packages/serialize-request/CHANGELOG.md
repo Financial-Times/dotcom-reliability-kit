@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v2.2.0...serialize-request-v2.2.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* trim long request URLs ([72afa5d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/72afa5d8a533306b61ee89fb3f6b9bc2ab93eb26))
+
 ## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v2.1.0...serialize-request-v2.2.0) (2023-06-23)
 
 
