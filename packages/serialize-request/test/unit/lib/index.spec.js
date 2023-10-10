@@ -197,6 +197,19 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 		});
 
+		describe('when `request.url` is longer than 200 characters', () => {
+			beforeEach(() => {
+				request.url =
+					'/url-that-is-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-long';
+			});
+
+			it('casts the url to a string and truncates it', () => {
+				expect(serializeRequest(request)).toMatchObject({
+					url: '/url-that-is-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-ve [truncated]'
+				});
+			});
+		});
+
 		describe('when `request.headers` is undefined', () => {
 			beforeEach(() => {
 				delete request.headers;

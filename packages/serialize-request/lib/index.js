@@ -72,6 +72,14 @@ const DEFAULT_INCLUDED_HEADERS = [
 ];
 
 /**
+ * The maximum length of a URL, any longer than this will be truncated.
+ *
+ * @private
+ * @type {number}
+ */
+const URL_TRUNCATION_LENGTH = 200;
+
+/**
  * Serialize a request object so that it can be consistently logged or output as JSON.
  *
  * @public
@@ -121,9 +129,14 @@ function serializeRequest(request, options = {}) {
 		requestProperties.method = `${request.method}`.toUpperCase();
 	}
 
-	// If set, request URL is cast to a string
+	// If set, request URL is cast to a string and truncated to avoid
+	// us exceeding log event size limits
 	if (request.url) {
-		requestProperties.url = `${request.url}`;
+		let url = `${request.url}`;
+		if (url.length > URL_TRUNCATION_LENGTH) {
+			url = url.slice(0, URL_TRUNCATION_LENGTH) + ' [truncated]';
+		}
+		requestProperties.url = url;
 	}
 
 	// Serialize the headers
