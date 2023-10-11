@@ -22,6 +22,6 @@
     "entities": "^4.5.0"
   },
   "devDependencies": {
-    "@types/express": "^4.17.18"
+    "@types/express": "^4.17.19"
   }
 }
