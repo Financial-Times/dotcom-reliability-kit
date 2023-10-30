@@ -11,6 +11,7 @@ A utility to get application information (e.g. the system code) in a consistent 
     * [`appInfo.releaseVersion`](#appinforeleaseversion)
     * [`appInfo.systemCode`](#appinfosystemcode)
     * [`appInfo.processType`](#appinfoprocesstype)
+    * [`appInfo.cloudProvider](#appinfocloudprovider)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -76,6 +77,12 @@ For AWS Lambda, this is the name of the function, read from `process.env.AWS_LAM
 For Heroku, this is derived from the first part of `process.env.DYNO`, which is set to by Heroku, e.g. a dyno called `web.1` will have `processType` set to `web`. The process types in an application are defined by the application's `Procfile`.
 
 If neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.DYNO` are set, this property will be `null`
+
+### `appInfo.cloudProvider`
+
+Get the type of cloud provider which is set to either Heroku or AWS depending on where we think the system is hosted.
+
+This is derived from some environment variables which we have high confidence are defined by only Heroku or AWS/Lambda
 
 ## Contributing
 

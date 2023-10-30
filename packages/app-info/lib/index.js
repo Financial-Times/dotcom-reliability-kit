@@ -125,7 +125,17 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	processType
+	processType,
+
+	/**
+	 * The cloud provider type.
+	 *
+	 * @readonly
+	 * @type {string | null}
+	 */
+	cloudProvider:
+		(processType === process.env.AWS_LAMBDA_FUNCTION_NAME ? 'aws' : 'heroku') ||
+		null
 };
 
 // @ts-ignore
