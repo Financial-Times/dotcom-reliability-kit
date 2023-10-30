@@ -275,4 +275,31 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			});
 		});
 	});
+
+	describe('.cloudProvider', () => {
+		it('is set to `aws` if processType is set to `process.env.AWS_LAMBDA_FUNCTION_NAME`', () => {
+			if (appInfo.processType === process.env.AWS_LAMBDA_FUNCTION_NAME) {
+				expect(appInfo.cloudProvider).toBe('aws');
+			}
+		});
+
+		it('is set to `heroku` if processType is set to `process.env.DYNO`', () => {
+			if (appInfo.processType === process.env.DYNO) {
+				expect(appInfo.cloudProvider).toBe('heroku');
+			}
+		});
+
+		describe('when neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.DYNO` are defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.DYNO;
+				delete process.env.AWS_LAMBDA_FUNCTION_NAME;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to null', () => {
+				expect(appInfo.cloudProvider).toBe(null);
+			});
+		});
+	});
 });
