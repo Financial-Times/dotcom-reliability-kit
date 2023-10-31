@@ -19,8 +19,8 @@
     "@dotcom-reliability-kit/log-error": "^3.1.1"
   },
   "devDependencies": {
-    "@financial-times/n-express": "^28.0.4",
-    "@types/express": "^4.17.19",
+    "@financial-times/n-express": "^28.0.5",
+    "@types/express": "^4.17.20",
     "node-fetch": "^2.7.0"
   }
 }
