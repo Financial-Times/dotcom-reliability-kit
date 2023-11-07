@@ -32,8 +32,8 @@
   "devDependencies": {
     "@financial-times/n-logger": "^10.3.0",
     "@financial-times/n-mask-logger": "^7.2.0",
-    "@types/events": "^3.0.1",
-    "@types/lodash.clonedeep": "^4.5.7",
-    "@types/ungap__structured-clone": "^0.3.0"
+    "@types/events": "^3.0.3",
+    "@types/lodash.clonedeep": "^4.5.8",
+    "@types/ungap__structured-clone": "^0.3.1"
   }
 }
