@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v2.1.0...app-info-v2.2.0) (2023-11-07)
+
+
+### Features
+
+* add cloudProvider as exported property for appInfo ([ae28f2b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ae28f2bcb5c364c9eb82a5ac0fbad6dc17a65806))
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v2.0.1...app-info-v2.1.0) (2023-05-02)
 
 
