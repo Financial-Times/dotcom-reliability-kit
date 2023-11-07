@@ -283,16 +283,16 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			}
 		});
 
-		it('is set to `heroku` if processType is set to `process.env.DYNO`', () => {
-			if (appInfo.processType === process.env.DYNO) {
+		it('is set to `heroku` if `process.env.HEROKU_RELEASE_CREATED_AT` is set to true', () => {
+			if (process.env.HEROKU_RELEASE_CREATED_AT) {
 				expect(appInfo.cloudProvider).toBe('heroku');
 			}
 		});
 
-		describe('when neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.DYNO` are defined', () => {
+		describe('when neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.HEROKU_RELEASE_CREATED_AT` are defined', () => {
 			beforeEach(() => {
 				jest.resetModules();
-				delete process.env.DYNO;
+				delete process.env.HEROKU_RELEASE_CREATED_AT;
 				delete process.env.AWS_LAMBDA_FUNCTION_NAME;
 				appInfo = require('../../../lib');
 			});

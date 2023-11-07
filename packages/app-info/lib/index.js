@@ -136,9 +136,9 @@ module.exports = {
 	cloudProvider:
 		(processType === process.env.AWS_LAMBDA_FUNCTION_NAME
 			? 'aws'
-			: processType === process.env.DYNO
-				? 'heroku'
-				: null) || null
+			: Boolean(process.env.HEROKU_RELEASE_CREATED_AT)
+			? 'heroku'
+			: null) || null
 };
 
 // @ts-ignore
