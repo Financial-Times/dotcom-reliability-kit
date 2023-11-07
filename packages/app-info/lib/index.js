@@ -63,6 +63,22 @@ const processType =
 	(process.env.DYNO && normalizeHerokuProcessType(process.env.DYNO)) ||
 	null;
 
+/**
+ * Sets the cloud provider type.
+ *
+ * @returns {string | null}
+ *     Returns the cloud provider type (either aws or heroku).
+ */
+const cloudProvider = () => {
+	if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+		return 'aws';
+	}
+	if (process.env.HEROKU_RELEASE_CREATED_AT) {
+		return 'heroku';
+	}
+	return null;
+};
+
 module.exports = {
 	/**
 	 * The application commit hash.
@@ -133,12 +149,7 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	cloudProvider:
-		(processType === process.env.AWS_LAMBDA_FUNCTION_NAME
-			? 'aws'
-			: Boolean(process.env.HEROKU_RELEASE_CREATED_AT)
-			? 'heroku'
-			: null) || null
+	cloudProvider: cloudProvider()
 };
 
 // @ts-ignore
