@@ -40,6 +40,7 @@ function renderErrorPage({ request, response, serializedError }) {
 			${renderError(serializedError)}
 			${renderRequest(request)}
 			${renderResponse(response)}
+			${renderAppInfo(appInfo)}
 		`,
 		request,
 		title: escape(`${serializedError.name} in ${appName}`)
@@ -205,6 +206,59 @@ function renderResponse(response) {
 				label: 'Status Code',
 				value: response.statusCode,
 				formatter: renderCodeBlock
+			}
+		]
+	});
+}
+
+/**
+ * Render application info to HTML.
+ *
+ * @private
+ * @param {typeof appInfo} appInfo
+ *     The app information to render.
+ * @returns {string}
+ *     Returns the rendered app info.
+ */
+function renderAppInfo(appInfo) {
+	return renderSection({
+		id: 'app',
+		title: 'App Info',
+		fields: [
+			{
+				label: 'System',
+				helpText: 'The system this error is being served by',
+				value: appInfo.systemCode,
+				formatter: renderBizOpsSystem
+			},
+			{
+				label: 'Environment',
+				helpText:
+					'The environment (production/development) that the app is running in',
+				value: appInfo.environment
+			},
+			{
+				label: 'Cloud provider',
+				helpText: 'The cloud provider the app is running on.',
+				value: appInfo.cloudProvider
+			},
+			{
+				label: 'Region',
+				helpText: 'The cloud region that the app is running in',
+				value: appInfo.region
+			},
+			{
+				label: 'Release date',
+				helpText: 'When the app was last released',
+				value: appInfo.releaseDate
+			},
+			{
+				label: 'Release version',
+				value: appInfo.releaseVersion
+			},
+			{
+				label: 'Commit hash',
+				value: appInfo.commitHash
 			}
 		]
 	});

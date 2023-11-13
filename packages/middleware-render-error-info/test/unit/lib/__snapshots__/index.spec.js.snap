@@ -326,6 +326,32 @@ See the <a href="https://github.com/Financial-Times/dotcom-reliability-kit/blob/
 </dl>
 </section>
 
+
+<section class="o-layout__main__full-span">
+<h2 id="app">App Info</h2>
+
+<dl class="kv-list">
+
+<dt class="kv-list__key">
+<span class="kv-list__label">System:</span>
+<br/><small>The system this error is being served by</small>
+</dt>
+<dd class="kv-list__value">
+<a
+href="https://biz-ops.in.ft.com/System/mock-system-code"
+target="_blank"
+>mock-system-code</a>
+</dd>
+
+<dt class="kv-list__key">
+<span class="kv-list__label">Environment:</span>
+<br/><small>The environment (production/development) that the app is running in</small>
+</dt>
+<dd class="kv-list__value">development</dd>
+
+</dl>
+</section>
+
 </main>
 <div class="o-layout__footer">
 <footer class="o-footer-services">
