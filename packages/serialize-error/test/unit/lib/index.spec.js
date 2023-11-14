@@ -12,10 +12,13 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 
 		beforeEach(() => {
 			error = new Error('mock message');
+			error.stack = 'Error: mock message\nmock line 1\nmock line 2';
 		});
 
 		it('returns the expected serialized error properties', () => {
 			expect(serializeError(error)).toMatchObject({
+				// MD5 hash of the first two lines of the mock error stack above
+				fingerprint: '9b5df16d105739b263ecfbf4e8a31f95',
 				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'mock message',
@@ -183,6 +186,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 
 		it('returns the expected serialized error properties', () => {
 			expect(serializeError(error)).toMatchObject({
+				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'An error occurred',
@@ -300,6 +304,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = 'mock message';
 			expect(serializeError(error)).toMatchObject({
+				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'mock message',
@@ -317,6 +322,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = 123;
 			expect(serializeError(error)).toMatchObject({
+				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',
 				message: '123',
@@ -334,6 +340,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = ['mock', 'message'];
 			expect(serializeError(error)).toMatchObject({
+				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',
 				message: 'mock,message',

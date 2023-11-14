@@ -1,5 +1,11 @@
+const crypto = require('node:crypto');
+
 /**
  * @typedef {object} SerializedError
+ * @property {string | null} fingerprint
+ *     A hash of the first part of the error stack, used to help group errors that occurred in
+ *     the same part of the codebase. The fingerprint is null if the error does not include a
+ *     stack trace.
  * @property {string} name
  *     The name of the class that the error is an instance of.
  * @property {string} code
@@ -69,6 +75,14 @@ function serializeError(error) {
 	// Only include error stack if it's a string
 	if (typeof error.stack === 'string') {
 		errorProperties.stack = error.stack;
+
+		// Calculate the error fingerprint
+		const errorStackLines = error.stack.split(/[\r\n]+/);
+		const errorStackHeader = errorStackLines.slice(0, 2).join('\n');
+		errorProperties.fingerprint = crypto
+			.createHash('md5')
+			.update(errorStackHeader)
+			.digest('hex');
 	}
 
 	// If set, cast the error status code to a number
@@ -101,6 +115,7 @@ function createSerializedError(properties) {
 	return Object.assign(
 		{},
 		{
+			fingerprint: null,
 			name: 'Error',
 			code: 'UNKNOWN',
 			message: 'An error occurred',

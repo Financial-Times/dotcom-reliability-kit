@@ -6,6 +6,7 @@ A utility function to serialize an error object in a way that's friendly to logg
   * [Usage](#usage)
     * [`serializeError`](#serializeerror)
     * [`SerializedError` type](#serializederror-type)
+      * [`SerializedError.fingerprint`](#serializederrorfingerprint)
       * [`SerializedError.name`](#serializederrorname)
       * [`SerializedError.code`](#serializederrorcode)
       * [`SerializedError.message`](#serializederrormessage)
@@ -42,6 +43,7 @@ The `serializeError` function accepts an error-like object (e.g. an instance of 
 ```js
 serializeError(new Error('example message'));
 // {
+//     fingerprint: '...',
 //     name: 'Error',
 //     code: 'UNKNOWN',
 //     message: 'An error occurred',
@@ -65,6 +67,13 @@ serializeError({
 ### `SerializedError` type
 
 The `SerializedError` type documents the return value of the [`serializeError` function](#serializeerror). It will always have the following properties, extracting them from a given error object.
+
+#### `SerializedError.fingerprint`
+
+This is a hash of the first part of the error stack, used to help group errors that occurred in the same part of the codebase. The fingerprint is `null` if the error does not include a stack trace.
+
+> **Warning**
+> Do not rely on the format or length of the error fingerprint as the underlying hash may change without warning. You _can_ rely on the fingerprint being unique to the type of error being thrown.
 
 #### `SerializedError.name`
 
