@@ -14,6 +14,7 @@ function cleanLogFortesting(log) {
 
 	// The error stack properties are not comparable, and won't be
 	// consistent between machines or local vs CI
+	delete log.error?.fingerprint;
 	delete log.error?.stack;
 	delete log.error_stack;
 	delete log.nestedError?.stack;
