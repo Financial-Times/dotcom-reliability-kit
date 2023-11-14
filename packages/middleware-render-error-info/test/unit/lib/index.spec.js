@@ -172,6 +172,64 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 		});
 
+		describe('when the serialized error has a `statusCode` property lower than 400', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValue({
+					statusCode: 399,
+					data: {}
+				});
+				response.status = jest.fn();
+
+				middleware(error, request, response, next);
+			});
+
+			it('responds with a 500 status code', () => {
+				expect(response.status).toBeCalledTimes(1);
+				expect(response.status).toBeCalledWith(500);
+			});
+		});
+
+		describe('when the serialized error has a `statusCode` property greater than 500', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValue({
+					statusCode: 600,
+					data: {}
+				});
+				response.status = jest.fn();
+
+				middleware(error, request, response, next);
+			});
+
+			it('responds with a 500 status code', () => {
+				expect(response.status).toBeCalledTimes(1);
+				expect(response.status).toBeCalledWith(500);
+			});
+		});
+
+		describe('when the response headers have already been sent', () => {
+			beforeEach(() => {
+				middleware = createErrorRenderingMiddleware();
+				response = {
+					headersSent: true,
+					send: jest.fn(),
+					set: jest.fn(),
+					status: jest.fn()
+				};
+				next = jest.fn();
+				middleware(error, request, response, next);
+			});
+
+			it('does not render and send an error info page', () => {
+				expect(response.status).toBeCalledTimes(0);
+				expect(response.set).toBeCalledTimes(0);
+				expect(response.send).toBeCalledTimes(0);
+			});
+
+			it('calls `next` with the original error', () => {
+				expect(next).toBeCalledWith(error);
+			});
+		});
+
 		describe('when the environment is set to "production"', () => {
 			beforeEach(() => {
 				appInfo.environment = 'production';
