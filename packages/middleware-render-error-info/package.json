@@ -1,7 +1,7 @@
 {
   "name": "@dotcom-reliability-kit/middleware-render-error-info",
   "version": "3.1.0",
-  "description": "Express middleware to render error information in a way that makes local debugging easier.",
+  "description": "Express middleware to render error information in a way that makes local debugging easier and production error rendering more consistent.",
   "repository": {
     "type": "git",
     "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
