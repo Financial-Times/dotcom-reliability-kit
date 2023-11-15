@@ -78,6 +78,12 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^3.1.1 to ^3.1.2
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.2 to ^3.1.3
+
 ## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v2.1.2...crash-handler-v3.0.0) (2023-08-07)
 
 

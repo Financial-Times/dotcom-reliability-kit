@@ -94,6 +94,26 @@
     * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
     * @dotcom-reliability-kit/log-error bumped from ^3.1.1 to ^3.1.2
 
+## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.0.4...middleware-render-error-info-v3.1.0) (2023-11-15)
+
+
+### Features
+
+* add some basic app info to error pages ([d1f9522](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d1f9522b40b6a526a60a49720947132c57ece4f4))
+
+
+### Bug Fixes
+
+* handle more error rendering edge-cases ([564d950](https://github.com/Financial-Times/dotcom-reliability-kit/commit/564d95090c0f3751b2dde49fd5abba22823872f8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.2 to ^3.1.3
+    * @dotcom-reliability-kit/serialize-error bumped from ^2.1.0 to ^2.2.0
+
 ## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v2.1.1...middleware-render-error-info-v3.0.0) (2023-08-07)
 
 
