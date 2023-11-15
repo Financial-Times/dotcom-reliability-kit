@@ -40,6 +40,13 @@ const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 jest.mock('@dotcom-reliability-kit/app-info', () => ({}));
 const appInfo = require('@dotcom-reliability-kit/app-info');
 
+jest.mock('node:http', () => ({
+	STATUS_CODES: {
+		456: 'Mock Error',
+		500: 'Server Error'
+	}
+}));
+
 describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 	let middleware;
 
@@ -243,14 +250,42 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				middleware(error, request, response, next);
 			});
 
-			it('does not render and send an error info page', () => {
-				expect(response.status).toBeCalledTimes(0);
-				expect(response.set).toBeCalledTimes(0);
-				expect(response.send).toBeCalledTimes(0);
+			it('responds with the serialized error status code', () => {
+				expect(response.status).toBeCalledTimes(1);
+				expect(response.status).toBeCalledWith(500);
 			});
 
-			it('calls `next` with the original error', () => {
-				expect(next).toBeCalledWith(error);
+			it('responds with a Content-Type header of "text/html"', () => {
+				expect(response.set).toBeCalledTimes(1);
+				expect(response.set).toBeCalledWith('content-type', 'text/html');
+			});
+
+			it('responds with a simple status code and message in the body', () => {
+				expect(response.send).toBeCalledTimes(1);
+				const html = response.send.mock.calls[0][0];
+				expect(html).toStrictEqual('500 Server Error\n');
+			});
+
+			it('does not call `next` with the original error', () => {
+				expect(next).toBeCalledTimes(0);
+			});
+
+			describe('when the serialized error has a nonexistent `statusCode` property', () => {
+				beforeEach(() => {
+					serializeError.mockReturnValueOnce({
+						statusCode: 477,
+						data: {}
+					});
+					response.send = jest.fn();
+
+					middleware(error, request, response, next);
+				});
+
+				it('responds with a simple status code and the default server error message in the body', () => {
+					expect(response.send).toBeCalledTimes(1);
+					const html = response.send.mock.calls[0][0];
+					expect(html).toStrictEqual('477 Server Error\n');
+				});
 			});
 		});
 
@@ -259,9 +294,22 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 
 			beforeEach(() => {
 				renderingError = new Error('rendering failed');
-				response.send.mockImplementation(() => {
-					throw renderingError;
+
+				// We fail getting the request method as this will
+				// ensure that the rendering fails without having
+				// to mock the entire rendering method
+				delete request.method;
+				Object.defineProperty(request, 'method', {
+					get: () => {
+						throw renderingError;
+					}
 				});
+
+				response = {
+					send: jest.fn(),
+					set: jest.fn(),
+					status: jest.fn()
+				};
 				next = jest.fn();
 				middleware(error, request, response, next);
 			});
@@ -275,8 +323,24 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				});
 			});
 
-			it('calls `next` with the original error', () => {
-				expect(next).toBeCalledWith(error);
+			it('responds with the serialized error status code', () => {
+				expect(response.status).toBeCalledTimes(1);
+				expect(response.status).toBeCalledWith(500);
+			});
+
+			it('responds with a Content-Type header of "text/html"', () => {
+				expect(response.set).toBeCalledTimes(1);
+				expect(response.set).toBeCalledWith('content-type', 'text/html');
+			});
+
+			it('responds with a simple status code and message in the body', () => {
+				expect(response.send).toBeCalledTimes(1);
+				const html = response.send.mock.calls[0][0];
+				expect(html).toStrictEqual('500 Server Error\n');
+			});
+
+			it('does not call `next` with the original error', () => {
+				expect(next).toBeCalledTimes(0);
 			});
 
 			describe('when the logger option is set', () => {
