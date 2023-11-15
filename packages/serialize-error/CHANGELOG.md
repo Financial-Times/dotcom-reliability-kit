@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.1.0...serialize-error-v2.2.0) (2023-11-15)
+
+
+### Features
+
+* add a fingerprint to serialized errors ([dab223f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/dab223fb64a85d38561e1a4509bf508aac5e3e77))
+
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.0.1...serialize-error-v2.1.0) (2023-05-02)
 
 

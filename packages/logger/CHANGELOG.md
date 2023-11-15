@@ -12,6 +12,20 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
 
+## [2.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.10...logger-v2.3.0) (2023-11-15)
+
+
+### Features
+
+* add a fingerprint to serialized errors ([dab223f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/dab223fb64a85d38561e1a4509bf508aac5e3e77))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/serialize-error bumped from ^2.1.0 to ^2.2.0
+
 ## [2.2.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.8...logger-v2.2.9) (2023-09-19)
 
 
