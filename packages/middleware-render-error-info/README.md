@@ -47,6 +47,10 @@ Once you've mounted the middleware, if you're working locally you should now see
 
 ![Reliability Kit Error Info Page](https://user-images.githubusercontent.com/138944/183625949-fff25554-5c7e-4616-b717-963d472e5d35.png)
 
+#### Debug headers
+
+As well as rendering an error page, the middleware also sends an `x-error-fingerprint` HTTP header in the response. This contains the [error fingerprint](../serialize-error/README.md#serializederrorfingerprint) and is available in development and production. Inspecting this header on a generic error page can help identify the root cause of an issue.
+
 
 ## Contributing
 
