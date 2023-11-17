@@ -162,6 +162,26 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 		});
 
+		describe('when the serialized error has a `fingerprint` property', () => {
+			beforeEach(() => {
+				serializeError.mockReturnValue({
+					fingerprint: 'mockfingerprint',
+					statusCode: null,
+					data: {}
+				});
+				response.status = jest.fn();
+
+				middleware(error, request, response, next);
+			});
+
+			it('responds with an x-error-fingerprint header', () => {
+				expect(response.set).toBeCalledWith(
+					'x-error-fingerprint',
+					'mockfingerprint'
+				);
+			});
+		});
+
 		describe('when the serialized error does not have a `statusCode` property', () => {
 			beforeEach(() => {
 				serializeError.mockReturnValue({
