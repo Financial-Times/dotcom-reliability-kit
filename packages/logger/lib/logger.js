@@ -54,7 +54,7 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  *     Log info level information.
  * @property {(...args: any) => any} warn
  *     Log warn level information.
- * @property {() => {}} [flush]
+ * @property {() => void} [flush]
  *     Flush async logs ahead of time.
  */
 
