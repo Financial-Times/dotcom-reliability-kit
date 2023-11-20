@@ -174,9 +174,9 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				middleware(error, request, response, next);
 			});
 
-			it('responds with an x-error-fingerprint header', () => {
+			it('responds with an error-fingerprint header', () => {
 				expect(response.set).toBeCalledWith(
-					'x-error-fingerprint',
+					'error-fingerprint',
 					'mockfingerprint'
 				);
 			});

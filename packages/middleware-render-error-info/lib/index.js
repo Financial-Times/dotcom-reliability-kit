@@ -53,9 +53,7 @@ function createErrorRenderingMiddleware(options = {}) {
 
 		// If the error has a fingerprint, output it as a header to aid debugging in production
 		if (serializedError.fingerprint) {
-			// Note: we use x-error-fingerprint rather than ft-error-fingerprint to make
-			// it easier to reuse this middleware outside of FT-branded applications
-			response.set('x-error-fingerprint', serializedError.fingerprint);
+			response.set('error-fingerprint', serializedError.fingerprint);
 		}
 
 		// Render a full error page in non-production environments
