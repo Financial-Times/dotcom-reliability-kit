@@ -94,6 +94,23 @@
     * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
     * @dotcom-reliability-kit/log-error bumped from ^3.1.1 to ^3.1.2
 
+## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.1.0...middleware-render-error-info-v4.0.0) (2023-11-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* render stripped back errors in production
+
+### Features
+
+* expose error fingerprints as an HTTP header ([2357f2d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2357f2d92819b753e58c61532652cca0eced3dea))
+* render stripped back errors in production ([d4e1e71](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d4e1e71f7b8f7ff38c0366f24668678589430614))
+
+
+### Bug Fixes
+
+* stop using deprecated `x-` header prefix ([5de9864](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5de9864e5a3b424653bb638207df2c6be763324e))
+
 ## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.0.4...middleware-render-error-info-v3.1.0) (2023-11-15)
 
 
