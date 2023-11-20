@@ -49,7 +49,7 @@ Once you've mounted the middleware, if you're working locally you should now see
 
 #### Debug headers
 
-As well as rendering an error page, the middleware also sends an `x-error-fingerprint` HTTP header in the response. This contains the [error fingerprint](../serialize-error/README.md#serializederrorfingerprint) and is available in development and production. Inspecting this header on a generic error page can help identify the root cause of an issue.
+As well as rendering an error page, the middleware also sends an `error-fingerprint` HTTP header in the response. This contains the [error fingerprint](../serialize-error/README.md#serializederrorfingerprint) and is available in development and production. Inspecting this header on a generic error page can help identify the root cause of an issue.
 
 
 ## Contributing
