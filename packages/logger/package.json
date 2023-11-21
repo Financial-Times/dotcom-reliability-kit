@@ -34,6 +34,6 @@
     "@financial-times/n-mask-logger": "^7.2.0",
     "@types/events": "^3.0.3",
     "@types/lodash.clonedeep": "^4.5.9",
-    "@types/ungap__structured-clone": "^0.3.2"
+    "@types/ungap__structured-clone": "^0.3.3"
   }
 }
