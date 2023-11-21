@@ -767,10 +767,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the environment is not "production" - e.g. "development', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () =>
-					jest.fn().mockReturnValue('mock pino pretty')
-				);
-				pinoPretty = require('pino-pretty');
+				jest.mock('pino-pretty', () => {
+					return { default: jest.fn().mockReturnValue('mock pino pretty') };
+				});
+				pinoPretty = require('pino-pretty').default;
 				appInfo.environment = 'development';
 
 				// We have to reset all modules because the checks for pino-pretty are done
@@ -800,10 +800,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the environment is not "production" - e.g. "test', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () =>
-					jest.fn().mockReturnValue('mock pino pretty')
-				);
-				pinoPretty = require('pino-pretty');
+				jest.mock('pino-pretty', () => {
+					return { default: jest.fn().mockReturnValue('mock pino pretty') };
+				});
+				pinoPretty = require('pino-pretty').default;
 				appInfo.environment = 'test';
 
 				// We have to reset all modules because the checks for pino-pretty are done
@@ -833,10 +833,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the `withPrettifier` option is set to `false`', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () =>
-					jest.fn().mockReturnValue('mock pino pretty')
-				);
-				pinoPretty = require('pino-pretty');
+				jest.mock('pino-pretty', () => {
+					return { default: jest.fn().mockReturnValue('mock pino pretty') };
+				});
+				pinoPretty = require('pino-pretty').default;
 				appInfo.environment = 'development';
 
 				// We have to reset all modules because the checks for pino-pretty are done
@@ -862,10 +862,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the `LOG_DISABLE_PRETTIFIER` environment variable is set', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () =>
-					jest.fn().mockReturnValue('mock pino pretty')
-				);
-				pinoPretty = require('pino-pretty');
+				jest.mock('pino-pretty', () => {
+					return { default: jest.fn().mockReturnValue('mock pino pretty') };
+				});
+				pinoPretty = require('pino-pretty').default;
 				appInfo.environment = 'development';
 				process.env.LOG_DISABLE_PRETTIFIER = 'true';
 
@@ -892,10 +892,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the environment is "production"', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () =>
-					jest.fn().mockReturnValue('mock pino pretty')
-				);
-				pinoPretty = require('pino-pretty');
+				jest.mock('pino-pretty', () => {
+					return { default: jest.fn().mockReturnValue('mock pino pretty') };
+				});
+				pinoPretty = require('pino-pretty').default;
 				appInfo.environment = 'production';
 
 				// We have to reset all modules because the checks for pino-pretty are done
