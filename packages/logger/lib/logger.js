@@ -93,38 +93,28 @@ const logLevelToTransportMethodMap = {
 const logLevels = Object.keys(logLevelToTransportMethodMap);
 
 /**
+ * We have to try/catch here to be sure that we don't
+ * error if pino-pretty (an optional peer dependency)
+ * is not installed.
+ *
  * @type {null | import('pino-pretty').default}
  */
-let pinoPretty = null;
+const pinoPretty = (() => {
+	try {
+		return require('pino-pretty').default;
+	} catch (_) {
+		return null;
+	}
+})();
 
 /**
- * Whether log prettification is available. This is based
- * on two things: the pino-pretty module being installed
- * in the application, and the `NODE_ENV` environment
- * variable being undefined or "development".
+ * Whether log prettification is allowed. We never allow log
+ * prettification if the `NODE_ENV` environment variable is
+ * set to "production".
  *
  * @type {boolean}
  */
-const PRETTIFICATION_AVAILABLE = (() => {
-	try {
-		// We have to `require` here rather than `require.resolve`
-		// which is less than ideal but otherwise this is actually
-		// impossible to test with Jest. Both technically do the
-		// same file system work though, and it's only done once
-		// when the module first loads. It's also safe to ts-ignore
-		// this one because it's never actually used directly.
-		// @ts-ignore
-		pinoPretty = require('pino-pretty');
-
-		// If we get to this point, pino-pretty is installed because
-		// otherwise it would have errored. So we can just check for
-		// the environment not being "production" (which implies
-		// "development", "test" or a similar pre-production term).
-		return appInfo.environment !== 'production';
-	} catch (_) {
-		return false;
-	}
-})();
+const prettificationAllowed = appInfo.environment !== 'production';
 
 /**
  * Class representing a logger.
@@ -221,7 +211,7 @@ class Logger {
 				messageKey: 'message', // This is for backwards compatibility with our existing logs
 				timestamp: withTimestamps
 			};
-			if (withPrettifier && PRETTIFICATION_AVAILABLE && pinoPretty) {
+			if (withPrettifier && prettificationAllowed && pinoPretty) {
 				this.#logTransport = pino(
 					pinoOptions,
 					pinoPretty({
