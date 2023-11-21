@@ -93,6 +93,11 @@ const logLevelToTransportMethodMap = {
 const logLevels = Object.keys(logLevelToTransportMethodMap);
 
 /**
+ * @type {null | import('pino-pretty').default}
+ */
+let pinoPretty = null;
+
+/**
  * Whether log prettification is available. This is based
  * on two things: the pino-pretty module being installed
  * in the application, and the `NODE_ENV` environment
@@ -109,7 +114,7 @@ const PRETTIFICATION_AVAILABLE = (() => {
 		// when the module first loads. It's also safe to ts-ignore
 		// this one because it's never actually used directly.
 		// @ts-ignore
-		require('pino-pretty');
+		pinoPretty = require('pino-pretty');
 
 		// If we get to this point, pino-pretty is installed because
 		// otherwise it would have errored. So we can just check for
@@ -216,16 +221,17 @@ class Logger {
 				messageKey: 'message', // This is for backwards compatibility with our existing logs
 				timestamp: withTimestamps
 			};
-			if (withPrettifier && PRETTIFICATION_AVAILABLE) {
-				pinoOptions.transport = {
-					target: 'pino-pretty',
-					options: {
+			if (withPrettifier && PRETTIFICATION_AVAILABLE && pinoPretty) {
+				this.#logTransport = pino(
+					pinoOptions,
+					pinoPretty({
 						colorize: true,
 						messageKey: 'message'
-					}
-				};
+					})
+				);
+			} else {
+				this.#logTransport = pino(pinoOptions);
 			}
-			this.#logTransport = pino(pinoOptions);
 			this.#logTransport.level = this.#logLevel;
 		}
 

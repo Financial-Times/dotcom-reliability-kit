@@ -34,6 +34,7 @@ let Logger = require('../../../lib/logger');
 
 describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 	let mockPinoLogger;
+	let pinoPretty;
 
 	beforeEach(() => {
 		mockPinoLogger = createMockPinoLogger();
@@ -766,7 +767,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the environment is not "production" - e.g. "development', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
+				jest.mock('pino-pretty', () =>
+					jest.fn().mockReturnValue('mock pino pretty')
+				);
+				pinoPretty = require('pino-pretty');
 				appInfo.environment = 'development';
 
 				// We have to reset all modules because the checks for pino-pretty are done
@@ -785,21 +789,21 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('configures the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(typeof pinoOptions.transport).toStrictEqual('object');
-				expect(pinoOptions.transport).toEqual({
-					target: 'pino-pretty',
-					options: {
-						colorize: true,
-						messageKey: 'message'
-					}
+				const pinoStream = pino.mock.calls[0][1];
+				expect(pinoPretty).toHaveBeenCalledWith({
+					colorize: true,
+					messageKey: 'message'
 				});
+				expect(pinoStream).toStrictEqual('mock pino pretty');
 			});
 		});
 
 		describe('when pino-pretty is installed and the environment is not "production" - e.g. "test', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
+				jest.mock('pino-pretty', () =>
+					jest.fn().mockReturnValue('mock pino pretty')
+				);
+				pinoPretty = require('pino-pretty');
 				appInfo.environment = 'test';
 
 				// We have to reset all modules because the checks for pino-pretty are done
@@ -818,21 +822,21 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('configures the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(typeof pinoOptions.transport).toStrictEqual('object');
-				expect(pinoOptions.transport).toEqual({
-					target: 'pino-pretty',
-					options: {
-						colorize: true,
-						messageKey: 'message'
-					}
+				const pinoStream = pino.mock.calls[0][1];
+				expect(pinoPretty).toHaveBeenCalledWith({
+					colorize: true,
+					messageKey: 'message'
 				});
+				expect(pinoStream).toStrictEqual('mock pino pretty');
 			});
 		});
 
 		describe('when pino-pretty is installed and the `withPrettifier` option is set to `false`', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
+				jest.mock('pino-pretty', () =>
+					jest.fn().mockReturnValue('mock pino pretty')
+				);
+				pinoPretty = require('pino-pretty');
 				appInfo.environment = 'development';
 
 				// We have to reset all modules because the checks for pino-pretty are done
@@ -858,7 +862,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the `LOG_DISABLE_PRETTIFIER` environment variable is set', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
+				jest.mock('pino-pretty', () =>
+					jest.fn().mockReturnValue('mock pino pretty')
+				);
+				pinoPretty = require('pino-pretty');
 				appInfo.environment = 'development';
 				process.env.LOG_DISABLE_PRETTIFIER = 'true';
 
@@ -885,7 +892,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is installed and the environment is "production"', () => {
 			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
+				jest.mock('pino-pretty', () =>
+					jest.fn().mockReturnValue('mock pino pretty')
+				);
+				pinoPretty = require('pino-pretty');
 				appInfo.environment = 'production';
 
 				// We have to reset all modules because the checks for pino-pretty are done
