@@ -1,17 +1,25 @@
-jest.mock('pino', () => ({
-	default: jest.fn(),
-	createMockPinoLogger() {
-		return {
-			flush: jest.fn(),
-			mockCanonicalLevel: jest.fn(),
-			mockDeprecatedCanonocalLevel: jest.fn(),
-			mockErroringLevel: jest.fn().mockImplementation(() => {
-				throw new Error('mock error');
-			}),
-			warn: jest.fn()
-		};
-	}
-}));
+jest.mock('pino', () => {
+	const pinoDefault = jest.fn();
+
+	pinoDefault.stdTimeFunctions = {
+		isoTime: 'mockIsoTime'
+	};
+
+	return {
+		default: pinoDefault,
+		createMockPinoLogger() {
+			return {
+				flush: jest.fn(),
+				mockCanonicalLevel: jest.fn(),
+				mockDeprecatedCanonocalLevel: jest.fn(),
+				mockErroringLevel: jest.fn().mockImplementation(() => {
+					throw new Error('mock error');
+				}),
+				warn: jest.fn()
+			};
+		}
+	};
+});
 const { default: pino, createMockPinoLogger } = require('pino');
 
 jest.mock('pino-pretty', () => {
@@ -702,6 +710,21 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('turns off timestamps in the created Pino logger', () => {
 				const pinoOptions = pino.mock.calls[0][0];
 				expect(pinoOptions.timestamp).toStrictEqual(false);
+			});
+		});
+
+		describe('when the `useIsoTimeFormat` option is set to `true`', () => {
+			beforeEach(() => {
+				pino.mockReset();
+				pino.mockReturnValue(mockPinoLogger);
+				logger = new Logger({
+					useIsoTimeFormat: true
+				});
+			});
+
+			it('formats timestamps in the Pino logger as ISO8601', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(pinoOptions.timestamp).toStrictEqual('mockIsoTime');
 			});
 		});
 

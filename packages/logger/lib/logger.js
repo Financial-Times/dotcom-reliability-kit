@@ -12,6 +12,10 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  */
 
 /**
+ * @typedef {typeof import('pino').stdTimeFunctions.isoTime} TimeFn
+ */
+
+/**
  * @typedef {object} LoggerOptions
  * @property {LogData} [baseLogData = {}]
  *     Base log data which is added to every log output.
@@ -24,6 +28,8 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  *     Whether to prettify log output if it's possible.
  * @property {boolean} [withTimestamps = true]
  *     Whether to send the timestamp that each log method was called.
+ * @property {boolean} [useIsoTimeFormat = false]
+ *     Whether to format the timestamps as ISO8601.
  */
 
 /**
@@ -191,7 +197,12 @@ class Logger {
 				: !Boolean(process.env.LOG_DISABLE_PRETTIFIER);
 
 		// Default and set the timestamps option.
-		const withTimestamps = options.withTimestamps !== false;
+		/** @type {boolean | TimeFn} */
+		let withTimestamps = options.withTimestamps !== false;
+
+		if (options.useIsoTimeFormat) {
+			withTimestamps = pino.stdTimeFunctions.isoTime;
+		}
 
 		if (options._transport) {
 			// If we have a configured transport, use it. This means

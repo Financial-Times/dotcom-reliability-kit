@@ -12,6 +12,7 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
       * [`options.transforms`](#optionstransforms)
       * [`options.withPrettifier`](#optionswithprettifier)
       * [`options.withTimestamps`](#optionswithtimestamps)
+      * [`options.useIsoTimeFormat`](#optionsuseisotimeformat)
     * [`logger.log()` and shortcut methods](#loggerlog-and-shortcut-methods)
     * [`logger.flush()`](#loggerflush)
     * [`logger.createChildLogger()`](#loggercreatechildlogger)
@@ -216,6 +217,26 @@ logger.info('This is a log');
 //     "level": "info",
 //     "message": "This is a log",
 //     "time": 1234567890
+// }
+```
+
+#### `options.useIsoTimeFormat`
+
+Whether to format the `time` property as an [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) standard datetime format. This overrides the `withTimestamps` option.
+
+Must be a `Boolean` and defaults to `false` for backwards-compatibility with previous timestamps, which were formatted as [Unix time](https://en.wikipedia.org/wiki/Unix_time) seconds.
+
+```js
+const logger = new Logger({
+    useIsoTimeFormat: true
+});
+
+logger.info('This is a log');
+// Outputs:
+// {
+//     "level": "info",
+//     "message": "This is a log",
+//     "time": "2020-01-01T12:00:00.000Z"
 // }
 ```
 
