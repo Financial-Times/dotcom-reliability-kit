@@ -12,6 +12,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
 
+## [2.4.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.3.1...logger-v2.4.0) (2023-11-23)
+
+
+### Features
+
+* add useIsoTimeFormat option to format log timestamps ([d22e24a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d22e24a811e6bf4baef8adfcd8401330436a405f))
+
 ## [2.3.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.3.0...logger-v2.3.1) (2023-11-21)
 
 
