@@ -11,7 +11,9 @@ A utility to get application information (e.g. the system code) in a consistent 
     * [`appInfo.releaseVersion`](#appinforeleaseversion)
     * [`appInfo.systemCode`](#appinfosystemcode)
     * [`appInfo.processType`](#appinfoprocesstype)
-    * [`appInfo.cloudProvider](#appinfocloudprovider)
+    * [`appInfo.cloudProvider`](#appinfocloudprovider)
+    * [`appInfo.herokuAppId`](#appinfoherokuappId)
+    * [`appInfo.herokuDynoId`](#appinfoherokudynoId)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -83,6 +85,18 @@ If neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.DYNO` are set,
 Get the type of cloud provider which is set to either Heroku or AWS depending on where we think the system is hosted.
 
 This is derived from some environment variables which we have high confidence are defined by only Heroku or AWS/Lambda
+
+### `appInfo.herokuAppId`
+
+Get the `process.env.HEROKU_APP_ID` which is the unique identifier for the application.e.g "9daa2797-e49b-4624-932f-ec3f9688e3da"
+
+This is derived from the dyno metadata
+
+### `appInfo.herokuDynoId`
+
+Get the `process.env.HEROKU_DYNO_ID` which is the dyno identifier
+
+This is derived from the dyno metadata
 
 ## Contributing
 

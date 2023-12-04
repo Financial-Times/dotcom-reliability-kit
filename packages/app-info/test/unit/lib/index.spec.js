@@ -15,6 +15,8 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		process.env.REGION = 'mock-region';
 		process.env.SYSTEM_CODE = 'mock-system-code';
 		process.env.DYNO = 'mock-heroku-process-type.1';
+		process.env.HEROKU_APP_ID = 'mock-heroku-app-id';
+		process.env.HEROKU_DYNO_ID = 'mock-heroku-dyno-id';
 		appInfo = require('../../../lib');
 	});
 
@@ -300,6 +302,29 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			it('is set to null', () => {
 				expect(appInfo.cloudProvider).toBe(null);
 			});
+		});
+	});
+	describe('.herokuAppId', () => {
+		it('returns HEROKU_APP_ID when process.env.HEROKU_APP_ID exists', () => {
+			expect(appInfo.herokuAppId).toBe('mock-heroku-app-id');
+		});
+
+		it('returns null when process.env.HEROKU_APP_ID does not exist', () => {
+			jest.resetModules();
+			delete process.env.HEROKU_APP_ID;
+			appInfo = require('../../../lib');
+			expect(appInfo.herokuAppId).toBe(null);
+		});
+	});
+	describe('.herokuDynoId', () => {
+		it('returns HEROKU_DYNO_ID when `process.env.HEROKU_DYNO_ID` exists', () => {
+			expect(appInfo.herokuDynoId).toBe('mock-heroku-dyno-id');
+		});
+		it('returns null when `process.env.HEROKU_DYNO_ID` does not exist', () => {
+			jest.resetModules();
+			delete process.env.HEROKU_DYNO_ID;
+			appInfo = require('../../../lib');
+			expect(appInfo.herokuDynoId).toBe(null);
 		});
 	});
 });
