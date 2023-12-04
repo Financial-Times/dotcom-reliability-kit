@@ -44,7 +44,7 @@ function normalizePackageName(name) {
 }
 
 /**
- * Extract the proceess type from a Heroku dyno name.
+ * Extract the process type from a Heroku dyno name.
  *
  * @param {string} dyno
  *     The dyno name to normalize.
@@ -149,7 +149,23 @@ module.exports = {
 	 * @readonly
 	 * @type {string | null}
 	 */
-	cloudProvider: cloudProvider()
+	cloudProvider: cloudProvider(),
+
+	/**
+	 * The heroku application Id.
+	 *
+	 * @readonly
+	 * @type {string | null}
+	 */
+	herokuAppId: process.env.HEROKU_APP_ID || null,
+
+	/**
+	 * The heroku dyno Id.
+	 *
+	 * @readonly
+	 * @type {string | null}
+	 */
+	herokuDynoId: process.env.HEROKU_DYNO_ID || null
 };
 
 // @ts-ignore
