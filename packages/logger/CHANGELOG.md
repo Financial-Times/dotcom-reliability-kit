@@ -12,6 +12,12 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
 
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
+
 ## [2.4.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.3.1...logger-v2.4.0) (2023-11-23)
 
 

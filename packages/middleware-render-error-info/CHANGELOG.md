@@ -106,6 +106,21 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^3.1.4 to ^3.1.5
 
+## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v4.0.2...middleware-render-error-info-v4.1.0) (2023-12-05)
+
+
+### Features
+
+* render the error fingerprint ([1cbb9fa](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1cbb9fa7b7cfc74b353a72da6239e73ea65fca9a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.5 to ^3.1.6
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.1.0...middleware-render-error-info-v4.0.0) (2023-11-20)
 
 
