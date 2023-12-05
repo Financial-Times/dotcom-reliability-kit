@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v2.2.0...app-info-v2.3.0) (2023-12-05)
+
+
+### Features
+
+* add herokuAppId and herokuDynoID properties ([ca28b38](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ca28b38425cfc951c2641702f4982a9d9c4c9e12))
+
 ## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v2.1.0...app-info-v2.2.0) (2023-11-07)
 
 
