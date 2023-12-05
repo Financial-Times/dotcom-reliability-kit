@@ -28,6 +28,7 @@ serializeError.mockReturnValue({
 	message: 'mock serialized error message',
 	name: 'MockSerializedError',
 	relatesToSystems: ['mock-system-1', 'mock-system-2'],
+	fingerprint: 'mock serialized error fingerprint',
 	stack: 'mock serialized error stack <script>oops</script>',
 	statusCode: 456
 });
@@ -107,8 +108,14 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		});
 
 		it('responds with a Content-Type header of "text/html"', () => {
-			expect(response.set).toBeCalledTimes(1);
 			expect(response.set).toBeCalledWith('content-type', 'text/html');
+		});
+
+		it('responds with an error-fingerprint header', () => {
+			expect(response.set).toBeCalledWith(
+				'error-fingerprint',
+				'mock serialized error fingerprint'
+			);
 		});
 
 		it('responds with an HTML representation of the error', () => {
@@ -162,22 +169,23 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 		});
 
-		describe('when the serialized error has a `fingerprint` property', () => {
+		describe('when the serialized error does not have a `fingerprint` property', () => {
 			beforeEach(() => {
 				serializeError.mockReturnValue({
 					fingerprint: 'mockfingerprint',
 					statusCode: null,
 					data: {}
 				});
+				response.set = jest.fn();
 				response.status = jest.fn();
 
 				middleware(error, request, response, next);
 			});
 
-			it('responds with an error-fingerprint header', () => {
-				expect(response.set).toBeCalledWith(
+			it('does not respond with an error-fingerprint header', () => {
+				expect(response.set).not.toHaveBeenCalledWith(
 					'error-fingerprint',
-					'mockfingerprint'
+					'mock serialized error fingerprint'
 				);
 			});
 		});
@@ -259,6 +267,10 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 
 		describe('when the environment is set to "production"', () => {
 			beforeEach(() => {
+				serializeError.mockReturnValueOnce({
+					fingerprint: 'mock serialized error fingerprint',
+					data: {}
+				});
 				appInfo.environment = 'production';
 				middleware = createErrorRenderingMiddleware();
 				response = {
@@ -276,14 +288,22 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('responds with a Content-Type header of "text/html"', () => {
-				expect(response.set).toBeCalledTimes(1);
 				expect(response.set).toBeCalledWith('content-type', 'text/html');
 			});
 
-			it('responds with a simple status code and message in the body', () => {
+			it('responds with an error-fingerprint header', () => {
+				expect(response.set).toBeCalledWith(
+					'error-fingerprint',
+					'mock serialized error fingerprint'
+				);
+			});
+
+			it('responds with a simple status code, message, and fingerprint in the body', () => {
 				expect(response.send).toBeCalledTimes(1);
 				const html = response.send.mock.calls[0][0];
-				expect(html).toStrictEqual('500 Server Error\n');
+				expect(html).toStrictEqual(
+					'500 Server Error\n(error code: mock serialized error fingerprint)\n'
+				);
 			});
 
 			it('does not call `next` with the original error', () => {
@@ -305,6 +325,23 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 					expect(response.send).toBeCalledTimes(1);
 					const html = response.send.mock.calls[0][0];
 					expect(html).toStrictEqual('477 Server Error\n');
+				});
+			});
+
+			describe('when the serialized error does not have a `fingerprint` property', () => {
+				beforeEach(() => {
+					serializeError.mockReturnValueOnce({
+						data: {}
+					});
+					response.send = jest.fn();
+
+					middleware(error, request, response, next);
+				});
+
+				it('responds with a simple status code and message in the body', () => {
+					expect(response.send).toBeCalledTimes(1);
+					const html = response.send.mock.calls[0][0];
+					expect(html).toStrictEqual('500 Server Error\n');
 				});
 			});
 		});

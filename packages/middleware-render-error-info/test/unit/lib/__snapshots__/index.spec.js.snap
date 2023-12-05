@@ -181,6 +181,12 @@ target="_blank"
 }</code></pre></dd>
 
 <dt class="kv-list__key">
+<span class="kv-list__label">Fingerprint:</span>
+<br/><small>A unique hash generated from this error's stack</small>
+</dt>
+<dd class="kv-list__value"><pre><code>mock serialized error fingerprint</code></pre></dd>
+
+<dt class="kv-list__key">
 <span class="kv-list__label">Stack:</span>
 <br/><small>The full stack trace for the error, indicating where it was thrown</small>
 </dt>
