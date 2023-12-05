@@ -125,6 +125,12 @@ function renderError(error) {
 				};
 			}),
 			{
+				label: 'Fingerprint',
+				helpText: "A unique hash generated from this error's stack",
+				value: error.fingerprint,
+				formatter: renderCodeBlock
+			},
+			{
 				label: 'Stack',
 				helpText:
 					'The full stack trace for the error, indicating where it was thrown',

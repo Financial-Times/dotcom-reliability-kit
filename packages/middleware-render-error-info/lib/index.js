@@ -81,7 +81,13 @@ function createErrorRenderingMiddleware(options = {}) {
 		// Either rendering has failed or we're in production. We render a
 		// heavily stripped back error
 		const statusMessage = STATUS_CODES[statusCode] || STATUS_CODES[500];
-		const output = `${statusCode} ${statusMessage}\n`;
+		let output = `${statusCode} ${statusMessage}\n`;
+
+		// If the error has a fingerprint, add it to the output
+		if (serializedError.fingerprint) {
+			output += `(error code: ${serializedError.fingerprint})\n`;
+		}
+
 		response.send(output);
 	};
 }
