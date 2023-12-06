@@ -36,7 +36,7 @@ The `registerCrashHandler` function can be used to bind an event handler to the 
 
 This function should only ever be called once in your app, normally alongside all your setup code (e.g. alongside creating an Express app).
 
-> **Note**
+> [!NOTE]<br />
 > It's not a requirement, but generally the earlier the better with registering an uncaught exception handler – the sooner you register it the more likely you are to catch uncaught exceptions.
 
 ```js

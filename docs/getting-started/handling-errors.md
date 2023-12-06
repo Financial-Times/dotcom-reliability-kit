@@ -87,7 +87,7 @@ app.get('/', async (request, response, next) => {
 
 This way of handling async errors will also be [built-in in Express v5](https://expressjs.com/en/guide/migrating-5.html#rejected-promises).
 
-> **Note**
+> [!NOTE]<br />
 > The rest of the examples in this documentation assume that you're _not_ including `express-async-errors`. If you do use this library then you can simplify a lot when you're implementing in your own app.
 
 ### Registering error handlers
