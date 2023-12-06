@@ -72,7 +72,7 @@ It's important that you run `npm install` before committing. This ensures that t
 
 You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
 
-> [!WARNING]<br />
+> [!IMPORTANT]<br />
 > Normally we want the first release of a new package to be a pre-release (e.g. `0.1.0`). To do this, you'll need to [hard-code the release version in a commit](#hard-coding-the-release-version).
 
 > [!NOTE]<br />

@@ -112,7 +112,7 @@ error.code // FETCH_DNS_LOOKUP_ERROR
 error.cause // The underlying DNS error that was caught
 ```
 
-> [!NOTE]<br />
+> [!IMPORTANT]<br />
 > This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
 
 #### Abort and timeout errors
@@ -124,7 +124,7 @@ error.code // FETCH_ABORT_ERROR or FETCH_TIMEOUT_ERROR
 error.cause // The underlying abort or timeout error that was caught
 ```
 
-> [!NOTE]<br />
+> [!IMPORTANT]<br />
 > This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
 
 #### Socket errors
@@ -136,7 +136,7 @@ error.code // FETCH_SOCKET_HANGUP_ERROR
 error.cause // The underlying socket error that was caught
 ```
 
-> [!NOTE]<br />
+> [!IMPORTANT]<br />
 > This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
 
 #### Unknown errors

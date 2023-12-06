@@ -33,7 +33,7 @@ const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors
 
 The `createErrorLogger` function can be used to generate Express middleware which logs errors to the console and Splunk via [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger).
 
-> [!WARNING]<br />
+> [!CAUTION]<br />
 > This middleware **must** be added to your Express app _after_ all your application routes – you won't get error logs for any routes which are mounted after this middleware.
 
 ```js
