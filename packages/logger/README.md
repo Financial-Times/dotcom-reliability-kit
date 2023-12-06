@@ -258,7 +258,7 @@ It's generally easier and less error-prone to use one of the shortcut methods ra
 
 As well as the valid log levels, there are a couple of deprecated legacy levels. These are only present to maintain backwards-compatibility with [n-logger](https://github.com/Financial-Times/n-logger).
 
-> **Warning**
+> [!WARNING]<br />
 > These methods are deprecated and will log a warning message the first time they're used.
 
   * `logger.data(...logData)`: Aliases `logger.debug()`
@@ -313,7 +313,7 @@ app.get('/mock-url', (request, response) => {
 
 Add additional [base log data](#optionsbaselogdata) to the logger via merging objects together. You must pass an `Object` which will be merged with the existing base log data.
 
-> **Warning**
+> [!WARNING]<br />
 > This method is deprecated and will log a warning message the first time it's used. This is just for compatibility with n-logger and you should use either `baseLogData` or [`createChildLogger`](#loggercreatechildlogger) instead.
 
 ```js
@@ -341,7 +341,7 @@ logger.info('Example');
 
 Add a `context` property to the logger's [base log data](#optionsbaselogdata). You must pass an `Object` which will be added as a `context` property to all logs.
 
-> **Warning**
+> [!WARNING]<br />
 > This method is deprecated and will log a warning message the first time it's used. This is just for compatibility with [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger) and you should use either `baseLogData` or [`createChildLogger`](#loggercreatechildlogger) instead.
 
 ```js
@@ -366,7 +366,7 @@ logger.info('Example');
 
 Remove the `context` property from the logger's [base log data](#optionsbaselogdata).
 
-> **Warning**
+> [!WARNING]<br />
 > This method is deprecated and will log a warning message the first time it's used. This is just for compatibility with [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger) and you should use either `baseLogData` or [`createChildLogger`](#loggercreatechildlogger) instead.
 
 ```js
@@ -491,7 +491,7 @@ Different types of data are serialized differently before being output as JSON:
       // }
       ```
 
-    > **Warning:**
+    > [!WARNING]<br />
     > It's important to note that only properties that are [serializable as JSON](https://www.rfc-editor.org/rfc/rfc7159) can be logged. Any non-serializable properties (e.g. functions) will not be output.
 
   * **Strings** are moved into the `message` property of the output log. E.g.

@@ -31,7 +31,7 @@ The `renderErrorInfoPage` function can be used to generate Express middleware wh
 
 When the `NODE_ENV` environment variable is either **empty** or set to **`"development"`** then a full debug page will be rendered. Otherwise only the error status code and message will be output, e.g. `500 Server Error`. This ensures that we don't leak important error information in production.
 
-> **Warning**
+> [!WARNING]<br />
 > This middleware **must** be added to your Express app _after_ all your application routes – you won't get rendered errors for any routes which are mounted after this middleware.
 
 ```js
@@ -40,7 +40,7 @@ const app = express();
 app.use(renderErrorInfoPage());
 ```
 
-> **Warning**
+> [!WARNING]<br />
 > If you're using [@dotcom-reliability-kit/middleware-log-errors](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-log-errors#readme) in your app, it's best to mount the error page middleware _after_ the logging middleware. Otherwise the error will never be logged.
 
 Once you've mounted the middleware, if you're working locally you should now see a detailed error page when you encounter an error in your app (assuming you're [relying on the Express error handler to serve errors](https://github.com/Financial-Times/dotcom-reliability-kit/blob/main/docs/getting-started/handling-errors.md#bubbling-up-in-express)):

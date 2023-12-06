@@ -72,7 +72,7 @@ The `SerializedError` type documents the return value of the [`serializeError` f
 
 This is a hash of the first part of the error stack, used to help group errors that occurred in the same part of the codebase. The fingerprint is `null` if the error does not include a stack trace.
 
-> **Warning**
+> [!WARNING]<br />
 > Do not rely on the format or length of the error fingerprint as the underlying hash may change without warning. You _can_ rely on the fingerprint being unique to the type of error being thrown.
 
 #### `SerializedError.name`
