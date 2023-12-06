@@ -72,8 +72,11 @@ It's important that you run `npm install` before committing. This ensures that t
 
 You'll need to manually add the package to the list of packages in the README once it's ready to be used by other teams.
 
+> **Warning**
+> Normally we want the first release of a new package to be a pre-release (e.g. `0.1.0`). To do this, you'll need to [hard-code the release version in a commit](#hard-coding-the-release-version).
+
 > **Note**
-> Wherever the package version appears, you should leave it as `0.0.0` to allow Release Please to correctly bump and release the first version. If you want the first release of the new package to be a pre-release (e.g. `0.1.0`) then you can [hard-code the release version in a commit](#hard-coding-the-release-version).
+> Wherever the package version appears, you should leave it as `0.0.0` to allow Release Please to correctly bump and release the first version.
 
 
 ## Installing dependencies
