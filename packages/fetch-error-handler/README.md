@@ -3,7 +3,7 @@
 
 Properly handle fetch errors and avoid a lot of boilerplate in your app. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
-> [!WARNING]  
+> [!WARNING]<br />
 > This package is in beta and hasn't been tested extensively in production yet. Feel free to use, and any feedback is greatly appreciated.
 
   * [Usage](#usage)
@@ -112,7 +112,7 @@ error.code // FETCH_DNS_LOOKUP_ERROR
 error.cause // The underlying DNS error that was caught
 ```
 
-> [!NOTE]  
+> [!NOTE]<br />
 > This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
 
 #### Abort and timeout errors
@@ -124,7 +124,7 @@ error.code // FETCH_ABORT_ERROR or FETCH_TIMEOUT_ERROR
 error.cause // The underlying abort or timeout error that was caught
 ```
 
-> [!NOTE]  
+> [!NOTE]<br />
 > This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
 
 #### Socket errors
@@ -136,7 +136,7 @@ error.code // FETCH_SOCKET_HANGUP_ERROR
 error.cause // The underlying socket error that was caught
 ```
 
-> [!NOTE]  
+> [!NOTE]<br />
 > This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
 
 #### Unknown errors

@@ -45,7 +45,7 @@ Errors can contain a lot of information about what happened, but passing an erro
 
 Extracting the information we do want can result in a lot of boilerplate code littered around our systems. To aid this, Reliability Kit provides a couple of packages to help with this task.
 
-> **Note**
+> [!NOTE]<br />
 > The code examples in this section are illustrative to help understand what we're doing under the hood. For our recommended implementation of error logging, see the [One way of logging](#one-way-of-logging) section.
 
 [`@dotcom-reliability-kit/serialize-error`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/serialize-error#readme)  provides a `serializeError` function which accepts an error object and converts it to a plain object with all of the data extracted for logging. If you were logging something manually you could get all error information like this:
@@ -203,7 +203,7 @@ There are times where an unexpected error can occur in your app and your code is
 
 Uncaught exception handling should never attempt to keep the app alive. If an error is thrown in a place where no handling is present then it's correct for the application to crash, _however_ if the app is crashing then we need to be sure that the fatal error is logged somewhere:
 
-> **Note**
+> [!NOTE]<br />
 > This code example is illustrative, you should not use this in your application but it helps us explain how logging fatal errors works. For a production solution, see the later example under this heading.
 
 ```js

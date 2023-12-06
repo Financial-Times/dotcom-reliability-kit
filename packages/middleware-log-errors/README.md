@@ -33,7 +33,7 @@ const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors
 
 The `createErrorLogger` function can be used to generate Express middleware which logs errors to the console and Splunk via [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger).
 
-> **Warning**
+> [!WARNING]<br />
 > This middleware **must** be added to your Express app _after_ all your application routes – you won't get error logs for any routes which are mounted after this middleware.
 
 ```js
@@ -94,7 +94,7 @@ type ErrorLoggingFilter = (error: any, request: express.Request) => boolean;
 
 If the function returns `true` then the error and request details will be logged. Otherwise no logs will be output.
 
-> **Warning**
+> [!WARNING]<br />
 > This option can be dangerous, misconfiguring it can result in a loss of log information. Consider whether you _definitely_ need to filter logs before using, sometimes it's better to have a few too many logs than miss an important one.
 
 Example of usage:
@@ -153,7 +153,7 @@ app.use(createErrorLogger({
 }));
 ```
 
-> **Note**
+> [!NOTE]<br />
 > There's no need to include the `x-request-id` header in this array, as this is automatically included as `request.id` in the logs.
 
 #### `options.logger`
