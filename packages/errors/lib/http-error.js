@@ -106,7 +106,7 @@ class HttpError extends OperationalError {
 			typeof data.statusCode === 'number'
 				? HttpError.normalizeErrorStatusCode(data.statusCode)
 				: // @ts-ignore TypeScript does not properly infer the constructor
-				  this.constructor.defaultStatusCode;
+					this.constructor.defaultStatusCode;
 		this.statusMessage = HttpError.getMessageForStatusCode(this.statusCode);
 
 		// Default the error code to one that includes the HTTP status
