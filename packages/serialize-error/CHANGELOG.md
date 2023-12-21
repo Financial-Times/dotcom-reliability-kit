@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.2.0...serialize-error-v2.2.1) (2023-12-21)
+
+
+### Documentation Changes
+
+* fix the markdown note/warning blocks ([c7f69f2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c7f69f20a8b000f4a40c4cd25be23fcee2ecd85d))
+
 ## [2.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.1.0...serialize-error-v2.2.0) (2023-11-15)
 
 

@@ -18,6 +18,25 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
 
+## [2.4.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.4.1...logger-v2.4.2) (2023-12-21)
+
+
+### Bug Fixes
+
+* bump pino from 8.16.2 to 8.17.1 ([433e70d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/433e70d49bd4206b725b5d171ad325c86c8808cc))
+
+
+### Documentation Changes
+
+* fix the markdown note/warning blocks ([c7f69f2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c7f69f20a8b000f4a40c4cd25be23fcee2ecd85d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/serialize-error bumped from ^2.2.0 to ^2.2.1
+
 ## [2.4.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.3.1...logger-v2.4.0) (2023-11-23)
 
 

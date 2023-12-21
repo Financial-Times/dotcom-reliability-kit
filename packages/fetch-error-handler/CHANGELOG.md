@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.1.1...fetch-error-handler-v0.1.2) (2023-12-21)
+
+
+### Documentation Changes
+
+* fix the markdown note/warning blocks ([c7f69f2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c7f69f20a8b000f4a40c4cd25be23fcee2ecd85d))
+* revise the note/warning levels ([917abc6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/917abc60a0891f3a9110bafca96fe924a5b76a80))
+
 ## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.1.0...fetch-error-handler-v0.1.1) (2023-09-19)
 
 

@@ -102,6 +102,21 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^3.1.5 to ^3.1.6
 
+## [3.0.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.8...crash-handler-v3.0.9) (2023-12-21)
+
+
+### Documentation Changes
+
+* fix the markdown note/warning blocks ([c7f69f2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c7f69f20a8b000f4a40c4cd25be23fcee2ecd85d))
+* revise the note/warning levels ([917abc6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/917abc60a0891f3a9110bafca96fe924a5b76a80))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.6 to ^3.1.7
+
 ## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v2.1.2...crash-handler-v3.0.0) (2023-08-07)
 
 
