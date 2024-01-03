@@ -106,3 +106,13 @@ updates:
     commit-message:
       prefix: "fix:"
       prefix-development: "chore:"
+
+  - package-ecosystem: "npm"
+    directory: "/packages/opentelemetry"
+    schedule:
+      interval: "daily"
+      time: "09:00"
+      timezone: "Europe/London"
+    commit-message:
+      prefix: "fix:"
+      prefix-development: "chore:"

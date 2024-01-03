@@ -37,6 +37,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/middleware-render-error-info](./packages/middleware-render-error-info/#readme):**<br/>
       Express middleware to render error information in a browser in a way that makes local debugging easier
 
+    * **[@dotcom-reliability-kit/opentelemetry](./packages/opentelemetry/#readme):**<br/>
+      An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client that's preconfigured for drop-in use in FT apps.
+
     * **[@dotcom-reliability-kit/serialize-error](./packages/serialize-error/#readme):**<br/>
       A utility function to serialize an error object in a way that's friendly to loggers, view engines, and converting to JSON
 
