@@ -76,7 +76,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			expect(typeof pinoOptions).toStrictEqual('object');
 			expect(pinoOptions.base).toEqual({});
 			expect(pinoOptions.messageKey).toStrictEqual('message');
-			expect(pinoOptions.timestamp).toStrictEqual(true);
+			expect(pinoOptions.timestamp).toStrictEqual('mockIsoTime');
 
 			expect(typeof pinoOptions.formatters).toStrictEqual('object');
 			expect(typeof pinoOptions.formatters.level).toStrictEqual('function');
@@ -695,36 +695,6 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				it('is set to the value of the `transport` option', () => {
 					expect(logger.transport).toStrictEqual('mock transport');
 				});
-			});
-		});
-
-		describe('when the `withTimestamps` option is set to `false`', () => {
-			beforeEach(() => {
-				pino.mockReset();
-				pino.mockReturnValue(mockPinoLogger);
-				logger = new Logger({
-					withTimestamps: false
-				});
-			});
-
-			it('turns off timestamps in the created Pino logger', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(pinoOptions.timestamp).toStrictEqual(false);
-			});
-		});
-
-		describe('when the `useIsoTimeFormat` option is set to `true`', () => {
-			beforeEach(() => {
-				pino.mockReset();
-				pino.mockReturnValue(mockPinoLogger);
-				logger = new Logger({
-					useIsoTimeFormat: true
-				});
-			});
-
-			it('formats timestamps in the Pino logger as ISO8601', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(pinoOptions.timestamp).toStrictEqual('mockIsoTime');
 			});
 		});
 

@@ -11,8 +11,6 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
       * [`options.logLevel`](#optionsloglevel)
       * [`options.transforms`](#optionstransforms)
       * [`options.withPrettifier`](#optionswithprettifier)
-      * [`options.withTimestamps`](#optionswithtimestamps)
-      * [`options.useIsoTimeFormat`](#optionsuseisotimeformat)
     * [`logger.log()` and shortcut methods](#loggerlog-and-shortcut-methods)
     * [`logger.flush()`](#loggerflush)
     * [`logger.createChildLogger()`](#loggercreatechildlogger)
@@ -179,14 +177,14 @@ const logger = new Logger({
 });
 
 logger.info({
-    time: 1234567890,
-    message: 'Hello World'
+    message: 'Hello World',
+    example: true
 });
 // Outputs:
 // {
 //     "LEVEL": "info",
 //     "MESSAGE": "This is a log",
-//     "TIME": 1234567890
+//     "EXAMPLE": true
 // }
 ```
 
@@ -199,46 +197,6 @@ Whether to send prettified logs if available. This option has no effect if you h
 Must be a `Boolean` and defaults to `true`.
 
 It's also possible to set this option as an environment variable, which is how you configure the default logger. Set the `LOG_DISABLE_PRETTIFIER` environment variable to `true` if you want to force the prettifier not to load.
-
-#### `options.withTimestamps`
-
-Whether to send the timestamp that each log method was called. Because this module logs asynchronously the timestamp when the log is sent to Splunk is not necessarily accurate. Sending the timestamp as a `time` property on each log gives you accurate timings.
-
-Must be a `Boolean` and defaults to `true` for backwards-compatibility with [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger). This is not _technically_ compatible with [n-logger](https://github.com/Financial-Times/n-logger) which is why the option to turn it off exists.
-
-```js
-const logger = new Logger({
-    withTimestamps: true
-});
-
-logger.info('This is a log');
-// Outputs:
-// {
-//     "level": "info",
-//     "message": "This is a log",
-//     "time": 1234567890
-// }
-```
-
-#### `options.useIsoTimeFormat`
-
-Whether to format the `time` property as an [ISO8601](https://en.wikipedia.org/wiki/ISO_8601) standard datetime format. This overrides the `withTimestamps` option.
-
-Must be a `Boolean` and defaults to `false` for backwards-compatibility with previous timestamps, which were formatted as [Unix time](https://en.wikipedia.org/wiki/Unix_time) seconds.
-
-```js
-const logger = new Logger({
-    useIsoTimeFormat: true
-});
-
-logger.info('This is a log');
-// Outputs:
-// {
-//     "level": "info",
-//     "message": "This is a log",
-//     "time": "2020-01-01T12:00:00.000Z"
-// }
-```
 
 ### `logger.log()` and shortcut methods
 
