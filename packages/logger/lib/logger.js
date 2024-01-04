@@ -26,10 +26,6 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  *     Transforms to apply to logs before sending.
  * @property {boolean} [withPrettifier = true]
  *     Whether to prettify log output if it's possible.
- * @property {boolean} [withTimestamps = true]
- *     Whether to send the timestamp that each log method was called.
- * @property {boolean} [useIsoTimeFormat = false]
- *     Whether to format the timestamps as ISO8601.
  */
 
 /**
@@ -196,14 +192,6 @@ class Logger {
 				? options.withPrettifier
 				: !Boolean(process.env.LOG_DISABLE_PRETTIFIER);
 
-		// Default and set the timestamps option.
-		/** @type {boolean | TimeFn} */
-		let withTimestamps = options.withTimestamps !== false;
-
-		if (options.useIsoTimeFormat) {
-			withTimestamps = pino.stdTimeFunctions.isoTime;
-		}
-
 		if (options._transport) {
 			// If we have a configured transport, use it. This means
 			// that a child logger was created with an already-instantated
@@ -220,7 +208,7 @@ class Logger {
 					}
 				},
 				messageKey: 'message', // This is for backwards compatibility with our existing logs
-				timestamp: withTimestamps
+				timestamp: pino.stdTimeFunctions.isoTime
 			};
 			if (withPrettifier && prettificationAllowed && pinoPretty) {
 				this.#logTransport = pino(
