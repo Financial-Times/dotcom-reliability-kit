@@ -9,6 +9,7 @@ Express middleware to consistently log errors. This module is part of [FT.com Re
     * [`options.filter`](#optionsfilter)
     * [`options.includeHeaders`](#optionsincludeheaders)
     * [`options.logger`](#optionslogger)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -165,6 +166,11 @@ type LogMethod = (...logData: any) => any;
 ```
 
 This is passed directly onto the relevant log-error method, [see the documentation for that package for more details](../log-error/README.md#optionslogger).
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

@@ -5,6 +5,7 @@ Express middleware to render error information in a browser in a way that makes 
 
   * [Usage](#usage)
     * [`renderErrorInfoPage`](#rendererrorinfopage)
+  * [Migrating](#migrating)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -50,6 +51,11 @@ Once you've mounted the middleware, if you're working locally you should now see
 #### Debug headers
 
 As well as rendering an error page, the middleware also sends an `error-fingerprint` HTTP header in the response. This contains the [error fingerprint](../serialize-error/README.md#serializederrorfingerprint) and is available in development and production. Inspecting this header on a generic error page can help identify the root cause of an issue.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

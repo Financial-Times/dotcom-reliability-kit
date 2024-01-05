@@ -12,6 +12,7 @@ A method to consistently log error object with optional request information. Thi
     * [`options.includeHeaders`](#optionsincludeheaders)
     * [`options.logger`](#optionslogger)
     * [`options.request`](#optionsrequest)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -257,6 +258,11 @@ When this option is defined, the logged data looks includes request data:
     }
 }
 ```
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing
