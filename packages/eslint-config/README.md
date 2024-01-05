@@ -4,6 +4,7 @@ A linting config, specifically focussed on enhancing code quality and proactivel
 
 - [Usage](#usage)
   - [Static Code Analysis](#static-code-analysis)
+- [Migrating](#migrating)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -34,6 +35,12 @@ Add the following command to the `scripts` object in your repository's package.j
 ```
 
 Run that command in your terminal to lint your files (either cd into the relevant directory or run from root). Any linting errors found by the config will be displayed in your terminal, with helpful suggestions on how to resolve them.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
 
 ## Contributing
 

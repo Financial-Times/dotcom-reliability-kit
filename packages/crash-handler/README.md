@@ -10,6 +10,7 @@ A method to bind an uncaught exception handler to ensure that fatal application 
     * [`options.process`](#optionsprocess)
 * [Compatibility](#compatibility)
   * [Migrating from Sentry](#migrating-from-sentry)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -81,6 +82,11 @@ registerCrashHandler({
 ### Migrating from Sentry
 
 The Reliability Kit crash handler is a replacement for Sentry's uncaught exception handling, which your app is likely to be using. You'll need to migrate away from Sentry in order to use this module. [We maintain a migration guide for this on Confluence](https://financialtimes.atlassian.net/l/cp/eeTWSAxe).
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

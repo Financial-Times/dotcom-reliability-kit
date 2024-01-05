@@ -13,6 +13,7 @@ A utility function to serialize a request object ([Express](https://expressjs.co
       * [`SerializedRequest.url`](#serializedrequesturl)
       * [`SerializedRequest.headers`](#serializedrequestheaders)
       * [`SerializedRequest.route`](#serializedrequestroute)
+  * [Migrating](#migrating)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -138,6 +139,11 @@ This is extracted from the `request.headers` property and is filtered to only in
 #### `SerializedRequest.route`
 
 This is an object extracted from `request.route.path` (string) and `request.params` (object) if they are present and conform to the same properties on an [Express Request object](https://expressjs.com/en/4x/api.html#req). It defaults to `undefined`.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

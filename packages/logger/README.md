@@ -30,9 +30,7 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
     * [Production usage](#production-usage)
     * [Testing](#testing)
     * [Compatibility](#compatibility)
-      * [Migrating from n-logger](./docs/migration.md#migrating-from-n-logger)
-      * [Migrating from n-mask-logger](./docs/migration.md#migrating-from-n-mask-logger)
-      * [Migrating from n-serverless-logger](./docs/migration.md#migrating-from-n-serverless-logger)
+  * [Migrating](#migrating)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -571,6 +569,11 @@ jest.mock('@dotcom-reliability-kit/logger', () => ({
 ### Compatibility
 
 `@dotcom-reliability-kit/logger` is compatible with most use cases of [n-logger](https://github.com/Financial-Times/n-logger), [n-mask-logger](https://github.com/Financial-Times/n-mask-logger), and [n-serverless-logger](https://github.com/Financial-Times/n-serverless-logger). We tried hard to make migration as easy as possible from these libraries. The full list of differences are available in the [Migration Guide](./docs/migration.md) as well as tips on migrating.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

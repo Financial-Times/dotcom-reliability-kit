@@ -14,6 +14,7 @@ A utility to get application information (e.g. the system code) in a consistent 
     * [`appInfo.cloudProvider`](#appinfocloudprovider)
     * [`appInfo.herokuAppId`](#appinfoherokuappId)
     * [`appInfo.herokuDynoId`](#appinfoherokudynoId)
+  * [Migrating](#migrating)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -97,6 +98,12 @@ This is derived from the dyno metadata
 Get the `process.env.HEROKU_DYNO_ID` which is the dyno identifier
 
 This is derived from the dyno metadata
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
 
 ## Contributing
 

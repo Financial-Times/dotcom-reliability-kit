@@ -14,6 +14,7 @@ A suite of error classes which help you throw the most appropriate error in any 
     * [`UpstreamServiceError`](#upstreamserviceerror)
     * [`UserInputError`](#userinputerror)
     * [`BaseError`](#baseerror)
+  * [Migrating](#migrating)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -219,6 +220,12 @@ throw new BaseError({
     cause: new TypeError('example cause')
 });
 ```
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
 
 ## Contributing
 

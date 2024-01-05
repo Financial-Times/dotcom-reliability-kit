@@ -16,6 +16,7 @@ A utility function to serialize an error object in a way that's friendly to logg
       * [`SerializedError.stack`](#serializederrorstack)
       * [`SerializedError.statusCode`](#serializederrorstatuscode)
       * [`SerializedError.data`](#serializederrordata)
+  * [Migrating](#migrating)
   * [Contributing](#contributing)
   * [License](#license)
 
@@ -110,6 +111,11 @@ This is extracted from the `error.statusCode` property first, then the `error.st
 #### `SerializedError.data`
 
 This is extracted from the `error.data` property. If this property is not a plain object, then it will default to an empty object: `{}`.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

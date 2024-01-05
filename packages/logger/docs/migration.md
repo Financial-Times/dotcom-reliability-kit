@@ -5,11 +5,9 @@ This document outlines how to migrate to the latest version of the Reliability K
 
 Emoji           | Label             | Meaning
 ----------------|:------------------|:-------
-:red_circle:    | Breaking          | A breaking change which will definitely require code changes to resolve
-:orange_circle: | Possibly Breaking | A breaking change to the output of the library which may require extra steps
+:red_circle:    | Breaking          | A breaking change which will likely require code or config changes to resolve
+:orange_circle: | Possibly Breaking | A breaking change that is unlikely to require code changes but things outside of the code (e.g. logs) may have changed
 :yellow_circle: | Deprecation       | A deprecated feature which will require code changes in the future
-
-## Table of contents
 
   * [Migrating from n-logger](#migrating-from-n-logger)
     * [Where logs get sent](#n-logger-where-logs-get-sent)
@@ -31,6 +29,11 @@ Emoji           | Label             | Meaning
     * [Logger property changes](#n-serverless-logger-property-changes)
     * [Logger method changes](#n-serverless-logger-method-changes)
     * [Environment variable changes](#n-serverless-logger-environment-variable-changes)
+  * [Migrating from v1 to v2](#migrating-from-v1-to-v2)
+    * [Node.js 14 is no longer supported](#nodejs-14-is-no-longer-supported)
+  * [Migrating from v2 to v3](#migrating-from-v2-to-v3)
+    * [Node.js 16 is no longer supported](#nodejs-16-is-no-longer-supported)
+
 
 ## Migrating from n-logger
 
@@ -265,3 +268,27 @@ logger.info('Hello');
 The following environment variables have been deprecated.
 
   * **`SPLUNK_LOG_LEVEL`:** This environment variable will be used if a `LOG_LEVEL` environment variable is not present, however it may be removed in a later version of the Reliability Kit logger. It's best to migrate to `LOG_LEVEL` early.
+
+
+## Migrating from v1 to v2
+
+### Node.js 14 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v14. If your app is already using Node.js v16 or above then you can migrate with no code changes.
+
+
+## Migrating from v2 to v3
+
+### Node.js 16 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v16. If your app is already using Node.js v18 or above then you can migrate with no code changes.
+
+### Log times are now ISO 8601 timestamps
+
+**:orange_circle: Possibly Breaking:** The `time` property of all logs is now an [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) representation of the time that the log was sent rather than a timestamp. There are two ways this could be a breaking change in your app:
+
+  1. If you have saved searches or dashboards that rely on the `time` property being a number.
+
+  2. If you're using the `withTimestamps` or `useIsoTimeFormat` options with TypeScript, because these options have now been removed from the code and the type definitions.
+
+If neither of the above is true, this should be a safe update with no code changes.
