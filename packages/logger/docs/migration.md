@@ -33,6 +33,7 @@ Emoji           | Label             | Meaning
     * [Node.js 14 is no longer supported](#nodejs-14-is-no-longer-supported)
   * [Migrating from v2 to v3](#migrating-from-v2-to-v3)
     * [Node.js 16 is no longer supported](#nodejs-16-is-no-longer-supported)
+    * [Log times are now ISO 8601 timestamps](#log-times-are-now-iso-8601-timestamps)
 
 
 ## Migrating from n-logger
