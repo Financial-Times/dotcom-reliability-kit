@@ -18,6 +18,39 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
 
+## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.4.2...logger-v3.0.0) (2024-01-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* always log ISO datetime
+* drop support for Node.js 16 and npm 7
+
+### Bug Fixes
+
+* bump pino from 8.17.1 to 8.17.2 ([fa74a45](https://github.com/Financial-Times/dotcom-reliability-kit/commit/fa74a450a0aa60d019ea32d8caba874a786c9c03))
+
+
+### Documentation Changes
+
+* add a missing table-of-contents link ([20fe3e9](https://github.com/Financial-Times/dotcom-reliability-kit/commit/20fe3e99db01132fdb40c57ad95785adb1e7a4a3))
+* add migration guides for all packages ([f6233b8](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f6233b8ac802a32cad321e43b63420fe6fd979c0))
+* replace node 16 references with node 18 ([8196a95](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8196a954beebe89a720d3440041fd673e895c61b))
+
+
+### Miscellaneous
+
+* always log ISO datetime ([e12ab9a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e12ab9a22d078e58e17b934eca3edb20d302d7ae))
+* drop support for Node.js 16 and npm 7 ([016096e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/016096eab022fa426159ec649a4e32c24eedd568))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.3.0 to ^3.0.0
+    * @dotcom-reliability-kit/serialize-error bumped from ^2.2.1 to ^3.0.0
+
 ## [2.4.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.4.1...logger-v2.4.2) (2023-12-21)
 
 

@@ -87,6 +87,33 @@
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
     * @dotcom-reliability-kit/logger bumped from ^2.4.0 to ^2.4.1
 
+## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v3.1.7...log-error-v4.0.0) (2024-01-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node.js 16 and npm 7
+
+### Documentation Changes
+
+* add migration guides for all packages ([f6233b8](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f6233b8ac802a32cad321e43b63420fe6fd979c0))
+* replace node 16 references with node 18 ([8196a95](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8196a954beebe89a720d3440041fd673e895c61b))
+
+
+### Miscellaneous
+
+* drop support for Node.js 16 and npm 7 ([016096e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/016096eab022fa426159ec649a4e32c24eedd568))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.3.0 to ^3.0.0
+    * @dotcom-reliability-kit/logger bumped from ^2.4.2 to ^3.0.0
+    * @dotcom-reliability-kit/serialize-error bumped from ^2.2.1 to ^3.0.0
+    * @dotcom-reliability-kit/serialize-request bumped from ^2.2.1 to ^3.0.0
+
 ## [3.1.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v3.1.6...log-error-v3.1.7) (2023-12-21)
 
 

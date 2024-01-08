@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.2.1...serialize-error-v3.0.0) (2024-01-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node.js 16 and npm 7
+
+### Documentation Changes
+
+* add migration guides for all packages ([f6233b8](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f6233b8ac802a32cad321e43b63420fe6fd979c0))
+
+
+### Miscellaneous
+
+* drop support for Node.js 16 and npm 7 ([016096e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/016096eab022fa426159ec649a4e32c24eedd568))
+
 ## [2.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v2.2.0...serialize-error-v2.2.1) (2023-12-21)
 
 
