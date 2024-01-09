@@ -106,6 +106,22 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^3.1.4 to ^3.1.5
 
+## [5.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v5.0.0...middleware-render-error-info-v5.0.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* add official support for npm 10 ([f7c4f2f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f7c4f2f4c9358389be7bbcbd3609081eec2246b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.0.0 to ^3.0.1
+    * @dotcom-reliability-kit/log-error bumped from ^4.0.0 to ^4.0.1
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.0.0 to ^3.0.1
+
 ## [5.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v4.1.1...middleware-render-error-info-v5.0.0) (2024-01-08)
 
 

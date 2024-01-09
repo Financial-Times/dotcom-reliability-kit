@@ -87,6 +87,23 @@
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
     * @dotcom-reliability-kit/logger bumped from ^2.4.0 to ^2.4.1
 
+## [4.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.0.0...log-error-v4.0.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* add official support for npm 10 ([f7c4f2f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f7c4f2f4c9358389be7bbcbd3609081eec2246b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.0.0 to ^3.0.1
+    * @dotcom-reliability-kit/logger bumped from ^3.0.0 to ^3.0.1
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.0.0 to ^3.0.1
+    * @dotcom-reliability-kit/serialize-request bumped from ^3.0.0 to ^3.0.1
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v3.1.7...log-error-v4.0.0) (2024-01-08)
 
 
