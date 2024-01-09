@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.0...fetch-error-handler-v0.2.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* add official support for npm 10 ([f7c4f2f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f7c4f2f4c9358389be7bbcbd3609081eec2246b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/errors bumped from ^3.0.0 to ^3.0.1
+
 ## [0.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.1.2...fetch-error-handler-v0.2.0) (2024-01-08)
 
 

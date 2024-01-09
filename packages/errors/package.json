@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/errors",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A suite of error classes which help you throw the most appropriate error in any situation",
   "repository": {
     "type": "git",

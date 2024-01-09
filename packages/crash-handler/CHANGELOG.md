@@ -102,6 +102,20 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^3.1.5 to ^3.1.6
 
+## [4.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v4.0.0...crash-handler-v4.0.1) (2024-01-09)
+
+
+### Bug Fixes
+
+* add official support for npm 10 ([f7c4f2f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f7c4f2f4c9358389be7bbcbd3609081eec2246b5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.0.0 to ^4.0.1
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.9...crash-handler-v4.0.0) (2024-01-08)
 
 
