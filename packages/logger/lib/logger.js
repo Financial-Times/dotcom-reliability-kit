@@ -95,17 +95,24 @@ const logLevelToTransportMethodMap = {
 const logLevels = Object.keys(logLevelToTransportMethodMap);
 
 /**
- * We have to try/catch here to be sure that we don't
- * error if pino-pretty (an optional peer dependency)
- * is not installed.
+ * Whether log prettification is available. This is based
+ * on whether pino-pretty is installed in the application.
  *
- * @type {null | import('pino-pretty').default}
+ * @type {boolean}
  */
-const pinoPretty = (() => {
+const prettificationAvailable = (() => {
 	try {
-		return require('pino-pretty').default;
+		// We have to `require` here rather than `require.resolve`
+		// which is less than ideal but otherwise this is actually
+		// impossible to test with Jest. Both technically do the
+		// same file system work though, and it's only done once
+		// when the module first loads. It's also safe to ts-ignore
+		// this one because it's never actually used directly.
+		// @ts-ignore
+		require('pino-pretty');
+		return true;
 	} catch (_) {
-		return null;
+		return false;
 	}
 })();
 
@@ -210,17 +217,17 @@ class Logger {
 				messageKey: 'message', // This is for backwards compatibility with our existing logs
 				timestamp: pino.stdTimeFunctions.isoTime
 			};
-			if (withPrettifier && prettificationAllowed && pinoPretty) {
-				this.#logTransport = pino(
-					pinoOptions,
-					pinoPretty({
+			if (withPrettifier && prettificationAllowed && prettificationAvailable) {
+				pinoOptions.transport = {
+					target: 'pino-pretty',
+					worker: { execArgv: [] },
+					options: {
 						colorize: true,
 						messageKey: 'message'
-					})
-				);
-			} else {
-				this.#logTransport = pino(pinoOptions);
+					}
+				};
 			}
+			this.#logTransport = pino(pinoOptions);
 			this.#logTransport.level = this.#logLevel;
 		}
 
