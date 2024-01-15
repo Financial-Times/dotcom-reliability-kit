@@ -16,7 +16,7 @@
 	},
 	"main": "lib",
 	"dependencies": {
-		"@dotcom-reliability-kit/app-info": "^2.3.0",
+		"@dotcom-reliability-kit/app-info": "^3.0.1",
 		"@dotcom-reliability-kit/logger": "^3.0.1",
 		"@opentelemetry/api": "^1.7.0",
 		"@opentelemetry/auto-instrumentations-node": "^0.40.2",
