@@ -21,8 +21,10 @@ const logger = require('@dotcom-reliability-kit/logger');
  *      Options passed into the function parameter.
  * @param {string | null} [options.tracesEndpoint]
  *      The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
+ * @param {string | null} [options.authorizationHeader]
+ *      The HTTP `Authorization` header to send with OpenTelemetry trace segments.
  */
-function setupOpenTelemetry({ tracesEndpoint } = {}) {
+function setupOpenTelemetry({ authorizationHeader, tracesEndpoint } = {}) {
 	// Use a Reliability Kit logger for logging. The DiagLogLevel
 	// does nothing here – Reliability Kit's log level (set through
 	// the LOG_LEVEL environment variable) takes over. We set the
@@ -65,8 +67,13 @@ function setupOpenTelemetry({ tracesEndpoint } = {}) {
 			enabled: true,
 			tracesEndpoint: tracesEndpoint
 		});
+		const headers = {};
+		if (authorizationHeader) {
+			headers.authorization = authorizationHeader;
+		}
 		openTelemetryConfig.traceExporter = new OTLPTraceExporter({
-			url: tracesEndpoint
+			url: tracesEndpoint,
+			headers
 		});
 	} else {
 		logger.warn({
