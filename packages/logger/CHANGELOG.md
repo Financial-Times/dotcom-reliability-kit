@@ -18,6 +18,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
 
+## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.1...logger-v3.0.2) (2024-01-16)
+
+
+### Bug Fixes
+
+* switch back to using a pino-pretty transport ([3a90c1e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3a90c1efec01f4d8e7df7b934ce692785de241bd))
+
 ## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.0...logger-v3.0.1) (2024-01-09)
 
 
