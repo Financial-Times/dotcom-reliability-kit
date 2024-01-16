@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/opentelemetry
+# @dotcom-reliability-kit/opentelemetry
 
 An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client that's preconfigured for drop-in use in FT apps. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

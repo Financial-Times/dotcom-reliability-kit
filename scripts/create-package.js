@@ -45,7 +45,7 @@ const releasePleaseManifest = require('../.release-please-manifest.json');
 	await fs.writeFile(
 		path.join(packagePath, 'README.md'),
 		`
-## @dotcom-reliability-kit/${name}
+# @dotcom-reliability-kit/${name}
 
 This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 `

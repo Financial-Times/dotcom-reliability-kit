@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/logos
+# @dotcom-reliability-kit/logos
 
 Logo images for [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

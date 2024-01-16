@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/app-info
+# @dotcom-reliability-kit/app-info
 
 A utility to get application information (e.g. the system code) in a consistent way. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

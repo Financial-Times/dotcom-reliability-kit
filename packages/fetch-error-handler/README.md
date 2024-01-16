@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/fetch-error-handler
+# @dotcom-reliability-kit/fetch-error-handler
 
 Properly handle fetch errors and avoid a lot of boilerplate in your app. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

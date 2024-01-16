@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/errors
+# @dotcom-reliability-kit/errors
 
 A suite of error classes which help you throw the most appropriate error in any situation, and identify when errors are known vs unknown. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

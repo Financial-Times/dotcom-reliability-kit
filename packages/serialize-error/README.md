@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/serialize-error
+# @dotcom-reliability-kit/serialize-error
 
 A utility function to serialize an error object in a way that's friendly to loggers, view engines, and converting to JSON. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
