@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/middleware-render-error-info
+# @dotcom-reliability-kit/middleware-render-error-info
 
 Express middleware to render error information in a browser in a way that makes local debugging easier and production error rendering more consistent. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

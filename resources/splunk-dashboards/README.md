@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/splunk-dashboard
+# @dotcom-reliability-kit/splunk-dashboard
 
 Splunk dashboard templates for apps which use [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

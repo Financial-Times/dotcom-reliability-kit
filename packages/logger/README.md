@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/logger
+# @dotcom-reliability-kit/logger
 
 A simple and fast logger based on [Pino](https://getpino.io/), with FT preferences baked in. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 

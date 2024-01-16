@@ -1,5 +1,5 @@
 
-## @dotcom-reliability-kit/serialize-request
+# @dotcom-reliability-kit/serialize-request
 
 A utility function to serialize a request object ([Express](https://expressjs.com/en/4x/api.html#req) or [IncomingMessage](https://nodejs.org/api/http.html#class-httpincomingmessage)) in a way that's friendly to loggers, view engines, and converting to JSON. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
