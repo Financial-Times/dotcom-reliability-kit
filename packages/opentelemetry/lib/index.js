@@ -15,14 +15,18 @@ const { NoopSpanProcessor } = require('@opentelemetry/sdk-trace-base');
 const logger = require('@dotcom-reliability-kit/logger');
 
 /**
+ * @typedef {object} Options
+ * @property {string | null} [tracesEndpoint]
+ *      The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
+ * @property {string | null} [authorizationHeader]
+ *      The HTTP `Authorization` header to send with OpenTelemetry trace segments.
+ */
+
+/**
  * Set up OpenTelemetry tracing.
  *
- * @param {object} [options]
- *      Options passed into the function parameter.
- * @param {string | null} [options.tracesEndpoint]
- *      The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
- * @param {string | null} [options.authorizationHeader]
- *      The HTTP `Authorization` header to send with OpenTelemetry trace segments.
+ * @param {Options} [options]
+ *      OpenTelemetry configuration options.
  */
 function setupOpenTelemetry({ authorizationHeader, tracesEndpoint } = {}) {
 	// Use a Reliability Kit logger for logging. The DiagLogLevel
