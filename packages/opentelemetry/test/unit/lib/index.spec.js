@@ -95,7 +95,8 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		it('creates traces via an instantiated OTLPTraceExporter', () => {
 			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
 			expect(OTLPTraceExporter).toHaveBeenCalledWith({
-				url: 'MOCK_TRACES_ENDPOINT'
+				url: 'MOCK_TRACES_ENDPOINT',
+				headers: {}
 			});
 			expect(
 				opentelemetrySDK.NodeSDK.mock.calls[0][0].traceExporter
@@ -104,6 +105,26 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 		it('it does not create traces via an instantiated NoopSpanProcessor', () => {
 			expect(NoopSpanProcessor).toHaveBeenCalledTimes(0);
+		});
+	});
+
+	describe('when an authorization header is passed into the options', () => {
+		beforeAll(() => {
+			OTLPTraceExporter.mockReset();
+			openTelemetryTracing({
+				tracesEndpoint: 'MOCK_TRACES_ENDPOINT',
+				authorizationHeader: 'mock-authorization-header'
+			});
+		});
+
+		it('instantiates the OTLPTraceExporter with the authorization header set', () => {
+			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
+			expect(OTLPTraceExporter).toHaveBeenCalledWith({
+				url: 'MOCK_TRACES_ENDPOINT',
+				headers: {
+					authorization: 'mock-authorization-header'
+				}
+			});
 		});
 	});
 
