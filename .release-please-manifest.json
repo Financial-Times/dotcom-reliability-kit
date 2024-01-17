@@ -10,5 +10,5 @@
   "packages/middleware-render-error-info": "5.0.2",
   "packages/serialize-error": "3.0.1",
   "packages/serialize-request": "3.0.1",
-  "packages/opentelemetry": "0.1.0"
+  "packages/opentelemetry": "0.1.1"
 }
