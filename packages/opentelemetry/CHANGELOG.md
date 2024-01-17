@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.1.0...opentelemetry-v0.1.1) (2024-01-17)
+
+
+### Documentation Changes
+
+* add a README for the opentelemetry package ([0ab4dd2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0ab4dd246e07747d5c57b9ff08bebb78e24037e2))
+
 ## 0.1.0 (2024-01-16)
 
 
