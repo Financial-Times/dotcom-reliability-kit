@@ -13,11 +13,16 @@ const {
 	OTLPTraceExporter
 } = require('@opentelemetry/exporter-trace-otlp-proto');
 const traceExporterPackageJson = require('@opentelemetry/exporter-trace-otlp-proto/package.json');
-const { NoopSpanProcessor } = require('@opentelemetry/sdk-trace-base');
+const {
+	NoopSpanProcessor,
+	TraceIdRatioBasedSampler
+} = require('@opentelemetry/sdk-trace-base');
 const logger = require('@dotcom-reliability-kit/logger');
 
 const USER_AGENT = `FTSystem/${appInfo.systemCode} (${packageJson.name}/${packageJson.version})`;
 const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${traceExporterPackageJson.version})`;
+
+const DEFAULT_SAMPLE_PERCENTAGE = 5;
 
 /**
  * @typedef {object} Options
@@ -31,6 +36,8 @@ const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${tr
  * @typedef {object} TracingOptions
  * @property {string} endpoint
  *     The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
+ * @property {number} [samplePercentage]
+ *     What percentage of traces should be sent onto the collector.
  */
 
 /**
@@ -88,12 +95,6 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 	// If we have an OpenTelemetry tracing endpoint then set it up,
 	// otherwise we pass a noop span processor so that nothing is exported
 	if (tracing?.endpoint) {
-		logger.debug({
-			event: 'OTEL_TRACE_STATUS',
-			message: `OpenTelemetry tracing is enabled and exporting to endpoint ${tracing.endpoint}`,
-			enabled: true,
-			endpoint: tracing.endpoint
-		});
 		const headers = {
 			'user-agent': TRACING_USER_AGENT
 		};
@@ -103,6 +104,22 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 		openTelemetryConfig.traceExporter = new OTLPTraceExporter({
 			url: tracing.endpoint,
 			headers
+		});
+
+		// Sample traces
+		let samplePercentage = DEFAULT_SAMPLE_PERCENTAGE;
+		if (tracing.samplePercentage && !Number.isNaN(tracing.samplePercentage)) {
+			samplePercentage = tracing.samplePercentage;
+		}
+		const sampleRatio = samplePercentage / 100;
+		openTelemetryConfig.sampler = new TraceIdRatioBasedSampler(sampleRatio);
+
+		logger.debug({
+			event: 'OTEL_TRACE_STATUS',
+			message: `OpenTelemetry tracing is enabled and exporting to endpoint ${tracing.endpoint}`,
+			enabled: true,
+			endpoint: tracing.endpoint,
+			samplePercentage
 		});
 	} else {
 		logger.warn({

@@ -30,7 +30,10 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
 const {
 	OTLPTraceExporter
 } = require('@opentelemetry/exporter-trace-otlp-proto');
-const { NoopSpanProcessor } = require('@opentelemetry/sdk-trace-base');
+const {
+	NoopSpanProcessor,
+	TraceIdRatioBasedSampler
+} = require('@opentelemetry/sdk-trace-base');
 
 // Set up the mock
 appInfo.systemCode = 'MOCK_SYSTEM_CODE';
@@ -114,13 +117,22 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			).toBeInstanceOf(OTLPTraceExporter);
 		});
 
+		it('creates a ratio-based sampler and sets a sample rate for OpenTelemetry', () => {
+			expect(TraceIdRatioBasedSampler).toHaveBeenCalledTimes(1);
+			expect(TraceIdRatioBasedSampler).toHaveBeenCalledWith(0.05); // The default
+			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].sampler).toBeInstanceOf(
+				TraceIdRatioBasedSampler
+			);
+		});
+
 		it('logs that tracing is enabled', () => {
 			expect(logger.debug).toHaveBeenCalledWith({
 				enabled: true,
 				endpoint: 'MOCK_TRACING_ENDPOINT',
 				event: 'OTEL_TRACE_STATUS',
 				message:
-					'OpenTelemetry tracing is enabled and exporting to endpoint MOCK_TRACING_ENDPOINT'
+					'OpenTelemetry tracing is enabled and exporting to endpoint MOCK_TRACING_ENDPOINT',
+				samplePercentage: 5
 			});
 		});
 
@@ -148,6 +160,25 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 						'FTSystem/MOCK_SYSTEM_CODE (mock-package/1.2.3) (mock-otel-tracing-package/3.4.5)'
 				}
 			});
+		});
+	});
+
+	describe('when a sample percentage is passed into the options', () => {
+		beforeAll(() => {
+			opentelemetrySDK.NodeSDK.mockReset();
+			TraceIdRatioBasedSampler.mockReset();
+			openTelemetryTracing({
+				tracing: { endpoint: 'MOCK_TRACING_ENDPOINT', samplePercentage: 50 }
+			});
+		});
+
+		it('sets a sample rate for OpenTelemetry based on the value', () => {
+			expect(TraceIdRatioBasedSampler).toHaveBeenCalledTimes(1);
+			// The value of `samplePercentage` divided by 100
+			expect(TraceIdRatioBasedSampler).toHaveBeenCalledWith(0.5);
+			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].sampler).toBeInstanceOf(
+				TraceIdRatioBasedSampler
+			);
 		});
 	});
 
