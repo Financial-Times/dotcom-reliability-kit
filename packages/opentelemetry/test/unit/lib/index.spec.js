@@ -126,7 +126,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		});
 
 		it('logs that tracing is enabled', () => {
-			expect(logger.debug).toHaveBeenCalledWith({
+			expect(logger.info).toHaveBeenCalledWith({
 				enabled: true,
 				endpoint: 'MOCK_TRACING_ENDPOINT',
 				event: 'OTEL_TRACE_STATUS',
