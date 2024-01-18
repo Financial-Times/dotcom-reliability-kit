@@ -1,6 +1,6 @@
 {
 	"name": "@dotcom-reliability-kit/opentelemetry",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"description": "An OpenTelemetry client that's preconfigured for drop-in use in FT apps.",
 	"repository": {
 		"type": "git",
