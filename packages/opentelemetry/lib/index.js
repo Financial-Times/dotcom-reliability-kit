@@ -114,7 +114,7 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 		const sampleRatio = samplePercentage / 100;
 		openTelemetryConfig.sampler = new TraceIdRatioBasedSampler(sampleRatio);
 
-		logger.debug({
+		logger.info({
 			event: 'OTEL_TRACE_STATUS',
 			message: `OpenTelemetry tracing is enabled and exporting to endpoint ${tracing.endpoint}`,
 			enabled: true,
