@@ -21,6 +21,38 @@ describe('setupOpenTelemetry', () => {
 		});
 	});
 
+	describe('when a sample rate is specified', () => {
+		it('calls OpenTelemetry with the given sample percentage as a number', () => {
+			process.env.OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE = '50';
+			require('../../setup.js');
+
+			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
+			expect(setupOpenTelemetry).toHaveBeenCalledWith({
+				authorizationHeader: 'MOCK_AUTH_HEADER',
+				tracing: {
+					endpoint: 'MOCK_TRACING_ENDPOINT',
+					samplePercentage: 50
+				}
+			});
+		});
+	});
+
+	describe('when a non-numeric sample rate is specified', () => {
+		it('calls OpenTelemetry with NaN as a percentage', () => {
+			process.env.OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE = 'nope';
+			require('../../setup.js');
+
+			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
+			expect(setupOpenTelemetry).toHaveBeenCalledWith({
+				authorizationHeader: 'MOCK_AUTH_HEADER',
+				tracing: {
+					endpoint: 'MOCK_TRACING_ENDPOINT',
+					samplePercentage: NaN
+				}
+			});
+		});
+	});
+
 	describe('when no traces endpoint is specified', () => {
 		it('should not include tracing configuration', () => {
 			delete process.env.OPENTELEMETRY_TRACING_ENDPOINT;

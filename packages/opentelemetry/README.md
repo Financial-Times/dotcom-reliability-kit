@@ -14,6 +14,7 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
     * [`options.authorizationHeader`](#optionsauthorizationheader)
     * [`options.tracing`](#optionstracing)
     * [`options.tracing.endpoint`](#optionstracingendpoint)
+    * [`options.tracing.samplePercentage`](#optionstracingsamplepercentage)
     * [`OTEL_` environment variables](#otel_-environment-variables)
 * [Contributing](#contributing)
 * [License](#license)
@@ -169,6 +170,13 @@ A URL to send OpenTelemetry traces to. E.g. `http://localhost:4318/v1/traces`. D
 
 **Environment variable:** `OPENTELEMETRY_TRACING_ENDPOINT`<br/>
 **Option:** `tracing.endpoint` (`String`)
+
+#### `options.tracing.samplePercentage`
+
+The percentage of traces to send to the exporter. Defaults to `5` which means that 5% of traces will be exported.
+
+**Environment variable:** `OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE`<br/>
+**Option:** `tracing.samplePercentage` (`Number`)
 
 #### `OTEL_` environment variables
 
