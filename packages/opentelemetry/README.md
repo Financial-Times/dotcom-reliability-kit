@@ -12,7 +12,8 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
   * [Manual setup](#manual-setup)
   * [Configuration options](#configuration-options)
     * [`options.authorizationHeader`](#optionsauthorizationheader)
-    * [`options.tracesEndpoint`](#optionstracesendpoint)
+    * [`options.tracing`](#optionstracing)
+    * [`options.tracing.endpoint`](#optionstracingendpoint)
     * [`OTEL_` environment variables](#otel_-environment-variables)
 * [Contributing](#contributing)
 * [License](#license)
@@ -153,17 +154,21 @@ setupOpenTelemetry({
 
 #### `options.authorizationHeader`
 
-Set the [`Authorization` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) in requests to the OpenTelemetry collector. Defaults to `null`.
+Set the [`Authorization` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) in requests to the OpenTelemetry collector. Defaults to `undefined`.
 
 **Environment variable:** `OPENTELEMETRY_AUTHORIZATION_HEADER`<br/>
 **Option:** `authorizationHeader` (`String`)
 
-#### `options.tracesEndpoint`
+#### `options.tracing`
 
-A URL to send OpenTelemetry traces to. E.g. `http://localhost:4318/v1/traces`. Defaults to `null` which means that OpenTelemetry traces will not be sent.
+An object containing other tracing-specific configurations. Defaults to `undefined` which means that OpenTelemetry traces will not be sent.
 
-**Environment variable:** `OPENTELEMETRY_TRACES_ENDPOINT`<br/>
-**Option:** `tracesEndpoint` (`String`)
+#### `options.tracing.endpoint`
+
+A URL to send OpenTelemetry traces to. E.g. `http://localhost:4318/v1/traces`. Defaults to `undefined` which means that OpenTelemetry traces will not be sent.
+
+**Environment variable:** `OPENTELEMETRY_TRACING_ENDPOINT`<br/>
+**Option:** `tracing.endpoint` (`String`)
 
 #### `OTEL_` environment variables
 

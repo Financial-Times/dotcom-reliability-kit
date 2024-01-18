@@ -53,7 +53,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 	describe('OpenTelemetry is set up correctly', () => {
 		beforeAll(() => {
-			openTelemetryTracing({ tracesEndpoint: 'MOCK_TRACES_ENDPOINT' });
+			openTelemetryTracing({ tracing: { endpoint: 'MOCK_TRACING_ENDPOINT' } });
 		});
 
 		it('sets up OpenTelemetry to log via Reliability Kit logger', () => {
@@ -103,7 +103,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		it('creates traces via an instantiated OTLPTraceExporter', () => {
 			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
 			expect(OTLPTraceExporter).toHaveBeenCalledWith({
-				url: 'MOCK_TRACES_ENDPOINT',
+				url: 'MOCK_TRACING_ENDPOINT',
 				headers: {
 					'user-agent':
 						'FTSystem/MOCK_SYSTEM_CODE (mock-package/1.2.3) (mock-otel-tracing-package/3.4.5)'
@@ -112,6 +112,16 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(
 				opentelemetrySDK.NodeSDK.mock.calls[0][0].traceExporter
 			).toBeInstanceOf(OTLPTraceExporter);
+		});
+
+		it('logs that tracing is enabled', () => {
+			expect(logger.debug).toHaveBeenCalledWith({
+				enabled: true,
+				endpoint: 'MOCK_TRACING_ENDPOINT',
+				event: 'OTEL_TRACE_STATUS',
+				message:
+					'OpenTelemetry tracing is enabled and exporting to endpoint MOCK_TRACING_ENDPOINT'
+			});
 		});
 
 		it('it does not create traces via an instantiated NoopSpanProcessor', () => {
@@ -123,7 +133,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		beforeAll(() => {
 			OTLPTraceExporter.mockReset();
 			openTelemetryTracing({
-				tracesEndpoint: 'MOCK_TRACES_ENDPOINT',
+				tracing: { endpoint: 'MOCK_TRACING_ENDPOINT' },
 				authorizationHeader: 'mock-authorization-header'
 			});
 		});
@@ -131,7 +141,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		it('instantiates the OTLPTraceExporter with the authorization header set', () => {
 			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
 			expect(OTLPTraceExporter).toHaveBeenCalledWith({
-				url: 'MOCK_TRACES_ENDPOINT',
+				url: 'MOCK_TRACING_ENDPOINT',
 				headers: {
 					authorization: 'mock-authorization-header',
 					'user-agent':
@@ -145,7 +155,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		beforeAll(() => {
 			opentelemetrySDK.NodeSDK.mockReset();
 			OTLPTraceExporter.mockReset();
-			openTelemetryTracing({ tracesEndpoint: null });
+			openTelemetryTracing({ tracing: undefined });
 		});
 
 		it('instantiates the NoopSpanProcessor if param is not a traces endpoint', () => {
@@ -155,35 +165,22 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			).toBeInstanceOf(NoopSpanProcessor);
 		});
 
+		it('logs that tracing is disabled', () => {
+			expect(logger.warn).toHaveBeenCalledWith({
+				enabled: false,
+				endpoint: null,
+				event: 'OTEL_TRACE_STATUS',
+				message:
+					'OpenTelemetry tracing is disabled because no tracing endpoint was set'
+			});
+		});
+
 		it('it does not create traces via an instantiated OTLPTraceExporter', () => {
 			expect(OTLPTraceExporter).toHaveBeenCalledTimes(0);
 		});
 	});
 
-	describe('OpenTelemetry is passed a param', () => {
-		it('executes when no param is passed in (as params are optional)', () => {
-			openTelemetryTracing();
-		});
-
-		it('should log a good message when passed a traces endpoint url', () => {
-			openTelemetryTracing({ tracesEndpoint: 'MOCK_TRACES_ENDPOINT' });
-			expect(logger.debug).toHaveBeenCalledWith({
-				enabled: true,
-				event: 'OTEL_TRACE_STATUS',
-				message:
-					'OpenTelemetry tracing is enabled and exporting to endpoint MOCK_TRACES_ENDPOINT',
-				tracesEndpoint: 'MOCK_TRACES_ENDPOINT'
-			});
-		});
-
-		it('should log a bad message when not passed a traces endpoint url', () => {
-			openTelemetryTracing({ tracesEndpoint: null });
-			expect(logger.warn).toHaveBeenCalledWith({
-				enabled: false,
-				event: 'OTEL_TRACE_STATUS',
-				message:
-					'OpenTelemetry tracing is disabled because no OPENTELEMETRY_TRACES_ENDPOINT environment variable was set'
-			});
-		});
+	it('executes when no param is passed in (as params are optional)', () => {
+		openTelemetryTracing();
 	});
 });

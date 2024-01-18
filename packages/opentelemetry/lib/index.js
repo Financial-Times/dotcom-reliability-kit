@@ -21,10 +21,16 @@ const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${tr
 
 /**
  * @typedef {object} Options
- * @property {string | null} [tracesEndpoint]
- *      The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
- * @property {string | null} [authorizationHeader]
- *      The HTTP `Authorization` header to send with OpenTelemetry trace segments.
+ * @property {string} [authorizationHeader]
+ *      The HTTP `Authorization` header to send with OpenTelemetry requests.
+ * @property {TracingOptions} [tracing]
+ *      Configuration options for OpenTelemetry tracing.
+ */
+
+/**
+ * @typedef {object} TracingOptions
+ * @property {string} endpoint
+ *     The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
  */
 
 /**
@@ -33,7 +39,7 @@ const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${tr
  * @param {Options} [options]
  *      OpenTelemetry configuration options.
  */
-function setupOpenTelemetry({ authorizationHeader, tracesEndpoint } = {}) {
+function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 	// Use a Reliability Kit logger for logging. The DiagLogLevel
 	// does nothing here – Reliability Kit's log level (set through
 	// the LOG_LEVEL environment variable) takes over. We set the
@@ -67,14 +73,14 @@ function setupOpenTelemetry({ authorizationHeader, tracesEndpoint } = {}) {
 		})
 	];
 
-	// If we have an OpenTelemetry traces endpoint then set it up,
+	// If we have an OpenTelemetry tracing endpoint then set it up,
 	// otherwise we pass a noop span processor so that nothing is exported
-	if (tracesEndpoint) {
+	if (tracing?.endpoint) {
 		logger.debug({
 			event: 'OTEL_TRACE_STATUS',
-			message: `OpenTelemetry tracing is enabled and exporting to endpoint ${tracesEndpoint}`,
+			message: `OpenTelemetry tracing is enabled and exporting to endpoint ${tracing.endpoint}`,
 			enabled: true,
-			tracesEndpoint: tracesEndpoint
+			endpoint: tracing.endpoint
 		});
 		const headers = {
 			'user-agent': TRACING_USER_AGENT
@@ -83,15 +89,16 @@ function setupOpenTelemetry({ authorizationHeader, tracesEndpoint } = {}) {
 			headers.authorization = authorizationHeader;
 		}
 		openTelemetryConfig.traceExporter = new OTLPTraceExporter({
-			url: tracesEndpoint,
+			url: tracing.endpoint,
 			headers
 		});
 	} else {
 		logger.warn({
 			event: 'OTEL_TRACE_STATUS',
 			message:
-				'OpenTelemetry tracing is disabled because no OPENTELEMETRY_TRACES_ENDPOINT environment variable was set',
-			enabled: false
+				'OpenTelemetry tracing is disabled because no tracing endpoint was set',
+			enabled: false,
+			endpoint: null
 		});
 		openTelemetryConfig.spanProcessor = new NoopSpanProcessor();
 	}
