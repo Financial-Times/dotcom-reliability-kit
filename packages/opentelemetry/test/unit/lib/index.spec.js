@@ -1,5 +1,13 @@
+jest.mock('../../../package.json', () => ({
+	name: 'mock-package',
+	version: '1.2.3'
+}));
 jest.mock('@opentelemetry/auto-instrumentations-node');
 jest.mock('@opentelemetry/exporter-trace-otlp-proto');
+jest.mock('@opentelemetry/exporter-trace-otlp-proto/package.json', () => ({
+	name: 'mock-otel-tracing-package',
+	version: '3.4.5'
+}));
 jest.mock('@opentelemetry/sdk-trace-base');
 jest.mock('@opentelemetry/resources');
 jest.mock('@opentelemetry/sdk-node');
@@ -96,7 +104,10 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
 			expect(OTLPTraceExporter).toHaveBeenCalledWith({
 				url: 'MOCK_TRACES_ENDPOINT',
-				headers: {}
+				headers: {
+					'user-agent':
+						'FTSystem/MOCK_SYSTEM_CODE (mock-package/1.2.3) (mock-otel-tracing-package/3.4.5)'
+				}
 			});
 			expect(
 				opentelemetrySDK.NodeSDK.mock.calls[0][0].traceExporter
@@ -122,7 +133,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(OTLPTraceExporter).toHaveBeenCalledWith({
 				url: 'MOCK_TRACES_ENDPOINT',
 				headers: {
-					authorization: 'mock-authorization-header'
+					authorization: 'mock-authorization-header',
+					'user-agent':
+						'FTSystem/MOCK_SYSTEM_CODE (mock-package/1.2.3) (mock-otel-tracing-package/3.4.5)'
 				}
 			});
 		});
