@@ -40,6 +40,18 @@ const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${tr
  *      OpenTelemetry configuration options.
  */
 function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
+	// We don't support using the built-in `OTEL_`-prefixed environment variables. We
+	// do want to know when these are used, though, so that we can easily spot when
+	// an app's use of these environment variables might be interfering.
+	const environmentVariables = Object.keys(process.env);
+	if (environmentVariables.some((key) => key.startsWith('OTEL_'))) {
+		logger.warn({
+			event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
+			message:
+				'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
+		});
+	}
+
 	// Use a Reliability Kit logger for logging. The DiagLogLevel
 	// does nothing here – Reliability Kit's log level (set through
 	// the LOG_LEVEL environment variable) takes over. We set the

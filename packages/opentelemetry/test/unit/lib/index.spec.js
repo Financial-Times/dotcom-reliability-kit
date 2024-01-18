@@ -183,4 +183,19 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 	it('executes when no param is passed in (as params are optional)', () => {
 		openTelemetryTracing();
 	});
+
+	describe('when OTEL_ environment variables are defined', () => {
+		beforeAll(() => {
+			process.env.OTEL_MOCK = 'mock';
+			openTelemetryTracing();
+		});
+
+		it('logs a warning that these environment variables are not supported', () => {
+			expect(logger.warn).toHaveBeenCalledWith({
+				event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
+				message:
+					'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
+			});
+		});
+	});
 });
