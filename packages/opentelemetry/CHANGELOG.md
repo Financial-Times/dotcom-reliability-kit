@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.1.1...opentelemetry-v0.2.0) (2024-01-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* add the ability to sample traces
+* move tracing config into a separate object
+
+### Features
+
+* add a warning against otel environment vars ([491069a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/491069a5bf6665e9b18d47d6b429cdc80967da37))
+* add the ability to sample traces ([03e3f5b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/03e3f5b46948fe958dcffaea07fdf399b0e3cfc4))
+* move tracing config into a separate object ([f96a90f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f96a90f3e311d35ca3ed1eee493dd6de4578a5e6))
+* send a custom user-agent with otel requests ([efce3fe](https://github.com/Financial-Times/dotcom-reliability-kit/commit/efce3feb0367a803252da4b78f9345a12dc1da24))
+
 ## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.1.0...opentelemetry-v0.1.1) (2024-01-17)
 
 
