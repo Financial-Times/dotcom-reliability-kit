@@ -1,3 +1,4 @@
+const packageJson = require('../package.json');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
 const {
 	getNodeAutoInstrumentations
@@ -11,8 +12,12 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
 const {
 	OTLPTraceExporter
 } = require('@opentelemetry/exporter-trace-otlp-proto');
+const traceExporterPackageJson = require('@opentelemetry/exporter-trace-otlp-proto/package.json');
 const { NoopSpanProcessor } = require('@opentelemetry/sdk-trace-base');
 const logger = require('@dotcom-reliability-kit/logger');
+
+const USER_AGENT = `FTSystem/${appInfo.systemCode} (${packageJson.name}/${packageJson.version})`;
+const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${traceExporterPackageJson.version})`;
 
 /**
  * @typedef {object} Options
@@ -71,7 +76,9 @@ function setupOpenTelemetry({ authorizationHeader, tracesEndpoint } = {}) {
 			enabled: true,
 			tracesEndpoint: tracesEndpoint
 		});
-		const headers = {};
+		const headers = {
+			'user-agent': TRACING_USER_AGENT
+		};
 		if (authorizationHeader) {
 			headers.authorization = authorizationHeader;
 		}
