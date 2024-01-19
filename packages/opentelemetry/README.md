@@ -171,6 +171,14 @@ You'll need to set the [tracing endpoint](#optionstracingendpoint) to use Jaeger
 
 You'll also need to disable sampling by [configuring it](#optionstracingsamplepercentage) to `100`.
 
+Assuming you're using one of the [automated setups](#automated-setup-with---require), environment variables could be set like this:
+
+```
+OPENTELEMETRY_TRACING_ENDPOINT=http://localhost:4318/v1/traces \
+OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE=100 \
+npm start
+```
+
 Run your application and perform some actions. Open up the Jaeger interface (`http://localhost:16686`). You should start to see traces appear.
 
 
