@@ -155,7 +155,7 @@ Each log transform must be a function which accepts a single object argument and
 
 ```ts
 type LogData = {[x: string]: any};
-type Tranform = (logData: LogData) => LogData
+type Transform = (logData: LogData) => LogData
 ```
 
 You can pass as many transforms as you need, though you must consider performance – each function will be called on every log that's sent.
