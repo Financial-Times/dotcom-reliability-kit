@@ -3,13 +3,21 @@
 
 An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client that's preconfigured for drop-in use in FT apps. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
+> [!TIP]<br />
+> OpenTelemetry is an open source observability framework that supports sending metrics, traces, and logs to a large variety of backends via a shared protocol. We try to abstract some of these concepts away with this module, but [understanding OpenTelemetry will help you get it set up](https://opentelemetry.io/docs/what-is-opentelemetry/).
+
 > [!WARNING]<br />
 > This package is in beta and hasn't been tested extensively in production yet. Feel free to use, and any feedback is greatly appreciated.
 
 * [Usage](#usage)
-  * [Automated setup with `--require`](#automated-setup-with---require)
-  * [Automated setup with `require()`](#automated-setup-with-require)
-  * [Manual setup](#manual-setup)
+  * [Setup](#setup)
+    * [Automated setup with `--require`](#automated-setup-with---require)
+    * [Automated setup with `require()`](#automated-setup-with-require)
+    * [Manual setup](#manual-setup)
+  * [Running in production](#running-in-production)
+  * [Running locally](#running-locally)
+    * [Running a backend](#running-a-backend)
+    * [Sending traces to your local backend](#sending-traces-to-your-local-backend)
   * [Configuration options](#configuration-options)
     * [`options.authorizationHeader`](#optionsauthorizationheader)
     * [`options.tracing`](#optionstracing)
@@ -28,9 +36,11 @@ Install `@dotcom-reliability-kit/opentelemetry` as a dependency:
 npm install --save @dotcom-reliability-kit/opentelemetry
 ```
 
+### Setup
+
 You can set up OpenTelemetry in a number of ways, each has pros and cons which we'll outline in the sections below.
 
-### Automated setup with `--require`
+#### Automated setup with `--require`
 
 You can completely avoid code changes by setting up OpenTelemetry using the Node.js [`--require` command-line option](https://nodejs.org/api/cli.html#-r---require-module):
 
@@ -61,7 +71,7 @@ This will import our setup script _before_ any of your code. OpenTelemetry will 
     </tr>
 </table>
 
-### Automated setup with `require()`
+#### Automated setup with `require()`
 
 If you can't use `--require`, e.g. because your tooling won't allow it, then you can include the setup script directly in your code:
 
@@ -96,7 +106,7 @@ OpenTelemetry will be [configured](#configuration-options) with environment vari
     </tr>
 </table>
 
-### Manual setup
+#### Manual setup
 
 If you'd like to customise the OpenTelemetry config more and have control over what runs, you can include in your code:
 
@@ -134,6 +144,35 @@ setupOpenTelemetry({ /* ... */ });
         </td>
     </tr>
 </table>
+
+### Running in production
+
+To use this package in production you'll need a [Collector](https://opentelemetry.io/docs/collector/) that can receive traces over HTTP. This could be something you run (e.g. the [AWS Distro for OpenTelemetry](https://aws.amazon.com/otel/)) or a third-party service.
+
+Having traces collected centrally will give you a good view of how your production application is performing, allowing you to debug issues more effectively.
+
+OpenTelemetry can generate a huge amount of data which, depending on where you send it, can become very expensive. In production environments where you don't have control over the traffic volume of your app, you'll likely need to sample your traces. This package automatically samples traces ([at 5% by default](#optionstracingsamplepercentage)).
+
+### Running locally
+
+If you want to debug specific performance issues then setting up a local Collector can help you. You shouldn't be sending traces in local development to your production backend as this could make it harder to debug real production issues. You probably also don't want to sample traces in local development – you'll want to collect all traffic because the volume will be much lower.
+
+#### Running a backend
+
+To view traces locally, you'll need a backend for them to be sent to. In this example we'll be using [Jaeger](https://www.jaegertracing.io/) via [Docker](https://www.docker.com/). You'll need Docker (or a compatible [alternative](https://podman.io/)) to be set up first.
+
+[Jaeger maintains a useful guide for this](https://www.jaegertracing.io/docs/1.53/getting-started/#all-in-one).
+
+#### Sending traces to your local backend
+
+Once your backend is running you'll need to make some configuration changes.
+
+You'll need to set the [tracing endpoint](#optionstracingendpoint) to use Jaeger's tracing endpoint on port `4318` ([OTLP/HTTP](https://opentelemetry.io/docs/specs/otlp/#otlphttp)). E.g. `http://localhost:4318/v1/traces`.
+
+You'll also need to disable sampling by [configuring it](#optionstracingsamplepercentage) to `100`.
+
+Run your application and perform some actions. Open up the Jaeger interface (`http://localhost:16686`). You should start to see traces appear.
+
 
 ### Configuration options
 
