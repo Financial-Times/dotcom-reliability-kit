@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.2.0...opentelemetry-v0.2.1) (2024-01-19)
+
+
+### Features
+
+* log OpenTelemetry success as info ([af5fce9](https://github.com/Financial-Times/dotcom-reliability-kit/commit/af5fce92fb26bc4f52d8421fe5b93c0ffd758770))
+
 ## [0.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.1.1...opentelemetry-v0.2.0) (2024-01-18)
 
 
