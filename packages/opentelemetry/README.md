@@ -18,6 +18,7 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
   * [Running locally](#running-locally)
     * [Running a backend](#running-a-backend)
     * [Sending traces to your local backend](#sending-traces-to-your-local-backend)
+  * [Implementation details](#implementation-details)
   * [Configuration options](#configuration-options)
     * [`options.authorizationHeader`](#optionsauthorizationheader)
     * [`options.tracing`](#optionstracing)
@@ -181,6 +182,13 @@ npm start
 
 Run your application and perform some actions. Open up the Jaeger interface (`http://localhost:16686`). You should start to see traces appear.
 
+### Implementation details
+
+Some details about how we're implementing OpenTelemetry. This is to help avoid any gotchas and to document some of the decisions we made:
+
+  * We don't send traces for paths that we frequently poll or that will create unnecessary noise/cost. We ignore paths like `/__gtg`, `/__health`, and `/favicon.ico`. For the full list, visit [`lib/index.js`](./lib/index.js).
+
+  * We don't instrument file system operations because we don't find these useful. If you would like traces for file system operations then let us know and we can add a configuration.
 
 ### Configuration options
 
