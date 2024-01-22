@@ -6,9 +6,6 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
 > [!TIP]<br />
 > OpenTelemetry is an open source observability framework that supports sending metrics, traces, and logs to a large variety of backends via a shared protocol. We try to abstract some of these concepts away with this module, but [understanding OpenTelemetry will help you get it set up](https://opentelemetry.io/docs/what-is-opentelemetry/).
 
-> [!WARNING]<br />
-> This package is in beta and hasn't been tested extensively in production yet. Feel free to use, and any feedback is greatly appreciated.
-
 * [Usage](#usage)
   * [Setup](#setup)
     * [Automated setup with `--require`](#automated-setup-with---require)
