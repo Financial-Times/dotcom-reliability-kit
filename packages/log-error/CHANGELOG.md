@@ -87,6 +87,15 @@
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
     * @dotcom-reliability-kit/logger bumped from ^2.4.0 to ^2.4.1
 
+## [4.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.0.2...log-error-v4.0.3) (2024-01-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/logger bumped from ^3.0.2 to ^3.0.3
+
 ## [4.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.0.1...log-error-v4.0.2) (2024-01-16)
 
 

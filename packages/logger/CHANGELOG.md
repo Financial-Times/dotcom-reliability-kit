@@ -18,6 +18,13 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
 
+## [3.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.2...logger-v3.0.3) (2024-01-22)
+
+
+### Documentation Changes
+
+* fix typo in Tranform -&gt; Transform ([dab3539](https://github.com/Financial-Times/dotcom-reliability-kit/commit/dab3539a13504b29600318c29119653485df66eb))
+
 ## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.1...logger-v3.0.2) (2024-01-16)
 
 
