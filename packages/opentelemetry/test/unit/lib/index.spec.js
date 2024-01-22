@@ -94,6 +94,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		it('sets OpenTelemetry instrumentations by auto-instrumenting common and built-in Node.js modules', () => {
 			expect(getNodeAutoInstrumentations).toHaveBeenCalledTimes(1);
 			expect(getNodeAutoInstrumentations).toHaveBeenCalledWith({
+				'@opentelemetry/instrumentation-http': {
+					ignoreIncomingRequestHook: expect.any(Function)
+				},
 				'@opentelemetry/instrumentation-fs': {
 					enabled: false
 				}
@@ -138,6 +141,65 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 		it('it does not create traces via an instantiated NoopSpanProcessor', () => {
 			expect(NoopSpanProcessor).toHaveBeenCalledTimes(0);
+		});
+
+		describe('ignoreIncomingRequestHook filter', () => {
+			let ignoreIncomingRequestHook;
+
+			beforeAll(() => {
+				ignoreIncomingRequestHook =
+					getNodeAutoInstrumentations.mock.calls[0][0][
+						'@opentelemetry/instrumentation-http'
+					].ignoreIncomingRequestHook;
+			});
+
+			it('returns `true` with a request to `/__gtg`', () => {
+				const mockRequest = {
+					url: '/__gtg?a=b',
+					headers: { host: 'mock-host' }
+				};
+				expect(ignoreIncomingRequestHook(mockRequest)).toBe(true);
+			});
+
+			it('returns `true` with a request to `/__health`', () => {
+				const mockRequest = {
+					url: '/__health?a=b',
+					headers: { host: 'mock-host' }
+				};
+				expect(ignoreIncomingRequestHook(mockRequest)).toBe(true);
+			});
+
+			it('returns `true` with a request to `/favicon.ico`', () => {
+				const mockRequest = {
+					url: '/favicon.ico?a=b',
+					headers: { host: 'mock-host' }
+				};
+				expect(ignoreIncomingRequestHook(mockRequest)).toBe(true);
+			});
+
+			it('returns `false` with a request to anything else', () => {
+				const mockRequest = {
+					url: '/mock-endpoint',
+					headers: { host: 'mock-host' }
+				};
+				expect(ignoreIncomingRequestHook(mockRequest)).toBe(false);
+			});
+
+			it('returns `false` when a request URL is not present', () => {
+				const mockRequest = {
+					url: undefined,
+					headers: { host: 'mock-host' }
+				};
+				expect(ignoreIncomingRequestHook(mockRequest)).toBe(false);
+			});
+
+			it("doesn't throw when the host header isn't set", () => {
+				const mockRequest = {
+					url: '/mock-endpoint',
+					headers: {}
+				};
+				expect(() => ignoreIncomingRequestHook(mockRequest)).not.toThrow();
+			});
 		});
 	});
 

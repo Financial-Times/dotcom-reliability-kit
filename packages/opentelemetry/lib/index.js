@@ -24,6 +24,8 @@ const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${tr
 
 const DEFAULT_SAMPLE_PERCENTAGE = 5;
 
+const IGNORED_REQUEST_PATHS = ['/__gtg', '/__health', '/favicon.ico'];
+
 /**
  * @typedef {object} Options
  * @property {string} [authorizationHeader]
@@ -86,6 +88,22 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 	// Auto-instrument common and built-in Node.js modules
 	openTelemetryConfig.instrumentations = [
 		getNodeAutoInstrumentations({
+			'@opentelemetry/instrumentation-http': {
+				// NOTE: this is not a filter like you know it. The name
+				// gives us a clue: if the hook returns `true` then the
+				// request WILL be ignored.
+				ignoreIncomingRequestHook: (request) => {
+					if (request.url) {
+						const url = new URL(request.url, `http://${request.headers.host}`);
+
+						// Don't send traces for paths that we frequently poll
+						if (IGNORED_REQUEST_PATHS.includes(url.pathname)) {
+							return true;
+						}
+					}
+					return false;
+				}
+			},
 			'@opentelemetry/instrumentation-fs': {
 				enabled: false
 			}
