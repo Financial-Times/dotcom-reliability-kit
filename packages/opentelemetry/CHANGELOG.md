@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.2.1...opentelemetry-v1.0.0) (2024-01-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* mark as stable
+
+### Features
+
+* ignore commonly polled URLs ([c207c37](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c207c378869d41a9f8d73f411a4784041d689253))
+
+
+### Documentation Changes
+
+* add a full local development example ([0dd33c6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0dd33c6d5fef6f31bafa71c0e02becb86bc5588e))
+* add running instructions ([e936cee](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e936cee7b1f1cfcae7e2e0b7a559056eb84c5ece))
+* mark as stable ([4f8c924](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4f8c92425d53035d4b80a6b8539d8181bf4e0e44))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/logger bumped from ^3.0.2 to ^3.0.3
+
 ## [0.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.2.0...opentelemetry-v0.2.1) (2024-01-19)
 
 
