@@ -116,3 +116,10 @@ updates:
     commit-message:
       prefix: "fix:"
       prefix-development: "chore:"
+    groups:
+      opentelemetry:
+        patterns:
+          - "@opentelemetry/*"
+        update-types:
+          - "minor"
+          - "patch"
