@@ -187,6 +187,8 @@ Some details about how we're implementing OpenTelemetry. This is to help avoid a
 
   * We don't instrument file system operations because we don't find these useful. If you would like traces for file system operations then let us know and we can add a configuration.
 
+  * It's less of _our_ implementation detail and more a note on the [OpenTelemetry Node.js SDK](https://github.com/open-telemetry/opentelemetry-js). Native ES Modules cannot be auto-instrumented without the `--experimental-loader` Node.js option. [Documentation is here](https://www.npmjs.com/package/@opentelemetry/instrumentation?activeTab=readme#instrumentation-for-es-modules-in-nodejs-experimental).
+
 ### Configuration options
 
 Depending on the way you set up OpenTelemetry, you can either configure it via environment variables or options passed into an object.
