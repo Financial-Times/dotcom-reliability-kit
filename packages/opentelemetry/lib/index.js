@@ -18,6 +18,8 @@ const {
 	TraceIdRatioBasedSampler
 } = require('@opentelemetry/sdk-trace-base');
 const logger = require('@dotcom-reliability-kit/logger');
+const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
+const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
 const USER_AGENT = `FTSystem/${appInfo.systemCode} (${packageJson.name}/${packageJson.version})`;
 const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${traceExporterPackageJson.version})`;
@@ -94,11 +96,29 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 				// request WILL be ignored.
 				ignoreIncomingRequestHook: (request) => {
 					if (request.url) {
-						const url = new URL(request.url, `http://${request.headers.host}`);
+						try {
+							const url = new URL(
+								request.url,
+								`http://${request.headers.host}`
+							);
 
-						// Don't send traces for paths that we frequently poll
-						if (IGNORED_REQUEST_PATHS.includes(url.pathname)) {
-							return true;
+							// Don't send traces for paths that we frequently poll
+							if (IGNORED_REQUEST_PATHS.includes(url.pathname)) {
+								return true;
+							}
+						} catch (/** @type {any} */ cause) {
+							// If URL parsing errors then we log it and move on.
+							// We don't ignore URLs that result in an error because
+							// we're interested in the traces from bad requests.
+							logRecoverableError({
+								error: new UserInputError({
+									message: 'Failed to parse the request URL for filtering',
+									code: 'OTEL_REQUEST_FILTER_FAILURE',
+									cause
+								}),
+								includeHeaders: ['host'],
+								request
+							});
 						}
 					}
 					return false;
