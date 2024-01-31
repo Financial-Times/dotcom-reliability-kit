@@ -15,12 +15,16 @@ jest.mock('@opentelemetry/semantic-conventions');
 jest.mock('@dotcom-reliability-kit/app-info');
 jest.mock('@opentelemetry/api');
 jest.mock('@dotcom-reliability-kit/logger');
+jest.mock('@dotcom-reliability-kit/log-error');
+jest.mock('@dotcom-reliability-kit/errors');
 
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
 const {
 	getNodeAutoInstrumentations
 } = require('@opentelemetry/auto-instrumentations-node');
 const logger = require('@dotcom-reliability-kit/logger');
+const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
+const { UserInputError } = require('@dotcom-reliability-kit/errors');
 const { Resource } = require('@opentelemetry/resources');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
 const {
@@ -199,6 +203,28 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 					headers: {}
 				};
 				expect(() => ignoreIncomingRequestHook(mockRequest)).not.toThrow();
+			});
+
+			it('logs a warning and returns `false` when a request URL cannot be parsed', () => {
+				const mockRequest = {
+					url: '/mock-endpont',
+					headers: { host: '' }
+				};
+				expect(ignoreIncomingRequestHook(mockRequest)).toBe(false);
+				expect(UserInputError).toHaveBeenCalledTimes(1);
+				expect(UserInputError).toHaveBeenCalledWith(
+					expect.objectContaining({
+						code: 'OTEL_REQUEST_FILTER_FAILURE'
+					})
+				);
+				expect(logRecoverableError).toHaveBeenCalledTimes(1);
+				expect(logRecoverableError).toHaveBeenCalledWith(
+					expect.objectContaining({
+						error: expect.any(UserInputError),
+						includeHeaders: ['host'],
+						request: mockRequest
+					})
+				);
 			});
 		});
 	});
