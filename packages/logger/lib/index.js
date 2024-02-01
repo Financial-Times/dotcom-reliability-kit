@@ -19,12 +19,9 @@ const legacyMask = require('./transforms/legacy-mask');
 const transforms = { legacyMask };
 
 /** @type {Logger & DefaultLogger} */
-const defaultLogger = Object.assign(new Logger(), {
-	Logger,
-	transforms
-});
-
-module.exports = defaultLogger;
+exports = module.exports = new Logger();
+exports.Logger = Logger;
+exports.transforms = transforms;
 
 // @ts-ignore
-module.exports.default = module.exports;
+exports.default = exports;
