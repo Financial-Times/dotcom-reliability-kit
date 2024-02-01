@@ -12,7 +12,8 @@
   "license": "MIT",
   "workspaces": [
     "resources/*",
-    "packages/*"
+    "packages/*",
+    "test/modules/*"
   ],
   "scripts": {
     "build:logos": "npm run build -w resources/logos",
@@ -24,7 +25,9 @@
     "clean:types": "find ./packages -name \"*.d.ts*\" | xargs -r rm",
     "build": "npm run clean && npm run build:types",
     "build:types": "tsc --project ./jsconfig.build.json",
-    "test": "jest --silent",
+    "test": "npm run test:jest && npm run test:modules",
+    "test:jest": "jest --silent",
+    "test:modules": "npm run build && npm run test --workspaces --if-present",
     "prepare": "husky",
     "postinstall": "npm run build:logos"
   },

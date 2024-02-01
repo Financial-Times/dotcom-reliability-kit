@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"module": "ES2022",
+		"moduleResolution": "node",
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "ES2022",
+		"types": ["node"]
+	},
+	"include": [
+		"**/*.ts"
+	]
+}

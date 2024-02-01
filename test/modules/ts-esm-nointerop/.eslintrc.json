@@ -1,0 +1,12 @@
+{
+	"extends": [
+		"../../../.eslintrc.json"
+	],
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"rules": {
+		"no-console": "off",
+		"no-duplicate-imports": "off"
+	}
+}
