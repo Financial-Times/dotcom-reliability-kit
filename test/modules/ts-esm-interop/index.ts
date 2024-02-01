@@ -3,9 +3,9 @@ import * as logger2 from '@dotcom-reliability-kit/logger';
 import { Logger, transforms } from '@dotcom-reliability-kit/logger';
 
 type TypeTests = {
-	logger1: Logger,
-	logger2: Logger
-}
+	logger1: Logger;
+	logger2: Logger;
+};
 
 export default {
 	// These test that the default logger exports
