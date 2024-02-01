@@ -1,65 +1,6 @@
 /**
- * @typedef {import('express').Request} ExpressRequest
- */
-
-/**
- * @typedef {import('http').IncomingMessage} HttpIncomingMessage
- */
-
-/**
- * @typedef {object} BasicRequest
- * @property {Headers | {[key: string]: string} | Iterable<[string, string]>} [headers]
- *     The request HTTP headers.
- * @property {string} [method]
- *     The request HTTP method.
- * @property {string} [url]
- *     The request URL.
- */
-
-/**
- * @typedef {BasicRequest & Record<string, any> | ExpressRequest | HttpIncomingMessage & Record<string, any>} Request
- */
-
-/**
- * @typedef {object} SerializeRequestOptions
- * @property {string[]} [includeHeaders]
- *     An array of request headers to include.
- */
-
-/**
- * @typedef {{[key: string]: string}} SerializedRequestHeaders
- */
-
-/**
- * @typedef {{[key: string]: string}} SerializedRequestRouteParams
- */
-
-/**
- * @typedef {object} SerializedRequestRoute
- * @property {string} path
- *     The route path which the request object was matched by.
- * @property {SerializedRequestRouteParams} params
- *     The parameters which were matched in the request path.
- */
-
-/**
- * @typedef {object} SerializedRequest
- * @property {(string|null)} id
- *     A unique identifier for the request.
- * @property {string} method
- *     The HTTP method for the request.
- * @property {string} url
- *     The full path and querystring of the resource being requested.
- * @property {SerializedRequestHeaders} headers
- *     A subset of HTTP headers which came with the request.
- * @property {SerializedRequestRoute} [route]
- *     The express route details.
- */
-
-/**
  * The default request headers to include in the serialization.
  *
- * @public
  * @type {string[]}
  */
 const DEFAULT_INCLUDED_HEADERS = [
@@ -73,24 +14,13 @@ const DEFAULT_INCLUDED_HEADERS = [
 
 /**
  * The maximum length of a URL, any longer than this will be truncated.
- *
- * @private
- * @type {number}
  */
 const URL_TRUNCATION_LENGTH = 200;
 
 /**
- * Serialize a request object so that it can be consistently logged or output as JSON.
  *
- * @public
- * @param {string | Request} request
- *     The request object to serialize. Either an Express Request object, a
- *     built-in Node.js IncomingMessage object, or an object with the expected
- *     `headers`, `method`, and `url` properties.
- * @param {SerializeRequestOptions} [options]
- *     Options to configure the serialization.
- * @returns {SerializedRequest}
- *     Returns the serialized request object.
+ * @param request
+ * @param options
  */
 function serializeRequest(request, options = {}) {
 	// If the request is not an object, assume it's the request
@@ -200,9 +130,9 @@ function serializeHeaders(headers, includeHeaders) {
  * Create a new serialized request object.
  *
  * @private
- * @param {Record<string, any>} properties
+ * @param {{[key: string]: any}} properties
  *     The properties of the serialized error.
- * @returns {SerializedRequest}
+ * @returns {import(".").SerializedRequest}
  *     Returns the serialized error object.
  */
 function createSerializedRequest(properties) {
