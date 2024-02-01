@@ -1,0 +1,10 @@
+{
+  "name": "@dotcom-reliability-kit/test-js-esm-uncompiled",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "tsc --project ./jsconfig.json && npm start",
+    "start": "node ."
+  }
+}

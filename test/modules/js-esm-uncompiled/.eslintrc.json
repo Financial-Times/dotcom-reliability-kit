@@ -1,0 +1,13 @@
+{
+	"extends": [
+		"../../../.eslintrc.json"
+	],
+	"parserOptions": {
+		"sourceType": "module"
+	},
+	"rules": {
+		"jsdoc/require-property-description": "off",
+		"no-console": "off",
+		"no-duplicate-imports": "off"
+	}
+}
