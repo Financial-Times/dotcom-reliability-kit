@@ -2,6 +2,7 @@
 	"extends": [
 		"../../../.eslintrc.json"
 	],
+	"ignorePatterns": ["*.js"],
 	"parserOptions": {
 		"sourceType": "module"
 	},
