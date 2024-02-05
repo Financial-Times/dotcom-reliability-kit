@@ -168,6 +168,5 @@ module.exports = {
 	herokuDynoId: process.env.HEROKU_DYNO_ID || null
 };
 
-// @ts-ignore
 module.exports.default = module.exports;
 Object.freeze(module.exports);

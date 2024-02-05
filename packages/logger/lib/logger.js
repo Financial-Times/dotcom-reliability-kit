@@ -4,76 +4,11 @@ const clone = require('lodash.clonedeep');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 
 /**
- * @typedef {"silly" | "data" | "debug" | "verbose" | "info" | "warn" | "error" | "fatal"} LogLevel
- */
-
-/**
- * @typedef {string | object | Error} LogData
- */
-
-/**
- * @typedef {typeof import('pino').stdTimeFunctions.isoTime} TimeFn
- */
-
-/**
- * @typedef {object} LoggerOptions
- * @property {LogData} [baseLogData = {}]
- *     Base log data which is added to every log output.
- * @property {LogLevel} [logLevel = "debug"]
- *     The maximum log level to output during logging. Logs at levels
- *     beneath this will be ignored.
- * @property {LogTransform[]} [transforms = []]
- *     Transforms to apply to logs before sending.
- * @property {boolean} [withPrettifier = true]
- *     Whether to prettify log output if it's possible.
- */
-
-/**
- * @typedef {object} PrivateLoggerOptions
- * @property {LogTransport} [_transport]
- *     A transport used to perform logging. This is only for internal use.
- */
-
-/**
- * @callback LogTransform
- * @param {{[key: string]: any}} logData
- *     The log data to transform.
- * @returns {{[key: string]: any}}
- *     Returns the transformed log data.
- */
-
-/**
- * @typedef {object} LogTransport
- * @property {string} [level]
- *     A property used to set the transport log level.
- * @property {(...args: any) => any} debug
- *     Log debug level information.
- * @property {(...args: any) => any} error
- *     Log error level information.
- * @property {(...args: any) => any} fatal
- *     Log fatal level information.
- * @property {(...args: any) => any} info
- *     Log info level information.
- * @property {(...args: any) => any} warn
- *     Log warn level information.
- * @property {() => void} [flush]
- *     Flush async logs ahead of time.
- */
-
-/**
- * @typedef {object} LogLevelInfo
- * @property {LogLevel} logLevel
- *     A canonical alternative level for a given level.
- * @property {boolean} isDeprecated
- *     Whether the original log level is deprecated.
- */
-
-/**
  * A map of log levels to the underlying log method that
  * should be called when a log of that level is sent, as
  * well as the deprecation status of the log level.
  *
- * @type {{[key: string]: LogLevelInfo}}
+ * @type {{[key: string]: {logLevel: import('./logger').LogLevel, isDeprecated: boolean}}}
  */
 const logLevelToTransportMethodMap = {
 	data: { logLevel: 'debug', isDeprecated: true },
@@ -86,20 +21,10 @@ const logLevelToTransportMethodMap = {
 	verbose: { logLevel: 'debug', isDeprecated: true },
 	warn: { logLevel: 'warn', isDeprecated: false }
 };
-
-/**
- * A list of supported log levels.
- *
- * @type {string[]}
- */
 const logLevels = Object.keys(logLevelToTransportMethodMap);
 
-/**
- * Whether log prettification is available. This is based
- * on whether pino-pretty is installed in the application.
- *
- * @type {boolean}
- */
+// Whether log prettification is available. This is based
+// on whether pino-pretty is installed in the application.
 const prettificationAvailable = (() => {
 	try {
 		// We have to `require` here rather than `require.resolve`
@@ -116,36 +41,34 @@ const prettificationAvailable = (() => {
 	}
 })();
 
-/**
- * Whether log prettification is allowed. We never allow log
- * prettification if the `NODE_ENV` environment variable is
- * set to "production".
- *
- * @type {boolean}
- */
+// Whether log prettification is allowed. We never allow log
+// prettification if the `NODE_ENV` environment variable is
+// set to "production".
 const prettificationAllowed = appInfo.environment !== 'production';
 
 /**
  * Class representing a logger.
+ *
+ * @type {import('./logger').default}
  */
 class Logger {
 	/**
-	 * @type {LogLevel}
+	 * @type {import('./logger').LogLevel}
 	 */
 	#logLevel = 'debug';
 
 	/**
-	 * @type {LogData}
+	 * @type {import('./logger').LogData}
 	 */
 	#baseLogData = {};
 
 	/**
-	 * @type {LogTransform[]}
+	 * @type {import('./logger').LogTransform[]}
 	 */
 	#transforms = [];
 
 	/**
-	 * @type {LogTransport}
+	 * @type {import('./logger').LogTransport}
 	 */
 	#logTransport;
 
@@ -155,10 +78,7 @@ class Logger {
 	#deprecatedMethodTracker = [];
 
 	/**
-	 * Create a logger.
-	 *
-	 * @param {LoggerOptions & PrivateLoggerOptions} [options]
-	 *     Options to configure the logger.
+	 * @param {import('./logger').LoggerOptions & import('./logger').PrivateLoggerOptions} options
 	 */
 	constructor(options = {}) {
 		// Default and set the base log data option
@@ -240,26 +160,14 @@ class Logger {
 		}
 	}
 
-	/**
-	 * @public
-	 * @type {LogData}
-	 */
 	get baseLogData() {
 		return this.#baseLogData;
 	}
 
-	/**
-	 * @public
-	 * @type {LogLevel}
-	 */
 	get logLevel() {
 		return this.#logLevel;
 	}
 
-	/**
-	 * @public
-	 * @type {LogTransport}
-	 */
 	get transport() {
 		return this.#logTransport;
 	}
@@ -267,11 +175,8 @@ class Logger {
 	/**
 	 * Create a child logger with additional base log data.
 	 *
-	 * @public
-	 * @param {LogData} baseLogData
-	 *     The base log data to add.
-	 * @returns {Logger}
-	 *     Returns a new child logger.
+	 * @param {import('./logger').LogData} baseLogData
+	 * @returns {import('./logger').default}
 	 */
 	createChildLogger(baseLogData) {
 		return new Logger({
@@ -286,10 +191,7 @@ class Logger {
 	 * Add additional log data to all subsequent log calls.
 	 *
 	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
-	 * @public
-	 * @param {LogData} extraLogData
-	 *     The additional data to add to all logs from this logger.
-	 * @returns {void}
+	 * @param {import('./logger').LogData} extraLogData
 	 */
 	addContext(extraLogData) {
 		this.#baseLogData = Object.assign({}, this.#baseLogData, extraLogData);
@@ -307,13 +209,12 @@ class Logger {
 	 * Set the `context` property for all subsequent log calls.
 	 *
 	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
-	 * @public
-	 * @param {LogData} contextData
-	 *     The additional data to add to all log `context` properties.
-	 * @returns {void}
+	 * @param {import('./logger').LogData} contextData
 	 */
 	setContext(contextData) {
-		this.#baseLogData.context = contextData;
+		if (typeof this.#baseLogData !== 'string') {
+			this.#baseLogData.context = contextData;
+		}
 		if (!this.#deprecatedMethodTracker.includes('setContext')) {
 			this.#deprecatedMethodTracker.push('setContext');
 			this.transport.warn({
@@ -328,11 +229,11 @@ class Logger {
 	 * Clear the `context` property for all subsequent log calls.
 	 *
 	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
-	 * @public
-	 * @returns {void}
 	 */
 	clearContext() {
-		delete this.#baseLogData.context;
+		if (typeof this.#baseLogData !== 'string') {
+			delete this.#baseLogData.context;
+		}
 		if (!this.#deprecatedMethodTracker.includes('clearContext')) {
 			this.#deprecatedMethodTracker.push('clearContext');
 			this.transport.warn({
@@ -346,12 +247,8 @@ class Logger {
 	/**
 	 * Send a log.
 	 *
-	 * @public
-	 * @param {LogLevel} level
-	 *     The log level to output the log as.
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {import('./logger').LogLevel} level
+	 * @param {...import('./logger').LogData} logData
 	 */
 	log(level, ...logData) {
 		if (typeof level !== 'string') {
@@ -416,10 +313,7 @@ class Logger {
 	 * Send a log with a level of "data".
 	 *
 	 * @deprecated Please use a log level of "debug" instead.
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	data(...logData) {
 		this.log('data', ...logData);
@@ -428,10 +322,7 @@ class Logger {
 	/**
 	 * Send a log with a level of "debug".
 	 *
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	debug(...logData) {
 		this.log('debug', ...logData);
@@ -440,10 +331,7 @@ class Logger {
 	/**
 	 * Send a log with a level of "error".
 	 *
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	error(...logData) {
 		this.log('error', ...logData);
@@ -452,10 +340,7 @@ class Logger {
 	/**
 	 * Send a log with a level of "fatal".
 	 *
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	fatal(...logData) {
 		this.log('fatal', ...logData);
@@ -464,10 +349,7 @@ class Logger {
 	/**
 	 * Send a log with a level of "info".
 	 *
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	info(...logData) {
 		this.log('info', ...logData);
@@ -477,10 +359,7 @@ class Logger {
 	 * Send a log with a level of "silly".
 	 *
 	 * @deprecated Please use a log level of "debug" instead.
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	silly(...logData) {
 		this.log('silly', ...logData);
@@ -490,10 +369,7 @@ class Logger {
 	 * Send a log with a level of "verbose".
 	 *
 	 * @deprecated Please use a log level of "debug" instead.
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	verbose(...logData) {
 		this.log('verbose', ...logData);
@@ -502,10 +378,7 @@ class Logger {
 	/**
 	 * Send a log with a level of "warn".
 	 *
-	 * @public
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {void}
+	 * @param {...import('./logger').LogData} logData
 	 */
 	warn(...logData) {
 		this.log('warn', ...logData);
@@ -515,7 +388,6 @@ class Logger {
 	 * Flush any asynchronous logs in the queue when an async transport is used.
 	 *
 	 * @public
-	 * @returns {void}
 	 */
 	flush() {
 		if (this.transport.flush) {
@@ -529,7 +401,7 @@ class Logger {
 	 * @private
 	 * @param {string} level
 	 *     The log level to get information for.
-	 * @returns {LogLevelInfo}
+	 * @returns {{logLevel: import('./logger').LogLevel, isDeprecated: boolean}}
 	 *     Returns information about the log level.
 	 */
 	static getLogLevelInfo(level) {
@@ -543,7 +415,7 @@ class Logger {
 	 * Combine multiple log data into a single zipped object.
 	 *
 	 * @private
-	 * @param {...LogData} logData
+	 * @param {...import('./logger').LogData} logData
 	 *     The log data.
 	 * @returns {{[key: string]: any}}
 	 *     Returns a single zipped object containing all log data.
@@ -554,20 +426,25 @@ class Logger {
 		// rather than the last
 		const reversedLogData = logData.reverse();
 		return clone(
-			reversedLogData.reduce((collect, item) => {
-				if (typeof item === 'string') {
-					return Object.assign(collect, { message: item });
-				}
-				if (item instanceof Error) {
-					return Object.assign(collect, { error: serializeError(item) });
-				}
-				return Object.assign(collect, item);
-			}, {})
+			reversedLogData.reduce(
+				/**
+				 * @param {{[key: string]: any}} collect
+				 * @param {import('./logger').LogData} item
+				 * @returns {{[key: string]: any}}
+				 */
+				(collect, item) => {
+					if (typeof item === 'string') {
+						return Object.assign(collect, { message: item });
+					}
+					if (item instanceof Error) {
+						return Object.assign(collect, { error: serializeError(item) });
+					}
+					return Object.assign(collect, item);
+				},
+				{}
+			)
 		);
 	}
 }
 
 module.exports = Logger;
-
-// @ts-ignore
-module.exports.default = module.exports;

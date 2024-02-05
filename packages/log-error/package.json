@@ -14,7 +14,7 @@
     "node": "18.x || 20.x",
     "npm": "8.x || 9.x || 10.x"
   },
-  "main": "lib",
+  "main": "lib/index.js",
   "dependencies": {
     "@dotcom-reliability-kit/app-info": "^3.0.1",
     "@dotcom-reliability-kit/logger": "^3.0.3",
