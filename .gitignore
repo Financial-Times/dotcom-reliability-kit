@@ -1,6 +1,4 @@
 .husky/_
-*.d.ts
-*.d.ts.map
 coverage
 node_modules/
 resources/logos/dist
