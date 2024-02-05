@@ -2,18 +2,22 @@
 	"compilerOptions": {
 		"alwaysStrict": true,
 		"checkJs": true,
-		"module": "commonjs",
+		"declaration": true,
+		"declarationMap": true,
+		"module": "node16",
 		"noEmit": true,
 		"noImplicitOverride": true,
 		"noImplicitThis": true,
 		"resolveJsonModule": true,
+		"sourceMap": true,
 		"strictBindCallApply": true,
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
 		"target": "es2020",
+		"types": [],
 		"useUnknownInCatchVariables": true,
-		"types": []
+		"verbatimModuleSyntax": true
 	},
 	"exclude": [
 		"coverage",
