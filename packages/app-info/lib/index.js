@@ -79,95 +79,93 @@ const cloudProvider = () => {
 	return null;
 };
 
-module.exports = {
-	/**
-	 * The application commit hash.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	commitHash:
-		process.env.HEROKU_SLUG_COMMIT ||
-		process.env.GIT_COMMIT_LONG ||
-		process.env.GIT_COMMIT ||
-		null,
+/**
+ * The application commit hash.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.commitHash =
+	process.env.HEROKU_SLUG_COMMIT ||
+	process.env.GIT_COMMIT_LONG ||
+	process.env.GIT_COMMIT ||
+	null;
 
-	/**
-	 * The application environment.
-	 *
-	 * @readonly
-	 * @type {string}
-	 */
-	environment: process.env.NODE_ENV || 'development',
+/**
+ * The application environment.
+ *
+ * @readonly
+ * @type {string}
+ */
+exports.environment = process.env.NODE_ENV || 'development';
 
-	/**
-	 * The region the application is running in.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	region: process.env.REGION || process.env.AWS_REGION || null,
+/**
+ * The region the application is running in.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.region = process.env.REGION || process.env.AWS_REGION || null;
 
-	/**
-	 * The date and time that the application was last released at.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	releaseDate: process.env.HEROKU_RELEASE_CREATED_AT || null,
+/**
+ * The date and time that the application was last released at.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.releaseDate = process.env.HEROKU_RELEASE_CREATED_AT || null;
 
-	/**
-	 * The last released version of the application.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	releaseVersion:
-		process.env.HEROKU_RELEASE_VERSION ||
-		process.env.AWS_LAMBDA_FUNCTION_VERSION ||
-		null,
+/**
+ * The last released version of the application.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.releaseVersion =
+	process.env.HEROKU_RELEASE_VERSION ||
+	process.env.AWS_LAMBDA_FUNCTION_VERSION ||
+	null;
 
-	/**
-	 * The application system code.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	systemCode,
+/**
+ * The application system code.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.systemCode = systemCode;
 
-	/**
-	 * The dyno process type.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	processType,
+/**
+ * The dyno process type.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.processType = processType;
 
-	/**
-	 * The cloud provider type.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	cloudProvider: cloudProvider(),
+/**
+ * The cloud provider type.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.cloudProvider = cloudProvider();
 
-	/**
-	 * The heroku application Id.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	herokuAppId: process.env.HEROKU_APP_ID || null,
+/**
+ * The heroku application Id.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.herokuAppId = process.env.HEROKU_APP_ID || null;
 
-	/**
-	 * The heroku dyno Id.
-	 *
-	 * @readonly
-	 * @type {string | null}
-	 */
-	herokuDynoId: process.env.HEROKU_DYNO_ID || null
-};
+/**
+ * The heroku dyno Id.
+ *
+ * @readonly
+ * @type {string | null}
+ */
+exports.herokuDynoId = process.env.HEROKU_DYNO_ID || null;
 
 // @ts-ignore
 module.exports.default = module.exports;
-Object.freeze(module.exports);
+module.exports = Object.freeze(module.exports);
