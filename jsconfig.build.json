@@ -8,7 +8,6 @@
 		"removeComments": true
 	},
 	"include": [
-		"packages/app-info/**/*.js",
 		"packages/crash-handler/**/*.js",
 		"packages/errors/**/*.js",
 		"packages/eslint-config/**/*.js",
