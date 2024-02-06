@@ -6,11 +6,6 @@ const { Logger, transforms } = require('@dotcom-reliability-kit/logger');
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 
-// Test that appInfo types work
-if (appInfo.environment !== environment) {
-	throw new Error('appInfo is not working');
-}
-
 type TypeTests = {
 	// @ts-ignore TODO this isn't working correctly and we'll need
 	// to rethink the way we build our type definitions in order to
@@ -21,14 +16,27 @@ type TypeTests = {
 	// to rethink the way we build our type definitions in order to
 	// support TypeScript written as CommonJS properly.
 	logger2: Logger;
+
+	environment1: string;
+	environment2: string;
 };
 
-module.exports = {
+const result: TypeTests = {
 	// These test that the default logger exports
 	// are instances of the Logger export
 	logger1,
-	logger2
-} as TypeTests;
+	logger2,
+	// These test that appInfo can be imported either
+	// as a default or named exports
+	environment1: environment,
+	environment2: appInfo.environment
+};
+module.exports = result;
+
+// Test that appInfo exports the correct values
+if (!appInfo.environment || appInfo.environment !== environment) {
+	throw new Error('appInfo is not working');
+}
 
 // Test that a logger can be constructed
 new Logger({
