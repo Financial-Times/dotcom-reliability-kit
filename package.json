@@ -22,7 +22,7 @@
     "lint:eslint": "eslint .",
     "lint:tsc": "npm run clean && tsc --project ./jsconfig.json",
     "clean": "npm run clean:types",
-    "clean:types": "find ./packages -name \"*.d.ts*\" | xargs -r rm",
+    "clean:types": "./scripts/clean-generated-types.sh",
     "build": "npm run clean && npm run build:types",
     "build:types": "tsc --project ./jsconfig.build.json",
     "test": "npm run test:jest && npm run test:modules",
