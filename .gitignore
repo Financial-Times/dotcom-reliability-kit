@@ -1,5 +1,4 @@
 .husky/_
-packages/app-info/**/*.d.*
 packages/crash-handler/**/*.d.*
 packages/errors/**/*.d.*
 packages/eslint-config/**/*.d.*

@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-find ./packages/app-info -name "*.d.ts*" | xargs -r rm
 find ./packages/crash-handler -name "*.d.ts*" | xargs -r rm
 find ./packages/errors -name "*.d.ts*" | xargs -r rm
 find ./packages/eslint-config -name "*.d.ts*" | xargs -r rm
