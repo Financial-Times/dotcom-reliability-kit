@@ -14,5 +14,11 @@
     "node": "18.x || 20.x",
     "npm": "8.x || 9.x || 10.x"
   },
-  "main": "lib"
+  "exports": {
+    "import": "./lib/index.mjs",
+    "require": "./dist/index.cjs"
+  },
+  "scripts": {
+    "build": "esbuild lib/*.js --outdir=dist --format=cjs --platform=node --target=node18 --sourcemap --out-extension:.js=.cjs"
+  }
 }

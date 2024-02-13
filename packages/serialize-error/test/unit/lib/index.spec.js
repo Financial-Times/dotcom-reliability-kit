@@ -1,12 +1,6 @@
-const serializeError = require('../../../lib/index');
+import serializeError from '../../../lib/index';
 
 describe('@dotcom-reliability-kit/serialize-error', () => {
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			expect(serializeError.default).toStrictEqual(serializeError);
-		});
-	});
-
 	describe('when called with an error object', () => {
 		let error;
 

@@ -1,4 +1,4 @@
-const crypto = require('node:crypto');
+import crypto from 'node:crypto';
 
 /**
  * @typedef {object} SerializedError
@@ -31,6 +31,7 @@ const crypto = require('node:crypto');
  *
  * @public
  * @param {(string | Error & Record<string, any>)} error
+ * @param lol
  *     The error object to serialize.
  * @returns {SerializedError}
  *     Returns the serialized error object.
@@ -130,7 +131,5 @@ function createSerializedError(properties) {
 	);
 }
 
-module.exports = serializeError;
-
-// @ts-ignore
-module.exports.default = module.exports;
+export { serializeError };
+export default serializeError;

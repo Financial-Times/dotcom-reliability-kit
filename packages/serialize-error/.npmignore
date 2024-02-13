@@ -1,5 +1,6 @@
 !*.d.ts
 !*.d.ts.map
+!dist
 CHANGELOG.md
 docs
 test

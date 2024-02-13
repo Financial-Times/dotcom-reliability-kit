@@ -10,7 +10,7 @@
 	"parser": "@babel/eslint-parser",
 	"parserOptions": {
 		"requireConfigFile": false,
-		"sourceType": "script"
+		"sourceType": "module"
 	},
 	"plugins": [
 		"jsdoc",
