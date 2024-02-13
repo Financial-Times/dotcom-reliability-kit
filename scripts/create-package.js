@@ -33,7 +33,8 @@ const releasePleaseManifest = require('../.release-please-manifest.json');
 		bugs: `https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:"package: ${name}"`,
 		license: rootManifest.license,
 		engines: rootManifest.engines,
-		main: 'lib'
+		main: 'lib/index.js',
+		types: 'lib/index.d.ts'
 	};
 	console.log('📦 initialising "package.json"');
 	await fs.writeFile(
