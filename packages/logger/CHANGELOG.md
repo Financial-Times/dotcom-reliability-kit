@@ -18,6 +18,21 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
 
+## [3.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.3...logger-v3.0.4) (2024-02-19)
+
+
+### Bug Fixes
+
+* bump pino from 8.17.2 to 8.19.0 ([9c80a44](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9c80a447b1a5c3e6820c03afb48ef68e2d1c728b))
+* get the types working with most modules ([0323c02](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0323c0236edabe72ef31c5e91dbb0dc76fce396a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.0.1 to ^3.0.2
+
 ## [3.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.2...logger-v3.0.3) (2024-01-22)
 
 
