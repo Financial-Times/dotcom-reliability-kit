@@ -17,7 +17,6 @@
 		"packages/middleware-log-errors/**/*.js",
 		"packages/middleware-render-error-info/**/*.js",
 		"packages/opentelemetry/**/*.js",
-		"packages/serialize-error/**/*.js",
-		"packages/serialize-request/**/*.js"
+		"packages/serialize-error/**/*.js"
 	]
 }

@@ -9,7 +9,6 @@ packages/middleware-log-errors/**/*.d.*
 packages/middleware-render-error-info/**/*.d.*
 packages/opentelemetry/**/*.d.*
 packages/serialize-error/**/*.d.*
-packages/serialize-request/**/*.d.*
 coverage
 node_modules/
 resources/logos/dist

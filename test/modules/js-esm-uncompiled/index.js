@@ -40,10 +40,6 @@ new Logger({
 // Test that error and request serialization works.
 // See: https://github.com/Financial-Times/cp-content-pipeline/blob/90ce06158b65742cd03cbf03f5372790906cad9e/packages/api/src/plugins/logging.ts#L1-L3
 serializeError(new Error('hi'));
-
-// @ts-ignore TODO this isn't working correctly and we'll need
-// to rethink the way we build our type definitions in order to
-// support TypeScript written as ESM properly.
 serializeRequest({ url: 'https://example.com' });
 
 console.log('OK');

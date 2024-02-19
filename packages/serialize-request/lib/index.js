@@ -1,67 +1,3 @@
-/**
- * @typedef {import('express').Request} ExpressRequest
- */
-
-/**
- * @typedef {import('http').IncomingMessage} HttpIncomingMessage
- */
-
-/**
- * @typedef {object} BasicRequest
- * @property {Headers | {[key: string]: string} | Iterable<[string, string]>} [headers]
- *     The request HTTP headers.
- * @property {string} [method]
- *     The request HTTP method.
- * @property {string} [url]
- *     The request URL.
- */
-
-/**
- * @typedef {BasicRequest & Record<string, any> | ExpressRequest | HttpIncomingMessage & Record<string, any>} Request
- */
-
-/**
- * @typedef {object} SerializeRequestOptions
- * @property {string[]} [includeHeaders]
- *     An array of request headers to include.
- */
-
-/**
- * @typedef {{[key: string]: string}} SerializedRequestHeaders
- */
-
-/**
- * @typedef {{[key: string]: string}} SerializedRequestRouteParams
- */
-
-/**
- * @typedef {object} SerializedRequestRoute
- * @property {string} path
- *     The route path which the request object was matched by.
- * @property {SerializedRequestRouteParams} params
- *     The parameters which were matched in the request path.
- */
-
-/**
- * @typedef {object} SerializedRequest
- * @property {(string|null)} id
- *     A unique identifier for the request.
- * @property {string} method
- *     The HTTP method for the request.
- * @property {string} url
- *     The full path and querystring of the resource being requested.
- * @property {SerializedRequestHeaders} headers
- *     A subset of HTTP headers which came with the request.
- * @property {SerializedRequestRoute} [route]
- *     The express route details.
- */
-
-/**
- * The default request headers to include in the serialization.
- *
- * @public
- * @type {string[]}
- */
 const DEFAULT_INCLUDED_HEADERS = [
 	'accept',
 	'accept-encoding',
@@ -73,24 +9,15 @@ const DEFAULT_INCLUDED_HEADERS = [
 
 /**
  * The maximum length of a URL, any longer than this will be truncated.
- *
- * @private
- * @type {number}
  */
 const URL_TRUNCATION_LENGTH = 200;
 
 /**
  * Serialize a request object so that it can be consistently logged or output as JSON.
  *
- * @public
- * @param {string | Request} request
- *     The request object to serialize. Either an Express Request object, a
- *     built-in Node.js IncomingMessage object, or an object with the expected
- *     `headers`, `method`, and `url` properties.
- * @param {SerializeRequestOptions} [options]
- *     Options to configure the serialization.
- * @returns {SerializedRequest}
- *     Returns the serialized request object.
+ * @param {import('@dotcom-reliability-kit/serialize-request').Request} request
+ * @param {import('@dotcom-reliability-kit/serialize-request').SerializeRequestOptions} options
+ * @returns {import('@dotcom-reliability-kit/serialize-request').SerializedRequest}
  */
 function serializeRequest(request, options = {}) {
 	// If the request is not an object, assume it's the request
@@ -168,13 +95,9 @@ function serializeRequest(request, options = {}) {
 /**
  * Serialize request headers.
  *
- * @private
- * @param {Headers | Record<string, any> | Iterable<[string, string]>} headers
- *     The headers object to serialize.
+ * @param {import('@dotcom-reliability-kit/serialize-request').RequestHeaders} headers
  * @param {string[]} includeHeaders
- *     An array of request headers to include.
- * @returns {SerializedRequestHeaders}
- *     Returns the serialized request headers.
+ * @returns {import('@dotcom-reliability-kit/serialize-request').SerializedRequestHeaders}
  */
 function serializeHeaders(headers, includeHeaders) {
 	const headersObject = {};
@@ -199,11 +122,8 @@ function serializeHeaders(headers, includeHeaders) {
 /**
  * Create a new serialized request object.
  *
- * @private
- * @param {Record<string, any>} properties
- *     The properties of the serialized error.
- * @returns {SerializedRequest}
- *     Returns the serialized error object.
+ * @param {{[key: string]: any}} properties
+ * @returns {import('@dotcom-reliability-kit/serialize-request').SerializedRequest}
  */
 function createSerializedRequest(properties) {
 	return Object.assign(
@@ -219,16 +139,17 @@ function createSerializedRequest(properties) {
 }
 
 /**
+ * Check whether a value is an iterable request headers object.
+ *
  * @param {any} value
- *     The value to test.
  * @returns {value is Iterable<[string, string]>}
- *     Returns whether a value is iterable.
  */
 function isIterableHeadersObject(value) {
 	return value && typeof value?.[Symbol.iterator] === 'function';
 }
 
 module.exports = serializeRequest;
+module.exports.default = module.exports;
 
 // We freeze this object so that we avoid any side-effects
 // introduced by the way Node.js caches modules. If this
@@ -238,6 +159,3 @@ module.exports = serializeRequest;
 module.exports.DEFAULT_INCLUDED_HEADERS = Object.freeze([
 	...DEFAULT_INCLUDED_HEADERS
 ]);
-
-// @ts-ignore
-module.exports.default = module.exports;
