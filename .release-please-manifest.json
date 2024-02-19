@@ -1,14 +1,14 @@
 {
-  "packages/app-info": "3.0.1",
-  "packages/crash-handler": "4.0.3",
+  "packages/app-info": "3.0.2",
+  "packages/crash-handler": "4.0.4",
   "packages/errors": "3.0.1",
   "packages/eslint-config": "3.0.1",
   "packages/fetch-error-handler": "0.2.1",
-  "packages/log-error": "4.0.3",
-  "packages/logger": "3.0.3",
-  "packages/middleware-log-errors": "4.0.3",
-  "packages/middleware-render-error-info": "5.0.3",
+  "packages/log-error": "4.0.4",
+  "packages/logger": "3.0.4",
+  "packages/middleware-log-errors": "4.0.4",
+  "packages/middleware-render-error-info": "5.0.4",
   "packages/serialize-error": "3.0.1",
   "packages/serialize-request": "3.0.1",
-  "packages/opentelemetry": "1.0.0"
+  "packages/opentelemetry": "1.0.1"
 }

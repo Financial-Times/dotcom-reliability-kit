@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v1.0.0...opentelemetry-v1.0.1) (2024-02-19)
+
+
+### Bug Fixes
+
+* bump @opentelemetry/auto-instrumentations-node ([48418fa](https://github.com/Financial-Times/dotcom-reliability-kit/commit/48418faa415ce9242a0664ab9ec682a224d501d4))
+* handle invalid URLs in the request filter ([ade80ff](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ade80ff8c9ab622d6eb911891870d85923a0c6d9))
+* update all OpenTelemetry packages ([bf460e5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/bf460e5d69804decffc7bc3b650a1acd79581a25))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.0.1 to ^3.0.2
+    * @dotcom-reliability-kit/logger bumped from ^3.0.3 to ^3.0.4
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v0.2.1...opentelemetry-v1.0.0) (2024-01-22)
 
 

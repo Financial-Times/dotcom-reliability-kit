@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.0.1...app-info-v3.0.2) (2024-02-19)
+
+
+### Bug Fixes
+
+* add manual types for app-info ([e36bb9e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e36bb9ee20e7a75c5301bfcceb15018242caaaf4))
+* correct the types for the app-info package ([86cd542](https://github.com/Financial-Times/dotcom-reliability-kit/commit/86cd54280fdfa3482a1ca81a5474301714031f63))
+
 ## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.0.0...app-info-v3.0.1) (2024-01-09)
 
 
