@@ -1,39 +1,10 @@
 const crypto = require('node:crypto');
 
 /**
- * @typedef {object} SerializedError
- * @property {string | null} fingerprint
- *     A hash of the first part of the error stack, used to help group errors that occurred in
- *     the same part of the codebase. The fingerprint is null if the error does not include a
- *     stack trace.
- * @property {string} name
- *     The name of the class that the error is an instance of.
- * @property {string} code
- *     A machine-readable error code which identifies the specific type of error.
- * @property {string} message
- *     A human readable message which describes the error.
- * @property {boolean} isOperational
- *     Whether the error is operational, as in it's an error we expect sometimes as part of running the application.
- * @property {string[]} relatesToSystems
- *     An array of FT system codes which are related to this error.
- * @property {(Error | null)} cause
- *     The root cause error instance.
- * @property {(string | null)} stack
- *     The full error stack.
- * @property {(number | null)} statusCode
- *     An HTTP status code to represent the error.
- * @property {{[key: string]: any}} data
- *     Any additional error information.
- */
-
-/**
  * Serialize an error object so that it can be consistently logged or output as JSON.
  *
- * @public
- * @param {(string | Error & Record<string, any>)} error
- *     The error object to serialize.
- * @returns {SerializedError}
- *     Returns the serialized error object.
+ * @param {import('@dotcom-reliability-kit/serialize-error').ErrorLike} error
+ * @returns {import('@dotcom-reliability-kit/serialize-error').SerializedError}
  */
 function serializeError(error) {
 	if (typeof error !== 'object' || Array.isArray(error) || error === null) {
@@ -105,11 +76,8 @@ function serializeError(error) {
 /**
  * Create a new serialized error object.
  *
- * @private
  * @param {Record<string, any>} properties
- *     The properties of the serialized error.
- * @returns {SerializedError}
- *     Returns the serialized error object.
+ * @returns {import('@dotcom-reliability-kit/serialize-error').SerializedError}
  */
 function createSerializedError(properties) {
 	return Object.assign(
@@ -131,6 +99,4 @@ function createSerializedError(properties) {
 }
 
 module.exports = serializeError;
-
-// @ts-ignore
 module.exports.default = module.exports;
