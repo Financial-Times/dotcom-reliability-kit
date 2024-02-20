@@ -10,7 +10,6 @@
 	"include": [
 		"packages/crash-handler/**/*.js",
 		"packages/errors/**/*.js",
-		"packages/eslint-config/**/*.js",
 		"packages/fetch-error-handler/**/*.js",
 		"packages/log-error/**/*.js",
 		"packages/logger/**/*.js",

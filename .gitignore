@@ -1,7 +1,6 @@
 .husky/_
 packages/crash-handler/**/*.d.*
 packages/errors/**/*.d.*
-packages/eslint-config/**/*.d.*
 packages/fetch-error-handler/**/*.d.*
 packages/log-error/**/*.d.*
 packages/logger/**/*.d.*

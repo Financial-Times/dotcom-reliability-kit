@@ -1,5 +1,5 @@
 /**
- * @type {import('eslint').ESLint.ConfigData}
+ * @type {import('@dotcom-reliability-kit/eslint-config')}
  */
 const config = {
 	env: {
