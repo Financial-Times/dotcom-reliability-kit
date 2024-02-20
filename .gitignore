@@ -8,7 +8,6 @@ packages/logger/**/*.d.*
 packages/middleware-log-errors/**/*.d.*
 packages/middleware-render-error-info/**/*.d.*
 packages/opentelemetry/**/*.d.*
-packages/serialize-error/**/*.d.*
 coverage
 node_modules/
 resources/logos/dist
