@@ -3,7 +3,6 @@ packages/crash-handler/**/*.d.*
 packages/errors/**/*.d.*
 packages/fetch-error-handler/**/*.d.*
 packages/log-error/**/*.d.*
-packages/logger/**/*.d.*
 packages/middleware-log-errors/**/*.d.*
 packages/middleware-render-error-info/**/*.d.*
 packages/opentelemetry/**/*.d.*

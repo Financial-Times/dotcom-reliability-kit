@@ -1,14 +1,4 @@
 /**
- * @typedef {object} LegacyMaskTransformOptions
- * @property {string[]} [denyList]
- *     Additional field names to apply masking to.
- * @property {string[]} [allowList]
- *     Field names to allow from the default deny list.
- * @property {string} [maskString]
- *     The mask string to apply to discovered sensitive values.
- */
-
-/**
  * @typedef {object} InternalMaskSettings
  * @property {Set<string>} maskedFields
  *     Field names to mask.
@@ -160,10 +150,8 @@ function maskObject(object, settings) {
 /**
  * Create a log transform function which masks sensitive fields in log data.
  *
- * @param {LegacyMaskTransformOptions} options
- *     Masking options.
- * @returns {import('../logger').LogTransform}
- *     Returns a transform function for use with the logger.
+ * @param {import('@dotcom-reliability-kit/logger').LegacyMaskTransformOptions} options
+ * @returns {import('@dotcom-reliability-kit/logger').LogTransform}
  */
 function createLegacyMaskTransform({
 	denyList = [],
@@ -195,6 +183,3 @@ function createLegacyMaskTransform({
 }
 
 module.exports = createLegacyMaskTransform;
-
-// @ts-ignore
-module.exports.default = module.exports;
