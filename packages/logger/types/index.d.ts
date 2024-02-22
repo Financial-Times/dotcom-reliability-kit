@@ -47,42 +47,44 @@ declare module '@dotcom-reliability-kit/logger' {
 	};
 
 	export class Logger {
+		constructor(options?: LoggerOptions);
+		get baseLogData(): any;
+		get logLevel(): LogLevel;
+		get transport(): LogTransport;
+		createChildLogger(baseLogData: LogData): Logger;
+
+		/** @deprecated */
+		addContext(extraLogData: LogData): void;
+		/** @deprecated */
+		setContext(contextData: LogData): void;
+		/** @deprecated */
+		clearContext(): void;
+
+		log(level: LogLevel, ...logData: LogData[]): void;
+		debug(...logData: LogData[]): void;
+		error(...logData: LogData[]): void;
+		fatal(...logData: LogData[]): void;
+		info(...logData: LogData[]): void;
+		warn(...logData: LogData[]): void;
+		flush(): void;
+
+		/** @deprecated */
+		data(...logData: LogData[]): void;
+		/** @deprecated */
+		silly(...logData: LogData[]): void;
+		/** @deprecated */
+		verbose(...logData: LogData[]): void;
+
 		private static getLogLevelInfo;
 		private static zipLogData;
-		constructor(options?: LoggerOptions);
-		public get baseLogData(): any;
-		public get logLevel(): LogLevel;
-		public get transport(): LogTransport;
-		public createChildLogger(baseLogData: LogData): Logger;
-
-		/** @deprecated */
-		public addContext(extraLogData: LogData): void;
-		/** @deprecated */
-		public setContext(contextData: LogData): void;
-		/** @deprecated */
-		public clearContext(): void;
-
-		public log(level: LogLevel, ...logData: LogData[]): void;
-		public debug(...logData: LogData[]): void;
-		public error(...logData: LogData[]): void;
-		public fatal(...logData: LogData[]): void;
-		public info(...logData: LogData[]): void;
-		public warn(...logData: LogData[]): void;
-		public flush(): void;
-
-		/** @deprecated */
-		public data(...logData: LogData[]): void;
-		/** @deprecated */
-		public silly(...logData: LogData[]): void;
-		/** @deprecated */
-		public verbose(...logData: LogData[]): void;
 	}
 
-	export const transforms: Transforms;
+	class DefaultLogger extends Logger {
+		tranforms: Transforms;
+		Logger: typeof Logger
+	}
 
-	// const DefaultLogger = new Logger() & { Logger, transforms };
-
-	export default new Logger();
+	// export default new DefaultLogger();
+	exports = new DefaultLogger();
 	// exports = new Logger & { Logger, transforms };
-	exports = '.';
 }

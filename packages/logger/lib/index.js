@@ -1,8 +1,10 @@
 const Logger = require('./logger');
 const legacyMask = require('./transforms/legacy-mask');
 
-exports = module.exports = new Logger();
-exports.Logger = Logger;
-exports.transforms = { legacyMask };
+class DefaultLogger extends Logger {
+	transforms = { legacyMask };
+	Logger = Logger;
+}
 
+exports = module.exports = new DefaultLogger();
 exports.default = exports;
