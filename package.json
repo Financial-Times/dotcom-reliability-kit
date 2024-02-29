@@ -32,10 +32,10 @@
     "postinstall": "npm run build:logos"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.9",
+    "@babel/core": "^7.24.0",
     "@babel/eslint-parser": "^7.23.10",
-    "@commitlint/cli": "^19.0.2",
-    "@commitlint/config-conventional": "^19.0.0",
+    "@commitlint/cli": "^19.0.3",
+    "@commitlint/config-conventional": "^19.0.3",
     "@financial-times/eslint-config-next": "^7.1.0",
     "@types/jest": "^29.5.12",
     "eslint": "^8.57.0",
