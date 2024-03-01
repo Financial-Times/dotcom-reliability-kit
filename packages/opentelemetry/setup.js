@@ -10,8 +10,16 @@ if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 			: undefined
 	};
 }
+/** @type {setupOpenTelemetry.MetricsOptions | undefined} */
+let metrics = undefined;
+if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
+	metrics = {
+		endpoint: process.env.OPENTELEMETRY_METRICS_ENDPOINT
+	};
+}
 
 setupOpenTelemetry({
 	authorizationHeader: process.env.OPENTELEMETRY_AUTHORIZATION_HEADER,
-	tracing
+	tracing,
+	metrics
 });
