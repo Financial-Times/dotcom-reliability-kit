@@ -28,7 +28,11 @@ const { UserInputError } = require('@dotcom-reliability-kit/errors');
 const { Resource } = require('@opentelemetry/resources');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
 const {
-	SemanticResourceAttributes
+	SEMRESATTRS_CLOUD_PROVIDER,
+	SEMRESATTRS_CLOUD_REGION,
+	SEMRESATTRS_DEPLOYMENT_ENVIRONMENT,
+	SEMRESATTRS_SERVICE_NAME,
+	SEMRESATTRS_SERVICE_VERSION
 } = require('@opentelemetry/semantic-conventions');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const {
@@ -84,11 +88,11 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		it('sets OpenTelemetry resource attributes based on app data', () => {
 			expect(Resource).toHaveBeenCalledTimes(1);
 			expect(Resource).toHaveBeenCalledWith({
-				[SemanticResourceAttributes.SERVICE_NAME]: 'MOCK_SYSTEM_CODE',
-				[SemanticResourceAttributes.SERVICE_VERSION]: 'MOCK_RELEASE_VERSION',
-				[SemanticResourceAttributes.CLOUD_PROVIDER]: 'MOCK_CLOUD_PROVIDER',
-				[SemanticResourceAttributes.CLOUD_REGION]: 'MOCK_CLOUD_REGION',
-				[SemanticResourceAttributes.DEPLOYMENT_ENVIRONMENT]: 'MOCK_ENVIRONMENT'
+				[SEMRESATTRS_SERVICE_NAME]: 'MOCK_SYSTEM_CODE',
+				[SEMRESATTRS_SERVICE_VERSION]: 'MOCK_RELEASE_VERSION',
+				[SEMRESATTRS_CLOUD_PROVIDER]: 'MOCK_CLOUD_PROVIDER',
+				[SEMRESATTRS_CLOUD_REGION]: 'MOCK_CLOUD_REGION',
+				[SEMRESATTRS_DEPLOYMENT_ENVIRONMENT]: 'MOCK_ENVIRONMENT'
 			});
 			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].resource).toBeInstanceOf(
 				Resource
@@ -314,6 +318,31 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 				event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
 				message:
 					'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
+			});
+		});
+	});
+
+	describe('when app data is not available', () => {
+		beforeAll(() => {
+			Resource.mockReset();
+			appInfo.systemCode = null;
+			appInfo.releaseVersion = null;
+			appInfo.cloudProvider = null;
+			appInfo.region = null;
+			appInfo.environment = null;
+			openTelemetryTracing({
+				tracing: { endpoint: 'MOCK_TRACING_ENDPOINT' }
+			});
+		});
+
+		it('sets OpenTelemetry resource attributes to undefined', () => {
+			expect(Resource).toHaveBeenCalledTimes(1);
+			expect(Resource).toHaveBeenCalledWith({
+				[SEMRESATTRS_SERVICE_NAME]: undefined,
+				[SEMRESATTRS_SERVICE_VERSION]: undefined,
+				[SEMRESATTRS_CLOUD_PROVIDER]: undefined,
+				[SEMRESATTRS_CLOUD_REGION]: undefined,
+				[SEMRESATTRS_DEPLOYMENT_ENVIRONMENT]: undefined
 			});
 		});
 	});
