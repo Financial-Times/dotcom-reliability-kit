@@ -1,107 +1,5 @@
 # Changelog
 
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.8 to ^1.3.9
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.9 to ^1.3.10
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.10 to ^1.3.11
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.11 to ^1.4.0
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.1 to ^1.5.2
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.2 to ^1.5.3
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.3 to ^1.5.4
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^2.1.0 to ^2.1.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.0.0 to ^3.0.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.0.1 to ^3.1.0
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.0 to ^3.1.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.1 to ^3.1.2
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.2 to ^3.1.3
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.3 to ^3.1.4
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.4 to ^3.1.5
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.5 to ^3.1.6
-
 ## [4.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v4.0.4...crash-handler-v4.0.5) (2024-03-22)
 
 
@@ -190,6 +88,78 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^3.1.6 to ^3.1.7
 
+## [3.0.8](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.7...crash-handler-v3.0.8) (2023-12-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.5 to ^3.1.6
+
+## [3.0.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.6...crash-handler-v3.0.7) (2023-11-23)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.4 to ^3.1.5
+
+## [3.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.5...crash-handler-v3.0.6) (2023-11-21)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.3 to ^3.1.4
+
+## [3.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.4...crash-handler-v3.0.5) (2023-11-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.2 to ^3.1.3
+
+## [3.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.3...crash-handler-v3.0.4) (2023-11-07)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.1 to ^3.1.2
+
+## [3.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.2...crash-handler-v3.0.3) (2023-10-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.0 to ^3.1.1
+
+## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.1...crash-handler-v3.0.2) (2023-09-19)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.0.1 to ^3.1.0
+
+## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v3.0.0...crash-handler-v3.0.1) (2023-08-29)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.0.0 to ^3.0.1
+
 ## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v2.1.2...crash-handler-v3.0.0) (2023-08-07)
 
 
@@ -220,6 +190,15 @@
 ### Bug Fixes
 
 * avoid double-registering Crash Handler ([e18c8b3](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e18c8b34adefa0ff3dfe38db9c4261ca77ae86de))
+
+## [2.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v2.1.0...crash-handler-v2.1.1) (2023-06-23)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^2.1.0 to ^2.1.1
 
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v2.0.1...crash-handler-v2.1.0) (2023-05-02)
 
@@ -267,6 +246,42 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^1.5.4 to ^2.0.0
 
+## [1.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.1.3...crash-handler-v1.1.4) (2023-04-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.3 to ^1.5.4
+
+## [1.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.1.2...crash-handler-v1.1.3) (2023-04-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.2 to ^1.5.3
+
+## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.1.1...crash-handler-v1.1.2) (2023-03-21)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.1 to ^1.5.2
+
+## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.1.0...crash-handler-v1.1.1) (2022-12-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v1.0.0...crash-handler-v1.1.0) (2022-11-22)
 
 
@@ -286,7 +301,50 @@
 
 ### Features
 
+* add an uncaught exception handler ([a2bf68e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a2bf68ed4fd31c2e7856b4fbe130afcf6ca7289c))
 * indicate that the crash handler is stable ([63c694c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/63c694c14d261f545efa91edbcf1454658e355fa))
+
+
+### Documentation Changes
+
+* clarify where you register crash handlers ([459d68e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/459d68e10000fc93366b5ca9458d21f3ba2a87be))
+* fix a typo ([10daf21](https://github.com/Financial-Times/dotcom-reliability-kit/commit/10daf21e48706e623a7b14d79864df7ea87c7055))
+
+## [0.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v0.1.3...crash-handler-v0.1.4) (2022-11-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.11 to ^1.4.0
+
+## [0.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v0.1.2...crash-handler-v0.1.3) (2022-11-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.10 to ^1.3.11
+
+## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v0.1.1...crash-handler-v0.1.2) (2022-10-26)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.9 to ^1.3.10
+
+## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v0.1.0...crash-handler-v0.1.1) (2022-10-25)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.8 to ^1.3.9
 
 ## 0.1.0 (2022-10-21)
 
