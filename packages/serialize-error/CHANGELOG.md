@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v3.0.1...serialize-error-v3.0.2) (2024-03-22)
+
+
+### Bug Fixes
+
+* add type declarations for serialize-error ([8909075](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8909075fe882f9e2e594aca5c071bc82b2edabaa))
+
 ## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v3.0.0...serialize-error-v3.0.1) (2024-01-09)
 
 

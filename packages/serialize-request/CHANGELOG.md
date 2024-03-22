@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v3.0.1...serialize-request-v3.0.2) (2024-03-22)
+
+
+### Bug Fixes
+
+* add type declarations for serialize-request ([b45d3e4](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b45d3e42cda481d898eadebf4aadab0e9b2db823))
+
 ## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v3.0.0...serialize-request-v3.0.1) (2024-01-09)
 
 

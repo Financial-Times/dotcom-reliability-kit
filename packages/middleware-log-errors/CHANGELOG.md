@@ -114,6 +114,15 @@
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^3.1.5 to ^3.1.6
 
+## [4.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.0.4...middleware-log-errors-v4.0.5) (2024-03-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.0.4 to ^4.0.5
+
 ## [4.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.0.3...middleware-log-errors-v4.0.4) (2024-02-19)
 
 

@@ -87,6 +87,17 @@
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
     * @dotcom-reliability-kit/logger bumped from ^2.4.0 to ^2.4.1
 
+## [4.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.0.4...log-error-v4.0.5) (2024-03-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/logger bumped from ^3.0.4 to ^3.0.5
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.0.1 to ^3.0.2
+    * @dotcom-reliability-kit/serialize-request bumped from ^3.0.1 to ^3.0.2
+
 ## [4.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.0.3...log-error-v4.0.4) (2024-02-19)
 
 

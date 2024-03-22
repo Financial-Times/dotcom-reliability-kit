@@ -18,6 +18,15 @@
   * dependencies
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
 
+## [3.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.4...logger-v3.0.5) (2024-03-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.0.1 to ^3.0.2
+
 ## [3.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.3...logger-v3.0.4) (2024-02-19)
 
 
