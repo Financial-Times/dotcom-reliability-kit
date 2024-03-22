@@ -1,23 +1,5 @@
 # Changelog
 
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
-
 ## [3.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.4...logger-v3.0.5) (2024-03-22)
 
 
@@ -123,6 +105,15 @@
   * dependencies
     * @dotcom-reliability-kit/serialize-error bumped from ^2.2.0 to ^2.2.1
 
+## [2.4.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.4.0...logger-v2.4.1) (2023-12-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
+
 ## [2.4.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.3.1...logger-v2.4.0) (2023-11-23)
 
 
@@ -151,6 +142,15 @@
 * The following workspace dependencies were updated
   * dependencies
     * @dotcom-reliability-kit/serialize-error bumped from ^2.1.0 to ^2.2.0
+
+## [2.2.10](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.9...logger-v2.2.10) (2023-11-07)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
 
 ## [2.2.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v2.2.8...logger-v2.2.9) (2023-09-19)
 
@@ -373,6 +373,15 @@
 ### Features
 
 * mark the logger package as stable ([57c5f65](https://github.com/Financial-Times/dotcom-reliability-kit/commit/57c5f65272692bf416c7f1777b240f2276e02e9d))
+
+## [0.1.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.4...logger-v0.1.5) (2022-12-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
 
 ## [0.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v0.1.3...logger-v0.1.4) (2022-12-16)
 
