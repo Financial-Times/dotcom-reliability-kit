@@ -1,111 +1,5 @@
 # Changelog
 
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.3
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.8 to ^1.3.9
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.9 to ^1.3.10
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.10 to ^1.3.11
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.3.11 to ^1.4.0
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.4.0 to ^1.5.0
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.1 to ^1.5.2
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/app-info bumped from ^1.1.0 to ^1.2.0
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.2 to ^1.5.3
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/app-info bumped from ^1.2.0 to ^1.2.1
-    * @dotcom-reliability-kit/log-error bumped from ^1.5.3 to ^1.5.4
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^2.1.0 to ^2.1.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.0.0 to ^3.0.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.0.1 to ^3.1.0
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.0 to ^3.1.1
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.1 to ^3.1.2
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.3 to ^3.1.4
-
-### Dependencies
-
-* The following workspace dependencies were updated
-  * dependencies
-    * @dotcom-reliability-kit/log-error bumped from ^3.1.4 to ^3.1.5
-
 ## [5.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v5.0.4...middleware-render-error-info-v5.0.5) (2024-03-22)
 
 
@@ -216,6 +110,24 @@
     * @dotcom-reliability-kit/app-info bumped from ^2.2.0 to ^2.3.0
     * @dotcom-reliability-kit/log-error bumped from ^3.1.5 to ^3.1.6
 
+## [4.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v4.0.1...middleware-render-error-info-v4.0.2) (2023-11-23)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.4 to ^3.1.5
+
+## [4.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v4.0.0...middleware-render-error-info-v4.0.1) (2023-11-21)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.3 to ^3.1.4
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.1.0...middleware-render-error-info-v4.0.0) (2023-11-20)
 
 
@@ -253,6 +165,43 @@
     * @dotcom-reliability-kit/log-error bumped from ^3.1.2 to ^3.1.3
     * @dotcom-reliability-kit/serialize-error bumped from ^2.1.0 to ^2.2.0
 
+## [3.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.0.3...middleware-render-error-info-v3.0.4) (2023-11-07)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^2.1.0 to ^2.2.0
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.1 to ^3.1.2
+
+## [3.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.0.2...middleware-render-error-info-v3.0.3) (2023-10-10)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.1.0 to ^3.1.1
+
+## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.0.1...middleware-render-error-info-v3.0.2) (2023-09-19)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.0.1 to ^3.1.0
+
+## [3.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v3.0.0...middleware-render-error-info-v3.0.1) (2023-08-29)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^3.0.0 to ^3.0.1
+
 ## [3.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v2.1.1...middleware-render-error-info-v3.0.0) (2023-08-07)
 
 
@@ -276,6 +225,15 @@
 * The following workspace dependencies were updated
   * dependencies
     * @dotcom-reliability-kit/log-error bumped from ^2.1.1 to ^3.0.0
+
+## [2.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v2.1.0...middleware-render-error-info-v2.1.1) (2023-06-23)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^2.1.0 to ^2.1.1
 
 ## [2.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v2.0.1...middleware-render-error-info-v2.1.0) (2023-05-02)
 
@@ -336,12 +294,96 @@
 
 * bump entities from 4.4.0 to 4.5.0 ([f6ca40d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f6ca40de6ab72794774b22a1458cc3cf481b518f))
 
+## [1.1.17](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.16...middleware-render-error-info-v1.1.17) (2023-04-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.2.0 to ^1.2.1
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.3 to ^1.5.4
+
+## [1.1.16](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.15...middleware-render-error-info-v1.1.16) (2023-04-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.1.0 to ^1.2.0
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.2 to ^1.5.3
+
+## [1.1.15](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.14...middleware-render-error-info-v1.1.15) (2023-03-21)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.1 to ^1.5.2
+
 ## [1.1.14](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.13...middleware-render-error-info-v1.1.14) (2023-01-25)
 
 
 ### Bug Fixes
 
 * use fake timers in middleware rendering snapshot test ([6fabcce](https://github.com/Financial-Times/dotcom-reliability-kit/commit/6fabcce57d19102a8dfa78442a83cb60f7cb323f))
+
+## [1.1.13](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.12...middleware-render-error-info-v1.1.13) (2022-12-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^1.0.3 to ^1.1.0
+    * @dotcom-reliability-kit/log-error bumped from ^1.5.0 to ^1.5.1
+
+## [1.1.12](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.11...middleware-render-error-info-v1.1.12) (2022-11-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.4.0 to ^1.5.0
+
+## [1.1.11](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.10...middleware-render-error-info-v1.1.11) (2022-11-04)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.11 to ^1.4.0
+
+## [1.1.10](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.9...middleware-render-error-info-v1.1.10) (2022-11-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.10 to ^1.3.11
+
+## [1.1.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.8...middleware-render-error-info-v1.1.9) (2022-10-26)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.9 to ^1.3.10
+
+## [1.1.8](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.7...middleware-render-error-info-v1.1.8) (2022-10-25)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.8 to ^1.3.9
 
 ## [1.1.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.6...middleware-render-error-info-v1.1.7) (2022-10-12)
 
@@ -431,6 +473,15 @@
 ### Bug Fixes
 
 * return named functions in middleware ([00e7ddd](https://github.com/Financial-Times/dotcom-reliability-kit/commit/00e7ddd77d18681dea8c504c40e4879c04207748))
+
+## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.1.0...middleware-render-error-info-v1.1.1) (2022-08-16)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^1.3.1 to ^1.3.3
 
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v1.0.0...middleware-render-error-info-v1.1.0) (2022-08-12)
 
