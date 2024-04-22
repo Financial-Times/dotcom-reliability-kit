@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.5...logger-v3.0.6) (2024-04-22)
+
+
+### Bug Fixes
+
+* bump pino from 8.19.0 to 8.20.0 ([2b9cf3d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2b9cf3d7af0a886db0e1daee78c80b078d08c07e))
+
 ## [3.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.4...logger-v3.0.5) (2024-03-22)
 
 
