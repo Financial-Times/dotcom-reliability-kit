@@ -48,6 +48,9 @@ Some of the options below result in more errors being caught, you can weigh this
 
 In all of the APIs below, if the response `ok` property is `false`, i.e. when the status code is `400` or greater, then errors will be thrown.
 
+> [!WARNING]
+> If you're using node-fetch then it's important to read the body of the request because of a [known memory leak](https://github.com/node-fetch/node-fetch/issues/83). If an error is thrown then we automatically drain the response body stream but, if the request is successful, you'll need to do this yourself.
+
 ### Wrap the fetch function
 
 This is the recommended API as this will allow you to handle the most errors (even DNS and timeout errors) correctly:

@@ -1,6 +1,9 @@
-const createFetchErrorHandler = require('../../../lib/create-handler');
+jest.mock('node:stream');
 
-describe('@dotcom-reliability-kit/fetch-error-handler', () => {
+const createFetchErrorHandler = require('../../../lib/create-handler');
+const { Writable } = require('node:stream');
+
+describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () => {
 	let fetchErrorHandler;
 
 	describe('createFetchErrorHandler()', () => {
@@ -20,7 +23,8 @@ describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 				mockResponse = {
 					ok: true,
 					status: 200,
-					url: 'https://mock.com/example'
+					url: 'https://mock.com/example',
+					body: {}
 				};
 				resolvedValue = await fetchErrorHandler(mockResponse);
 			});
@@ -148,7 +152,8 @@ describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 				mockResponse = {
 					ok: true,
 					status: 200,
-					url: 'https://mock.com/example'
+					url: 'https://mock.com/example',
+					body: {}
 				};
 				resolvedValue = await fetchErrorHandler(Promise.resolve(mockResponse));
 			});
@@ -167,6 +172,34 @@ describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 					} catch (error) {
 						expect(error).toBeInstanceOf(Error);
 					}
+				});
+
+				describe('when the response body has a pipe method (node-fetch)', () => {
+					it('pipes the body into a stream that voids the body data', async () => {
+						expect.assertions(5);
+						try {
+							mockResponse.ok = false;
+							mockResponse.status = 400;
+							mockResponse.body.pipe = jest.fn();
+							await fetchErrorHandler(Promise.resolve(mockResponse));
+						} catch (error) {
+							expect(mockResponse.body.pipe).toHaveBeenCalledTimes(1);
+							expect(mockResponse.body.pipe).toHaveBeenCalledWith(
+								expect.any(Writable)
+							);
+							const stream = mockResponse.body.pipe.mock.calls[0][0];
+							expect(typeof stream._write).toEqual('function');
+
+							// We make sure the _write function doesn't do anything with
+							// any of the data aside from calling `done`
+							const chunk = {}; // The test will error if we try to call any chunk methods, e.g. toString
+							const encoding = {}; // The test will error if we try to perform string operations on the encoding
+							const done = jest.fn();
+							stream._write(chunk, encoding, done);
+							expect(done).toHaveBeenCalledTimes(1);
+							expect(done).toHaveBeenCalledWith();
+						}
+					});
 				});
 			});
 
@@ -406,7 +439,8 @@ describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 						try {
 							await fetchErrorHandler({
 								ok: false,
-								status: 400
+								status: 400,
+								body: {}
 							});
 						} catch (error) {
 							expect(error).toBeInstanceOf(Error);
