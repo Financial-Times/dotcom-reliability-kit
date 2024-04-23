@@ -3,11 +3,18 @@ const {
 	OperationalError,
 	UpstreamServiceError
 } = require('@dotcom-reliability-kit/errors');
+const { Writable } = require('node:stream');
 
 /**
  * @typedef {object} ErrorHandlerOptions
  * @property {string} [upstreamSystemCode]
  *     The system code of the upstream system that the `fetch` makes a request to.
+ */
+
+/**
+ * @typedef {object} FetchResponseBody
+ * @property {(stream: Writable) => void} [pipe]
+ *     A function to pipe a response body stream.
  */
 
 /**
@@ -18,6 +25,8 @@ const {
  *     The response HTTP status code.
  * @property {string} url
  *     The URL of the response.
+ * @property {FetchResponseBody} body
+ *     A representation of the response body.
  */
 
 /* eslint-disable jsdoc/valid-types */
@@ -48,140 +57,160 @@ function createFetchErrorHandler(options = {}) {
 	return async function handleFetchErrors(input) {
 		let response = input;
 
-		// If input is a promise, resolve it. We also handle
-		// more errors this way.
-		if (isPromise(input)) {
-			try {
-				response = await input;
-			} catch (/** @type {any} */ error) {
-				const errorCode = error?.code || error?.cause?.code;
-
-				// Handle DNS errors
-				if (errorCode === 'ENOTFOUND') {
-					const hostname = error?.hostname || error?.cause?.hostname;
-					const dnsLookupErrorMessage = `Cound not resolve DNS entry${
-						hostname ? ` for host ${hostname}` : ''
-					}`;
-					throw new OperationalError({
-						code: 'FETCH_DNS_LOOKUP_ERROR',
-						message: dnsLookupErrorMessage,
-						relatesToSystems,
-						cause: error
-					});
-				}
-
-				// Handle standardised abort and timeout errors
-				const abortErrorMessage =
-					'The fetch was aborted before the upstream service could respond';
-				if (error?.name === 'AbortError' || error?.name === 'TimeoutError') {
-					throw new OperationalError({
-						code:
-							error.name === 'AbortError'
-								? 'FETCH_ABORT_ERROR'
-								: 'FETCH_TIMEOUT_ERROR',
-						message: abortErrorMessage,
-						relatesToSystems,
-						cause: error
-					});
-				}
-
-				// Handle non-standardised timeout errors
-				if (error?.name === 'FetchError' && error?.type === 'request-timeout') {
-					throw new OperationalError({
-						code: 'FETCH_TIMEOUT_ERROR',
-						message: abortErrorMessage,
-						relatesToSystems,
-						cause: error
-					});
-				}
-
-				// Handle socket hangups
-				if (
-					errorCode === 'ECONNRESET' ||
-					error?.cause?.name === 'SocketError'
-				) {
-					throw new UpstreamServiceError({
-						code: 'FETCH_SOCKET_HANGUP_ERROR',
-						message: 'The connection to the upstream service was terminated',
-						relatesToSystems,
-						cause: error
-					});
-				}
-
-				// We don't know what to do with this error so
-				// we throw it as-is
-				throw error;
-			}
-		}
-
-		// Check whether the value we were given is a valid response object
-		if (!isFetchResponse(response)) {
-			// This is not an operational error because the invalid
-			// input is highly likely to be a programmer error
-			throw Object.assign(
-				new TypeError(
-					'Fetch handler must be called with a `fetch` response object or a `fetch` promise'
-				),
-				{ code: 'FETCH_ERROR_HANDLER_INVALID_INPUT' }
-			);
-		}
-
-		// If the response isn't OK, we start throwing errors
-		if (!response.ok) {
-			// Parse the response URL so we can use the hostname in error messages
-			let responseHostName = 'unknown';
-			if (typeof response.url === 'string') {
+		// This outer try/catch is used to make sure that we're able to read
+		// the response body in the case of an error. This is important because
+		// otherwise node-fetch will leak memory. See the (still not fixed) bug:
+		// https://github.com/node-fetch/node-fetch/issues/83
+		try {
+			// If input is a promise, resolve it. We also handle
+			// more errors this way.
+			if (isPromise(input)) {
 				try {
-					const url = new URL(response.url);
-					responseHostName = url.hostname;
-				} catch (_) {
-					// We ignore this error because having a valid URL isn't essential – it
-					// just helps debug if we do have one. If someone's using a weird non-standard
-					// `fetch` implementation or mocking then this error could be fired
+					response = await input;
+				} catch (/** @type {any} */ error) {
+					const errorCode = error?.code || error?.cause?.code;
+
+					// Handle DNS errors
+					if (errorCode === 'ENOTFOUND') {
+						const hostname = error?.hostname || error?.cause?.hostname;
+						const dnsLookupErrorMessage = `Cound not resolve DNS entry${
+							hostname ? ` for host ${hostname}` : ''
+						}`;
+						throw new OperationalError({
+							code: 'FETCH_DNS_LOOKUP_ERROR',
+							message: dnsLookupErrorMessage,
+							relatesToSystems,
+							cause: error
+						});
+					}
+
+					// Handle standardised abort and timeout errors
+					const abortErrorMessage =
+						'The fetch was aborted before the upstream service could respond';
+					if (error?.name === 'AbortError' || error?.name === 'TimeoutError') {
+						throw new OperationalError({
+							code:
+								error.name === 'AbortError'
+									? 'FETCH_ABORT_ERROR'
+									: 'FETCH_TIMEOUT_ERROR',
+							message: abortErrorMessage,
+							relatesToSystems,
+							cause: error
+						});
+					}
+
+					// Handle non-standardised timeout errors
+					if (
+						error?.name === 'FetchError' &&
+						error?.type === 'request-timeout'
+					) {
+						throw new OperationalError({
+							code: 'FETCH_TIMEOUT_ERROR',
+							message: abortErrorMessage,
+							relatesToSystems,
+							cause: error
+						});
+					}
+
+					// Handle socket hangups
+					if (
+						errorCode === 'ECONNRESET' ||
+						error?.cause?.name === 'SocketError'
+					) {
+						throw new UpstreamServiceError({
+							code: 'FETCH_SOCKET_HANGUP_ERROR',
+							message: 'The connection to the upstream service was terminated',
+							relatesToSystems,
+							cause: error
+						});
+					}
+
+					// We don't know what to do with this error so
+					// we throw it as-is
+					throw error;
 				}
 			}
 
-			// Some common error options which we'll include in any that are thrown
-			const baseErrorOptions = {
-				message: `The upstream service at "${responseHostName}" responded with a ${response.status} status`,
-				relatesToSystems,
-				upstreamUrl: response.url,
-				upstreamStatusCode: response.status
-			};
+			// Check whether the value we were given is a valid response object
+			if (!isFetchResponse(response)) {
+				// This is not an operational error because the invalid
+				// input is highly likely to be a programmer error
+				throw Object.assign(
+					new TypeError(
+						'Fetch handler must be called with a `fetch` response object or a `fetch` promise'
+					),
+					{ code: 'FETCH_ERROR_HANDLER_INVALID_INPUT' }
+				);
+			}
 
-			// If the back end responds with a `4xx` error then it normally indicates
-			// that something is wrong with the _current_ system. Maybe we're sending data
-			// in an invalid format or our API key is invalid. For this we throw a generic
-			// `500` error to indicate an issue with our system.
-			if (response.status >= 400 && response.status < 500) {
+			// If the response isn't OK, we start throwing errors
+			if (!response.ok) {
+				// Parse the response URL so we can use the hostname in error messages
+				let responseHostName = 'unknown';
+				if (typeof response.url === 'string') {
+					try {
+						const url = new URL(response.url);
+						responseHostName = url.hostname;
+					} catch (_) {
+						// We ignore this error because having a valid URL isn't essential – it
+						// just helps debug if we do have one. If someone's using a weird non-standard
+						// `fetch` implementation or mocking then this error could be fired
+					}
+				}
+
+				// Some common error options which we'll include in any that are thrown
+				const baseErrorOptions = {
+					message: `The upstream service at "${responseHostName}" responded with a ${response.status} status`,
+					relatesToSystems,
+					upstreamUrl: response.url,
+					upstreamStatusCode: response.status
+				};
+
+				// If the back end responds with a `4xx` error then it normally indicates
+				// that something is wrong with the _current_ system. Maybe we're sending data
+				// in an invalid format or our API key is invalid. For this we throw a generic
+				// `500` error to indicate an issue with our system.
+				if (response.status >= 400 && response.status < 500) {
+					throw new HttpError(
+						Object.assign(
+							{ code: 'FETCH_CLIENT_ERROR', statusCode: 500 },
+							baseErrorOptions
+						)
+					);
+				}
+
+				// If the back end responds with a `5xx` error then it normally indicates
+				// that something is wrong with the _upstream_ system. For this we can output
+				// an upstream service error and attribute the error to this system.
+				if (response.status >= 500 && response.status < 600) {
+					throw new UpstreamServiceError(
+						Object.assign({ code: 'FETCH_SERVER_ERROR' }, baseErrorOptions)
+					);
+				}
+
+				// If we get here then it's unclear what's wrong – `response.ok` is false but the status
+				// isn't in the 400–599 range. We throw a generic 500 error so that we have visibility.
 				throw new HttpError(
 					Object.assign(
-						{ code: 'FETCH_CLIENT_ERROR', statusCode: 500 },
+						{ code: 'FETCH_UNKNOWN_ERROR', statusCode: 500 },
 						baseErrorOptions
 					)
 				);
 			}
 
-			// If the back end responds with a `5xx` error then it normally indicates
-			// that something is wrong with the _upstream_ system. For this we can output
-			// an upstream service error and attribute the error to this system.
-			if (response.status >= 500 && response.status < 600) {
-				throw new UpstreamServiceError(
-					Object.assign({ code: 'FETCH_SERVER_ERROR' }, baseErrorOptions)
-				);
+			return response;
+		} catch (/** @type {any} */ finalError) {
+			// If the response body has a pipe method then we're dealing
+			// with a node-fetch body. In this case we need to read the
+			// body so we don't introduce a memory leak.
+			if (
+				isFetchResponse(response) &&
+				typeof response.body.pipe === 'function'
+			) {
+				response.body.pipe(new BlackHoleStream());
 			}
-
-			// If we get here then it's unclear what's wrong – `response.ok` is false but the status
-			// isn't in the 400–599 range. We throw a generic 500 error so that we have visibility.
-			throw new HttpError(
-				Object.assign(
-					{ code: 'FETCH_UNKNOWN_ERROR', statusCode: 500 },
-					baseErrorOptions
-				)
-			);
+			throw finalError;
 		}
-
-		return response;
 	};
 }
 
@@ -212,6 +241,18 @@ function isFetchResponse(value) {
 		return false;
 	}
 	return true;
+}
+
+/**
+ * Writable stream to pipe data into the void.
+ */
+class BlackHoleStream extends Writable {
+	/**
+	 * @override
+	 */
+	_write(chunk, encoding, done) {
+		done();
+	}
 }
 
 module.exports = createFetchErrorHandler;
