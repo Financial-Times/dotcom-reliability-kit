@@ -24,7 +24,7 @@
 		"@opentelemetry/exporter-trace-otlp-proto": "^0.50.0",
 		"@opentelemetry/resources": "^1.23.0",
 		"@opentelemetry/sdk-node": "^0.50.0",
-		"@opentelemetry/sdk-trace-base": "^1.23.0",
+		"@opentelemetry/sdk-trace-base": "^1.24.0",
 		"@opentelemetry/semantic-conventions": "^1.23.0"
 	}
 }
