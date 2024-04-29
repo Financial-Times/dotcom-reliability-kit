@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v3.0.2...serialize-error-v3.1.0) (2024-04-29)
+
+
+### Features
+
+* add support for Node.js 22 ([e083794](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e083794c2b4901a055de9fce483bcbab03b8e522))
+
 ## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v3.0.1...serialize-error-v3.0.2) (2024-03-22)
 
 

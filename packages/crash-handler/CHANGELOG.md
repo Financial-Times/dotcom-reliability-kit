@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v4.0.6...crash-handler-v4.1.0) (2024-04-29)
+
+
+### Features
+
+* add support for Node.js 22 ([e083794](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e083794c2b4901a055de9fce483bcbab03b8e522))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.0.6 to ^4.1.0
+
 ## [4.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v4.0.5...crash-handler-v4.0.6) (2024-04-22)
 
 

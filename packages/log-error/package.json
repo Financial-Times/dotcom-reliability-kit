@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/log-error",
-  "version": "4.0.6",
+  "version": "4.1.0",
   "description": "A method to consistently log error object with optional request information",
   "repository": {
     "type": "git",
@@ -16,10 +16,10 @@
   },
   "main": "lib",
   "dependencies": {
-    "@dotcom-reliability-kit/app-info": "^3.0.2",
-    "@dotcom-reliability-kit/logger": "^3.0.6",
-    "@dotcom-reliability-kit/serialize-error": "^3.0.2",
-    "@dotcom-reliability-kit/serialize-request": "^3.0.2"
+    "@dotcom-reliability-kit/app-info": "^3.1.0",
+    "@dotcom-reliability-kit/logger": "^3.1.0",
+    "@dotcom-reliability-kit/serialize-error": "^3.1.0",
+    "@dotcom-reliability-kit/serialize-request": "^3.1.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21"

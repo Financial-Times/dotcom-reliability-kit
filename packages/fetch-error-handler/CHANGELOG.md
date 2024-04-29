@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.1...fetch-error-handler-v0.2.2) (2024-04-29)
+
+
+### Features
+
+* add support for Node.js 22 ([e083794](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e083794c2b4901a055de9fce483bcbab03b8e522))
+
+
+### Bug Fixes
+
+* handle node-fetch memory leak ([6716eca](https://github.com/Financial-Times/dotcom-reliability-kit/commit/6716eca8b4fe0a49431d5bdc77bdf0ed2f7742ce))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/errors bumped from ^3.0.1 to ^3.1.0
+
 ## [0.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.0...fetch-error-handler-v0.2.1) (2024-01-09)
 
 
