@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.6...logger-v3.1.0) (2024-04-29)
+
+
+### Features
+
+* add support for Node.js 22 ([e083794](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e083794c2b4901a055de9fce483bcbab03b8e522))
+
+
+### Bug Fixes
+
+* bump pino from 8.21.0 to 9.0.0 in /packages/logger ([9384e05](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9384e05cd0c2bda8990dd2b30d2ad8777e81b87d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.0.2 to ^3.1.0
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.0.2 to ^3.1.0
+
 ## [3.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.0.5...logger-v3.0.6) (2024-04-22)
 
 

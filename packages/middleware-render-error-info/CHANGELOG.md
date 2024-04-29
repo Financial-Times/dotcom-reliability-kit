@@ -1,5 +1,21 @@
 # Changelog
 
+## [5.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v5.0.6...middleware-render-error-info-v5.1.0) (2024-04-29)
+
+
+### Features
+
+* add support for Node.js 22 ([e083794](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e083794c2b4901a055de9fce483bcbab03b8e522))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.0.2 to ^3.1.0
+    * @dotcom-reliability-kit/log-error bumped from ^4.0.6 to ^4.1.0
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.0.2 to ^3.1.0
+
 ## [5.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v5.0.5...middleware-render-error-info-v5.0.6) (2024-04-22)
 
 
