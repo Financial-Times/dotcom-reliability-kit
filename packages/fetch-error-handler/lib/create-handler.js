@@ -12,7 +12,7 @@ const { Writable } = require('node:stream');
  */
 
 /**
- * @typedef {object} FetchResponseBody
+ * @typedef {object} NodeFetchResponseBody
  * @property {(stream: Writable) => void} [pipe]
  *     A function to pipe a response body stream.
  */
@@ -25,7 +25,7 @@ const { Writable } = require('node:stream');
  *     The response HTTP status code.
  * @property {string} url
  *     The URL of the response.
- * @property {FetchResponseBody} body
+ * @property {NodeFetchResponseBody | ReadableStream<Uint8Array> | null} body
  *     A representation of the response body.
  */
 
@@ -205,6 +205,8 @@ function createFetchErrorHandler(options = {}) {
 			// body so we don't introduce a memory leak.
 			if (
 				isFetchResponse(response) &&
+				response.body &&
+				'pipe' in response.body &&
 				typeof response.body.pipe === 'function'
 			) {
 				response.body.pipe(new BlackHoleStream());
