@@ -118,6 +118,28 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			});
 		});
 
+		describe('when the error is an AggregateError', () => {
+			it('serialises its errors', () => {
+				const aggregateError = new AggregateError(
+					[
+						new Error('error one'),
+						new Error('error two'),
+						new Error('error three')
+					],
+					'aggregate error message'
+				);
+
+				expect(serializeError(aggregateError)).toMatchObject({
+					message: 'aggregate error message',
+					errors: [
+						{ message: 'error one' },
+						{ message: 'error two' },
+						{ message: 'error three' }
+					]
+				});
+			});
+		});
+
 		describe('when the error has a `statusCode` property', () => {
 			it('returns the status code in the serialized error properties', () => {
 				error.statusCode = 456;

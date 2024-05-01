@@ -9,6 +9,7 @@ declare module '@dotcom-reliability-kit/serialize-error' {
 		isOperational: boolean;
 		relatesToSystems: string[];
 		cause: Error | null;
+		errors?: Error[];
 		stack: string | null;
 		statusCode: number | null;
 		data: {
