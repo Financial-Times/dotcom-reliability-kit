@@ -70,6 +70,13 @@ function serializeError(error) {
 		errorProperties.data = error.data;
 	}
 
+	// If an AggregateError, serialise its errors (needs to come after checking
+	// other properties, otherwise Typescript will widen the type to an intersection
+	// with AggregateError which prevents `& Record<string, any>` bit working)
+	if (error instanceof AggregateError) {
+		errorProperties.errors = error.errors.map(serializeError);
+	}
+
 	return createSerializedError(errorProperties);
 }
 
