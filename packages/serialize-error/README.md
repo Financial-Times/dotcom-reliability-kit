@@ -13,6 +13,7 @@ A utility function to serialize an error object in a way that's friendly to logg
       * [`SerializedError.isOperational`](#serializederrorisoperational)
       * [`SerializedError.relatesToSystems`](#serializederrorrelatestosystems)
       * [`SerializedError.cause`](#serializederrorcause)
+      * [`SerializedError.errors`](#serializederrorerrors)
       * [`SerializedError.stack`](#serializederrorstack)
       * [`SerializedError.statusCode`](#serializederrorstatuscode)
       * [`SerializedError.data`](#serializederrordata)
@@ -99,6 +100,9 @@ This array contains a list of [system codes](https://biz-ops.in.ft.com/list/Syst
 #### `SerializedError.cause`
 
 This is an error instance extracted from the `error.cause` property, which is serialized before being assigned. It defaults to `null`.
+
+#### `SerializedError.errors`
+This is an array of error instances extracted from the `error.errors` property (e.g. from an [AggregateError](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)). The errors are serialized before being assigned.
 
 #### `SerializedError.stack`
 
