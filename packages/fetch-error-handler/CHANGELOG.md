@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.2...fetch-error-handler-v0.2.3) (2024-05-01)
+
+
+### Bug Fixes
+
+* make FetchResponse type compatible with a native Response object ([00fb83d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/00fb83d477a864a26dc59c698e5d2471181ea1eb))
+
 ## [0.2.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.1...fetch-error-handler-v0.2.2) (2024-04-29)
 
 
