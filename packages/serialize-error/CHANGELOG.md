@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v3.1.0...serialize-error-v3.2.0) (2024-05-02)
+
+
+### Features
+
+* serialise an AggregateError's sub-errors ([1b66c9f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1b66c9fa4462811a658666cb1a44f478d62de37b))
+
+
+### Documentation Changes
+
+* **serialize-error:** document the errors property on SerializedError ([5fe380c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5fe380c08479c83248d87671f68e92493678d293))
+
 ## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v3.0.2...serialize-error-v3.1.0) (2024-04-29)
 
 
