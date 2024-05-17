@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v1.1.1...opentelemetry-v1.1.2) (2024-05-17)
+
+
+### Bug Fixes
+
+* add log-error as dependency of opentelemetry ([1e9fb75](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1e9fb758726507c8bc8eaf334dc69dd191abda1d))
+
 ## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v1.1.0...opentelemetry-v1.1.1) (2024-05-02)
 
 
