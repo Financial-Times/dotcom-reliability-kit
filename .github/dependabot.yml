@@ -16,6 +16,9 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      opentelemetry:
+        patterns:
+          - "@opentelemetry/*"
 
   - package-ecosystem: "npm"
     directory: "/resources/logos"
@@ -120,6 +123,3 @@ updates:
       opentelemetry:
         patterns:
           - "@opentelemetry/*"
-        update-types:
-          - "minor"
-          - "patch"
