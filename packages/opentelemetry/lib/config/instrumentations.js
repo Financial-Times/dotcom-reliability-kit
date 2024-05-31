@@ -8,7 +8,7 @@ const { UserInputError } = require('@dotcom-reliability-kit/errors');
 const IGNORED_REQUEST_PATHS = ['/__gtg', '/__health', '/favicon.ico'];
 
 /**
- * Create a Resource object using gathered app info.
+ * Create an instrumentations array for configuring OpenTelemetry.
  *
  * @returns {import('@opentelemetry/sdk-node').NodeSDKConfiguration['instrumentations']}
  */
