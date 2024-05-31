@@ -1,15 +1,6 @@
-jest.mock('../../../package.json', () => ({
-	name: 'mock-package',
-	version: '1.2.3'
-}));
 jest.mock('@opentelemetry/exporter-trace-otlp-proto');
-jest.mock('@opentelemetry/exporter-trace-otlp-proto/package.json', () => ({
-	name: 'mock-otel-tracing-package',
-	version: '3.4.5'
-}));
 jest.mock('@opentelemetry/sdk-trace-base');
 jest.mock('@opentelemetry/sdk-node');
-jest.mock('@dotcom-reliability-kit/app-info');
 jest.mock('@opentelemetry/api');
 jest.mock('@dotcom-reliability-kit/logger');
 jest.mock('../../../lib/config/instrumentations', () => ({
@@ -20,6 +11,9 @@ jest.mock('../../../lib/config/instrumentations', () => ({
 jest.mock('../../../lib/config/resource', () => ({
 	createResourceConfig: jest.fn().mockReturnValue('mock-resource')
 }));
+jest.mock('../../../lib/config/user-agents', () => ({
+	TRACING_USER_AGENT: 'mock-tracing-user-agent'
+}));
 
 const {
 	createInstrumentationConfig
@@ -28,7 +22,6 @@ const { createResourceConfig } = require('../../../lib/config/resource');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
 const logger = require('@dotcom-reliability-kit/logger');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
-const appInfo = require('@dotcom-reliability-kit/app-info');
 const {
 	OTLPTraceExporter
 } = require('@opentelemetry/exporter-trace-otlp-proto');
@@ -36,13 +29,6 @@ const {
 	NoopSpanProcessor,
 	TraceIdRatioBasedSampler
 } = require('@opentelemetry/sdk-trace-base');
-
-// Set up the mock
-appInfo.systemCode = 'MOCK_SYSTEM_CODE';
-appInfo.releaseVersion = 'MOCK_RELEASE_VERSION';
-appInfo.cloudProvider = 'MOCK_CLOUD_PROVIDER';
-appInfo.region = 'MOCK_CLOUD_REGION';
-appInfo.environment = 'MOCK_ENVIRONMENT';
 
 logger.createChildLogger.mockReturnValue('mock child logger');
 DiagLogLevel.INFO = 'mock info log level';
@@ -99,8 +85,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(OTLPTraceExporter).toHaveBeenCalledWith({
 				url: 'MOCK_TRACING_ENDPOINT',
 				headers: {
-					'user-agent':
-						'FTSystem/MOCK_SYSTEM_CODE (mock-package/1.2.3) (mock-otel-tracing-package/3.4.5)'
+					'user-agent': 'mock-tracing-user-agent'
 				}
 			});
 			expect(
@@ -147,8 +132,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 				url: 'MOCK_TRACING_ENDPOINT',
 				headers: {
 					authorization: 'mock-authorization-header',
-					'user-agent':
-						'FTSystem/MOCK_SYSTEM_CODE (mock-package/1.2.3) (mock-otel-tracing-package/3.4.5)'
+					'user-agent': 'mock-tracing-user-agent'
 				}
 			});
 		});
