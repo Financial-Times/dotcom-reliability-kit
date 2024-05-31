@@ -9,15 +9,17 @@ jest.mock('@opentelemetry/exporter-trace-otlp-proto/package.json', () => ({
 	version: '3.4.5'
 }));
 jest.mock('@opentelemetry/sdk-trace-base');
-jest.mock('@opentelemetry/resources');
 jest.mock('@opentelemetry/sdk-node');
-jest.mock('@opentelemetry/semantic-conventions');
 jest.mock('@dotcom-reliability-kit/app-info');
 jest.mock('@opentelemetry/api');
 jest.mock('@dotcom-reliability-kit/logger');
 jest.mock('@dotcom-reliability-kit/log-error');
 jest.mock('@dotcom-reliability-kit/errors');
+jest.mock('../../../lib/config/resource', () => ({
+	createResourceConfig: jest.fn().mockReturnValue('mock-resource')
+}));
 
+const { createResourceConfig } = require('../../../lib/config/resource');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
 const {
 	getNodeAutoInstrumentations
@@ -25,15 +27,7 @@ const {
 const logger = require('@dotcom-reliability-kit/logger');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
-const { Resource } = require('@opentelemetry/resources');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
-const {
-	SEMRESATTRS_CLOUD_PROVIDER,
-	SEMRESATTRS_CLOUD_REGION,
-	SEMRESATTRS_DEPLOYMENT_ENVIRONMENT,
-	SEMRESATTRS_SERVICE_NAME,
-	SEMRESATTRS_SERVICE_VERSION
-} = require('@opentelemetry/semantic-conventions');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const {
 	OTLPTraceExporter
@@ -85,17 +79,11 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(opentelemetrySDK.NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
 		});
 
-		it('sets OpenTelemetry resource attributes based on app data', () => {
-			expect(Resource).toHaveBeenCalledTimes(1);
-			expect(Resource).toHaveBeenCalledWith({
-				[SEMRESATTRS_SERVICE_NAME]: 'MOCK_SYSTEM_CODE',
-				[SEMRESATTRS_SERVICE_VERSION]: 'MOCK_RELEASE_VERSION',
-				[SEMRESATTRS_CLOUD_PROVIDER]: 'MOCK_CLOUD_PROVIDER',
-				[SEMRESATTRS_CLOUD_REGION]: 'MOCK_CLOUD_REGION',
-				[SEMRESATTRS_DEPLOYMENT_ENVIRONMENT]: 'MOCK_ENVIRONMENT'
-			});
-			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].resource).toBeInstanceOf(
-				Resource
+		it('configures the OpenTelemetry resource', () => {
+			expect(createResourceConfig).toHaveBeenCalledTimes(1);
+			expect(createResourceConfig).toHaveBeenCalledWith();
+			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].resource).toStrictEqual(
+				'mock-resource'
 			);
 		});
 
@@ -318,31 +306,6 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 				event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
 				message:
 					'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
-			});
-		});
-	});
-
-	describe('when app data is not available', () => {
-		beforeAll(() => {
-			Resource.mockReset();
-			appInfo.systemCode = null;
-			appInfo.releaseVersion = null;
-			appInfo.cloudProvider = null;
-			appInfo.region = null;
-			appInfo.environment = null;
-			openTelemetryTracing({
-				tracing: { endpoint: 'MOCK_TRACING_ENDPOINT' }
-			});
-		});
-
-		it('sets OpenTelemetry resource attributes to undefined', () => {
-			expect(Resource).toHaveBeenCalledTimes(1);
-			expect(Resource).toHaveBeenCalledWith({
-				[SEMRESATTRS_SERVICE_NAME]: undefined,
-				[SEMRESATTRS_SERVICE_VERSION]: undefined,
-				[SEMRESATTRS_CLOUD_PROVIDER]: undefined,
-				[SEMRESATTRS_CLOUD_REGION]: undefined,
-				[SEMRESATTRS_DEPLOYMENT_ENVIRONMENT]: undefined
 			});
 		});
 	});
