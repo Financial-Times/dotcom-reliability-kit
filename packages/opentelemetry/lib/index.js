@@ -1,9 +1,7 @@
 const packageJson = require('../package.json');
+const { createInstrumentationConfig } = require('./config/instrumentations');
 const { createResourceConfig } = require('./config/resource');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
-const {
-	getNodeAutoInstrumentations
-} = require('@opentelemetry/auto-instrumentations-node');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const {
@@ -15,15 +13,11 @@ const {
 	TraceIdRatioBasedSampler
 } = require('@opentelemetry/sdk-trace-base');
 const logger = require('@dotcom-reliability-kit/logger');
-const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
-const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
 const USER_AGENT = `FTSystem/${appInfo.systemCode} (${packageJson.name}/${packageJson.version})`;
 const TRACING_USER_AGENT = `${USER_AGENT} (${traceExporterPackageJson.name}/${traceExporterPackageJson.version})`;
 
 const DEFAULT_SAMPLE_PERCENTAGE = 5;
-
-const IGNORED_REQUEST_PATHS = ['/__gtg', '/__health', '/favicon.ico'];
 
 /**
  * @typedef {object} Options
@@ -73,50 +67,8 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 	// Construct the OpenTelemetry SDK configuration
 	/** @type {opentelemetrySDK.NodeSDKConfiguration} */
 	const openTelemetryConfig = {};
+	openTelemetryConfig.instrumentations = createInstrumentationConfig();
 	openTelemetryConfig.resource = createResourceConfig();
-
-	// Auto-instrument common and built-in Node.js modules
-	openTelemetryConfig.instrumentations = [
-		getNodeAutoInstrumentations({
-			'@opentelemetry/instrumentation-http': {
-				// NOTE: this is not a filter like you know it. The name
-				// gives us a clue: if the hook returns `true` then the
-				// request WILL be ignored.
-				ignoreIncomingRequestHook: (request) => {
-					if (request.url) {
-						try {
-							const url = new URL(
-								request.url,
-								`http://${request.headers.host}`
-							);
-
-							// Don't send traces for paths that we frequently poll
-							if (IGNORED_REQUEST_PATHS.includes(url.pathname)) {
-								return true;
-							}
-						} catch (/** @type {any} */ cause) {
-							// If URL parsing errors then we log it and move on.
-							// We don't ignore URLs that result in an error because
-							// we're interested in the traces from bad requests.
-							logRecoverableError({
-								error: new UserInputError({
-									message: 'Failed to parse the request URL for filtering',
-									code: 'OTEL_REQUEST_FILTER_FAILURE',
-									cause
-								}),
-								includeHeaders: ['host'],
-								request
-							});
-						}
-					}
-					return false;
-				}
-			},
-			'@opentelemetry/instrumentation-fs': {
-				enabled: false
-			}
-		})
-	];
 
 	// If we have an OpenTelemetry tracing endpoint then set it up,
 	// otherwise we pass a noop span processor so that nothing is exported
