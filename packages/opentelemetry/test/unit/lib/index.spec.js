@@ -1,5 +1,3 @@
-jest.mock('@opentelemetry/exporter-trace-otlp-proto');
-jest.mock('@opentelemetry/sdk-trace-base');
 jest.mock('@opentelemetry/sdk-node');
 jest.mock('@opentelemetry/api');
 jest.mock('@dotcom-reliability-kit/logger');
@@ -11,39 +9,38 @@ jest.mock('../../../lib/config/instrumentations', () => ({
 jest.mock('../../../lib/config/resource', () => ({
 	createResourceConfig: jest.fn().mockReturnValue('mock-resource')
 }));
-jest.mock('../../../lib/config/user-agents', () => ({
-	TRACING_USER_AGENT: 'mock-tracing-user-agent'
+jest.mock('../../../lib/config/tracing', () => ({
+	createTracingConfig: jest.fn().mockReturnValue({ tracing: 'mock-tracing' })
 }));
 
 const {
 	createInstrumentationConfig
 } = require('../../../lib/config/instrumentations');
 const { createResourceConfig } = require('../../../lib/config/resource');
+const { createTracingConfig } = require('../../../lib/config/tracing');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
+const { NodeSDK } = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
-const opentelemetrySDK = require('@opentelemetry/sdk-node');
-const {
-	OTLPTraceExporter
-} = require('@opentelemetry/exporter-trace-otlp-proto');
-const {
-	NoopSpanProcessor,
-	TraceIdRatioBasedSampler
-} = require('@opentelemetry/sdk-trace-base');
 
 logger.createChildLogger.mockReturnValue('mock child logger');
 DiagLogLevel.INFO = 'mock info log level';
 
 // Import the OTel function for testing
-const openTelemetryTracing = require('../../../lib/index');
+const setupOpenTelemetry = require('../../../lib/index');
 
 describe('@dotcom-reliability-kit/opentelemetry', () => {
-	it('should be exporting a function', () => {
-		expect(typeof openTelemetryTracing).toStrictEqual('function');
+	it('exports a function', () => {
+		expect(typeof setupOpenTelemetry).toStrictEqual('function');
 	});
 
-	describe('OpenTelemetry is set up correctly', () => {
+	describe('setupOpenTelemetry(options)', () => {
 		beforeAll(() => {
-			openTelemetryTracing({ tracing: { endpoint: 'MOCK_TRACING_ENDPOINT' } });
+			setupOpenTelemetry({
+				tracing: {
+					endpoint: 'mock-tracing-endpoint',
+					samplePercentage: 137
+				}
+			});
 		});
 
 		it('sets up OpenTelemetry to log via Reliability Kit logger', () => {
@@ -58,149 +55,123 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			);
 		});
 
-		it('calls and starts the OpenTelemetry Node SDK', () => {
-			expect(opentelemetrySDK.NodeSDK).toHaveBeenCalledTimes(1);
-			expect(opentelemetrySDK.NodeSDK).toHaveBeenCalledWith(expect.any(Object));
-			expect(opentelemetrySDK.NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
-		});
-
 		it('configures the OpenTelemetry instrumentations', () => {
 			expect(createInstrumentationConfig).toHaveBeenCalledTimes(1);
 			expect(createInstrumentationConfig).toHaveBeenCalledWith();
-			expect(
-				opentelemetrySDK.NodeSDK.mock.calls[0][0].instrumentations
-			).toStrictEqual('mock-instrumentations');
 		});
 
 		it('configures the OpenTelemetry resource', () => {
 			expect(createResourceConfig).toHaveBeenCalledTimes(1);
 			expect(createResourceConfig).toHaveBeenCalledWith();
-			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].resource).toStrictEqual(
-				'mock-resource'
-			);
 		});
 
-		it('creates traces via an instantiated OTLPTraceExporter', () => {
-			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
-			expect(OTLPTraceExporter).toHaveBeenCalledWith({
-				url: 'MOCK_TRACING_ENDPOINT',
-				headers: {
-					'user-agent': 'mock-tracing-user-agent'
-				}
-			});
-			expect(
-				opentelemetrySDK.NodeSDK.mock.calls[0][0].traceExporter
-			).toBeInstanceOf(OTLPTraceExporter);
-		});
-
-		it('creates a ratio-based sampler and sets a sample rate for OpenTelemetry', () => {
-			expect(TraceIdRatioBasedSampler).toHaveBeenCalledTimes(1);
-			expect(TraceIdRatioBasedSampler).toHaveBeenCalledWith(0.05); // The default
-			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].sampler).toBeInstanceOf(
-				TraceIdRatioBasedSampler
-			);
-		});
-
-		it('logs that tracing is enabled', () => {
-			expect(logger.info).toHaveBeenCalledWith({
-				enabled: true,
-				endpoint: 'MOCK_TRACING_ENDPOINT',
-				event: 'OTEL_TRACE_STATUS',
-				message:
-					'OpenTelemetry tracing is enabled and exporting to endpoint MOCK_TRACING_ENDPOINT',
-				samplePercentage: 5
+		it('creates tracing config', () => {
+			expect(createTracingConfig).toHaveBeenCalledTimes(1);
+			expect(createTracingConfig).toHaveBeenCalledWith({
+				endpoint: 'mock-tracing-endpoint',
+				samplePercentage: 137
 			});
 		});
 
-		it('it does not create traces via an instantiated NoopSpanProcessor', () => {
-			expect(NoopSpanProcessor).toHaveBeenCalledTimes(0);
+		it('instantiates and starts the OpenTelemetry Node SDK with the created config', () => {
+			expect(NodeSDK).toHaveBeenCalledTimes(1);
+			expect(NodeSDK).toHaveBeenCalledWith({
+				instrumentations: 'mock-instrumentations',
+				resource: 'mock-resource',
+				tracing: 'mock-tracing'
+			});
+			expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
 		});
-	});
 
-	describe('when an authorization header is passed into the options', () => {
-		beforeAll(() => {
-			OTLPTraceExporter.mockReset();
-			openTelemetryTracing({
-				tracing: { endpoint: 'MOCK_TRACING_ENDPOINT' },
-				authorizationHeader: 'mock-authorization-header'
+		describe('when no options are set', () => {
+			beforeAll(() => {
+				NodeSDK.mockClear();
+				setupOpenTelemetry();
+			});
+
+			it('still instantiates and starts the OpenTelemetry Node SDK with the created config', () => {
+				expect(NodeSDK).toHaveBeenCalledTimes(1);
+				expect(NodeSDK).toHaveBeenCalledWith({
+					instrumentations: 'mock-instrumentations',
+					resource: 'mock-resource',
+					tracing: 'mock-tracing'
+				});
 			});
 		});
 
-		it('instantiates the OTLPTraceExporter with the authorization header set', () => {
-			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
-			expect(OTLPTraceExporter).toHaveBeenCalledWith({
-				url: 'MOCK_TRACING_ENDPOINT',
-				headers: {
-					authorization: 'mock-authorization-header',
-					'user-agent': 'mock-tracing-user-agent'
-				}
+		describe('when an authorization header is passed into the root options (deprecated)', () => {
+			beforeAll(() => {
+				createTracingConfig.mockReset();
+				setupOpenTelemetry({
+					authorizationHeader: 'mock-authorization-header-root',
+					tracing: {
+						endpoint: 'mock-tracing-endpoint'
+					}
+				});
 			});
-		});
-	});
 
-	describe('when a sample percentage is passed into the options', () => {
-		beforeAll(() => {
-			opentelemetrySDK.NodeSDK.mockReset();
-			TraceIdRatioBasedSampler.mockReset();
-			openTelemetryTracing({
-				tracing: { endpoint: 'MOCK_TRACING_ENDPOINT', samplePercentage: 50 }
-			});
-		});
-
-		it('sets a sample rate for OpenTelemetry based on the value', () => {
-			expect(TraceIdRatioBasedSampler).toHaveBeenCalledTimes(1);
-			// The value of `samplePercentage` divided by 100
-			expect(TraceIdRatioBasedSampler).toHaveBeenCalledWith(0.5);
-			expect(opentelemetrySDK.NodeSDK.mock.calls[0][0].sampler).toBeInstanceOf(
-				TraceIdRatioBasedSampler
-			);
-		});
-	});
-
-	describe('spans are not created and exported if param is not a traces endpoint', () => {
-		beforeAll(() => {
-			opentelemetrySDK.NodeSDK.mockReset();
-			OTLPTraceExporter.mockReset();
-			openTelemetryTracing({ tracing: undefined });
-		});
-
-		it('instantiates the NoopSpanProcessor if param is not a traces endpoint', () => {
-			expect(NoopSpanProcessor).toHaveBeenCalledTimes(1);
-			expect(
-				opentelemetrySDK.NodeSDK.mock.calls[0][0].spanProcessor
-			).toBeInstanceOf(NoopSpanProcessor);
-		});
-
-		it('logs that tracing is disabled', () => {
-			expect(logger.warn).toHaveBeenCalledWith({
-				enabled: false,
-				endpoint: null,
-				event: 'OTEL_TRACE_STATUS',
-				message:
-					'OpenTelemetry tracing is disabled because no tracing endpoint was set'
+			it('uses the authorization header when configuring tracing', () => {
+				expect(createTracingConfig).toHaveBeenCalledTimes(1);
+				expect(createTracingConfig).toHaveBeenCalledWith({
+					authorizationHeader: 'mock-authorization-header-root',
+					endpoint: 'mock-tracing-endpoint'
+				});
 			});
 		});
 
-		it('it does not create traces via an instantiated OTLPTraceExporter', () => {
-			expect(OTLPTraceExporter).toHaveBeenCalledTimes(0);
+		describe('when an authorization header is passed into the tracing options', () => {
+			beforeAll(() => {
+				createTracingConfig.mockReset();
+				setupOpenTelemetry({
+					tracing: {
+						authorizationHeader: 'mock-authorization-header-tracing',
+						endpoint: 'mock-tracing-endpoint'
+					}
+				});
+			});
+
+			it('uses the authorization header when configuring tracing', () => {
+				expect(createTracingConfig).toHaveBeenCalledTimes(1);
+				expect(createTracingConfig).toHaveBeenCalledWith({
+					authorizationHeader: 'mock-authorization-header-tracing',
+					endpoint: 'mock-tracing-endpoint'
+				});
+			});
 		});
-	});
 
-	it('executes when no param is passed in (as params are optional)', () => {
-		openTelemetryTracing();
-	});
+		describe('when an authorization header is passed into both the root options (deprecated) and tracing options', () => {
+			beforeAll(() => {
+				createTracingConfig.mockReset();
+				setupOpenTelemetry({
+					authorizationHeader: 'mock-authorization-header-root',
+					tracing: {
+						authorizationHeader: 'mock-authorization-header-tracing',
+						endpoint: 'mock-tracing-endpoint'
+					}
+				});
+			});
 
-	describe('when OTEL_ environment variables are defined', () => {
-		beforeAll(() => {
-			process.env.OTEL_MOCK = 'mock';
-			openTelemetryTracing();
+			it('prioritises the tracing option authorization header', () => {
+				expect(createTracingConfig).toHaveBeenCalledTimes(1);
+				expect(createTracingConfig).toHaveBeenCalledWith({
+					authorizationHeader: 'mock-authorization-header-tracing',
+					endpoint: 'mock-tracing-endpoint'
+				});
+			});
 		});
 
-		it('logs a warning that these environment variables are not supported', () => {
-			expect(logger.warn).toHaveBeenCalledWith({
-				event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
-				message:
-					'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
+		describe('when OTEL_ environment variables are defined', () => {
+			beforeAll(() => {
+				process.env.OTEL_MOCK = 'mock';
+				setupOpenTelemetry();
+			});
+
+			it('logs a warning that these environment variables are not supported', () => {
+				expect(logger.warn).toHaveBeenCalledWith({
+					event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
+					message:
+						'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
+				});
 			});
 		});
 	});

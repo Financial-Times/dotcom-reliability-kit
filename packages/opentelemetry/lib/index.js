@@ -1,33 +1,20 @@
 const { createInstrumentationConfig } = require('./config/instrumentations');
 const { createResourceConfig } = require('./config/resource');
+const { createTracingConfig } = require('./config/tracing');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
-const {
-	OTLPTraceExporter
-} = require('@opentelemetry/exporter-trace-otlp-proto');
-const {
-	NoopSpanProcessor,
-	TraceIdRatioBasedSampler
-} = require('@opentelemetry/sdk-trace-base');
 const logger = require('@dotcom-reliability-kit/logger');
-const { TRACING_USER_AGENT } = require('./config/user-agents');
 
-const DEFAULT_SAMPLE_PERCENTAGE = 5;
+/**
+ * @typedef {import('./config/tracing').TracingOptions} TracingOptions
+ */
 
 /**
  * @typedef {object} Options
  * @property {string} [authorizationHeader]
- *      The HTTP `Authorization` header to send with OpenTelemetry requests.
+ *      [DEPRECATED] The HTTP `Authorization` header to send with OpenTelemetry requests. Use `tracing.authorizationHeader` instead.
  * @property {TracingOptions} [tracing]
  *      Configuration options for OpenTelemetry tracing.
- */
-
-/**
- * @typedef {object} TracingOptions
- * @property {string} endpoint
- *     The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
- * @property {number} [samplePercentage]
- *     What percentage of traces should be sent onto the collector.
  */
 
 /**
@@ -36,7 +23,10 @@ const DEFAULT_SAMPLE_PERCENTAGE = 5;
  * @param {Options} [options]
  *      OpenTelemetry configuration options.
  */
-function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
+function setupOpenTelemetry({
+	authorizationHeader,
+	tracing: tracingOptions
+} = {}) {
 	// We don't support using the built-in `OTEL_`-prefixed environment variables. We
 	// do want to know when these are used, though, so that we can easily spot when
 	// an app's use of these environment variables might be interfering.
@@ -59,54 +49,18 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 		DiagLogLevel.INFO
 	);
 
-	// Construct the OpenTelemetry SDK configuration
-	/** @type {opentelemetrySDK.NodeSDKConfiguration} */
-	const openTelemetryConfig = {};
-	openTelemetryConfig.instrumentations = createInstrumentationConfig();
-	openTelemetryConfig.resource = createResourceConfig();
-
-	// If we have an OpenTelemetry tracing endpoint then set it up,
-	// otherwise we pass a noop span processor so that nothing is exported
-	if (tracing?.endpoint) {
-		const headers = {
-			'user-agent': TRACING_USER_AGENT
-		};
-		if (authorizationHeader) {
-			headers.authorization = authorizationHeader;
-		}
-		openTelemetryConfig.traceExporter = new OTLPTraceExporter({
-			url: tracing.endpoint,
-			headers
-		});
-
-		// Sample traces
-		let samplePercentage = DEFAULT_SAMPLE_PERCENTAGE;
-		if (tracing.samplePercentage && !Number.isNaN(tracing.samplePercentage)) {
-			samplePercentage = tracing.samplePercentage;
-		}
-		const sampleRatio = samplePercentage / 100;
-		openTelemetryConfig.sampler = new TraceIdRatioBasedSampler(sampleRatio);
-
-		logger.info({
-			event: 'OTEL_TRACE_STATUS',
-			message: `OpenTelemetry tracing is enabled and exporting to endpoint ${tracing.endpoint}`,
-			enabled: true,
-			endpoint: tracing.endpoint,
-			samplePercentage
-		});
-	} else {
-		logger.warn({
-			event: 'OTEL_TRACE_STATUS',
-			message:
-				'OpenTelemetry tracing is disabled because no tracing endpoint was set',
-			enabled: false,
-			endpoint: null
-		});
-		openTelemetryConfig.spanProcessor = new NoopSpanProcessor();
-	}
-
 	// Set up and start OpenTelemetry
-	const sdk = new opentelemetrySDK.NodeSDK(openTelemetryConfig);
+	const sdk = new opentelemetrySDK.NodeSDK({
+		// Configurations we set regardless of whether we're using tracing
+		instrumentations: createInstrumentationConfig(),
+		resource: createResourceConfig(),
+
+		// Add tracing-specific configurations
+		...createTracingConfig({
+			authorizationHeader,
+			...tracingOptions
+		})
+	});
 	sdk.start();
 }
 
