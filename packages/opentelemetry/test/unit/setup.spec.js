@@ -14,8 +14,8 @@ describe('setupOpenTelemetry', () => {
 
 		expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
 		expect(setupOpenTelemetry).toHaveBeenCalledWith({
-			authorizationHeader: 'MOCK_AUTH_HEADER',
 			tracing: {
+				authorizationHeader: 'MOCK_AUTH_HEADER',
 				endpoint: 'MOCK_TRACING_ENDPOINT'
 			}
 		});
@@ -28,8 +28,8 @@ describe('setupOpenTelemetry', () => {
 
 			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
 			expect(setupOpenTelemetry).toHaveBeenCalledWith({
-				authorizationHeader: 'MOCK_AUTH_HEADER',
 				tracing: {
+					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT',
 					samplePercentage: 50
 				}
@@ -44,8 +44,8 @@ describe('setupOpenTelemetry', () => {
 
 			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
 			expect(setupOpenTelemetry).toHaveBeenCalledWith({
-				authorizationHeader: 'MOCK_AUTH_HEADER',
 				tracing: {
+					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT',
 					samplePercentage: NaN
 				}
@@ -59,9 +59,7 @@ describe('setupOpenTelemetry', () => {
 			require('../../setup.js');
 
 			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
-			expect(setupOpenTelemetry).toHaveBeenCalledWith({
-				authorizationHeader: 'MOCK_AUTH_HEADER'
-			});
+			expect(setupOpenTelemetry).toHaveBeenCalledWith({});
 		});
 	});
 });

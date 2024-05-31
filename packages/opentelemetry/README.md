@@ -20,6 +20,7 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
     * [`options.authorizationHeader`](#optionsauthorizationheader)
     * [`options.tracing`](#optionstracing)
     * [`options.tracing.endpoint`](#optionstracingendpoint)
+    * [`options.tracing.authorizationHeader`](#optionstracingauthorizationheader)
     * [`options.tracing.samplePercentage`](#optionstracingsamplepercentage)
     * [`OTEL_` environment variables](#otel_-environment-variables)
 * [Contributing](#contributing)
@@ -209,10 +210,7 @@ setupOpenTelemetry({
 
 #### `options.authorizationHeader`
 
-Set the [`Authorization` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) in requests to the OpenTelemetry collector. Defaults to `undefined`.
-
-**Environment variable:** `OPENTELEMETRY_AUTHORIZATION_HEADER`<br/>
-**Option:** `authorizationHeader` (`String`)
+**Deprecated**. This will still work but has been replaced with [`options.tracing.authorizationHeader`](#optionstracingauthorizationheader), which is now the preferred way to set this option.
 
 #### `options.tracing`
 
@@ -224,6 +222,13 @@ A URL to send OpenTelemetry traces to. E.g. `http://localhost:4318/v1/traces`. D
 
 **Environment variable:** `OPENTELEMETRY_TRACING_ENDPOINT`<br/>
 **Option:** `tracing.endpoint` (`String`)
+
+#### `options.tracing.authorizationHeader`
+
+Set the [`Authorization` HTTP header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization) in requests to the OpenTelemetry tracing collector. Defaults to `undefined`.
+
+**Environment variable:** `OPENTELEMETRY_AUTHORIZATION_HEADER`<br/>
+**Option:** `tracing.authorizationHeader` (`String`)
 
 #### `options.tracing.samplePercentage`
 
