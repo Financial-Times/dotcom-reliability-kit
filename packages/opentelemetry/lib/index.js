@@ -1,17 +1,10 @@
 const packageJson = require('../package.json');
+const { createResourceConfig } = require('./config/resource');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
 const {
 	getNodeAutoInstrumentations
 } = require('@opentelemetry/auto-instrumentations-node');
-const { Resource } = require('@opentelemetry/resources');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
-const {
-	SEMRESATTRS_CLOUD_PROVIDER,
-	SEMRESATTRS_CLOUD_REGION,
-	SEMRESATTRS_DEPLOYMENT_ENVIRONMENT,
-	SEMRESATTRS_SERVICE_NAME,
-	SEMRESATTRS_SERVICE_VERSION
-} = require('@opentelemetry/semantic-conventions');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const {
 	OTLPTraceExporter
@@ -80,15 +73,7 @@ function setupOpenTelemetry({ authorizationHeader, tracing } = {}) {
 	// Construct the OpenTelemetry SDK configuration
 	/** @type {opentelemetrySDK.NodeSDKConfiguration} */
 	const openTelemetryConfig = {};
-
-	// Set OpenTelemetry resource attributes based on app data
-	openTelemetryConfig.resource = new Resource({
-		[SEMRESATTRS_SERVICE_NAME]: appInfo.systemCode || undefined,
-		[SEMRESATTRS_SERVICE_VERSION]: appInfo.releaseVersion || undefined,
-		[SEMRESATTRS_CLOUD_PROVIDER]: appInfo.cloudProvider || undefined,
-		[SEMRESATTRS_CLOUD_REGION]: appInfo.region || undefined,
-		[SEMRESATTRS_DEPLOYMENT_ENVIRONMENT]: appInfo.environment || undefined
-	});
+	openTelemetryConfig.resource = createResourceConfig();
 
 	// Auto-instrument common and built-in Node.js modules
 	openTelemetryConfig.instrumentations = [
