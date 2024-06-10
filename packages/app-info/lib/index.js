@@ -149,6 +149,23 @@ exports.herokuAppId = process.env.HEROKU_APP_ID || null;
  */
 exports.herokuDynoId = process.env.HEROKU_DYNO_ID || null;
 
+/**
+ * @type {import('@dotcom-reliability-kit/app-info').SemanticConventions}
+ */
+exports.semanticConventions = {
+	cloud: {
+		provider: exports.cloudProvider,
+		region: exports.region
+	},
+	deployment: {
+		environment: exports.environment
+	},
+	service: {
+		name: exports.systemCode,
+		version: exports.releaseVersion
+	}
+};
+
 // @ts-ignore
 module.exports.default = module.exports;
 module.exports = Object.freeze(module.exports);
