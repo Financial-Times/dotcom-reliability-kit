@@ -155,15 +155,60 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			});
 		});
 
-		describe('when neither environment variable is defined', () => {
+		describe('when neither environment variable is defined but a package.json exists', () => {
 			beforeEach(() => {
 				jest.resetModules();
-				delete process.env.AWS_LAMBDA_FUNCTION_VERSION;
+				jest.mock(
+					'/mock-cwd/package.json',
+					() => ({ version: 'mock-package-version' }),
+					{ virtual: true }
+				);
 				delete process.env.HEROKU_RELEASE_VERSION;
+				delete process.env.AWS_LAMBDA_FUNCTION_VERSION;
 				appInfo = require('../../../lib');
 			});
 
-			it('is set to null', () => {
+			it('is set to the package.json version in the current working directory', () => {
+				expect(appInfo.releaseVersion).toBe('mock-package-version');
+			});
+
+			describe('when the package.json has a non-string `version` property', () => {
+				beforeEach(() => {
+					jest.resetModules();
+					jest.mock('/mock-cwd/package.json', () => ({ version: 123 }), {
+						virtual: true
+					});
+					appInfo = require('../../../lib');
+				});
+
+				it('is set to `null`', () => {
+					expect(appInfo.releaseVersion).toBe(null);
+				});
+			});
+
+			describe('when the package.json is not an object', () => {
+				beforeEach(() => {
+					jest.resetModules();
+					jest.mock('/mock-cwd/package.json', () => null, { virtual: true });
+					appInfo = require('../../../lib');
+				});
+
+				it('is set to `null`', () => {
+					expect(appInfo.releaseVersion).toBe(null);
+				});
+			});
+		});
+
+		describe('when neither environment variable is defined and a package.json does not exist', () => {
+			beforeEach(() => {
+				jest.unmock('/mock-cwd/package.json');
+				jest.resetModules();
+				delete process.env.HEROKU_RELEASE_VERSION;
+				delete process.env.AWS_LAMBDA_FUNCTION_VERSION;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to `null`', () => {
 				expect(appInfo.releaseVersion).toBe(null);
 			});
 		});
