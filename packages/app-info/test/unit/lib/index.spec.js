@@ -349,6 +349,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			});
 		});
 	});
+
 	describe('.herokuAppId', () => {
 		it('returns HEROKU_APP_ID when process.env.HEROKU_APP_ID exists', () => {
 			expect(appInfo.herokuAppId).toBe('mock-heroku-app-id');
@@ -361,6 +362,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			expect(appInfo.herokuAppId).toBe(null);
 		});
 	});
+
 	describe('.herokuDynoId', () => {
 		it('returns HEROKU_DYNO_ID when `process.env.HEROKU_DYNO_ID` exists', () => {
 			expect(appInfo.herokuDynoId).toBe('mock-heroku-dyno-id');
@@ -370,6 +372,52 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			delete process.env.HEROKU_DYNO_ID;
 			appInfo = require('../../../lib');
 			expect(appInfo.herokuDynoId).toBe(null);
+		});
+	});
+
+	describe('.semanticConventions', () => {
+		describe('.cloud', () => {
+			describe('.provider', () => {
+				it('is an alias of `cloudProvider`', () => {
+					expect(appInfo.semanticConventions.cloud.provider).toBe(
+						appInfo.cloudProvider
+					);
+				});
+			});
+
+			describe('.region', () => {
+				it('is an alias of `region`', () => {
+					expect(appInfo.semanticConventions.cloud.region).toBe(appInfo.region);
+				});
+			});
+		});
+
+		describe('.deployment', () => {
+			describe('.environment', () => {
+				it('is an alias of `environment`', () => {
+					expect(appInfo.semanticConventions.deployment.environment).toBe(
+						appInfo.environment
+					);
+				});
+			});
+		});
+
+		describe('.service', () => {
+			describe('.name', () => {
+				it('is an alias of `systemCode`', () => {
+					expect(appInfo.semanticConventions.service.name).toBe(
+						appInfo.systemCode
+					);
+				});
+			});
+
+			describe('.version', () => {
+				it('is an alias of `releaseVersion`', () => {
+					expect(appInfo.semanticConventions.service.version).toBe(
+						appInfo.releaseVersion
+					);
+				});
+			});
 		});
 	});
 });

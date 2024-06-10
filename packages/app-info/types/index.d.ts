@@ -10,6 +10,20 @@ declare module '@dotcom-reliability-kit/app-info' {
 	export const herokuAppId: string | null;
 	export const herokuDynoId: string | null;
 
+	export type SemanticConventions = {
+		cloud: {
+			provider: string | null,
+			region: string | null
+		},
+		deployment: {
+			environment: string | null
+		},
+		service: {
+			name: string | null
+			version: string | null
+		}
+	};
+
 	type appInfo = {
 		systemCode: typeof systemCode,
 		processType: typeof processType,
@@ -20,7 +34,8 @@ declare module '@dotcom-reliability-kit/app-info' {
 		releaseVersion: typeof releaseVersion,
 		cloudProvider: typeof cloudProvider,
 		herokuAppId: typeof herokuAppId,
-		herokuDynoId: typeof herokuDynoId
+		herokuDynoId: typeof herokuDynoId,
+		semanticConventions: SemanticConventions
 	};
 
 	export default appInfo;
