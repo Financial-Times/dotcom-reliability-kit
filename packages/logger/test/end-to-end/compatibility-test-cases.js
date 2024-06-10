@@ -705,6 +705,28 @@ module.exports = [
 		}
 	},
 
+	// Test cases based on observed differences and bug reports
+	{
+		id: 'issue-1069',
+		description: 'timestamp property is not silently removed',
+		call: {
+			method: 'info',
+			args: ['Timestamp test', { timestamp: 123456 }]
+		},
+		expectedOutput: {
+			nextLogger: {
+				level: 'info',
+				message: 'Timestamp test',
+				timestamp: 123456
+			},
+			reliabilityKit: {
+				level: 'info',
+				message: 'Timestamp test',
+				timestamp: 123456
+			}
+		}
+	},
+
 	// Test cases based on real-world usage of n-logger
 	{
 		id: 'next-article-1',
