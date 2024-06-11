@@ -1,6 +1,6 @@
 {
-	"title": "Reliability Kit: Heroku App With Log Drains",
-	"description": "A dashboard to view issues with apps which use Reliability Kit and Heroku Log Drains.",
+	"title": "Heroku App Health",
+	"description": "A dashboard to view the health of a Heroku app (works best when the app uses Reliability Kit)",
 	"visualizations": {
 		"viz_common_errors": {
 			"type": "splunk.table",
@@ -94,6 +94,23 @@
 				"stackMode": "stacked",
 				"legendDisplay": "bottom"
 			}
+		},
+		"viz_md_tech_debt_radar": {
+			"type": "splunk.markdown",
+			"options": {
+				"markdown": "---\n\n# Tech Debt Radar\n\nThe following charts help you identify areas of improvement, focused on easy-to-fix issues."
+			}
+		},
+		"viz_low_hanging_fruit": {
+			"type": "splunk.table",
+			"dataSources": {
+				"primary": "ds_low_hanging_fruit"
+			},
+			"title": "Low-Hanging Fruit",
+			"description": "Common JavaScript errors across the codebase which are likely due to a bug in the code",
+			"options": {
+				"count": 5
+			}
 		}
 	},
 	"dataSources": {
@@ -140,9 +157,17 @@
 			"type": "ds.search",
 			"options": {
 				"enableSmartSources": true,
-				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" level=error\n| rex field=error.stack \"(?<stackTraceHeader>[^\\r\\n]+[\\r\\n]+[^\\r\\n]+)\"\n| rex field=error.stack \"[^\\r\\n]+[\\r\\n]+[^\\r\\n\\(]*\\((?<filePointer>[^\\)]+)\\)\" \n| rename error.name as name, error.code as code, error.message as message\n| eval hash=md5(name.\"__\".code.\"__\".stackTraceHeader)\n| eval isCrash=if(event=\"UNHANDLED_ERROR\",\"true\",\"false\")\n| stats sparkline() as timeline count by hash, name, code, message, isCrash, filePointer \n| table count timeline name code isCrash message filePointer\n| sort count desc"
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" level=error error.statusCode>=500\n| rex field=error.stack \"(?<stackTraceHeader>[^\\r\\n]+[\\r\\n]+[^\\r\\n]+)\"\n| rex field=error.stack \"[^\\r\\n]+[\\r\\n]+[^\\r\\n\\(]*\\((?<filePointer>[^\\)]+)\\)\" \n| rename error.name as name, error.code as code, error.message as message\n| eval hash=md5(name.\"__\".code.\"__\".stackTraceHeader)\n| eval isCrash=if(event=\"UNHANDLED_ERROR\",\"true\",\"false\")\n| stats sparkline() as timeline count by hash, name, code, message, isCrash, filePointer \n| table count timeline name code isCrash message filePointer\n| sort count desc"
 			},
 			"name": "search_table_grouped_errors"
+		},
+		"ds_low_hanging_fruit": {
+			"type": "ds.search",
+			"options": {
+				"enableSmartSources": true,
+				"query": "index=\"heroku\" source=TERM($text_system_code$) sourcetype=\"heroku:app\" level=error\n| rex field=error.stack \"(?<stackTraceHeader>[^\\r\\n]+[\\r\\n]+[^\\r\\n]+)\"\n| rex field=error.stack \"[^\\r\\n]+[\\r\\n]+[^\\r\\n\\(]*\\((?<filePointer>[^\\)]+)\\)\" \n| rename error.name as name, error.code as code, error.message as message\n| eval hash=md5(name.\"__\".code.\"__\".stackTraceHeader)\n| eval isCrash=if(event=\"UNHANDLED_ERROR\",\"true\",\"false\")\n| stats sparkline() as timeline count by hash, name, code, message, isCrash, filePointer \n| table count timeline name code isCrash message filePointer\n| sort count desc"
+			},
+			"name": "search_table_low_hanging_fruit"
 		}
 	},
 	"defaults": {
@@ -168,7 +193,7 @@
 		},
 		"input_system_code": {
 			"options": {
-				"defaultValue": "next-topic-tracker-api",
+				"defaultValue": "",
 				"token": "text_system_code"
 			},
 			"title": "System code",
@@ -237,6 +262,26 @@
 					"y": 1430,
 					"w": 600,
 					"h": 350
+				}
+			},
+			{
+				"item": "viz_md_tech_debt_radar",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 1780,
+					"w": 1200,
+					"h": 150
+				}
+			},
+			{
+				"item": "viz_low_hanging_fruit",
+				"type": "block",
+				"position": {
+					"x": 0,
+					"y": 1930,
+					"w": 1200,
+					"h": 430
 				}
 			},
 			{
