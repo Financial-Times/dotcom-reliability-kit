@@ -1,3 +1,5 @@
+jest.mock('node:crypto');
+
 describe('@dotcom-reliability-kit/app-info', () => {
 	let appInfo;
 
@@ -375,6 +377,35 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		});
 	});
 
+	describe('.instanceId', () => {
+		let randomUUID;
+
+		beforeEach(() => {
+			jest.resetModules();
+			process.env.HEROKU_DYNO_ID = 'mock-heroku-dyno-id';
+			appInfo = require('../../../lib');
+		});
+
+		it('is set to `process.env.HEROKU_DYNO_ID`', () => {
+			expect(appInfo.instanceId).toBe('mock-heroku-dyno-id');
+		});
+
+		describe('when `process.env.HEROKU_DYNO_ID` is not defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				randomUUID = require('node:crypto').randomUUID;
+				randomUUID.mockReturnValue('mock-generated-uuid');
+				delete process.env.HEROKU_DYNO_ID;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to a random UUID', () => {
+				expect(randomUUID).toHaveBeenCalledTimes(1);
+				expect(appInfo.instanceId).toBe('mock-generated-uuid');
+			});
+		});
+	});
+
 	describe('.semanticConventions', () => {
 		describe('.cloud', () => {
 			describe('.provider', () => {
@@ -416,6 +447,16 @@ describe('@dotcom-reliability-kit/app-info', () => {
 					expect(appInfo.semanticConventions.service.version).toBe(
 						appInfo.releaseVersion
 					);
+				});
+			});
+
+			describe('.instance', () => {
+				describe('.id', () => {
+					it('is an alias of `instanceId`', () => {
+						expect(appInfo.semanticConventions.service.instance.id).toBe(
+							appInfo.instanceId
+						);
+					});
 				});
 			});
 		});
