@@ -13,15 +13,15 @@ declare module '@dotcom-reliability-kit/app-info' {
 
 	export type SemanticConventions = {
 		cloud: {
-			provider: string | null,
-			region: string | null
+			provider?: string,
+			region?: string
 		},
 		deployment: {
 			environment: string
 		},
 		service: {
-			name: string | null
-			version: string | null,
+			name?: string
+			version?: string,
 			instance: {
 				id: string
 			}

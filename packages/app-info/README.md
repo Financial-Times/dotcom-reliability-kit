@@ -116,6 +116,8 @@ This object contains aliases for the main `appInfo` properties that correspond t
   * `appInfo.semanticConventions.service.version` aliases `appInfo.releaseVersion`
   * `appInfo.semanticConventions.service.instance.id` aliases `appInfo.instanceId`
 
+> [!WARNING]
+> While all other properties default to `null` if they can't be calculated, the semantic conventions properties default to `undefined`. This is to ensure better compatibility with OpenTelemetry SDKs.
 
 ## Migrating
 
