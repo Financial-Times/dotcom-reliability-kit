@@ -14,6 +14,7 @@ A utility to get application information (e.g. the system code) in a consistent 
     * [`appInfo.cloudProvider`](#appinfocloudprovider)
     * [`appInfo.herokuAppId`](#appinfoherokuappid)
     * [`appInfo.herokuDynoId`](#appinfoherokudynoid)
+    * [`appInfo.instanceId`](#appinfoinstanceid)
     * [`appInfo.semanticConventions`](#appinfosemanticconventions)
   * [Migrating](#migrating)
   * [Contributing](#contributing)
@@ -100,6 +101,10 @@ Get the `process.env.HEROKU_DYNO_ID` which is the dyno identifier
 
 This is derived from the dyno metadata
 
+### `appInfo.instanceId`
+
+Get the ID of the instance that's running the application. This is derived from `process.env.HEROKU_DYNO_ID` if present, otherwise it will be set to a random UUID that identifies the currently running process.
+
 ### `appInfo.semanticConventions`
 
 This object contains aliases for the main `appInfo` properties that correspond to OpenTelemetry's [Semantic Conventions](https://opentelemetry.io/docs/concepts/semantic-conventions/). We use the following mapping:
@@ -109,6 +114,7 @@ This object contains aliases for the main `appInfo` properties that correspond t
   * `appInfo.semanticConventions.deployment.environment` aliases `appInfo.environment`
   * `appInfo.semanticConventions.service.name` aliases `appInfo.systemCode`
   * `appInfo.semanticConventions.service.version` aliases `appInfo.releaseVersion`
+  * `appInfo.semanticConventions.service.instance.id` aliases `appInfo.instanceId`
 
 
 ## Migrating

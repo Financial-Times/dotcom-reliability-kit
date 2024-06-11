@@ -9,6 +9,7 @@ declare module '@dotcom-reliability-kit/app-info' {
 	export const cloudProvider: string | null;
 	export const herokuAppId: string | null;
 	export const herokuDynoId: string | null;
+	export const instanceId: string;
 
 	export type SemanticConventions = {
 		cloud: {
@@ -16,11 +17,14 @@ declare module '@dotcom-reliability-kit/app-info' {
 			region: string | null
 		},
 		deployment: {
-			environment: string | null
+			environment: string
 		},
 		service: {
 			name: string | null
-			version: string | null
+			version: string | null,
+			instance: {
+				id: string
+			}
 		}
 	};
 
@@ -35,6 +39,7 @@ declare module '@dotcom-reliability-kit/app-info' {
 		cloudProvider: typeof cloudProvider,
 		herokuAppId: typeof herokuAppId,
 		herokuDynoId: typeof herokuDynoId,
+		instanceId: typeof instanceId,
 		semanticConventions: SemanticConventions
 	};
 
