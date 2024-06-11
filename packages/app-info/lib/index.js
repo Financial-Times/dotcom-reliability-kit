@@ -163,15 +163,15 @@ exports.instanceId = process.env.HEROKU_DYNO_ID || randomUUID();
  */
 exports.semanticConventions = {
 	cloud: {
-		provider: exports.cloudProvider,
-		region: exports.region
+		provider: exports.cloudProvider || undefined,
+		region: exports.region || undefined
 	},
 	deployment: {
 		environment: exports.environment
 	},
 	service: {
-		name: exports.systemCode,
-		version: exports.releaseVersion,
+		name: exports.systemCode || undefined,
+		version: exports.releaseVersion || undefined,
 		instance: {
 			id: exports.instanceId
 		}
