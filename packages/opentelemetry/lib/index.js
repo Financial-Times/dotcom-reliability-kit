@@ -1,9 +1,14 @@
 const { createInstrumentationConfig } = require('./config/instrumentations');
+const { createMetricsConfig } = require('./config/metrics');
 const { createResourceConfig } = require('./config/resource');
 const { createTracingConfig } = require('./config/tracing');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
 const opentelemetrySDK = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
+
+/**
+ * @typedef {import('./config/metrics').MetricsOptions} MetricsOptions
+ */
 
 /**
  * @typedef {import('./config/tracing').TracingOptions} TracingOptions
@@ -13,6 +18,8 @@ const logger = require('@dotcom-reliability-kit/logger');
  * @typedef {object} Options
  * @property {string} [authorizationHeader]
  *      [DEPRECATED] The HTTP `Authorization` header to send with OpenTelemetry requests. Use `tracing.authorizationHeader` instead.
+ * @property {MetricsOptions} [metrics]
+ *      Configuration options for OpenTelemetry metrics.
  * @property {TracingOptions} [tracing]
  *      Configuration options for OpenTelemetry tracing.
  */
@@ -25,6 +32,7 @@ const logger = require('@dotcom-reliability-kit/logger');
  */
 function setupOpenTelemetry({
 	authorizationHeader,
+	metrics: metricsOptions,
 	tracing: tracingOptions
 } = {}) {
 	// We don't support using the built-in `OTEL_`-prefixed environment variables. We
@@ -45,6 +53,10 @@ function setupOpenTelemetry({
 	// OpenTelemetry log level to the maximum value that we want
 	// Reliability Kit to consider logging
 	diag.setLogger(
+		// @ts-ignore this complains because DiagLogger accepts a type
+		// of unknown whereas our logger is stricter. This is fine though,
+		// if something unknown is logged then we do our best with it.
+		// It's easier to ignore this error than fix it.
 		logger.createChildLogger({ event: 'OTEL_INTERNALS' }),
 		DiagLogLevel.INFO
 	);
@@ -54,6 +66,9 @@ function setupOpenTelemetry({
 		// Configurations we set regardless of whether we're using tracing
 		instrumentations: createInstrumentationConfig(),
 		resource: createResourceConfig(),
+
+		// Add metrics-specific configurations
+		...createMetricsConfig(metricsOptions || {}),
 
 		// Add tracing-specific configurations
 		...createTracingConfig({

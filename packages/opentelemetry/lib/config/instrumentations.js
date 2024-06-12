@@ -1,6 +1,9 @@
 const {
 	getNodeAutoInstrumentations
 } = require('@opentelemetry/auto-instrumentations-node');
+const {
+	RuntimeNodeInstrumentation
+} = require('@opentelemetry/instrumentation-runtime-node');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
@@ -21,7 +24,8 @@ exports.createInstrumentationConfig = function createInstrumentationConfig() {
 			'@opentelemetry/instrumentation-fs': {
 				enabled: false
 			}
-		})
+		}),
+		new RuntimeNodeInstrumentation()
 	];
 };
 

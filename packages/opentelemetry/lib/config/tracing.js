@@ -13,7 +13,7 @@ const DEFAULT_SAMPLE_PERCENTAGE = 5;
 /**
  * @typedef {object} TracingOptions
  * @property {string} [authorizationHeader]
- *     The HTTP `Authorization` header to send with OpenTelemetry tracing requests.
+ *     The HTTP `Authorization` header to send with OpenTelemetry tracing requests if you're using the Customer Products trace collector endpoint.
  * @property {string} [endpoint]
  *     The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
  * @property {number} [samplePercentage]
