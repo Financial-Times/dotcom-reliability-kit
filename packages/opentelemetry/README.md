@@ -30,6 +30,7 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
     * [`options.tracing.authorizationHeader`](#optionstracingauthorizationheader)
     * [`options.tracing.samplePercentage`](#optionstracingsamplepercentage)
     * [`OTEL_` environment variables](#otel_-environment-variables)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -117,9 +118,9 @@ OpenTelemetry will be [configured](#configuration-options) with environment vari
 If you'd like to customise the OpenTelemetry config more and have control over what runs, you can include in your code:
 
 ```js
-import setupOpenTelemetry from '@dotcom-reliability-kit/opentelemetry';
+import * as opentelemetry from '@dotcom-reliability-kit/opentelemetry';
 // or
-const setupOpenTelemetry = require('@dotcom-reliability-kit/opentelemetry');
+const opentelemetry = require('@dotcom-reliability-kit/opentelemetry');
 ```
 
 Call the function, passing in [configuration options](#configuration-options):
@@ -128,7 +129,7 @@ Call the function, passing in [configuration options](#configuration-options):
 > This **must** be the first function called in your application for OpenTelemetry to be set up correctly (including before other `import`/`require` statements).
 
 ```js
-setupOpenTelemetry({ /* ... */ });
+opentelemetry.setup({ /* ... */ });
 ```
 
 <table>
@@ -225,7 +226,7 @@ EXAMPLE=true npm start
 For the [manual setup](#manual-setup), you'll need to use an options object, e.g.
 
 ```js
-setupOpenTelemetry({
+opentelemetry.setup({
     example: true
 });
 ```
@@ -283,6 +284,11 @@ OpenTelemetry itself can be configured through `OTEL_`-prefixed environment vari
 
 > [!CAUTION]
 > We strongly advise against using these. The power of this module is consistency and any application-specific changes should be considered. If you use these environment variables we won't offer support if things break.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

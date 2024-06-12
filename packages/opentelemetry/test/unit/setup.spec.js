@@ -1,21 +1,21 @@
-describe('setupOpenTelemetry', () => {
-	let setupOpenTelemetry;
+describe('setup', () => {
+	let opentelemetry;
 
 	beforeEach(() => {
 		jest.resetModules();
-		jest.mock('../../lib/index.js', () => jest.fn());
-		setupOpenTelemetry = require('../../lib/index.js');
+		jest.mock('../..', () => ({ setup: jest.fn() }));
+		opentelemetry = require('../..');
 	});
 
-	it('should call setupOpenTelemetry with the correct parameters', () => {
+	it('should call opentelemetry.setup with the correct parameters', () => {
 		process.env.OPENTELEMETRY_TRACING_ENDPOINT = 'MOCK_TRACING_ENDPOINT';
 		process.env.OPENTELEMETRY_AUTHORIZATION_HEADER = 'MOCK_AUTH_HEADER';
 		process.env.OPENTELEMETRY_METRICS_ENDPOINT = 'MOCK_METRICS_ENDPOINT';
 		process.env.OPENTELEMETRY_API_GATEWAY_KEY = 'MOCK_API_GATEWAY_KEY';
 		require('../../setup.js');
 
-		expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
-		expect(setupOpenTelemetry).toHaveBeenCalledWith({
+		expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
+		expect(opentelemetry.setup).toHaveBeenCalledWith({
 			tracing: {
 				authorizationHeader: 'MOCK_AUTH_HEADER',
 				endpoint: 'MOCK_TRACING_ENDPOINT'
@@ -33,8 +33,8 @@ describe('setupOpenTelemetry', () => {
 			process.env.OPENTELEMETRY_METRICS_ENDPOINT = 'MOCK_METRICS_ENDPOINT';
 			require('../../setup.js');
 
-			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
-			expect(setupOpenTelemetry).toHaveBeenCalledWith({
+			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
+			expect(opentelemetry.setup).toHaveBeenCalledWith({
 				metrics: {
 					apiGatewayKey: 'MOCK_API_GATEWAY_KEY',
 					endpoint: 'MOCK_METRICS_ENDPOINT'
@@ -49,8 +49,8 @@ describe('setupOpenTelemetry', () => {
 			process.env.OPENTELEMETRY_TRACING_ENDPOINT = 'MOCK_TRACING_ENDPOINT';
 			require('../../setup.js');
 
-			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
-			expect(setupOpenTelemetry).toHaveBeenCalledWith({
+			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
+			expect(opentelemetry.setup).toHaveBeenCalledWith({
 				tracing: {
 					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT'
@@ -65,8 +65,8 @@ describe('setupOpenTelemetry', () => {
 			process.env.OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE = '50';
 			require('../../setup.js');
 
-			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
-			expect(setupOpenTelemetry).toHaveBeenCalledWith({
+			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
+			expect(opentelemetry.setup).toHaveBeenCalledWith({
 				tracing: {
 					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT',
@@ -82,8 +82,8 @@ describe('setupOpenTelemetry', () => {
 			process.env.OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE = 'nope';
 			require('../../setup.js');
 
-			expect(setupOpenTelemetry).toHaveBeenCalledTimes(1);
-			expect(setupOpenTelemetry).toHaveBeenCalledWith({
+			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
+			expect(opentelemetry.setup).toHaveBeenCalledWith({
 				tracing: {
 					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT',
