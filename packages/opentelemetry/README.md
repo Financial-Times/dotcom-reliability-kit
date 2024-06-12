@@ -12,12 +12,19 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
     * [Automated setup with `require()`](#automated-setup-with-require)
     * [Manual setup](#manual-setup)
   * [Running in production](#running-in-production)
+    * [Production metrics](#production-metrics)
+    * [Production tracing](#production-tracing)
   * [Running locally](#running-locally)
-    * [Running a backend](#running-a-backend)
-    * [Sending traces to your local backend](#sending-traces-to-your-local-backend)
+    * [Local metrics](#local-metrics)
+    * [Local tracing](#local-tracing)
+      * [Running a backend](#running-a-backend)
+      * [Sending traces to your local backend](#sending-traces-to-your-local-backend)
   * [Implementation details](#implementation-details)
   * [Configuration options](#configuration-options)
     * [`options.authorizationHeader`](#optionsauthorizationheader)
+    * [`options.metrics`](#optionsmetrics)
+    * [`options.metrics.endpoint`](#optionsmetricsendpoint)
+    * [`options.metrics.apiGatewayKey`](#optionsmetricsapigatewaykey)
     * [`options.tracing`](#optionstracing)
     * [`options.tracing.endpoint`](#optionstracingendpoint)
     * [`options.tracing.authorizationHeader`](#optionstracingauthorizationheader)
@@ -146,6 +153,15 @@ setupOpenTelemetry({ /* ... */ });
 
 ### Running in production
 
+#### Production metrics
+
+To send metrics in production, you'll need an API Gateway key and the URL of the FT's official metrics collector. [You can find this information in Tech Hub](https://tech.in.ft.com/tech-topics/observability/opentelemetry).
+
+#### Production tracing
+
+> [!WARNING]<br />
+> Tracing is not supported centrally yet and these instructions assume your team or group will be setting up their own collector.
+
 To use this package in production you'll need a [Collector](https://opentelemetry.io/docs/collector/) that can receive traces over HTTP. This could be something you run (e.g. the [AWS Distro for OpenTelemetry](https://aws.amazon.com/otel/)) or a third-party service.
 
 Having traces collected centrally will give you a good view of how your production application is performing, allowing you to debug issues more effectively.
@@ -154,15 +170,21 @@ OpenTelemetry can generate a huge amount of data which, depending on where you s
 
 ### Running locally
 
+#### Local metrics
+
+We don't recommend trying to get a metrics exporter set up locally, if your `NODE_ENV` environment variable is not set to production, then local metrics will be available in Grafana under `OpenTelemetry Test`.
+
+#### Local tracing
+
 If you want to debug specific performance issues then setting up a local Collector can help you. You shouldn't be sending traces in local development to your production backend as this could make it harder to debug real production issues. You probably also don't want to sample traces in local development – you'll want to collect all traffic because the volume will be much lower.
 
-#### Running a backend
+##### Running a backend
 
 To view traces locally, you'll need a backend for them to be sent to. In this example we'll be using [Jaeger](https://www.jaegertracing.io/) via [Docker](https://www.docker.com/). You'll need Docker (or a compatible [alternative](https://podman.io/)) to be set up first.
 
 [Jaeger maintains a useful guide for this](https://www.jaegertracing.io/docs/1.53/getting-started/#all-in-one).
 
-#### Sending traces to your local backend
+##### Sending traces to your local backend
 
 Once your backend is running you'll need to make some configuration changes.
 
@@ -211,6 +233,24 @@ setupOpenTelemetry({
 #### `options.authorizationHeader`
 
 **Deprecated**. This will still work but has been replaced with [`options.tracing.authorizationHeader`](#optionstracingauthorizationheader), which is now the preferred way to set this option.
+
+#### `options.metrics`
+
+An object containing other metrics-specific configurations. Defaults to `undefined` which means that OpenTelemetry metrics will not be sent.
+
+#### `options.metrics.endpoint`
+
+A URL to send OpenTelemetry metrics to. E.g. `http://localhost:4318/v1/metrics`. Defaults to `undefined` which means that OpenTelemetry metrics will not be sent.
+
+**Environment variable:** `OPENTELEMETRY_METRICS_ENDPOINT`<br/>
+**Option:** `metrics.endpoint` (`String`)
+
+#### `options.metrics.apiGatewayKey`
+
+Set the `Authorization` HTTP header in requests to the central API-Gateway-backed OpenTelemetry metrics collector. Defaults to `undefined`.
+
+**Environment variable:** `OPENTELEMETRY_API_GATEWAY_KEY`<br/>
+**Option:** `metrics.apiGatewayKey` (`String`)
 
 #### `options.tracing`
 

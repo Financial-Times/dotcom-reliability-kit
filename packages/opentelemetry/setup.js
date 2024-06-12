@@ -12,6 +12,16 @@ if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 	};
 }
 
+/** @type {setupOpenTelemetry.MetricsOptions | undefined} */
+let metrics = undefined;
+if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
+	metrics = {
+		apiGatewayKey: process.env.OPENTELEMETRY_API_GATEWAY_KEY,
+		endpoint: process.env.OPENTELEMETRY_METRICS_ENDPOINT
+	};
+}
+
 setupOpenTelemetry({
+	metrics,
 	tracing
 });

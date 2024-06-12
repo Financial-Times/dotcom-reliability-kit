@@ -6,6 +6,9 @@ jest.mock('../../../lib/config/instrumentations', () => ({
 		.fn()
 		.mockReturnValue('mock-instrumentations')
 }));
+jest.mock('../../../lib/config/metrics', () => ({
+	createMetricsConfig: jest.fn().mockReturnValue({ metrics: 'mock-metrics' })
+}));
 jest.mock('../../../lib/config/resource', () => ({
 	createResourceConfig: jest.fn().mockReturnValue('mock-resource')
 }));
@@ -16,6 +19,7 @@ jest.mock('../../../lib/config/tracing', () => ({
 const {
 	createInstrumentationConfig
 } = require('../../../lib/config/instrumentations');
+const { createMetricsConfig } = require('../../../lib/config/metrics');
 const { createResourceConfig } = require('../../../lib/config/resource');
 const { createTracingConfig } = require('../../../lib/config/tracing');
 const { diag, DiagLogLevel } = require('@opentelemetry/api');
@@ -39,6 +43,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 				tracing: {
 					endpoint: 'mock-tracing-endpoint',
 					samplePercentage: 137
+				},
+				metrics: {
+					endpoint: 'mock-metrics-endpoint'
 				}
 			});
 		});
@@ -73,12 +80,20 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 		});
 
+		it('creates metrics config', () => {
+			expect(createMetricsConfig).toHaveBeenCalledTimes(1);
+			expect(createMetricsConfig).toHaveBeenCalledWith({
+				endpoint: 'mock-metrics-endpoint'
+			});
+		});
+
 		it('instantiates and starts the OpenTelemetry Node SDK with the created config', () => {
 			expect(NodeSDK).toHaveBeenCalledTimes(1);
 			expect(NodeSDK).toHaveBeenCalledWith({
 				instrumentations: 'mock-instrumentations',
 				resource: 'mock-resource',
-				tracing: 'mock-tracing'
+				tracing: 'mock-tracing',
+				metrics: 'mock-metrics'
 			});
 			expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
 		});
@@ -94,7 +109,8 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 				expect(NodeSDK).toHaveBeenCalledWith({
 					instrumentations: 'mock-instrumentations',
 					resource: 'mock-resource',
-					tracing: 'mock-tracing'
+					tracing: 'mock-tracing',
+					metrics: 'mock-metrics'
 				});
 			});
 		});
