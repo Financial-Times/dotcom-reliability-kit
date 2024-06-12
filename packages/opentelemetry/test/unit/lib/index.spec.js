@@ -1,5 +1,4 @@
 jest.mock('@opentelemetry/sdk-node');
-jest.mock('@opentelemetry/api');
 jest.mock('@dotcom-reliability-kit/logger');
 jest.mock('../../../lib/config/instrumentations', () => ({
 	createInstrumentationConfig: jest
@@ -22,7 +21,7 @@ const {
 const { createMetricsConfig } = require('../../../lib/config/metrics');
 const { createResourceConfig } = require('../../../lib/config/resource');
 const { createTracingConfig } = require('../../../lib/config/tracing');
-const { diag, DiagLogLevel } = require('@opentelemetry/api');
+const { diag, DiagLogLevel } = require('@opentelemetry/sdk-node').api;
 const { NodeSDK } = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
 

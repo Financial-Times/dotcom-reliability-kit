@@ -16,7 +16,7 @@ jest.mock('@dotcom-reliability-kit/app-info', () => ({
 		}
 	}
 }));
-jest.mock('@opentelemetry/resources');
+jest.mock('@opentelemetry/sdk-node');
 jest.mock('@opentelemetry/semantic-conventions', () => ({
 	SEMRESATTRS_CLOUD_PROVIDER: 'mock-semresattrs-cloud-provider',
 	SEMRESATTRS_CLOUD_REGION: 'mock-semresattrs-cloud-region',
@@ -26,7 +26,7 @@ jest.mock('@opentelemetry/semantic-conventions', () => ({
 	SEMRESATTRS_SERVICE_INSTANCE_ID: 'mock-semresattrs-service-instance-id'
 }));
 
-const { Resource } = require('@opentelemetry/resources');
+const { Resource } = require('@opentelemetry/sdk-node').resources;
 const { createResourceConfig } = require('../../../../lib/config/resource');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {

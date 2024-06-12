@@ -1,6 +1,6 @@
 jest.mock('@opentelemetry/exporter-metrics-otlp-proto');
 jest.mock('@opentelemetry/otlp-exporter-base');
-jest.mock('@opentelemetry/sdk-metrics');
+jest.mock('@opentelemetry/sdk-node');
 jest.mock('@dotcom-reliability-kit/logger');
 jest.mock('../../../../lib/config/user-agents', () => ({
 	METRICS_USER_AGENT: 'mock-metrics-user-agent'
@@ -10,7 +10,8 @@ const logger = require('@dotcom-reliability-kit/logger');
 const {
 	OTLPMetricExporter
 } = require('@opentelemetry/exporter-metrics-otlp-proto');
-const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-metrics');
+const { PeriodicExportingMetricReader } =
+	require('@opentelemetry/sdk-node').metrics;
 const { createMetricsConfig } = require('../../../../lib/config/metrics');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/metrics', () => {
