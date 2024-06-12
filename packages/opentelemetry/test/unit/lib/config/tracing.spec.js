@@ -9,10 +9,8 @@ const logger = require('@dotcom-reliability-kit/logger');
 const {
 	OTLPTraceExporter
 } = require('@opentelemetry/exporter-trace-otlp-proto');
-const {
-	NoopSpanProcessor,
-	TraceIdRatioBasedSampler
-} = require('@opentelemetry/sdk-trace-base');
+const { NoopSpanProcessor, TraceIdRatioBasedSampler } =
+	require('@opentelemetry/sdk-node').tracing;
 const { createTracingConfig } = require('../../../../lib/config/tracing');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {

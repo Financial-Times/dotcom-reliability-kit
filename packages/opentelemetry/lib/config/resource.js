@@ -1,5 +1,5 @@
 const appInfo = require('@dotcom-reliability-kit/app-info').semanticConventions;
-const { Resource } = require('@opentelemetry/resources');
+const { Resource } = require('@opentelemetry/sdk-node').resources;
 const {
 	SEMRESATTRS_CLOUD_PROVIDER,
 	SEMRESATTRS_CLOUD_REGION,
@@ -12,7 +12,7 @@ const {
 /**
  * Create a Resource object using gathered app info.
  *
- * @returns {import('@opentelemetry/sdk-node').NodeSDKConfiguration['resource']}
+ * @returns {import('@opentelemetry/sdk-node').resources.Resource}
  */
 exports.createResourceConfig = function createResourceConfig() {
 	// We set OpenTelemetry resource attributes based on app data
