@@ -79,7 +79,4 @@ function setupOpenTelemetry({
 	sdk.start();
 }
 
-module.exports = setupOpenTelemetry;
-
-// @ts-ignore
-module.exports.default = module.exports;
+exports.setup = setupOpenTelemetry;

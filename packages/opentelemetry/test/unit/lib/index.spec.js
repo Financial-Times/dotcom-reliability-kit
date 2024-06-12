@@ -30,16 +30,12 @@ logger.createChildLogger.mockReturnValue('mock child logger');
 DiagLogLevel.INFO = 'mock info log level';
 
 // Import the OTel function for testing
-const setupOpenTelemetry = require('../../../lib/index');
+const opentelemetry = require('../../../lib/index');
 
 describe('@dotcom-reliability-kit/opentelemetry', () => {
-	it('exports a function', () => {
-		expect(typeof setupOpenTelemetry).toStrictEqual('function');
-	});
-
-	describe('setupOpenTelemetry(options)', () => {
+	describe('.setup(options)', () => {
 		beforeAll(() => {
-			setupOpenTelemetry({
+			opentelemetry.setup({
 				tracing: {
 					endpoint: 'mock-tracing-endpoint',
 					samplePercentage: 137
@@ -101,7 +97,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when no options are set', () => {
 			beforeAll(() => {
 				NodeSDK.mockClear();
-				setupOpenTelemetry();
+				opentelemetry.setup();
 			});
 
 			it('still instantiates and starts the OpenTelemetry Node SDK with the created config', () => {
@@ -118,7 +114,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when an authorization header is passed into the root options (deprecated)', () => {
 			beforeAll(() => {
 				createTracingConfig.mockReset();
-				setupOpenTelemetry({
+				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
 						endpoint: 'mock-tracing-endpoint'
@@ -138,7 +134,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when an authorization header is passed into the tracing options', () => {
 			beforeAll(() => {
 				createTracingConfig.mockReset();
-				setupOpenTelemetry({
+				opentelemetry.setup({
 					tracing: {
 						authorizationHeader: 'mock-authorization-header-tracing',
 						endpoint: 'mock-tracing-endpoint'
@@ -158,7 +154,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when an authorization header is passed into both the root options (deprecated) and tracing options', () => {
 			beforeAll(() => {
 				createTracingConfig.mockReset();
-				setupOpenTelemetry({
+				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
 						authorizationHeader: 'mock-authorization-header-tracing',
@@ -179,7 +175,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when OTEL_ environment variables are defined', () => {
 			beforeAll(() => {
 				process.env.OTEL_MOCK = 'mock';
-				setupOpenTelemetry();
+				opentelemetry.setup();
 			});
 
 			it('logs a warning that these environment variables are not supported', () => {

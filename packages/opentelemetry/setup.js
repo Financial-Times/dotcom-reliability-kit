@@ -1,6 +1,6 @@
-const setupOpenTelemetry = require('./lib/index.js');
+const opentelemetry = require('.');
 
-/** @type {setupOpenTelemetry.TracingOptions | undefined} */
+/** @type {opentelemetry.TracingOptions | undefined} */
 let tracing = undefined;
 if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 	tracing = {
@@ -12,7 +12,7 @@ if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 	};
 }
 
-/** @type {setupOpenTelemetry.MetricsOptions | undefined} */
+/** @type {opentelemetry.MetricsOptions | undefined} */
 let metrics = undefined;
 if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
 	metrics = {
@@ -21,7 +21,7 @@ if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
 	};
 }
 
-setupOpenTelemetry({
+opentelemetry.setup({
 	metrics,
 	tracing
 });
