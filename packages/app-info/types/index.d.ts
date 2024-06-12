@@ -10,6 +10,7 @@ declare module '@dotcom-reliability-kit/app-info' {
 	export const herokuAppId: string | null;
 	export const herokuDynoId: string | null;
 	export const instanceId: string;
+	export const semanticConventions: SemanticConventions;
 
 	export type SemanticConventions = {
 		cloud: {
