@@ -276,7 +276,7 @@ A URL to send OpenTelemetry metrics to. E.g. `http://localhost:4318/v1/metrics`.
 
 #### `options.metrics.apiGatewayKey`
 
-Set the `Authorization` HTTP header in requests to the central API-Gateway-backed OpenTelemetry metrics collector. Defaults to `undefined`.
+Set the `X-OTel-Key` HTTP header in requests to the central API-Gateway-backed OpenTelemetry metrics collector. Defaults to `undefined`.
 
 **Environment variable:** `OPENTELEMETRY_API_GATEWAY_KEY`<br/>
 **Option:** `metrics.apiGatewayKey` (`String`)
