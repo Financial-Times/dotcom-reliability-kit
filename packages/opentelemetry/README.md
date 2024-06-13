@@ -11,6 +11,7 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
     * [Automated setup with `--require`](#automated-setup-with---require)
     * [Automated setup with `require()`](#automated-setup-with-require)
     * [Manual setup](#manual-setup)
+  * [Sending custom metrics](#sending-custom-metrics)
   * [Running in production](#running-in-production)
     * [Production metrics](#production-metrics)
     * [Production tracing](#production-tracing)
@@ -153,6 +154,31 @@ opentelemetry.setup({ /* ... */ });
 </table>
 
 This method returns any SDK instances created during setup. Calling this method a second time will return the same instances without rerunning setup.
+
+### Sending custom metrics
+
+Many metrics are taken care of by OpenTelemetry's auto-instrumentation (e.g. HTTP request data), but you sometimes need to send your own metrics. We expose the OpenTelemetry `getMeter` method ([documentation](https://opentelemetry.io/docs/languages/js/instrumentation/#acquiring-a-meter)) which allows you to do this.
+
+In your code, load in the `getMeter` function:
+
+```js
+import getMeter from '@dotcom-reliability-kit/opentelemetry';
+// or
+const { getMeter } = require('@dotcom-reliability-kit/opentelemetry');
+```
+
+You can now use it in the same way as the built-in OpenTelemetry equivalent. For more information, see the [OpenTelemetry Meter documentation](https://opentelemetry.io/docs/specs/otel/metrics/api/#meter).
+
+```js
+// Assumes that `app` is an Express application instance
+const meter = getMeter('my-app');
+const hitCounter = meter.createCounter('my-app.hits');
+
+app.get('/', (request, response) => {
+    hitCounter.add(1);
+    response.send('Thanks for visiting');
+});
+```
 
 ### Running in production
 

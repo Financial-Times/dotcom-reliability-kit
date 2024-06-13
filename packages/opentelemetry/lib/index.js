@@ -32,7 +32,7 @@ const logger = require('@dotcom-reliability-kit/logger');
 /**
  * Stores the singleton instances that were created during OpenTelemetry setup.
  *
- * @type {Instances}
+ * @type {Instances | undefined}
  */
 let instances;
 
@@ -101,4 +101,31 @@ function setupOpenTelemetry({
 	return instances;
 }
 
+/**
+ * Get a metrics meter from the configured OpenTelemetry SDK.
+ *
+ * @param {string} name
+ *     The meter name.
+ * @param {string} [version]
+ *     The meter version.
+ * @param {opentelemetry.api.MeterOptions} [options]
+ *     Additional configuration options for the meter.
+ * @returns {opentelemetry.api.Meter}
+ *      Returns a metrics meter.
+ */
+function getMeter(name, version, options) {
+	if (!instances) {
+		throw Object.assign(
+			new Error(
+				'Reliability Kit OpenTelemetry must be set up before meters can be created. See the setup guide for more information: https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/opentelemetry#setup'
+			),
+			{
+				code: 'OTEL_MISSING_SETUP'
+			}
+		);
+	}
+	return opentelemetry.api.metrics.getMeter(name, version, options);
+}
+
 exports.setup = setupOpenTelemetry;
+exports.getMeter = getMeter;
