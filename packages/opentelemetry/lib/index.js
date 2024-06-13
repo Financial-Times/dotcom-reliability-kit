@@ -2,6 +2,7 @@ const { createInstrumentationConfig } = require('./config/instrumentations');
 const { createMetricsConfig } = require('./config/metrics');
 const { createResourceConfig } = require('./config/resource');
 const { createTracingConfig } = require('./config/tracing');
+const { HostMetrics } = require('@opentelemetry/host-metrics');
 const opentelemetry = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
 
@@ -27,6 +28,8 @@ const logger = require('@dotcom-reliability-kit/logger');
  * @typedef {object} Instances
  * @property {opentelemetry.NodeSDK} sdk
  *      A singleton instance of the OpenTelemetry Node SDK.
+ * @property {HostMetrics} [hostMetrics]
+ *      A singleton instances of the OpenTelemetry host metrics collector.
  */
 
 /**
@@ -81,6 +84,7 @@ function setupOpenTelemetry({
 
 	// Set up and start OpenTelemetry
 	instances = {
+		hostMetrics: undefined,
 		sdk: new opentelemetry.NodeSDK({
 			// Configurations we set regardless of whether we're using tracing
 			instrumentations: createInstrumentationConfig(),
@@ -97,6 +101,18 @@ function setupOpenTelemetry({
 		})
 	};
 	instances.sdk.start();
+
+	// Set up host metrics if we have a metrics endpoint
+	if (metricsOptions?.endpoint) {
+		instances.hostMetrics = new HostMetrics({
+			// This is a little redundant as the HostMetrics package defaults
+			// this value to the package name, _however_ the types disagree and
+			// think that `name` is a required property. Could be fixable in
+			// future, see https://github.com/open-telemetry/opentelemetry-js-contrib/issues/2274
+			name: '@opentelemetry/host-metrics'
+		});
+		instances.hostMetrics.start();
+	}
 
 	return instances;
 }

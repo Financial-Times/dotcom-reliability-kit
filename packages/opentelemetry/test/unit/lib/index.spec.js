@@ -1,3 +1,4 @@
+jest.mock('@opentelemetry/host-metrics');
 jest.mock('@opentelemetry/sdk-node');
 jest.mock('@dotcom-reliability-kit/logger');
 jest.mock('../../../lib/config/instrumentations', () => ({
@@ -16,11 +17,12 @@ jest.mock('../../../lib/config/tracing', () => ({
 }));
 
 describe('@dotcom-reliability-kit/opentelemetry', () => {
+	let api;
 	let createInstrumentationConfig;
 	let createMetricsConfig;
 	let createResourceConfig;
 	let createTracingConfig;
-	let api;
+	let HostMetrics;
 	let logger;
 	let NodeSDK;
 	let opentelemetry;
@@ -40,6 +42,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		createTracingConfig =
 			require('../../../lib/config/tracing').createTracingConfig;
 		api = require('@opentelemetry/sdk-node').api;
+		HostMetrics = require('@opentelemetry/host-metrics').HostMetrics;
 		NodeSDK = require('@opentelemetry/sdk-node').NodeSDK;
 		logger = require('@dotcom-reliability-kit/logger');
 
@@ -114,9 +117,39 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
 		});
 
-		it('returns the SDK instance', () => {
+		it('instantiates and starts a HostMetrics collector', () => {
+			expect(HostMetrics).toHaveBeenCalledTimes(1);
+			expect(HostMetrics).toHaveBeenCalledWith({
+				name: '@opentelemetry/host-metrics'
+			});
+			expect(HostMetrics.prototype.start).toHaveBeenCalledTimes(1);
+		});
+
+		it('returns the SDK instances', () => {
 			expect(instances).toEqual({
-				sdk: NodeSDK.mock.instances[0]
+				sdk: NodeSDK.mock.instances[0],
+				hostMetrics: HostMetrics.mock.instances[0]
+			});
+		});
+
+		describe('when no metrics endpoint is set', () => {
+			beforeEach(() => {
+				NodeSDK.mockClear();
+				reloadAllModules();
+				instances = opentelemetry.setup({
+					tracing: {
+						endpoint: 'mock-tracing-endpoint',
+						samplePercentage: 137
+					}
+				});
+			});
+
+			it('does not instantiate a HostMetrics collector', () => {
+				expect(HostMetrics).toHaveBeenCalledTimes(0);
+			});
+
+			it('returns instances with hostMetrics undefined', () => {
+				expect(instances.hostMetrics).toBeUndefined();
 			});
 		});
 
