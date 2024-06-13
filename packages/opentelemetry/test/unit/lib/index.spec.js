@@ -20,8 +20,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 	let createMetricsConfig;
 	let createResourceConfig;
 	let createTracingConfig;
-	let diag;
-	let DiagLogLevel;
+	let api;
 	let logger;
 	let NodeSDK;
 	let opentelemetry;
@@ -40,13 +39,12 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			require('../../../lib/config/resource').createResourceConfig;
 		createTracingConfig =
 			require('../../../lib/config/tracing').createTracingConfig;
-		diag = require('@opentelemetry/sdk-node').api.diag;
-		DiagLogLevel = require('@opentelemetry/sdk-node').api.DiagLogLevel;
+		api = require('@opentelemetry/sdk-node').api;
 		NodeSDK = require('@opentelemetry/sdk-node').NodeSDK;
 		logger = require('@dotcom-reliability-kit/logger');
 
 		logger.createChildLogger.mockReturnValue('mock child logger');
-		DiagLogLevel.INFO = 'mock info log level';
+		api.DiagLogLevel.INFO = 'mock info log level';
 
 		opentelemetry = require('../../../lib/index');
 	}
@@ -73,8 +71,8 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(logger.createChildLogger).toHaveBeenCalledWith({
 				event: 'OTEL_INTERNALS'
 			});
-			expect(diag.setLogger).toHaveBeenCalledTimes(1);
-			expect(diag.setLogger).toHaveBeenCalledWith(
+			expect(api.diag.setLogger).toHaveBeenCalledTimes(1);
+			expect(api.diag.setLogger).toHaveBeenCalledWith(
 				'mock child logger',
 				'mock info log level'
 			);
@@ -251,6 +249,46 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 			it('returns the same instances on each call', () => {
 				expect(returnValue1).toStrictEqual(returnValue2);
+			});
+		});
+	});
+
+	describe('.getMeter(name, version, options)', () => {
+		let meter;
+
+		beforeEach(() => {
+			reloadAllModules();
+			api.metrics.getMeter.mockReturnValue('mock-meter');
+			opentelemetry.setup();
+			meter = opentelemetry.getMeter(
+				'mock-name',
+				'mock-version',
+				'mock-options'
+			);
+		});
+
+		it('creates and returns a global meter', () => {
+			expect(api.metrics.getMeter).toHaveBeenCalledTimes(1);
+			expect(api.metrics.getMeter).toHaveBeenCalledWith(
+				'mock-name',
+				'mock-version',
+				'mock-options'
+			);
+			expect(meter).toEqual('mock-meter');
+		});
+
+		describe('when OpenTelemetry has not been set up via Reliability Kit', () => {
+			beforeEach(() => {
+				reloadAllModules();
+			});
+
+			it('throws an error', () => {
+				expect.hasAssertions();
+				try {
+					opentelemetry.getMeter('mock-name', 'mock-version', 'mock-options');
+				} catch (error) {
+					expect(error.code).toEqual('OTEL_MISSING_SETUP');
+				}
 			});
 		});
 	});
