@@ -152,6 +152,8 @@ opentelemetry.setup({ /* ... */ });
     </tr>
 </table>
 
+This method returns any SDK instances created during setup. Calling this method a second time will return the same instances without rerunning setup.
+
 ### Running in production
 
 #### Production metrics
