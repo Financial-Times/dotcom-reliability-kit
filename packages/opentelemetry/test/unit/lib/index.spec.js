@@ -15,26 +15,49 @@ jest.mock('../../../lib/config/tracing', () => ({
 	createTracingConfig: jest.fn().mockReturnValue({ tracing: 'mock-tracing' })
 }));
 
-const {
-	createInstrumentationConfig
-} = require('../../../lib/config/instrumentations');
-const { createMetricsConfig } = require('../../../lib/config/metrics');
-const { createResourceConfig } = require('../../../lib/config/resource');
-const { createTracingConfig } = require('../../../lib/config/tracing');
-const { diag, DiagLogLevel } = require('@opentelemetry/sdk-node').api;
-const { NodeSDK } = require('@opentelemetry/sdk-node');
-const logger = require('@dotcom-reliability-kit/logger');
-
-logger.createChildLogger.mockReturnValue('mock child logger');
-DiagLogLevel.INFO = 'mock info log level';
-
-// Import the OTel function for testing
-const opentelemetry = require('../../../lib/index');
-
 describe('@dotcom-reliability-kit/opentelemetry', () => {
+	let createInstrumentationConfig;
+	let createMetricsConfig;
+	let createResourceConfig;
+	let createTracingConfig;
+	let diag;
+	let DiagLogLevel;
+	let logger;
+	let NodeSDK;
+	let opentelemetry;
+
+	// Helper function to reload all modules. We need this because the setup
+	// method stores a global singleton so it's impossible to call it multiple
+	// times with different configuration values normally. We need to do this
+	// in the tests though
+	function reloadAllModules() {
+		jest.resetModules();
+		createInstrumentationConfig =
+			require('../../../lib/config/instrumentations').createInstrumentationConfig;
+		createMetricsConfig =
+			require('../../../lib/config/metrics').createMetricsConfig;
+		createResourceConfig =
+			require('../../../lib/config/resource').createResourceConfig;
+		createTracingConfig =
+			require('../../../lib/config/tracing').createTracingConfig;
+		diag = require('@opentelemetry/sdk-node').api.diag;
+		DiagLogLevel = require('@opentelemetry/sdk-node').api.DiagLogLevel;
+		NodeSDK = require('@opentelemetry/sdk-node').NodeSDK;
+		logger = require('@dotcom-reliability-kit/logger');
+
+		logger.createChildLogger.mockReturnValue('mock child logger');
+		DiagLogLevel.INFO = 'mock info log level';
+
+		opentelemetry = require('../../../lib/index');
+	}
+
+	beforeEach(reloadAllModules);
+
 	describe('.setup(options)', () => {
-		beforeAll(() => {
-			opentelemetry.setup({
+		let instances;
+
+		beforeEach(() => {
+			instances = opentelemetry.setup({
 				tracing: {
 					endpoint: 'mock-tracing-endpoint',
 					samplePercentage: 137
@@ -93,9 +116,16 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
 		});
 
+		it('returns the SDK instance', () => {
+			expect(instances).toEqual({
+				sdk: NodeSDK.mock.instances[0]
+			});
+		});
+
 		describe('when no options are set', () => {
-			beforeAll(() => {
+			beforeEach(() => {
 				NodeSDK.mockClear();
+				reloadAllModules();
 				opentelemetry.setup();
 			});
 
@@ -111,8 +141,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		});
 
 		describe('when an authorization header is passed into the root options (deprecated)', () => {
-			beforeAll(() => {
+			beforeEach(() => {
 				createTracingConfig.mockReset();
+				reloadAllModules();
 				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
@@ -131,8 +162,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		});
 
 		describe('when an authorization header is passed into the tracing options', () => {
-			beforeAll(() => {
+			beforeEach(() => {
 				createTracingConfig.mockReset();
+				reloadAllModules();
 				opentelemetry.setup({
 					tracing: {
 						authorizationHeader: 'mock-authorization-header-tracing',
@@ -151,8 +183,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		});
 
 		describe('when an authorization header is passed into both the root options (deprecated) and tracing options', () => {
-			beforeAll(() => {
+			beforeEach(() => {
 				createTracingConfig.mockReset();
+				reloadAllModules();
 				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
@@ -172,8 +205,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		});
 
 		describe('when OTEL_ environment variables are defined', () => {
-			beforeAll(() => {
+			beforeEach(() => {
 				process.env.OTEL_MOCK = 'mock';
+				reloadAllModules();
 				opentelemetry.setup();
 			});
 
@@ -183,6 +217,40 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 					message:
 						'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
 				});
+			});
+		});
+
+		describe('when called a second time', () => {
+			let returnValue1;
+			let returnValue2;
+
+			beforeEach(() => {
+				reloadAllModules();
+				returnValue1 = opentelemetry.setup({
+					tracing: {
+						endpoint: 'mock-tracing-endpoint',
+						samplePercentage: 137
+					},
+					metrics: {
+						endpoint: 'mock-metrics-endpoint'
+					}
+				});
+				returnValue2 = opentelemetry.setup();
+			});
+
+			it('instantiates and starts the OpenTelemetry Node SDK once only', () => {
+				expect(NodeSDK).toHaveBeenCalledTimes(1);
+				expect(NodeSDK).toHaveBeenCalledWith({
+					instrumentations: 'mock-instrumentations',
+					resource: 'mock-resource',
+					tracing: 'mock-tracing',
+					metrics: 'mock-metrics'
+				});
+				expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
+			});
+
+			it('returns the same instances on each call', () => {
+				expect(returnValue1).toStrictEqual(returnValue2);
 			});
 		});
 	});

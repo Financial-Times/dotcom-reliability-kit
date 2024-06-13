@@ -2,7 +2,7 @@ const { createInstrumentationConfig } = require('./config/instrumentations');
 const { createMetricsConfig } = require('./config/metrics');
 const { createResourceConfig } = require('./config/resource');
 const { createTracingConfig } = require('./config/tracing');
-const opentelemetrySDK = require('@opentelemetry/sdk-node');
+const opentelemetry = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
 
 /**
@@ -24,16 +24,35 @@ const logger = require('@dotcom-reliability-kit/logger');
  */
 
 /**
+ * @typedef {object} Instances
+ * @property {opentelemetry.NodeSDK} sdk
+ *      A singleton instance of the OpenTelemetry Node SDK.
+ */
+
+/**
+ * Stores the singleton instances that were created during OpenTelemetry setup.
+ *
+ * @type {Instances}
+ */
+let instances;
+
+/**
  * Set up OpenTelemetry tracing.
  *
  * @param {Options} [options]
  *      OpenTelemetry configuration options.
+ * @returns {Instances}
+ *      Returns any created SDK instances.
  */
 function setupOpenTelemetry({
 	authorizationHeader,
 	metrics: metricsOptions,
 	tracing: tracingOptions
 } = {}) {
+	if (instances) {
+		return instances;
+	}
+
 	// We don't support using the built-in `OTEL_`-prefixed environment variables. We
 	// do want to know when these are used, though, so that we can easily spot when
 	// an app's use of these environment variables might be interfering.
@@ -51,31 +70,35 @@ function setupOpenTelemetry({
 	// the LOG_LEVEL environment variable) takes over. We set the
 	// OpenTelemetry log level to the maximum value that we want
 	// Reliability Kit to consider logging
-	opentelemetrySDK.api.diag.setLogger(
+	opentelemetry.api.diag.setLogger(
 		// @ts-ignore this complains because DiagLogger accepts a type
 		// of unknown whereas our logger is stricter. This is fine though,
 		// if something unknown is logged then we do our best with it.
 		// It's easier to ignore this error than fix it.
 		logger.createChildLogger({ event: 'OTEL_INTERNALS' }),
-		opentelemetrySDK.api.DiagLogLevel.INFO
+		opentelemetry.api.DiagLogLevel.INFO
 	);
 
 	// Set up and start OpenTelemetry
-	const sdk = new opentelemetrySDK.NodeSDK({
-		// Configurations we set regardless of whether we're using tracing
-		instrumentations: createInstrumentationConfig(),
-		resource: createResourceConfig(),
+	instances = {
+		sdk: new opentelemetry.NodeSDK({
+			// Configurations we set regardless of whether we're using tracing
+			instrumentations: createInstrumentationConfig(),
+			resource: createResourceConfig(),
 
-		// Add metrics-specific configurations
-		...createMetricsConfig(metricsOptions || {}),
+			// Add metrics-specific configurations
+			...createMetricsConfig(metricsOptions || {}),
 
-		// Add tracing-specific configurations
-		...createTracingConfig({
-			authorizationHeader,
-			...tracingOptions
+			// Add tracing-specific configurations
+			...createTracingConfig({
+				authorizationHeader,
+				...tracingOptions
+			})
 		})
-	});
-	sdk.start();
+	};
+	instances.sdk.start();
+
+	return instances;
 }
 
 exports.setup = setupOpenTelemetry;
