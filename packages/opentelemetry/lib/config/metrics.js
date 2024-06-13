@@ -49,7 +49,7 @@ exports.createMetricsConfig = function createMetricsConfig(options) {
 			endpoint: options.endpoint
 		});
 	} else {
-		logger.warn({
+		logger.info({
 			event: 'OTEL_METRICS_STATUS',
 			message:
 				'OpenTelemetry metrics are disabled because no metrics endpoint was set',

@@ -123,7 +123,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 			});
 
 			it('logs that tracing is disabled', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				expect(logger.info).toHaveBeenCalledWith({
 					enabled: false,
 					endpoint: null,
 					event: 'OTEL_TRACE_STATUS',
