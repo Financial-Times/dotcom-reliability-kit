@@ -59,7 +59,7 @@ exports.createTracingConfig = function createTracingConfig(options) {
 			samplePercentage
 		});
 	} else {
-		logger.warn({
+		logger.info({
 			event: 'OTEL_TRACE_STATUS',
 			message:
 				'OpenTelemetry tracing is disabled because no tracing endpoint was set',

@@ -100,7 +100,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/metrics', () => {
 			});
 
 			it('logs that metrics are disabled', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				expect(logger.info).toHaveBeenCalledWith({
 					enabled: false,
 					endpoint: null,
 					event: 'OTEL_METRICS_STATUS',
