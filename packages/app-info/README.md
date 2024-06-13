@@ -103,7 +103,7 @@ This is derived from the dyno metadata
 
 ### `appInfo.instanceId`
 
-Get the ID of the instance that's running the application. This is derived from `process.env.HEROKU_DYNO_ID` if present, otherwise it will be set to a random UUID that identifies the currently running process.
+Get the unique identifier for the instance that's running the application. This will be a different UUID for each running process, including cluster workers.
 
 ### `appInfo.semanticConventions`
 

@@ -382,27 +382,14 @@ describe('@dotcom-reliability-kit/app-info', () => {
 
 		beforeEach(() => {
 			jest.resetModules();
-			process.env.HEROKU_DYNO_ID = 'mock-heroku-dyno-id';
+			randomUUID = require('node:crypto').randomUUID;
+			randomUUID.mockReturnValue('mock-generated-uuid');
 			appInfo = require('../../../lib');
 		});
 
-		it('is set to `process.env.HEROKU_DYNO_ID`', () => {
-			expect(appInfo.instanceId).toBe('mock-heroku-dyno-id');
-		});
-
-		describe('when `process.env.HEROKU_DYNO_ID` is not defined', () => {
-			beforeEach(() => {
-				jest.resetModules();
-				randomUUID = require('node:crypto').randomUUID;
-				randomUUID.mockReturnValue('mock-generated-uuid');
-				delete process.env.HEROKU_DYNO_ID;
-				appInfo = require('../../../lib');
-			});
-
-			it('is set to a random UUID', () => {
-				expect(randomUUID).toHaveBeenCalledTimes(1);
-				expect(appInfo.instanceId).toBe('mock-generated-uuid');
-			});
+		it('is set to a random UUID', () => {
+			expect(randomUUID).toHaveBeenCalledTimes(1);
+			expect(appInfo.instanceId).toBe('mock-generated-uuid');
 		});
 	});
 

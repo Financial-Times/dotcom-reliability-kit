@@ -156,7 +156,7 @@ exports.herokuDynoId = process.env.HEROKU_DYNO_ID || null;
  * @readonly
  * @type {string}
  */
-exports.instanceId = process.env.HEROKU_DYNO_ID || randomUUID();
+exports.instanceId = randomUUID();
 
 /**
  * @type {import('@dotcom-reliability-kit/app-info').SemanticConventions}
