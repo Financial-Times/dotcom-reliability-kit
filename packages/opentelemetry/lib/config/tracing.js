@@ -66,7 +66,7 @@ exports.createTracingConfig = function createTracingConfig(options) {
 			enabled: false,
 			endpoint: null
 		});
-		config.spanProcessor = new NoopSpanProcessor();
+		config.spanProcessors = [new NoopSpanProcessor()];
 	}
 
 	return config;

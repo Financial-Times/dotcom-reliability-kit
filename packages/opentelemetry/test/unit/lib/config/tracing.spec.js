@@ -134,7 +134,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 
 			it('returns the configuration', () => {
 				expect(config).toEqual({
-					spanProcessor: NoopSpanProcessor.mock.instances[0]
+					spanProcessors: [NoopSpanProcessor.mock.instances[0]]
 				});
 			});
 		});
