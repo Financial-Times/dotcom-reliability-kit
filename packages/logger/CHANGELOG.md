@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.1.1...logger-v3.1.2) (2024-06-19)
+
+
+### Bug Fixes
+
+* bump pino from 9.0.0 to 9.1.0 ([3732e3b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3732e3ba6dff33a75cbe215e12028d7de40347da))
+* bump pino from 9.1.0 to 9.2.0 ([5d2f4fb](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5d2f4fb7a313574810d504a7af93814fd8be0be5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.1.0 to ^3.2.0
+
 ## [3.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.1.0...logger-v3.1.1) (2024-05-02)
 
 

@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.1.0...app-info-v3.2.0) (2024-06-19)
+
+
+### Features
+
+* add a service ID property ([3571259](https://github.com/Financial-Times/dotcom-reliability-kit/commit/35712597c7bc0582c96d34b584ca4e0944e5b626))
+* add semantic convention aliases ([ae585fc](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ae585fc4ff164007a149a7f4224f4d9842e0af6d))
+* pull the release version from package.json ([f32cc27](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f32cc27c2eb65cdfd938ec3110fc763bebec18ef))
+
+
+### Bug Fixes
+
+* always use a UUID for instance ID ([88db1fb](https://github.com/Financial-Times/dotcom-reliability-kit/commit/88db1fb255a701536beac86d1d16211168724517))
+* default semantic attributes to undefined ([b43aab0](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b43aab043c1db4dbac27397f435525ccfa22bb49))
+* export the SemanticConventions type ([6cfaca0](https://github.com/Financial-Times/dotcom-reliability-kit/commit/6cfaca0edbf023d4577377ad59cbe908c7ae7e27))
+
 ## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.0.2...app-info-v3.1.0) (2024-04-29)
 
 
