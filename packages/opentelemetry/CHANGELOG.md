@@ -1,5 +1,47 @@
 # Changelog
 
+## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v1.1.2...opentelemetry-v2.0.0) (2024-06-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* stop using default exports
+
+### Features
+
+* add OpenTelemetry metrics support ([1fd08ec](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1fd08ecc42b83a1fead1b590ec1ae5caa86a5f91))
+* add the ability to get metrics meters ([2d555e9](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2d555e9b12fd4d5ddb419277d9c1b3511ab9a3af))
+* prevent the setup from running twice ([1d74508](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1d7450805189db4751a35bf80f08be3b4a996dd8))
+* send host metrics ([9217bf7](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9217bf726921cb883ed327b617bcfa1b910da5ac))
+
+
+### Bug Fixes
+
+* downgrade status logs to info ([ca2216e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ca2216e442ebf356959aa2faaa218eacc6eef17d))
+* move tracing config into a new module ([72e123e](https://github.com/Financial-Times/dotcom-reliability-kit/commit/72e123ed33ae647c69e3a59f7c9cb81614ee2fb6))
+* switch away from deprecated `spanProcessor` ([55ba635](https://github.com/Financial-Times/dotcom-reliability-kit/commit/55ba63599454fdf7c932f28d035a326c13ba4206))
+* update all OpenTelemetry packages ([dff05ca](https://github.com/Financial-Times/dotcom-reliability-kit/commit/dff05ca28afc797343e8e4bc8e56f8878c5656ae))
+* update the existing OpenTelemetry packages ([5e81878](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5e81878cad5bdb8a7b6562342980dde8385a4a68))
+
+
+### Documentation Changes
+
+* fix a copy/paste error ([14b4c76](https://github.com/Financial-Times/dotcom-reliability-kit/commit/14b4c765502faf3afa991b3d2ec3ea50f9751fc6))
+
+
+### Miscellaneous
+
+* stop using default exports ([af3504a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/af3504ad46f694a84be2350355d36ce0bead21e1))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.1.0 to ^3.2.0
+    * @dotcom-reliability-kit/log-error bumped from ^4.1.1 to ^4.1.2
+    * @dotcom-reliability-kit/logger bumped from ^3.1.1 to ^3.1.2
+
 ## [1.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v1.1.1...opentelemetry-v1.1.2) (2024-05-17)
 
 
