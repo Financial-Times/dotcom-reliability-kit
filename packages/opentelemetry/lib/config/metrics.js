@@ -9,17 +9,9 @@ const logger = require('@dotcom-reliability-kit/logger');
 const { METRICS_USER_AGENT } = require('./user-agents');
 
 /**
- * @typedef {object} MetricsOptions
- * @property {string} [apiGatewayKey]
- *     The API key to send to the metrics collector if you're using the FT's official metrics collector endpoint.
- * @property {string} [endpoint]
- *     The URL to send OpenTelemetry metrics to, for example http://localhost:4318/v1/metrics.
- */
-
-/**
  * Create an OpenTelemetry metrics configuration.
  *
- * @param {MetricsOptions} options
+ * @param {import('@dotcom-reliability-kit/opentelemetry').MetricsOptions} options
  * @returns {Partial<import('@opentelemetry/sdk-node').NodeSDKConfiguration>}
  */
 exports.createMetricsConfig = function createMetricsConfig(options) {

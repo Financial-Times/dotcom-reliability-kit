@@ -5,7 +5,6 @@ packages/log-error/**/*.d.*
 packages/logger/**/*.d.*
 packages/middleware-log-errors/**/*.d.*
 packages/middleware-render-error-info/**/*.d.*
-packages/opentelemetry/**/*.d.*
 coverage
 node_modules/
 resources/logos/dist
