@@ -1,5 +1,5 @@
 {
-  "name": "@dotcom-reliability-kit/test-ts-esm-interop",
+  "name": "@dotcom-reliability-kit/test-ts-esm",
   "version": "0.0.0",
   "private": true,
   "type": "module",

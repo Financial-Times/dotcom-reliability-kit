@@ -1,5 +1,5 @@
 {
-  "name": "@dotcom-reliability-kit/test-ts-commonjs-nointerop",
+  "name": "@dotcom-reliability-kit/test-ts-commonjs",
   "version": "0.0.0",
   "private": true,
   "type": "commonjs",
