@@ -23,6 +23,6 @@
     "express": "^4.19.2",
     "node-fetch-1": "npm:node-fetch@^1.7.3",
     "node-fetch-2": "npm:node-fetch@^2.7.0",
-    "undici": "^6.11.1"
+    "undici": "^6.19.2"
   }
 }
