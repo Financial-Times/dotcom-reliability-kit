@@ -1,15 +1,5 @@
 /**
- * @typedef {object} ErrorStrictData
- * @property {string} [code]
- *     A machine-readable error code which identifies the specific type of error.
- * @property {string} [message]
- *     A human readable message which describes the error.
- * @property {Error | null} [cause]
- *     The root cause error instance.
- */
-
-/**
- * @typedef {ErrorStrictData & Record<string, any>} ErrorData
+ * @typedef {import('@dotcom-reliability-kit/errors').BaseErrorData} ErrorData
  */
 
 /**
@@ -19,8 +9,7 @@ class BaseError extends Error {
 	/**
 	 * @override
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').BaseError['name']}
 	 */
 	name = 'BaseError';
 
@@ -28,8 +17,7 @@ class BaseError extends Error {
 	 * Whether the error is operational.
 	 *
 	 * @readonly
-	 * @public
-	 * @type {boolean}
+	 * @type {import('@dotcom-reliability-kit/errors').BaseError['isOperational']}
 	 */
 	isOperational = false;
 
@@ -37,8 +25,7 @@ class BaseError extends Error {
 	 * A machine-readable error code which identifies the specific type of error.
 	 *
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').BaseError['code']}
 	 */
 	code = BaseError.defaultCode;
 
@@ -46,8 +33,7 @@ class BaseError extends Error {
 	 * The root cause error instance.
 	 *
 	 * @readonly
-	 * @public
-	 * @type {Error | null}
+	 * @type {import('@dotcom-reliability-kit/errors').BaseError['cause']}
 	 */
 	cause = null;
 
@@ -55,8 +41,7 @@ class BaseError extends Error {
 	 * Additional error information.
 	 *
 	 * @readonly
-	 * @public
-	 * @type {{[key: string]: any}}
+	 * @type {import('@dotcom-reliability-kit/errors').BaseError['data']}
 	 */
 	data = {};
 
@@ -134,13 +119,7 @@ class BaseError extends Error {
 	static defaultMessage = 'An error occurred';
 
 	/**
-	 * Get whether an error object is marked as operational (it has a truthy `isOperational` property).
-	 *
-	 * @public
-	 * @param {Error} error
-	 *     The error object to check.
-	 * @returns {boolean}
-	 *     Returns whether the error is operational.
+	 * @type {(typeof import('@dotcom-reliability-kit/errors').BaseError)['isErrorMarkedAsOperational']}
 	 */
 	static isErrorMarkedAsOperational(error) {
 		// @ts-ignore Error.prototype.isOperational does not exist, but it's OK to check in this

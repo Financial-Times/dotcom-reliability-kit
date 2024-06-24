@@ -1,5 +1,4 @@
 .husky/_
-packages/errors/**/*.d.*
 packages/fetch-error-handler/**/*.d.*
 packages/logger/**/*.d.*
 packages/middleware-log-errors/**/*.d.*

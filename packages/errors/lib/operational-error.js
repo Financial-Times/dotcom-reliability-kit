@@ -1,13 +1,7 @@
 const BaseError = require('./base-error');
 
 /**
- * @typedef {object} OperationalErrorStrictData
- * @property {string[]} [relatesToSystems]
- *     An array of FT system codes which are related to this error.
- */
-
-/**
- * @typedef {OperationalErrorStrictData & BaseError.ErrorData} OperationalErrorData
+ * @typedef {import('@dotcom-reliability-kit/errors').OperationalErrorData} ErrorData
  */
 
 /**
@@ -17,8 +11,7 @@ class OperationalError extends BaseError {
 	/**
 	 * @override
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').OperationalError['name']}
 	 */
 	name = 'OperationalError';
 
@@ -27,8 +20,7 @@ class OperationalError extends BaseError {
 	 *
 	 * @override
 	 * @readonly
-	 * @public
-	 * @type {boolean}
+	 * @type {import('@dotcom-reliability-kit/errors').OperationalError['isOperational']}
 	 */
 	isOperational = true;
 
@@ -37,8 +29,7 @@ class OperationalError extends BaseError {
 	 * If this error is caused by one or more dependencies, include their system code here.
 	 *
 	 * @readonly
-	 * @public
-	 * @type {string[]}
+	 * @type {import('@dotcom-reliability-kit/errors').OperationalError['relatesToSystems']}
 	 */
 	relatesToSystems = [];
 
@@ -51,7 +42,7 @@ class OperationalError extends BaseError {
 	 * Create an error with error data.
 	 *
 	 * @overload
-	 * @param {OperationalErrorData} data
+	 * @param {ErrorData} data
 	 *     Additional error information.
 	 */
 	/**
@@ -60,13 +51,13 @@ class OperationalError extends BaseError {
 	 * @overload
 	 * @param {string} message
 	 *     The error message.
-	 * @param {OperationalErrorData} [data]
+	 * @param {ErrorData} [data]
 	 *     Additional error information.
 	 */
 	/**
-	 * @param {string | OperationalErrorData} [message]
+	 * @param {string | ErrorData} [message]
 	 *     The error message if it's a string, or full error information if an object.
-	 * @param {OperationalErrorData} [data]
+	 * @param {ErrorData} [data]
 	 *     Additional error information if `message` is a string.
 	 */
 	constructor(message, data = {}) {

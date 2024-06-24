@@ -11,13 +11,7 @@ const OperationalError = require('./operational-error');
 const STATUS_CODES = require('http').STATUS_CODES;
 
 /**
- * @typedef {object} HttpErrorStrictData
- * @property {number} [statusCode]
- *     An HTTP status code.
- */
-
-/**
- * @typedef {HttpErrorStrictData & OperationalError.OperationalErrorData} HttpErrorData
+ * @typedef {import('@dotcom-reliability-kit/errors').HttpErrorData} ErrorData
  */
 
 /**
@@ -27,28 +21,24 @@ class HttpError extends OperationalError {
 	/**
 	 * @override
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').HttpError['name']}
 	 */
 	name = 'HttpError';
 
 	/**
 	 * @readonly
-	 * @public
-	 * @type {number}
+	 * @type {import('@dotcom-reliability-kit/errors').HttpError['statusCode']}
 	 */
 	statusCode;
 
 	/**
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').HttpError['statusMessage']}
 	 */
 	statusMessage;
 
 	/**
-	 * @public
-	 * @type {number}
+	 * @type {import('@dotcom-reliability-kit/errors').HttpError['status']}
 	 */
 	get status() {
 		return this.statusCode;
@@ -63,7 +53,7 @@ class HttpError extends OperationalError {
 	 * Create an error with error data.
 	 *
 	 * @overload
-	 * @param {HttpErrorData} data
+	 * @param {ErrorData} data
 	 *     Additional error information.
 	 */
 	/**
@@ -72,7 +62,7 @@ class HttpError extends OperationalError {
 	 * @overload
 	 * @param {string} message
 	 *     The error message.
-	 * @param {HttpErrorData} [data]
+	 * @param {ErrorData} [data]
 	 *     Additional error information.
 	 */
 	/**
@@ -81,14 +71,14 @@ class HttpError extends OperationalError {
 	 * @overload
 	 * @param {number} status
 	 *     The error HTTP status code.
-	 * @param {HttpErrorData} [data]
+	 * @param {ErrorData} [data]
 	 *     Additional error information.
 	 */
 	/**
-	 * @param {string | number | HttpErrorData} [message]
+	 * @param {string | number | ErrorData} [message]
 	 *     The error message if it's a string, the HTTP status code if it's a number, or full error
 	 *     information if an object.
-	 * @param {HttpErrorData} [data]
+	 * @param {ErrorData} [data]
 	 *     Additional error information if `message` is a string or number.
 	 */
 	constructor(message, data = {}) {

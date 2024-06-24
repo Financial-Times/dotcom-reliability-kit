@@ -7,8 +7,7 @@ class UpstreamServiceError extends HttpError {
 	/**
 	 * @override
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').UpstreamServiceError['name']}
 	 */
 	name = 'UpstreamServiceError';
 
