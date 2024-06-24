@@ -14,5 +14,6 @@
     "node": "18.x || 20.x || 22.x",
     "npm": "8.x || 9.x || 10.x"
   },
-  "main": "lib"
+  "main": "lib/index.js",
+  "types": "types/index.d.ts"
 }

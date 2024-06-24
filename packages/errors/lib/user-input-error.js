@@ -7,8 +7,7 @@ class UserInputError extends HttpError {
 	/**
 	 * @override
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').UserInputError['name']}
 	 */
 	name = 'UserInputError';
 

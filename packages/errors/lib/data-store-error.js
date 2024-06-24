@@ -7,8 +7,7 @@ class DataStoreError extends OperationalError {
 	/**
 	 * @override
 	 * @readonly
-	 * @public
-	 * @type {string}
+	 * @type {import('@dotcom-reliability-kit/errors').DataStoreError['name']}
 	 */
 	name = 'DataStoreError';
 }
