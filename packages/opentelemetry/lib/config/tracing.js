@@ -10,19 +10,9 @@ const { TRACING_USER_AGENT } = require('./user-agents');
 const DEFAULT_SAMPLE_PERCENTAGE = 5;
 
 /**
- * @typedef {object} TracingOptions
- * @property {string} [authorizationHeader]
- *     The HTTP `Authorization` header to send with OpenTelemetry tracing requests if you're using the Customer Products trace collector endpoint.
- * @property {string} [endpoint]
- *     The URL to send OpenTelemetry trace segments to, for example http://localhost:4318/v1/traces.
- * @property {number} [samplePercentage]
- *     What percentage of traces should be sent onto the collector.
- */
-
-/**
  * Create an OpenTelemetry tracing configuration.
  *
- * @param {TracingOptions} options
+ * @param {import('@dotcom-reliability-kit/opentelemetry').TracingOptions} options
  * @returns {Partial<import('@opentelemetry/sdk-node').NodeSDKConfiguration>}
  */
 exports.createTracingConfig = function createTracingConfig(options) {

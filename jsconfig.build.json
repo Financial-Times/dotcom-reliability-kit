@@ -13,7 +13,6 @@
 		"packages/log-error/**/*.js",
 		"packages/logger/**/*.js",
 		"packages/middleware-log-errors/**/*.js",
-		"packages/middleware-render-error-info/**/*.js",
-		"packages/opentelemetry/**/*.js"
+		"packages/middleware-render-error-info/**/*.js"
 	]
 }

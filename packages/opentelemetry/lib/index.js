@@ -7,29 +7,11 @@ const opentelemetry = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
 
 /**
- * @typedef {import('./config/metrics').MetricsOptions} MetricsOptions
+ * @typedef {import('@dotcom-reliability-kit/opentelemetry').Options} Options
  */
 
 /**
- * @typedef {import('./config/tracing').TracingOptions} TracingOptions
- */
-
-/**
- * @typedef {object} Options
- * @property {string} [authorizationHeader]
- *      [DEPRECATED] The HTTP `Authorization` header to send with OpenTelemetry requests. Use `tracing.authorizationHeader` instead.
- * @property {MetricsOptions} [metrics]
- *      Configuration options for OpenTelemetry metrics.
- * @property {TracingOptions} [tracing]
- *      Configuration options for OpenTelemetry tracing.
- */
-
-/**
- * @typedef {object} Instances
- * @property {opentelemetry.NodeSDK} sdk
- *      A singleton instance of the OpenTelemetry Node SDK.
- * @property {HostMetrics} [hostMetrics]
- *      A singleton instances of the OpenTelemetry host metrics collector.
+ * @typedef {import('@dotcom-reliability-kit/opentelemetry').Instances} Instances
  */
 
 /**
@@ -43,9 +25,7 @@ let instances;
  * Set up OpenTelemetry tracing.
  *
  * @param {Options} [options]
- *      OpenTelemetry configuration options.
  * @returns {Instances}
- *      Returns any created SDK instances.
  */
 function setupOpenTelemetry({
 	authorizationHeader,
@@ -121,13 +101,9 @@ function setupOpenTelemetry({
  * Get a metrics meter from the configured OpenTelemetry SDK.
  *
  * @param {string} name
- *     The meter name.
  * @param {string} [version]
- *     The meter version.
  * @param {opentelemetry.api.MeterOptions} [options]
- *     Additional configuration options for the meter.
  * @returns {opentelemetry.api.Meter}
- *      Returns a metrics meter.
  */
 function getMeter(name, version, options) {
 	if (!instances) {
