@@ -34,7 +34,7 @@ const releasePleaseManifest = require('../.release-please-manifest.json');
 		license: rootManifest.license,
 		engines: rootManifest.engines,
 		main: 'lib/index.js',
-		types: 'lib/index.d.ts'
+		types: 'types/index.d.ts'
 	};
 	console.log('📦 initialising "package.json"');
 	await fs.writeFile(
@@ -56,7 +56,7 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 	console.log('📄 adding ".npmignore"');
 	await fs.writeFile(
 		path.join(packagePath, '.npmignore'),
-		['!*.d.ts', '!*.d.ts.map', 'CHANGELOG.md', 'docs', 'test'].join('\n')
+		['CHANGELOG.md', 'docs', 'test'].join('\n')
 	);
 
 	// Bootstrap base JavaScript files
@@ -66,6 +66,14 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 	await fs.writeFile(
 		path.join(libPath, 'index.js'),
 		`module.exports = {};
+`
+	);
+	console.log('🏗  adding "types/index.d.ts"');
+	const typesPath = path.join(packagePath, 'types');
+	await fs.mkdir(typesPath);
+	await fs.writeFile(
+		path.join(typesPath, 'index.d.ts'),
+		`declare module '@dotcom-reliability-kit/${name}' {}
 `
 	);
 
