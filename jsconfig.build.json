@@ -10,7 +10,6 @@
 	"include": [
 		"packages/errors/**/*.js",
 		"packages/fetch-error-handler/**/*.js",
-		"packages/log-error/**/*.js",
 		"packages/logger/**/*.js",
 		"packages/middleware-log-errors/**/*.js",
 		"packages/middleware-render-error-info/**/*.js"
