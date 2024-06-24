@@ -8,7 +8,6 @@
 		"removeComments": true
 	},
 	"include": [
-		"packages/crash-handler/**/*.js",
 		"packages/errors/**/*.js",
 		"packages/fetch-error-handler/**/*.js",
 		"packages/log-error/**/*.js",

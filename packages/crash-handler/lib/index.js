@@ -4,19 +4,9 @@ const {
 } = require('@dotcom-reliability-kit/log-error');
 
 /**
- * @typedef {object} CrashHandlerOptions
- * @property {import('@dotcom-reliability-kit/log-error').Logger & {[key: string]: any}} [logger]
- *     The logger to use to output errors. Defaults to Reliability Kit logger.
- * @property {import('process')} [process]
- *     The Node.js process to add crash handlers for.
- */
-
-/**
  * Register a crash handler on a process.
  *
- * @public
- * @param {CrashHandlerOptions} [options]
- *     Options to configure the crash handler.
+ * @param {import('@dotcom-reliability-kit/crash-handler').CrashHandlerOptions} [options]
  */
 function registerCrashHandler(options = {}) {
 	const process = options.process || global.process;

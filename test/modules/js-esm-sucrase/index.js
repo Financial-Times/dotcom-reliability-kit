@@ -5,6 +5,7 @@ import * as logger2 from '@dotcom-reliability-kit/logger';
 import { Logger, transforms } from '@dotcom-reliability-kit/logger';
 import serializeError from '@dotcom-reliability-kit/serialize-error';
 import serializeRequest from '@dotcom-reliability-kit/serialize-request';
+import registerCrashHandler from '@dotcom-reliability-kit/crash-handler';
 
 /**
  * @typedef {object} TypeTests
@@ -41,5 +42,8 @@ new Logger({
 // See: https://github.com/Financial-Times/cp-content-pipeline/blob/90ce06158b65742cd03cbf03f5372790906cad9e/packages/api/src/plugins/logging.ts#L1-L3
 serializeError(new Error('hi'));
 serializeRequest({ url: 'https://example.com' });
+
+// Test that crash handler works
+registerCrashHandler({ process, logger: logger1 || logger2 });
 
 console.log('OK');
