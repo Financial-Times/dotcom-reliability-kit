@@ -162,7 +162,7 @@ Many metrics are taken care of by OpenTelemetry's auto-instrumentation (e.g. HTT
 In your code, load in the `getMeter` function:
 
 ```js
-import getMeter from '@dotcom-reliability-kit/opentelemetry';
+import { getMeter } from '@dotcom-reliability-kit/opentelemetry';
 // or
 const { getMeter } = require('@dotcom-reliability-kit/opentelemetry');
 ```
