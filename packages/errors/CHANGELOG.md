@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v3.1.0...errors-v3.1.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* add type declarations for errors ([f6aef2b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f6aef2b556974827cf1f3538f8043bac25c55708))
+
 ## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v3.0.1...errors-v3.1.0) (2024-04-29)
 
 
