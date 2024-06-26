@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.1.2...log-error-v4.1.3) (2024-06-26)
+
+
+### Bug Fixes
+
+* add type declarations for log-error ([d2c3f84](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d2c3f84790bf736212fd54638674eaeb15876007))
+
 ## [4.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.1.1...log-error-v4.1.2) (2024-06-19)
 
 

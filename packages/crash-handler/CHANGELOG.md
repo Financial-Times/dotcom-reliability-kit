@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v4.1.2...crash-handler-v4.1.3) (2024-06-26)
+
+
+### Bug Fixes
+
+* add type declarations for crash-handler ([d9d274f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d9d274f19d32591187fb8ddaed11cc9a046cf56e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.1.2 to ^4.1.3
+
 ## [4.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v4.1.1...crash-handler-v4.1.2) (2024-06-19)
 
 

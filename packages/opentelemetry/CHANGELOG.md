@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.0...opentelemetry-v2.0.1) (2024-06-26)
+
+
+### Bug Fixes
+
+* add type declarations for opentelemetry ([5b60286](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5b60286550ee8c152bec456fdd8c023b31fa10d1))
+* bump the opentelemetry group with 4 updates ([59dcc75](https://github.com/Financial-Times/dotcom-reliability-kit/commit/59dcc756cff198f789aebd633695883f4793be63))
+
+
+### Documentation Changes
+
+* correct the ESM opentelemetry example ([071806a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/071806a9dbc3a5eabef9357bdf84727d04038863))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/errors bumped from ^3.1.0 to ^3.1.1
+    * @dotcom-reliability-kit/log-error bumped from ^4.1.2 to ^4.1.3
+
 ## [2.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v1.1.2...opentelemetry-v2.0.0) (2024-06-19)
 
 

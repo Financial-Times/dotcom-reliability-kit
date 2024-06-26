@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.3...fetch-error-handler-v0.2.4) (2024-06-26)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/errors bumped from ^3.1.0 to ^3.1.1
+
 ## [0.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.2...fetch-error-handler-v0.2.3) (2024-05-01)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/fetch-error-handler",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Properly handle fetch errors and avoid a lot of boilerplate in your app.",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   },
   "main": "lib",
   "dependencies": {
-    "@dotcom-reliability-kit/errors": "^3.1.0"
+    "@dotcom-reliability-kit/errors": "^3.1.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
