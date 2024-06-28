@@ -7,6 +7,7 @@ import serializeError from '@dotcom-reliability-kit/serialize-error';
 import serializeRequest from '@dotcom-reliability-kit/serialize-request';
 import registerCrashHandler from '@dotcom-reliability-kit/crash-handler';
 import renderErrorInfoPage from '@dotcom-reliability-kit/middleware-render-error-info';
+import createErrorLogger from '@dotcom-reliability-kit/middleware-log-errors';
 
 type TypeTests = {
 	logger1: Logger;
@@ -47,5 +48,12 @@ registerCrashHandler({ process, logger: logger1 || logger2 });
 
 // Test that error rendering middleware works
 renderErrorInfoPage({ logger: logger1 || logger2 });
+
+// Test that error logging works
+createErrorLogger({
+	filter: () => true,
+	includeHeaders: ['example'],
+	logger: logger1 || logger2
+});
 
 console.log('OK');
