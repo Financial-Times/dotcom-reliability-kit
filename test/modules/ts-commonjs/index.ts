@@ -19,11 +19,11 @@ type TypeTests = {
 	// to rethink the way we build our type definitions in order to
 	// support TypeScript written as CommonJS properly.
 	logger2: Logger;
-	
+
 	// These test that appInfo can be imported either
 	// as a default or named exports
-	environment1: string,
-	environment2: string
+	environment1: string;
+	environment2: string;
 };
 
 const result: TypeTests = {
