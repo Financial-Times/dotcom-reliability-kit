@@ -7,6 +7,7 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
 const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
+const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
 
 /**
  * @typedef {object} TypeTests
@@ -49,5 +50,12 @@ registerCrashHandler({ process, logger: logger1 || logger2 });
 
 // Test that error rendering middleware works
 renderErrorInfoPage({ logger: logger1 || logger2 });
+
+// Test that error logging works
+createErrorLogger({
+	filter: () => true,
+	includeHeaders: ['example'],
+	logger: logger1 || logger2
+});
 
 console.log('OK');

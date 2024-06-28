@@ -9,7 +9,6 @@
 	},
 	"include": [
 		"packages/fetch-error-handler/**/*.js",
-		"packages/logger/**/*.js",
-		"packages/middleware-log-errors/**/*.js"
+		"packages/logger/**/*.js"
 	]
 }

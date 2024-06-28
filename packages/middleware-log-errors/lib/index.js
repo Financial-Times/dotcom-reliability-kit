@@ -4,33 +4,10 @@ const {
 } = require('@dotcom-reliability-kit/log-error');
 
 /**
- * @callback ErrorLoggingFilter
- * @param {any} error
- *     The error that will be logged.
- * @param {import('express').Request} request
- *     The Express request that resulted in the error.
- * @returns {boolean | void}
- *     Returns `true` if the error should be logged.
- */
-
-/**
- * @typedef {object} ErrorLoggingOptions
- * @property {string[]} [includeHeaders]
- *     An array of request headers to include in the log.
- * @property {ErrorLoggingFilter} [filter]
- *     A filter function to determine whether an error should be logged.
- * @property {import('@dotcom-reliability-kit/log-error').Logger & {[key: string]: any}} [logger]
- *     The logger to use to output errors. Defaults to Reliability Kit logger.
- */
-
-/**
  * Create a middleware function to log errors.
  *
- * @public
- * @param {ErrorLoggingOptions} [options]
- *     Options to configure the middleware.
+ * @param {import('@dotcom-reliability-kit/middleware-log-errors').ErrorLoggingOptions} [options]
  * @returns {import('express').ErrorRequestHandler}
- *     Returns error logging middleware.
  */
 function createErrorLoggingMiddleware(options = {}) {
 	// Validate the included headers (this stops the request serializer from erroring
