@@ -5,19 +5,10 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const { STATUS_CODES } = require('node:http');
 
 /**
- * @typedef {object} ErrorRenderingOptions
- * @property {import('@dotcom-reliability-kit/log-error').Logger & {[key: string]: any}} [logger]
- *     The logger to use to output errors. Defaults to Reliability Kit logger.
- */
-
-/**
  * Create a middleware function to render an error info page.
  *
- * @public
- * @param {ErrorRenderingOptions} [options]
- *     Options to configure the middleware.
+ * @param {import('@dotcom-reliability-kit/middleware-render-error-info').ErrorRenderingOptions} [options]
  * @returns {import('express').ErrorRequestHandler}
- *     Returns error info rendering middleware.
  */
 function createErrorRenderingMiddleware(options = {}) {
 	return function errorRenderingMiddleware(error, request, response, next) {
