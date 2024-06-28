@@ -6,6 +6,7 @@ const { Logger, transforms } = require('@dotcom-reliability-kit/logger');
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
+const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
 
 type TypeTests = {
 	// @ts-ignore TODO this isn't working correctly and we'll need
@@ -53,5 +54,8 @@ serializeRequest({ url: 'https://example.com' });
 
 // Test that crash handler works
 registerCrashHandler({ process, logger: logger1 || logger2 });
+
+// Test that error rendering middleware works
+renderErrorInfoPage({ logger: logger1 || logger2 });
 
 console.log('OK');

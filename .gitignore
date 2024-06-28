@@ -2,7 +2,6 @@
 packages/fetch-error-handler/**/*.d.*
 packages/logger/**/*.d.*
 packages/middleware-log-errors/**/*.d.*
-packages/middleware-render-error-info/**/*.d.*
 coverage
 node_modules/
 resources/logos/dist
