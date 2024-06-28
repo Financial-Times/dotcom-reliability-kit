@@ -1,23 +1,5 @@
 /**
- * @typedef {object} LegacyMaskTransformOptions
- * @property {string[]} [denyList]
- *     Additional field names to apply masking to.
- * @property {string[]} [allowList]
- *     Field names to allow from the default deny list.
- * @property {string} [maskString]
- *     The mask string to apply to discovered sensitive values.
- */
-
-/**
- * @typedef {object} InternalMaskSettings
- * @property {Set<string>} maskedFields
- *     Field names to mask.
- * @property {RegExp} maskRegExp
- *     A regular expression which applies masking to a string.
- * @property {string} maskString
- *     The mask string to apply to discovered sensitive values.
- * @property {WeakSet} references
- *     An internal store of references used to avoid masking the same object infinitely.
+ * @typedef {import('../../types/transforms/legacy-mask').InternalMaskSettings} InternalMaskSettings
  */
 
 /**
@@ -160,12 +142,9 @@ function maskObject(object, settings) {
 /**
  * Create a log transform function which masks sensitive fields in log data.
  *
- * @param {LegacyMaskTransformOptions} options
- *     Masking options.
- * @returns {import('../logger').LogTransform}
- *     Returns a transform function for use with the logger.
+ * @type {import('../../types/transforms/legacy-mask').createLegacyMaskTransform}
  */
-function createLegacyMaskTransform({
+module.exports = function createLegacyMaskTransform({
 	denyList = [],
 	allowList = [],
 	maskString = '*****'
@@ -192,9 +171,4 @@ function createLegacyMaskTransform({
 			references: new WeakSet()
 		});
 	};
-}
-
-module.exports = createLegacyMaskTransform;
-
-// @ts-ignore
-module.exports.default = module.exports;
+};

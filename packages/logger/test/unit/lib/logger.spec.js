@@ -1127,10 +1127,4 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			expect(Logger.default).toStrictEqual(Logger);
-		});
-	});
 });

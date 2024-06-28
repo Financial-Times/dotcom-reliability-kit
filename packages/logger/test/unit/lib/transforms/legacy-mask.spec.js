@@ -5,14 +5,6 @@ describe('@dotcom-reliability-kit/logger', () => {
 		expect(createLegacyMaskTransform).toBeInstanceOf(Function);
 	});
 
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			expect(createLegacyMaskTransform.default).toStrictEqual(
-				createLegacyMaskTransform
-			);
-		});
-	});
-
 	describe('createLegacyMaskTransform(options)', () => {
 		let transform;
 

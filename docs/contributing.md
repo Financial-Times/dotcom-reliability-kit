@@ -26,7 +26,6 @@ We're glad you want to contribute to Reliability Kit!
     * [Pull request scope](#pull-request-scope)
     * [Merging pull requests](#merging-pull-requests)
   * [Releasing](#releasing)
-    * [Generated files](#generated-files)
     * [Hard-coding the release version](#hard-coding-the-release-version)
     * [Correcting releases](#correcting-releases)
   * [Issue management](#issue-management)
@@ -174,7 +173,7 @@ The linters are also run on pull requests and linting errors will block merging,
 
 ### Type safety
 
-We do not write TypeScript in this project, but we _do_ write [thorough JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) and test against it which gives us all the benefits of TypeScript ([more info](./design.md#languages)).
+We do not write TypeScript code, but we _do_ write [thorough JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) and publish type declarations, then test against it which gives us all the benefits of TypeScript ([more info](./design.md#languages)).
 
 We do not compile the code in our packages, but we do check that all variables are set to the correct types. If there are any type errors then you should see these in your editor if you're using VS Code. Otherwise type checking can be manually run as part of linting:
 
@@ -268,16 +267,6 @@ When a commit with the `feat` or `fix` [commit type prefix](#commit-type-prefixe
 If the PR is left alone, it will continue to be updated with new releases as more commits appear on the `main` branch.
 
 Before approving and merging the release PR, make sure you review it. You need to check the package versions that it updates to make sure you’re only releasing the things you expect.
-
-### Generated files
-
-Before publishing npm packages we do generate TypeScript type declaration files (`.d.ts`) so that TypeScript-based projects which use Reliability Kit will get correct type hinting.
-
-If a release has caused issues with Type hinting or TypeScript-based projects compiling, then you can inspect the generated files by running the build command locally and viewing the `.d.ts` files in your editor:
-
-```
-npm run build
-```
 
 ### Hard-coding the release version
 

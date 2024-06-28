@@ -1,5 +1,4 @@
 .husky/_
-packages/logger/**/*.d.*
 coverage
 node_modules/
 resources/logos/dist

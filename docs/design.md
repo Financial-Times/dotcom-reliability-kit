@@ -27,7 +27,7 @@ The combination of the above allows us to work on and publish the packages in th
 
 In terms of TypeScript, the key benefits are having type safety and type hinting in your editor. We can achieve both of these without writing TypeScript. Using [JavaScript with JSDoc comments to document types](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html), VSCode (used by the majority of our engineers) offers the same level of type hinting as it does with TypeScript. It's also possible to run the TypeScript type checker against JavaScript code to verify that everything is type safe (e.g. using `tsc --checkJS`).
 
-In order to be useful for TypeScript projects, we do still need to publish our modules with TypeScript type declaration files (`.d.ts`). We made this an automated step during publishing and when authoring modules you should still write JavaScript and JSDoc.
+In order to be useful for TypeScript projects, we do still need to publish our modules with TypeScript type declaration files (`.d.ts`).
 
 ### CommonJS
 
