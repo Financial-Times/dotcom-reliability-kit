@@ -1,7 +1,7 @@
 const BaseError = require('./base-error');
 
 /**
- * @typedef {import('@dotcom-reliability-kit/errors').OperationalErrorData} ErrorData
+ * @import {OperationalErrorData as ErrorData} from '@dotcom-reliability-kit/errors'
  */
 
 /**

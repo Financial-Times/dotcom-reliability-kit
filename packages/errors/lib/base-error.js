@@ -1,5 +1,5 @@
 /**
- * @typedef {import('@dotcom-reliability-kit/errors').BaseErrorData} ErrorData
+ * @import {BaseErrorData as ErrorData} from '@dotcom-reliability-kit/errors'
  */
 
 /**

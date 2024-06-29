@@ -1,5 +1,5 @@
 /**
- * @typedef {import('../../types/transforms/legacy-mask').InternalMaskSettings} InternalMaskSettings
+ * @import {InternalMaskSettings} from '../../types/transforms/legacy-mask';
  */
 
 /**

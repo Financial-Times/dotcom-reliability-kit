@@ -1,6 +1,10 @@
 const OperationalError = require('./operational-error');
 
 /**
+ * @import {HttpErrorData as ErrorData} from '@dotcom-reliability-kit/errors'
+ */
+
+/**
  * We have guards in place wherever we use this map of status messages
  * which means we can safely cast it to an object where every property
  * is a string. If we don't do this then TypeScript will complain.
@@ -9,10 +13,6 @@ const OperationalError = require('./operational-error');
  * @type {{[key: string]: any}}
  */
 const STATUS_CODES = require('http').STATUS_CODES;
-
-/**
- * @typedef {import('@dotcom-reliability-kit/errors').HttpErrorData} ErrorData
- */
 
 /**
  * Class representing an HTTP error.
