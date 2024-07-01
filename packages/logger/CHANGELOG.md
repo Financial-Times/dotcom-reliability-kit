@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.1.2...logger-v3.1.3) (2024-07-01)
+
+
+### Bug Fixes
+
+* add type declarations for the logger ([b514c2a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b514c2abf637221ff09390e193fb843b66bfdffa)), closes [#946](https://github.com/Financial-Times/dotcom-reliability-kit/issues/946)
+
 ## [3.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.1.1...logger-v3.1.2) (2024-06-19)
 
 

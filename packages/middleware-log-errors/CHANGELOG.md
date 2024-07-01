@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.1.3...middleware-log-errors-v4.1.4) (2024-07-01)
+
+
+### Bug Fixes
+
+* add type declarations for error-logging ([9d65e0a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9d65e0a518a44dc3c2f463425ceb338ec0d4badc))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.1.3 to ^4.1.4
+
 ## [4.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.1.2...middleware-log-errors-v4.1.3) (2024-06-26)
 
 
