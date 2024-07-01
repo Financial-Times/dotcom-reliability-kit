@@ -45,7 +45,6 @@ app.listen(undefined).then((server) => {
 	if (process.send) {
 		process.send({
 			ready: true,
-			// @ts-ignore
 			port: server.address().port
 		});
 	}

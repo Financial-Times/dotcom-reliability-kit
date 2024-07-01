@@ -1,7 +1,7 @@
 const BaseError = require('./base-error');
 
 /**
- * @typedef {import('@dotcom-reliability-kit/errors').OperationalErrorData} ErrorData
+ * @import { OperationalError as OperationalErrorType, OperationalErrorData as ErrorData } from '@dotcom-reliability-kit/errors'
  */
 
 /**
@@ -11,7 +11,7 @@ class OperationalError extends BaseError {
 	/**
 	 * @override
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').OperationalError['name']}
+	 * @type {OperationalErrorType['name']}
 	 */
 	name = 'OperationalError';
 
@@ -20,7 +20,7 @@ class OperationalError extends BaseError {
 	 *
 	 * @override
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').OperationalError['isOperational']}
+	 * @type {OperationalErrorType['isOperational']}
 	 */
 	isOperational = true;
 
@@ -29,7 +29,7 @@ class OperationalError extends BaseError {
 	 * If this error is caused by one or more dependencies, include their system code here.
 	 *
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').OperationalError['relatesToSystems']}
+	 * @type {OperationalErrorType['relatesToSystems']}
 	 */
 	relatesToSystems = [];
 

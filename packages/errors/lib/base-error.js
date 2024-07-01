@@ -1,5 +1,5 @@
 /**
- * @typedef {import('@dotcom-reliability-kit/errors').BaseErrorData} ErrorData
+ * @import { BaseError as BaseErrorType, BaseErrorData as ErrorData } from '@dotcom-reliability-kit/errors'
  */
 
 /**
@@ -9,7 +9,7 @@ class BaseError extends Error {
 	/**
 	 * @override
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').BaseError['name']}
+	 * @type {BaseErrorType['name']}
 	 */
 	name = 'BaseError';
 
@@ -17,7 +17,7 @@ class BaseError extends Error {
 	 * Whether the error is operational.
 	 *
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').BaseError['isOperational']}
+	 * @type {BaseErrorType['isOperational']}
 	 */
 	isOperational = false;
 
@@ -25,7 +25,7 @@ class BaseError extends Error {
 	 * A machine-readable error code which identifies the specific type of error.
 	 *
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').BaseError['code']}
+	 * @type {BaseErrorType['code']}
 	 */
 	code = BaseError.defaultCode;
 
@@ -33,7 +33,7 @@ class BaseError extends Error {
 	 * The root cause error instance.
 	 *
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').BaseError['cause']}
+	 * @type {BaseErrorType['cause']}
 	 */
 	cause = null;
 
@@ -41,7 +41,7 @@ class BaseError extends Error {
 	 * Additional error information.
 	 *
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').BaseError['data']}
+	 * @type {BaseErrorType['data']}
 	 */
 	data = {};
 
@@ -119,7 +119,7 @@ class BaseError extends Error {
 	static defaultMessage = 'An error occurred';
 
 	/**
-	 * @type {(typeof import('@dotcom-reliability-kit/errors').BaseError)['isErrorMarkedAsOperational']}
+	 * @type {(typeof BaseErrorType)['isErrorMarkedAsOperational']}
 	 */
 	static isErrorMarkedAsOperational(error) {
 		// @ts-ignore Error.prototype.isOperational does not exist, but it's OK to check in this

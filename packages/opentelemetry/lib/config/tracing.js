@@ -7,16 +7,21 @@ const { NoopSpanProcessor, TraceIdRatioBasedSampler } =
 const logger = require('@dotcom-reliability-kit/logger');
 const { TRACING_USER_AGENT } = require('./user-agents');
 
+/**
+ * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
+ * @import { TracingOptions } from '@dotcom-reliability-kit/opentelemetry'
+ */
+
 const DEFAULT_SAMPLE_PERCENTAGE = 5;
 
 /**
  * Create an OpenTelemetry tracing configuration.
  *
- * @param {import('@dotcom-reliability-kit/opentelemetry').TracingOptions} options
- * @returns {Partial<import('@opentelemetry/sdk-node').NodeSDKConfiguration>}
+ * @param {TracingOptions} options
+ * @returns {Partial<NodeSDKConfiguration>}
  */
 exports.createTracingConfig = function createTracingConfig(options) {
-	/** @type {Partial<import('@opentelemetry/sdk-node').NodeSDKConfiguration>} */
+	/** @type {Partial<NodeSDKConfiguration>} */
 	const config = {};
 
 	// If we have an OpenTelemetry tracing endpoint then set it up,

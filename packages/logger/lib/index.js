@@ -2,8 +2,7 @@ const Logger = require('./logger');
 const legacyMask = require('./transforms/legacy-mask');
 
 /**
- * @typedef {import('@dotcom-reliability-kit/logger').DefaultLogger} DefaultLogger
- * @typedef {import('@dotcom-reliability-kit/logger').Transforms} Transforms
+ * @import { DefaultLogger, Transforms } from '@dotcom-reliability-kit/logger'
  */
 
 /** @type {Transforms} */

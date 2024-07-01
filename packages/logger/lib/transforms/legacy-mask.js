@@ -1,5 +1,6 @@
 /**
- * @typedef {import('../../types/transforms/legacy-mask').InternalMaskSettings} InternalMaskSettings
+ * @import { InternalMaskSettings } from '../../types/transforms/legacy-mask'
+ * @import { createLegacyMaskTransform as CreateLegacyMaskTransform } from '../../types/transforms/legacy-mask'
  */
 
 /**
@@ -142,7 +143,7 @@ function maskObject(object, settings) {
 /**
  * Create a log transform function which masks sensitive fields in log data.
  *
- * @type {import('../../types/transforms/legacy-mask').createLegacyMaskTransform}
+ * @type {CreateLegacyMaskTransform}
  */
 module.exports = function createLegacyMaskTransform({
 	denyList = [],

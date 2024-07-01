@@ -1,13 +1,17 @@
 const HttpError = require('./http-error');
 
 /**
+ * @import { UserInputError as UserInputErrorType } from '@dotcom-reliability-kit/errors'
+ */
+
+/**
  * Class representing an error caused by invalid user input.
  */
 class UserInputError extends HttpError {
 	/**
 	 * @override
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').UserInputError['name']}
+	 * @type {UserInputErrorType['name']}
 	 */
 	name = 'UserInputError';
 

@@ -9,13 +9,18 @@ const logger = require('@dotcom-reliability-kit/logger');
 const { METRICS_USER_AGENT } = require('./user-agents');
 
 /**
+ * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
+ * @import { MetricsOptions } from '@dotcom-reliability-kit/opentelemetry'
+ */
+
+/**
  * Create an OpenTelemetry metrics configuration.
  *
- * @param {import('@dotcom-reliability-kit/opentelemetry').MetricsOptions} options
- * @returns {Partial<import('@opentelemetry/sdk-node').NodeSDKConfiguration>}
+ * @param {MetricsOptions} options
+ * @returns {Partial<NodeSDKConfiguration>}
  */
 exports.createMetricsConfig = function createMetricsConfig(options) {
-	/** @type {Partial<import('@opentelemetry/sdk-node').NodeSDKConfiguration>} */
+	/** @type {Partial<NodeSDKConfiguration>} */
 	const config = {};
 
 	// If we have an OpenTelemetry metrics endpoint then set it up

@@ -93,7 +93,6 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 
 	// Add package to Release Please config
 	console.log('🚢 adding package to Release Please config');
-	// @ts-ignore
 	releasePleaseConfig.packages[`packages/${name}`] = {};
 	await fs.writeFile(
 		path.resolve(__dirname, '..', 'release-please-config.json'),
@@ -101,7 +100,6 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 	);
 
 	console.log('🚢 adding package to Release Please manifest');
-	// @ts-ignore
 	releasePleaseManifest[`packages/${name}`] = '0.0.0';
 	await fs.writeFile(
 		path.resolve(__dirname, '..', '.release-please-manifest.json'),

@@ -7,11 +7,7 @@ const opentelemetry = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
 
 /**
- * @typedef {import('@dotcom-reliability-kit/opentelemetry').Options} Options
- */
-
-/**
- * @typedef {import('@dotcom-reliability-kit/opentelemetry').Instances} Instances
+ * @import { Instances, Options } from '@dotcom-reliability-kit/opentelemetry'
  */
 
 /**

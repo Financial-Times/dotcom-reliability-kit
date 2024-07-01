@@ -4,16 +4,17 @@ const clone = require('lodash.clonedeep');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 
 /**
- * @typedef {import('../types/logger').BaseLogData} BaseLogData
- * @typedef {import('../types/logger').LogData} LogData
- * @typedef {import('../types/logger').LoggerInterface} LoggerInterface
- * @typedef {import('../types/logger').LoggerOptions} LoggerOptions
- * @typedef {import('../types/logger').LogLevel} LogLevel
- * @typedef {import('../types/logger').LogLevelInfo} LogLevelInfo
- * @typedef {import('../types/logger').LogTransform} LogTransform
- * @typedef {import('../types/logger').LogTransport} LogTransport
- * @typedef {import('../types/logger').PrivateLoggerOptions} PrivateLoggerOptions
- * @typedef {typeof import('pino').stdTimeFunctions.isoTime} TimeFn
+ * @import {
+ *   BaseLogData,
+ *   LogData,
+ *   LoggerInterface,
+ *   LoggerOptions,
+ *   LogLevel,
+ *   LogLevelInfo,
+ *   LogTransform,
+ *   LogTransport,
+ *   PrivateLoggerOptions
+ * } from '../types/logger';
  */
 
 /**

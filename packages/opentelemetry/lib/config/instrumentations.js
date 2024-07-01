@@ -7,13 +7,18 @@ const {
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
+/**
+ * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
+ * @import { IgnoreIncomingRequestFunction } from '@opentelemetry/instrumentation-http'
+ */
+
 // Request paths that we ignore when instrumenting HTTP requests
 const IGNORED_REQUEST_PATHS = ['/__gtg', '/__health', '/favicon.ico'];
 
 /**
  * Create an instrumentations array for configuring OpenTelemetry.
  *
- * @returns {import('@opentelemetry/sdk-node').NodeSDKConfiguration['instrumentations']}
+ * @returns {NodeSDKConfiguration['instrumentations']}
  */
 exports.createInstrumentationConfig = function createInstrumentationConfig() {
 	return [
@@ -34,7 +39,7 @@ exports.createInstrumentationConfig = function createInstrumentationConfig() {
  * if the hook returns `true` then the request WILL be ignored.
  *
  * @see https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/opentelemetry-instrumentation-http/README.md#http-instrumentation-options
- * @type {import('@opentelemetry/instrumentation-http').IgnoreIncomingRequestFunction}
+ * @type {IgnoreIncomingRequestFunction}
  */
 function ignoreIncomingRequestHook(request) {
 	if (request.url) {

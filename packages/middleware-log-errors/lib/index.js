@@ -4,10 +4,15 @@ const {
 } = require('@dotcom-reliability-kit/log-error');
 
 /**
+ * @import { ErrorLoggingOptions } from '@dotcom-reliability-kit/middleware-log-errors'
+ * @import { ErrorRequestHandler as ExpressErrorHandler } from 'express'
+ */
+
+/**
  * Create a middleware function to log errors.
  *
- * @param {import('@dotcom-reliability-kit/middleware-log-errors').ErrorLoggingOptions} [options]
- * @returns {import('express').ErrorRequestHandler}
+ * @param {ErrorLoggingOptions} [options]
+ * @returns {ExpressErrorHandler}
  */
 function createErrorLoggingMiddleware(options = {}) {
 	// Validate the included headers (this stops the request serializer from erroring

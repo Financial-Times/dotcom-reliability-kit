@@ -31,7 +31,6 @@ const sharp = require('sharp');
 	async function buildLogo(name, pngSizes) {
 		// Load and optimize the SVG
 		const filePath = path.join(src, `${name}.svg`);
-		// @ts-ignore
 		const svgString = optimizeSvg(await readFile(filePath, 'utf-8')).data || '';
 
 		// Save the optimized SVG

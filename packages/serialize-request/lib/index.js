@@ -1,3 +1,13 @@
+/**
+ * @import {
+ *   Request,
+ *   RequestHeaders,
+ *   SerializedRequest,
+ *   SerializedRequestHeaders,
+ *   SerializeRequestOptions
+ * } from '@dotcom-reliability-kit/serialize-request'
+ */
+
 const DEFAULT_INCLUDED_HEADERS = [
 	'accept',
 	'accept-encoding',
@@ -15,9 +25,9 @@ const URL_TRUNCATION_LENGTH = 200;
 /**
  * Serialize a request object so that it can be consistently logged or output as JSON.
  *
- * @param {import('@dotcom-reliability-kit/serialize-request').Request} request
- * @param {import('@dotcom-reliability-kit/serialize-request').SerializeRequestOptions} options
- * @returns {import('@dotcom-reliability-kit/serialize-request').SerializedRequest}
+ * @param {Request} request
+ * @param {SerializeRequestOptions} options
+ * @returns {SerializedRequest}
  */
 function serializeRequest(request, options = {}) {
 	// If the request is not an object, assume it's the request
@@ -95,9 +105,9 @@ function serializeRequest(request, options = {}) {
 /**
  * Serialize request headers.
  *
- * @param {import('@dotcom-reliability-kit/serialize-request').RequestHeaders} headers
+ * @param {RequestHeaders} headers
  * @param {string[]} includeHeaders
- * @returns {import('@dotcom-reliability-kit/serialize-request').SerializedRequestHeaders}
+ * @returns {SerializedRequestHeaders}
  */
 function serializeHeaders(headers, includeHeaders) {
 	const headersObject = {};
@@ -123,7 +133,7 @@ function serializeHeaders(headers, includeHeaders) {
  * Create a new serialized request object.
  *
  * @param {{[key: string]: any}} properties
- * @returns {import('@dotcom-reliability-kit/serialize-request').SerializedRequest}
+ * @returns {SerializedRequest}
  */
 function createSerializedRequest(properties) {
 	return Object.assign(
