@@ -1,5 +1,15 @@
 # Changelog
 
+## [2.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.1...opentelemetry-v2.0.2) (2024-07-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.1.3 to ^4.1.4
+    * @dotcom-reliability-kit/logger bumped from ^3.1.2 to ^3.1.3
+
 ## [2.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.0...opentelemetry-v2.0.1) (2024-06-26)
 
 
