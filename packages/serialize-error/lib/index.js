@@ -1,10 +1,14 @@
 const crypto = require('node:crypto');
 
 /**
+ * @import { ErrorLike, SerializedError } from '@dotcom-reliability-kit/serialize-error'
+ */
+
+/**
  * Serialize an error object so that it can be consistently logged or output as JSON.
  *
- * @param {import('@dotcom-reliability-kit/serialize-error').ErrorLike} error
- * @returns {import('@dotcom-reliability-kit/serialize-error').SerializedError}
+ * @param {ErrorLike} error
+ * @returns {SerializedError}
  */
 function serializeError(error) {
 	if (typeof error !== 'object' || Array.isArray(error) || error === null) {
@@ -84,7 +88,7 @@ function serializeError(error) {
  * Create a new serialized error object.
  *
  * @param {Record<string, any>} properties
- * @returns {import('@dotcom-reliability-kit/serialize-error').SerializedError}
+ * @returns {SerializedError}
  */
 function createSerializedError(properties) {
 	return Object.assign(

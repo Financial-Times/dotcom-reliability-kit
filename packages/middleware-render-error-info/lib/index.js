@@ -5,10 +5,15 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const { STATUS_CODES } = require('node:http');
 
 /**
+ * @import { ErrorRenderingOptions } from '@dotcom-reliability-kit/middleware-render-error-info'
+ * @import { ErrorRequestHandler as ExpressErrorHandler } from 'express'
+ */
+
+/**
  * Create a middleware function to render an error info page.
  *
- * @param {import('@dotcom-reliability-kit/middleware-render-error-info').ErrorRenderingOptions} [options]
- * @returns {import('express').ErrorRequestHandler}
+ * @param {ErrorRenderingOptions} [options]
+ * @returns {ExpressErrorHandler}
  */
 function createErrorRenderingMiddleware(options = {}) {
 	return function errorRenderingMiddleware(error, request, response, next) {

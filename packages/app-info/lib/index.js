@@ -1,6 +1,10 @@
 const path = require('node:path');
 const { randomUUID } = require('node:crypto');
 
+/**
+ * @import { SemanticConventions } from '@dotcom-reliability-kit/app-info'
+ */
+
 // This package relies on Heroku and AWS Lambda environment variables.
 // Documentation for these variables is available here:
 //
@@ -159,7 +163,7 @@ exports.herokuDynoId = process.env.HEROKU_DYNO_ID || null;
 exports.instanceId = randomUUID();
 
 /**
- * @type {import('@dotcom-reliability-kit/app-info').SemanticConventions}
+ * @type {SemanticConventions}
  */
 exports.semanticConventions = {
 	cloud: {

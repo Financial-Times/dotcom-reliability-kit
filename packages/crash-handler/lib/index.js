@@ -4,9 +4,13 @@ const {
 } = require('@dotcom-reliability-kit/log-error');
 
 /**
+ * @import { CrashHandlerOptions } from '@dotcom-reliability-kit/crash-handler'
+ */
+
+/**
  * Register a crash handler on a process.
  *
- * @param {import('@dotcom-reliability-kit/crash-handler').CrashHandlerOptions} [options]
+ * @param {CrashHandlerOptions} [options]
  */
 function registerCrashHandler(options = {}) {
 	const process = options.process || global.process;

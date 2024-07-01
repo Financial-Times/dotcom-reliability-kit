@@ -1,13 +1,17 @@
 const HttpError = require('./http-error');
 
 /**
+ * @import { UpstreamServiceError as UpstreamServiceErrorType } from '@dotcom-reliability-kit/errors'
+ */
+
+/**
  * Class representing an error in an upstream service.
  */
 class UpstreamServiceError extends HttpError {
 	/**
 	 * @override
 	 * @readonly
-	 * @type {import('@dotcom-reliability-kit/errors').UpstreamServiceError['name']}
+	 * @type {UpstreamServiceErrorType['name']}
 	 */
 	name = 'UpstreamServiceError';
 

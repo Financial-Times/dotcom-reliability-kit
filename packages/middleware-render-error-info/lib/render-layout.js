@@ -1,6 +1,10 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const fs = require('node:fs');
 
+/**
+ * @import { Request as ExpressRequest } from 'express'
+ */
+
 const buildServiceBaseUrl = 'https://www.ft.com/__origami/service/build/v3';
 const buildServiceComponents = [
 	'o-autoinit@^3.1.3',
@@ -21,7 +25,7 @@ const styles = fs.readFileSync(`${__dirname}/render-error-page.css`, 'utf-8');
  * @typedef {object} LayoutRenderingOptions
  * @property {string} body
  *     The main body of the page.
- * @property {import('express').Request} request
+ * @property {ExpressRequest} request
  *     An Express request object.
  * @property {string} title
  *     The page title.

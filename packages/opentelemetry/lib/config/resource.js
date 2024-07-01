@@ -12,7 +12,7 @@ const {
 /**
  * Create a Resource object using gathered app info.
  *
- * @returns {import('@opentelemetry/sdk-node').resources.Resource}
+ * @returns {Resource}
  */
 exports.createResourceConfig = function createResourceConfig() {
 	// We set OpenTelemetry resource attributes based on app data

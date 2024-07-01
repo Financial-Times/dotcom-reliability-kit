@@ -4,7 +4,7 @@ const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 
 /**
- * @typedef {import('@dotcom-reliability-kit/log-error').ErrorLoggingOptions} ErrorLoggingOptions
+ * @import { ErrorLoggingOptions } from '@dotcom-reliability-kit/log-error'
  */
 
 /**

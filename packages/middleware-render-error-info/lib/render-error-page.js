@@ -2,6 +2,11 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
 const entities = require('entities');
 const renderLayout = require('./render-layout');
 
+/**
+ * @import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
+ * @import { SerializedError } from '@dotcom-reliability-kit/serialize-error'
+ */
+
 const X_API_KEY_REQUEST_PROPERTY_NAME = 'x-api-key';
 const COOKIE_REQUEST_PROPERTY_NAME = 'cookie';
 
@@ -15,11 +20,11 @@ const CONCEALED_VALUE_MESSAGE =
 
 /**
  * @typedef {object} ErrorRenderingOptions
- * @property {import('express').Request} request
+ * @property {ExpressRequest} request
  *     An Express request object.
- * @property {import('express').Response} response
+ * @property {ExpressResponse} response
  *     An Express response object.
- * @property {import('@dotcom-reliability-kit/serialize-error').SerializedError} serializedError
+ * @property {SerializedError} serializedError
  *     The error to render.
  */
 
@@ -51,7 +56,7 @@ function renderErrorPage({ request, response, serializedError }) {
  * Render a serialized error to HTML.
  *
  * @private
- * @param {import('@dotcom-reliability-kit/serialize-error').SerializedError} error
+ * @param {SerializedError} error
  *     The error information to render.
  * @returns {string}
  *     Returns the rendered error.
@@ -152,7 +157,7 @@ function renderError(error) {
  * Render an HTTP request to HTML.
  *
  * @private
- * @param {import('express').Request} request
+ * @param {ExpressRequest} request
  *     The request information to render.
  * @returns {string}
  *     Returns the rendered request.
@@ -198,7 +203,7 @@ function renderRequest(request) {
  * Render an HTTP response to HTML.
  *
  * @private
- * @param {import('express').Response} response
+ * @param {ExpressResponse} response
  *     The responses information to render.
  * @returns {string}
  *     Returns the rendered response.
