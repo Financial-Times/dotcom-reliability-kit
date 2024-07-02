@@ -49,7 +49,12 @@ For AWS Lambda, you can use a plugin like [serverless-plugin-git-variables](http
 
 ### `appInfo.environment`
 
-Get the application environment, normally either `development` or `production`. This will be a string, using `process.env.NODE_ENV` and defaulting to `development`.
+Get the application environment, normally either `development` or `production`. This will be a string, trying each of the following environment variables in order and defaulting to `development`:
+
+  * `DEPLOYMENT_ENVIRONMENT`
+  * `RELEASE_ENV`
+  * `ENVIRONMENT`
+  * `NODE_ENV`
 
 ### `appInfo.region`
 

@@ -13,7 +13,10 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		process.env.HEROKU_RELEASE_CREATED_AT = 'mock-heroku-release-date';
 		process.env.HEROKU_RELEASE_VERSION = 'mock-heroku-release-version';
 		process.env.HEROKU_SLUG_COMMIT = 'mock-heroku-commit-hash';
-		process.env.NODE_ENV = 'mock-environment';
+		process.env.DEPLOYMENT_ENVIRONMENT = 'mock-deployment-environment';
+		process.env.RELEASE_ENV = 'mock-release-env';
+		process.env.ENVIRONMENT = 'mock-environment';
+		process.env.NODE_ENV = 'mock-node-env';
 		process.env.REGION = 'mock-region';
 		process.env.SYSTEM_CODE = 'mock-system-code';
 		process.env.DYNO = 'mock-heroku-process-type.1';
@@ -74,13 +77,55 @@ describe('@dotcom-reliability-kit/app-info', () => {
 	});
 
 	describe('.environment', () => {
-		it('is set to `process.env.NODE_ENV`', () => {
-			expect(appInfo.environment).toBe('mock-environment');
+		it('is set to `process.env.DEPLOYMENT_ENVIRONMENT`', () => {
+			expect(appInfo.environment).toBe('mock-deployment-environment');
 		});
 
-		describe('when `process.env.NODE_ENV` is not defined', () => {
+		describe('when `process.env.DEPLOYMENT_ENVIRONMENT` is not defined', () => {
 			beforeEach(() => {
 				jest.resetModules();
+				delete process.env.DEPLOYMENT_ENVIRONMENT;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to the value of `process.env.RELEASE_ENV`', () => {
+				expect(appInfo.environment).toBe('mock-release-env');
+			});
+		});
+
+		describe('when `process.env.RELEASE_ENV` is not defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.DEPLOYMENT_ENVIRONMENT;
+				delete process.env.RELEASE_ENV;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to the value of `process.env.ENVIRONMENT`', () => {
+				expect(appInfo.environment).toBe('mock-environment');
+			});
+		});
+
+		describe('when `process.env.ENVIRONMENT` is not defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.DEPLOYMENT_ENVIRONMENT;
+				delete process.env.RELEASE_ENV;
+				delete process.env.ENVIRONMENT;
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to the value of `process.env.NODE_ENV`', () => {
+				expect(appInfo.environment).toBe('mock-node-env');
+			});
+		});
+
+		describe('when none of the related environment variables are defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				delete process.env.DEPLOYMENT_ENVIRONMENT;
+				delete process.env.RELEASE_ENV;
+				delete process.env.ENVIRONMENT;
 				delete process.env.NODE_ENV;
 				appInfo = require('../../../lib');
 			});
