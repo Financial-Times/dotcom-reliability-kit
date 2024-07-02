@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.2.0...app-info-v3.3.0) (2024-07-02)
+
+
+### Features
+
+* allow setting the deployment environment ([3933189](https://github.com/Financial-Times/dotcom-reliability-kit/commit/39331898a32241630720490e62c460d399d5e5c0)), closes [#1111](https://github.com/Financial-Times/dotcom-reliability-kit/issues/1111)
+
 ## [3.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.1.0...app-info-v3.2.0) (2024-06-19)
 
 
