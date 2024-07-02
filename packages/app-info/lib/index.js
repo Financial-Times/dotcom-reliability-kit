@@ -80,12 +80,17 @@ exports.commitHash =
 	null;
 
 /**
- * The application environment.
+ * The application deployment environment.
  *
  * @readonly
  * @type {string}
  */
-exports.environment = process.env.NODE_ENV || 'development';
+exports.environment =
+	process.env.DEPLOYMENT_ENVIRONMENT ||
+	process.env.RELEASE_ENV ||
+	process.env.ENVIRONMENT ||
+	process.env.NODE_ENV ||
+	'development';
 
 /**
  * The region the application is running in.
