@@ -119,9 +119,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 		it('instantiates and starts a HostMetrics collector', () => {
 			expect(HostMetrics).toHaveBeenCalledTimes(1);
-			expect(HostMetrics).toHaveBeenCalledWith({
-				name: '@opentelemetry/host-metrics'
-			});
+			expect(HostMetrics).toHaveBeenCalledWith();
 			expect(HostMetrics.prototype.start).toHaveBeenCalledTimes(1);
 		});
 
