@@ -80,13 +80,7 @@ function setupOpenTelemetry({
 
 	// Set up host metrics if we have a metrics endpoint
 	if (metricsOptions?.endpoint) {
-		instances.hostMetrics = new HostMetrics({
-			// This is a little redundant as the HostMetrics package defaults
-			// this value to the package name, _however_ the types disagree and
-			// think that `name` is a required property. Could be fixable in
-			// future, see https://github.com/open-telemetry/opentelemetry-js-contrib/issues/2274
-			name: '@opentelemetry/host-metrics'
-		});
+		instances.hostMetrics = new HostMetrics();
 		instances.hostMetrics.start();
 	}
 

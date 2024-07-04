@@ -3,7 +3,7 @@ on: [pull_request]
 jobs:
   run-commitlint-on-pr:
     runs-on: ubuntu-latest
-    if: ${{ github.event.pull_request.user.login != 'dependabot' }}
+    if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
     steps:
 
       - uses: actions/checkout@v3
