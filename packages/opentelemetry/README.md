@@ -201,7 +201,7 @@ OpenTelemetry can generate a huge amount of data which, depending on where you s
 
 #### Local metrics
 
-We don't recommend trying to get a metrics exporter set up locally, if your `NODE_ENV` environment variable is not set to production, then local metrics will be available in Grafana under `OpenTelemetry Test`.
+We don't recommend trying to get a metrics [Collector](https://opentelemetry.io/docs/collector/) set up locally, but you should still import OpenTelemetry in local development. If the environment variables are not present then we'll instrument all your code but not send anything. This means that what you run in development is closer to what you run in production.
 
 #### Local tracing
 
