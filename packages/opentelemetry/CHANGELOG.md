@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.3...opentelemetry-v2.0.4) (2024-07-08)
+
+
+### Bug Fixes
+
+* bump the opentelemetry group with 3 updates ([f3af044](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f3af0447e12071a5a29da0fb727aede65e8a6eb0))
+
+
+### Documentation Changes
+
+* clarify local metrics guide ([48e2123](https://github.com/Financial-Times/dotcom-reliability-kit/commit/48e2123c1c5652f96db58ecea2d8ff052b356d6a))
+
 ## [2.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.2...opentelemetry-v2.0.3) (2024-07-02)
 
 
