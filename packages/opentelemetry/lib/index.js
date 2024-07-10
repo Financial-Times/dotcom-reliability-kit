@@ -8,6 +8,7 @@ const logger = require('@dotcom-reliability-kit/logger');
 
 /**
  * @import { Instances, Options } from '@dotcom-reliability-kit/opentelemetry'
+ * @import { MeterProvider } from '@opentelemetry/sdk-metrics'
  */
 
 /**
@@ -79,7 +80,10 @@ function setupOpenTelemetry({
 
 	// Set up host metrics if we have a metrics endpoint
 	if (metricsOptions?.endpoint) {
-		instances.hostMetrics = new HostMetrics();
+		const meterProvider = /** @type {MeterProvider} */ (
+			opentelemetry.api.metrics.getMeterProvider()
+		);
+		instances.hostMetrics = new HostMetrics({ meterProvider });
 		instances.hostMetrics.start();
 	}
 
