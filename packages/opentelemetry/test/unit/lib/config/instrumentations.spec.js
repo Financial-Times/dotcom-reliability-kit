@@ -41,6 +41,9 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 				},
 				'@opentelemetry/instrumentation-fs': {
 					enabled: false
+				},
+				'@opentelemetry/instrumentation-pino': {
+					enabled: false
 				}
 			});
 		});

@@ -28,6 +28,9 @@ exports.createInstrumentationConfig = function createInstrumentationConfig() {
 			},
 			'@opentelemetry/instrumentation-fs': {
 				enabled: false
+			},
+			'@opentelemetry/instrumentation-pino': {
+				enabled: false
 			}
 		}),
 		new RuntimeNodeInstrumentation()
