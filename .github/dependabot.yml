@@ -2,10 +2,23 @@ version: 2
 updates:
 
   - package-ecosystem: "npm"
-    directory: "/"
+    directories:
+      - /
+      - /resources/logos
+      - /packages/app-info
+      - /packages/crash-handler
+      - /packages/errors
+      - /packages/eslint-config
+      - /packages/fetch-error-handler
+      - /packages/log-error
+      - /packages/logger
+      - /packages/middleware-log-errors
+      - /packages/middleware-render-error-info
+      - /packages/opentelemetry
+      - /packages/serialize-error
+      - /packages/serialize-request
     schedule:
       interval: "daily"
-      time: "09:00"
       timezone: "Europe/London"
     commit-message:
       prefix: "fix:"
@@ -16,110 +29,6 @@ updates:
         update-types:
           - "minor"
           - "patch"
-      opentelemetry:
-        patterns:
-          - "@opentelemetry/*"
-
-  - package-ecosystem: "npm"
-    directory: "/resources/logos"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/errors"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/crash-handler"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/log-error"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/logger"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/middleware-log-errors"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/middleware-render-error-info"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/serialize-error"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/serialize-request"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-
-  - package-ecosystem: "npm"
-    directory: "/packages/opentelemetry"
-    schedule:
-      interval: "daily"
-      time: "09:00"
-      timezone: "Europe/London"
-    commit-message:
-      prefix: "fix:"
-      prefix-development: "chore:"
-    groups:
       opentelemetry:
         patterns:
           - "@opentelemetry/*"
