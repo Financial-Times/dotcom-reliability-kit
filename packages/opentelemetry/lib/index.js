@@ -44,19 +44,18 @@ function setupOpenTelemetry({
 		});
 	}
 
-	// Use a Reliability Kit logger for logging. The DiagLogLevel
-	// does nothing here – Reliability Kit's log level (set through
-	// the LOG_LEVEL environment variable) takes over. We set the
-	// OpenTelemetry log level to the maximum value that we want
-	// Reliability Kit to consider logging
-	opentelemetry.api.diag.setLogger(
-		// @ts-ignore this complains because DiagLogger accepts a type
-		// of unknown whereas our logger is stricter. This is fine though,
-		// if something unknown is logged then we do our best with it.
-		// It's easier to ignore this error than fix it.
-		logger.createChildLogger({ event: 'OTEL_INTERNALS' }),
-		opentelemetry.api.DiagLogLevel.INFO
-	);
+	// We need to create a new logger for OpenTelemetry internals
+	// because the function signature is different and OpenTelemetry
+	// logs mutliple strings. With pino this means we lose data
+	const log = logger.createChildLogger({ event: 'OTEL_INTERNALS' });
+	const opentelemetryLogger = {
+		error: (...args) => log.error(args[0], { details: args.slice(1) }),
+		info: (...args) => log.info(args[0], { details: args.slice(1) }),
+		warn: (...args) => log.warn(args[0], { details: args.slice(1) }),
+		debug: () => {},
+		verbose: () => {}
+	};
+	opentelemetry.api.diag.setLogger(opentelemetryLogger);
 
 	// Set up and start OpenTelemetry
 	instances = {
