@@ -43,6 +43,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		createTracingConfig =
 			require('../../../lib/config/tracing').createTracingConfig;
 		api = require('@opentelemetry/sdk-node').api;
+		api.metrics.getMeterProvider.mockReturnValue('mock-meter-provider');
 		HostMetrics = require('@opentelemetry/host-metrics').HostMetrics;
 		NodeSDK = require('@opentelemetry/sdk-node').NodeSDK;
 		logger = require('@dotcom-reliability-kit/logger');
@@ -185,7 +186,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 		it('instantiates and starts a HostMetrics collector', () => {
 			expect(HostMetrics).toHaveBeenCalledTimes(1);
-			expect(HostMetrics).toHaveBeenCalledWith();
+			expect(HostMetrics).toHaveBeenCalledWith({
+				meterProvider: 'mock-meter-provider'
+			});
 			expect(HostMetrics.prototype.start).toHaveBeenCalledTimes(1);
 		});
 
