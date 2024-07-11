@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.1.5...middleware-log-errors-v4.2.0) (2024-07-11)
+
+
+### Features
+
+* add a logUserErrorsAsWarnings option ([8c7541a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8c7541aa0952323e5755e4e2e46466bd2bf95c58))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.1.5 to ^4.2.0
+
 ## [4.1.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.1.4...middleware-log-errors-v4.1.5) (2024-07-02)
 
 

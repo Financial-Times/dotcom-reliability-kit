@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.4...opentelemetry-v2.0.5) (2024-07-11)
+
+
+### Bug Fixes
+
+* disable the pino instrumentation ([7daaa7b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/7daaa7b22fb1f90925d0fad0baa1baf4ebda6e1f))
+* manually pass a meterprovider to host metrics ([63c8216](https://github.com/Financial-Times/dotcom-reliability-kit/commit/63c8216f6c26a747246062bae2ec859181f459f8))
+* wrap the Reliability Kit logger ([28640ee](https://github.com/Financial-Times/dotcom-reliability-kit/commit/28640ee52cc41f5e621d6481f92007d8940110d7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.1.5 to ^4.2.0
+
 ## [2.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.3...opentelemetry-v2.0.4) (2024-07-08)
 
 
