@@ -5,13 +5,14 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 
 /**
  * @import { ErrorLoggingOptions } from '@dotcom-reliability-kit/log-error'
+ * @import { SerializedError } from '@dotcom-reliability-kit/serialize-error'
  */
 
 /**
  * Log an error object with optional request information.
  *
  * @private
- * @param {ErrorLoggingOptions & {event: string, level: 'error' | 'fatal' | 'warn'}} options
+ * @param {Omit<ErrorLoggingOptions, 'error'> & {error: SerializedError, event: string, level: 'error' | 'fatal' | 'warn'}} options
  *     The data to log.
  * @returns {void}
  */
@@ -23,11 +24,10 @@ function logError({
 	logger = reliabilityKitLogger,
 	request
 }) {
-	const serializedError = serializeError(error);
 	const logData = {
 		event,
-		message: extractErrorMessage(serializedError),
-		error: serializedError,
+		message: extractErrorMessage(error),
+		error,
 		app: {
 			commit: appInfo.commitHash,
 			name: appInfo.systemCode,
@@ -83,8 +83,9 @@ function extractErrorMessage(serializedError) {
  * @type {typeof import('@dotcom-reliability-kit/log-error').logHandledError}
  */
 function logHandledError({ error, includeHeaders, logger, request }) {
+	const serializedError = serializeError(error);
 	logError({
-		error,
+		error: serializedError,
 		event: 'HANDLED_ERROR',
 		includeHeaders,
 		level: 'error',
@@ -99,8 +100,9 @@ function logHandledError({ error, includeHeaders, logger, request }) {
  * @type {typeof import('@dotcom-reliability-kit/log-error').logHandledError}
  */
 function logRecoverableError({ error, includeHeaders, logger, request }) {
+	const serializedError = serializeError(error);
 	logError({
-		error,
+		error: serializedError,
 		event: 'RECOVERABLE_ERROR',
 		includeHeaders,
 		level: 'warn',
@@ -115,8 +117,9 @@ function logRecoverableError({ error, includeHeaders, logger, request }) {
  * @type {typeof import('@dotcom-reliability-kit/log-error').logHandledError}
  */
 function logUnhandledError({ error, includeHeaders, logger, request }) {
+	const serializedError = serializeError(error);
 	logError({
-		error,
+		error: serializedError,
 		event: 'UNHANDLED_ERROR',
 		includeHeaders,
 		level: 'fatal',
