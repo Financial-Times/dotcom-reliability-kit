@@ -15,6 +15,8 @@ const {
  * @returns {ExpressErrorHandler}
  */
 function createErrorLoggingMiddleware(options = {}) {
+	const { logUserErrorsAsWarnings } = options;
+
 	// Validate the included headers (this stops the request serializer from erroring
 	// on every request if the included headers are invalid)
 	const includeHeaders = options?.includeHeaders;
@@ -67,6 +69,7 @@ function createErrorLoggingMiddleware(options = {}) {
 				error,
 				includeHeaders,
 				logger: options.logger,
+				logUserErrorsAsWarnings,
 				request
 			});
 		} catch (_) {

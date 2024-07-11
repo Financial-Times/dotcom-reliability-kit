@@ -293,6 +293,99 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 		});
 
+		describe('when the logUserErrorsAsWarnings option is set to true', () => {
+			describe('and the serialized error has a status code in the 4xx range', () => {
+				beforeEach(() => {
+					serializeError.mockClear();
+					serializeError.mockReturnValueOnce({
+						name: 'MockError',
+						message: 'mock error',
+						statusCode: 456
+					});
+					logger.error.mockReset();
+					logger.warn.mockReset();
+					logHandledError({
+						error,
+						request,
+						logUserErrorsAsWarnings: true
+					});
+				});
+
+				it('logs with a level of "warn" rather than "error"', () => {
+					expect(logger.error).toHaveBeenCalledTimes(0);
+					expect(logger.warn).toHaveBeenCalledWith(
+						expect.objectContaining({
+							error: {
+								name: 'MockError',
+								message: 'mock error',
+								statusCode: 456
+							}
+						})
+					);
+				});
+			});
+
+			describe('and the serialized error has a status code in the 5xx range', () => {
+				beforeEach(() => {
+					serializeError.mockClear();
+					serializeError.mockReturnValueOnce({
+						name: 'MockError',
+						message: 'mock error',
+						statusCode: 500
+					});
+					logger.error.mockReset();
+					logger.warn.mockReset();
+					logHandledError({
+						error,
+						request,
+						logUserErrorsAsWarnings: true
+					});
+				});
+
+				it('still logs with a level of "error"', () => {
+					expect(logger.warn).toHaveBeenCalledTimes(0);
+					expect(logger.error).toHaveBeenCalledWith(
+						expect.objectContaining({
+							error: {
+								name: 'MockError',
+								message: 'mock error',
+								statusCode: 500
+							}
+						})
+					);
+				});
+			});
+
+			describe('and the serialized error does not have a status code', () => {
+				beforeEach(() => {
+					serializeError.mockClear();
+					serializeError.mockReturnValueOnce({
+						name: 'MockError',
+						message: 'mock error'
+					});
+					logger.error.mockReset();
+					logger.warn.mockReset();
+					logHandledError({
+						error,
+						request,
+						logUserErrorsAsWarnings: true
+					});
+				});
+
+				it('still logs with a level of "error"', () => {
+					expect(logger.warn).toHaveBeenCalledTimes(0);
+					expect(logger.error).toHaveBeenCalledWith(
+						expect.objectContaining({
+							error: {
+								name: 'MockError',
+								message: 'mock error'
+							}
+						})
+					);
+				});
+			});
+		});
+
 		describe('when logging fails', () => {
 			let loggingError;
 

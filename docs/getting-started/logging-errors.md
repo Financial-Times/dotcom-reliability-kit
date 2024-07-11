@@ -108,6 +108,8 @@ When logging errors it's important to consider the level of the log you send. Th
     }
     ```
 
+    You may also want to differentiate between `4xx` and `5xx` errors by logging them with a level of "warn" or "error" respectively to indicate the different criticality of these types of errors.
+
   * If an error is not recoverable at all and throws the app into an unstable state, e.g. an initial database connection cannot be established, then consider a level of "fatal" or "critical" if your logger supports it (currently [n-logger](https://github.com/Financial-Times/n-logger) does not support critical logs but we'll be investigating adding this in future).
 
 

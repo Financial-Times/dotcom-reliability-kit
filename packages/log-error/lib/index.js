@@ -82,13 +82,22 @@ function extractErrorMessage(serializedError) {
  *
  * @type {typeof import('@dotcom-reliability-kit/log-error').logHandledError}
  */
-function logHandledError({ error, includeHeaders, logger, request }) {
+function logHandledError({
+	error,
+	includeHeaders,
+	logger,
+	logUserErrorsAsWarnings = false,
+	request
+}) {
 	const serializedError = serializeError(error);
 	logError({
 		error: serializedError,
 		event: 'HANDLED_ERROR',
 		includeHeaders,
-		level: 'error',
+		level:
+			logUserErrorsAsWarnings && isUserError(serializedError)
+				? 'warn'
+				: 'error',
 		logger,
 		request
 	});
@@ -126,6 +135,18 @@ function logUnhandledError({ error, includeHeaders, logger, request }) {
 		logger,
 		request
 	});
+}
+
+/**
+ * @param {SerializedError} error
+ * @returns {boolean}
+ */
+function isUserError(error) {
+	return (
+		error.statusCode !== null &&
+		error.statusCode >= 400 &&
+		error.statusCode < 500
+	);
 }
 
 exports.logHandledError = logHandledError;

@@ -217,6 +217,27 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 		});
 
+		describe('when the logUserErrorsAsWarnings option is set', () => {
+			beforeEach(() => {
+				middleware = createErrorLoggingMiddleware({
+					logUserErrorsAsWarnings: true
+				});
+				middleware(error, request, response, next);
+			});
+
+			it('it passes the option down to the error logging function', () => {
+				expect(logHandledError).toBeCalledWith({
+					error,
+					request,
+					logUserErrorsAsWarnings: true
+				});
+			});
+
+			it('calls `next` with the original error', () => {
+				expect(next).toBeCalledWith(error);
+			});
+		});
+
 		describe('when logging fails', () => {
 			beforeEach(() => {
 				logHandledError.mockImplementation(() => {

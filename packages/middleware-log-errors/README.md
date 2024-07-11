@@ -9,6 +9,7 @@ Express middleware to consistently log errors. This module is part of [FT.com Re
     * [`options.filter`](#optionsfilter)
     * [`options.includeHeaders`](#optionsincludeheaders)
     * [`options.logger`](#optionslogger)
+    * [`options.logUserErrorsAsWarnings`](#optionslogusererrorsaswarnings)
 * [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
@@ -166,6 +167,12 @@ type LogMethod = (...logData: any) => any;
 ```
 
 This is passed directly onto the relevant log-error method, [see the documentation for that package for more details](../log-error/README.md#optionslogger).
+
+#### `options.logUserErrorsAsWarnings`
+
+A `boolean` indicating whether to log user errors (those with a `400`–`499` `status` property) with a level of `warn` rather than `error`. This helps to reduce the amount of error-level logs that you need to focus on.
+
+This option defaults to `false`.
 
 
 ## Migrating
