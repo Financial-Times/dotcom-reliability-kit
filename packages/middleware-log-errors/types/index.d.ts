@@ -11,6 +11,7 @@ declare module '@dotcom-reliability-kit/middleware-log-errors' {
 		filter?: ErrorLoggingFilter;
 		includeHeaders?: string[];
 		logger?: Logger & { [key: string]: any };
+		logUserErrorsAsWarnings?: boolean;
 	};
 
 	declare function createErrorLoggingMiddleware(

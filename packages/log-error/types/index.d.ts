@@ -16,7 +16,11 @@ declare module '@dotcom-reliability-kit/log-error' {
 		request?: string | Request;
 	};
 
-	export function logHandledError(options: ErrorLoggingOptions): void;
+	export type HandledErrorLoggingOptions = ErrorLoggingOptions & {
+		logUserErrorsAsWarnings?: boolean;
+	};
+
+	export function logHandledError(options: HandledErrorLoggingOptions): void;
 
 	export function logRecoverableError(options: ErrorLoggingOptions): void;
 
