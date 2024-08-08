@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.5...opentelemetry-v2.0.6) (2024-08-08)
+
+
+### Bug Fixes
+
+* bump @opentelemetry/auto-instrumentations-node ([17ff339](https://github.com/Financial-Times/dotcom-reliability-kit/commit/17ff3390df8c10a4910cbc256a60b601c69c3e98))
+* bump the opentelemetry group across 2 directories with 1 update ([fdb0905](https://github.com/Financial-Times/dotcom-reliability-kit/commit/fdb0905248f46ae93d558c5ad3e76af8583a0b0f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.2.0 to ^4.2.1
+    * @dotcom-reliability-kit/logger bumped from ^3.1.4 to ^3.1.5
+
 ## [2.0.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.4...opentelemetry-v2.0.5) (2024-07-11)
 
 
