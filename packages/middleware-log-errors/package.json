@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/middleware-log-errors",
-  "version": "4.2.0",
+  "version": "4.2.1",
   "description": "Express middleware to consistently log errors",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "dependencies": {
-    "@dotcom-reliability-kit/log-error": "^4.2.0"
+    "@dotcom-reliability-kit/log-error": "^4.2.1"
   },
   "devDependencies": {
     "@financial-times/n-express": "^31.9.0",
