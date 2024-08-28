@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.6...opentelemetry-v2.0.7) (2024-08-28)
+
+
+### Bug Fixes
+
+* bump @opentelemetry/auto-instrumentations-node ([4f86338](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4f8633890fc70269c1f40e54f744820448ccc572))
+* bump @opentelemetry/semantic-conventions ([3ed3c02](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3ed3c026c646ca1c2c84a602dd7756e53d8b0885))
+
 ## [2.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.5...opentelemetry-v2.0.6) (2024-08-08)
 
 
