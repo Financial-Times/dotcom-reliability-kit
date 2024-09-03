@@ -78,74 +78,10 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 		});
 
-		it('sets up OpenTelemetry to log via a custom logger', () => {
-			expect(logger.createChildLogger).toHaveBeenCalledTimes(1);
-			expect(logger.createChildLogger).toHaveBeenCalledWith({
-				event: 'OTEL_INTERNALS'
-			});
-			expect(api.diag.setLogger).toHaveBeenCalledTimes(1);
-			expect(api.diag.setLogger).not.toHaveBeenCalledWith(mockChildLogger);
-			expect(api.diag.setLogger).toHaveBeenCalledWith(
-				expect.objectContaining({
-					debug: expect.any(Function),
-					error: expect.any(Function),
-					info: expect.any(Function),
-					verbose: expect.any(Function),
-					warn: expect.any(Function)
-				})
-			);
-		});
-
-		describe('custom logger', () => {
-			let customLogger;
-
-			beforeEach(() => {
-				customLogger = api.diag.setLogger.mock.calls[0][0];
-			});
-
-			describe('.debug()', () => {
-				it('does nothing', () => {
-					customLogger.debug('mock message 1', 'mock message 2');
-					expect(mockChildLogger.debug).toHaveBeenCalledTimes(0);
-				});
-			});
-
-			describe('.error()', () => {
-				it('logs an error via the Reliability Kit child logger', () => {
-					customLogger.error('mock message 1', 'mock message 2');
-					expect(mockChildLogger.error).toHaveBeenCalledTimes(1);
-					expect(mockChildLogger.error).toHaveBeenCalledWith('mock message 1', {
-						details: ['mock message 2']
-					});
-				});
-			});
-
-			describe('.info()', () => {
-				it('logs info via the Reliability Kit child logger', () => {
-					customLogger.info('mock message 1', 'mock message 2');
-					expect(mockChildLogger.info).toHaveBeenCalledTimes(1);
-					expect(mockChildLogger.info).toHaveBeenCalledWith('mock message 1', {
-						details: ['mock message 2']
-					});
-				});
-			});
-
-			describe('.verbose()', () => {
-				it('does nothing', () => {
-					customLogger.verbose('mock message 1', 'mock message 2');
-					expect(mockChildLogger.verbose).toHaveBeenCalledTimes(0);
-				});
-			});
-
-			describe('.warn()', () => {
-				it('logs an warning via the Reliability Kit child logger', () => {
-					customLogger.warn('mock message 1', 'mock message 2');
-					expect(mockChildLogger.warn).toHaveBeenCalledTimes(1);
-					expect(mockChildLogger.warn).toHaveBeenCalledWith('mock message 1', {
-						details: ['mock message 2']
-					});
-				});
-			});
+		it('disables the internal OpenTelemetry logger', () => {
+			expect(api.diag.disable).toHaveBeenCalledTimes(1);
+			expect(logger.createChildLogger).toHaveBeenCalledTimes(0);
+			expect(api.diag.setLogger).toHaveBeenCalledTimes(0);
 		});
 
 		it('configures the OpenTelemetry instrumentations', () => {
@@ -196,6 +132,103 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			expect(instances).toEqual({
 				sdk: NodeSDK.mock.instances[0],
 				hostMetrics: HostMetrics.mock.instances[0]
+			});
+		});
+
+		describe('when the logInternals option is set', () => {
+			beforeEach(() => {
+				NodeSDK.mockClear();
+				reloadAllModules();
+				instances = opentelemetry.setup({
+					logInternals: true,
+					tracing: {
+						endpoint: 'mock-tracing-endpoint',
+						samplePercentage: 137
+					},
+					metrics: {
+						endpoint: 'mock-metrics-endpoint'
+					}
+				});
+			});
+
+			it('sets up OpenTelemetry to log via a custom logger', () => {
+				expect(logger.createChildLogger).toHaveBeenCalledTimes(1);
+				expect(logger.createChildLogger).toHaveBeenCalledWith({
+					event: 'OTEL_INTERNALS'
+				});
+				expect(api.diag.setLogger).toHaveBeenCalledTimes(1);
+				expect(api.diag.setLogger).not.toHaveBeenCalledWith(mockChildLogger);
+				expect(api.diag.setLogger).toHaveBeenCalledWith(
+					expect.objectContaining({
+						debug: expect.any(Function),
+						error: expect.any(Function),
+						info: expect.any(Function),
+						verbose: expect.any(Function),
+						warn: expect.any(Function)
+					})
+				);
+				expect(api.diag.disable).toHaveBeenCalledTimes(0);
+			});
+
+			describe('custom logger', () => {
+				let customLogger;
+
+				beforeEach(() => {
+					customLogger = api.diag.setLogger.mock.calls[0][0];
+				});
+
+				describe('.debug()', () => {
+					it('does nothing', () => {
+						customLogger.debug('mock message 1', 'mock message 2');
+						expect(mockChildLogger.debug).toHaveBeenCalledTimes(0);
+					});
+				});
+
+				describe('.error()', () => {
+					it('logs an error via the Reliability Kit child logger', () => {
+						customLogger.error('mock message 1', 'mock message 2');
+						expect(mockChildLogger.error).toHaveBeenCalledTimes(1);
+						expect(mockChildLogger.error).toHaveBeenCalledWith(
+							'mock message 1',
+							{
+								details: ['mock message 2']
+							}
+						);
+					});
+				});
+
+				describe('.info()', () => {
+					it('logs info via the Reliability Kit child logger', () => {
+						customLogger.info('mock message 1', 'mock message 2');
+						expect(mockChildLogger.info).toHaveBeenCalledTimes(1);
+						expect(mockChildLogger.info).toHaveBeenCalledWith(
+							'mock message 1',
+							{
+								details: ['mock message 2']
+							}
+						);
+					});
+				});
+
+				describe('.verbose()', () => {
+					it('does nothing', () => {
+						customLogger.verbose('mock message 1', 'mock message 2');
+						expect(mockChildLogger.verbose).toHaveBeenCalledTimes(0);
+					});
+				});
+
+				describe('.warn()', () => {
+					it('logs an warning via the Reliability Kit child logger', () => {
+						customLogger.warn('mock message 1', 'mock message 2');
+						expect(mockChildLogger.warn).toHaveBeenCalledTimes(1);
+						expect(mockChildLogger.warn).toHaveBeenCalledWith(
+							'mock message 1',
+							{
+								details: ['mock message 2']
+							}
+						);
+					});
+				});
 			});
 		});
 

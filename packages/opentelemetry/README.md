@@ -23,6 +23,7 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
   * [Implementation details](#implementation-details)
   * [Configuration options](#configuration-options)
     * [`options.authorizationHeader`](#optionsauthorizationheader)
+    * [`options.logInternals`](#optionsloginternals)
     * [`options.metrics`](#optionsmetrics)
     * [`options.metrics.endpoint`](#optionsmetricsendpoint)
     * [`options.metrics.apiGatewayKey`](#optionsmetricsapigatewaykey)
@@ -268,6 +269,10 @@ opentelemetry.setup({
 #### `options.authorizationHeader`
 
 **Deprecated**. This will still work but has been replaced with [`options.tracing.authorizationHeader`](#optionstracingauthorizationheader), which is now the preferred way to set this option.
+
+#### `options.logInternals`
+
+Boolean indicating whether to log internal OpenTelemetry warnings and errors. Defaults to `false`.
 
 #### `options.metrics`
 

@@ -22,6 +22,7 @@ if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
 }
 
 opentelemetry.setup({
+	logInternals: Boolean(process.env.OPENTELEMETRY_LOG_INTERNALS),
 	metrics,
 	tracing
 });

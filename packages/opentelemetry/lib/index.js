@@ -26,6 +26,7 @@ let instances;
  */
 function setupOpenTelemetry({
 	authorizationHeader,
+	logInternals,
 	metrics: metricsOptions,
 	tracing: tracingOptions
 } = {}) {
@@ -48,15 +49,19 @@ function setupOpenTelemetry({
 	// We need to create a new logger for OpenTelemetry internals
 	// because the function signature is different and OpenTelemetry
 	// logs mutliple strings. With pino this means we lose data
-	const log = logger.createChildLogger({ event: 'OTEL_INTERNALS' });
-	const opentelemetryLogger = {
-		error: (...args) => log.error(args[0], { details: args.slice(1) }),
-		info: (...args) => log.info(args[0], { details: args.slice(1) }),
-		warn: (...args) => log.warn(args[0], { details: args.slice(1) }),
-		debug: () => {},
-		verbose: () => {}
-	};
-	opentelemetry.api.diag.setLogger(opentelemetryLogger);
+	if (logInternals) {
+		const log = logger.createChildLogger({ event: 'OTEL_INTERNALS' });
+		const opentelemetryLogger = {
+			error: (...args) => log.error(args[0], { details: args.slice(1) }),
+			info: (...args) => log.info(args[0], { details: args.slice(1) }),
+			warn: (...args) => log.warn(args[0], { details: args.slice(1) }),
+			debug: () => {},
+			verbose: () => {}
+		};
+		opentelemetry.api.diag.setLogger(opentelemetryLogger);
+	} else {
+		opentelemetry.api.diag.disable();
+	}
 
 	// Set up and start OpenTelemetry
 	instances = {
