@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.0.9](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.8...opentelemetry-v2.0.9) (2024-09-03)
+
+
+### Bug Fixes
+
+* bump the opentelemetry group across 2 directories with 2 updates ([cb252db](https://github.com/Financial-Times/dotcom-reliability-kit/commit/cb252dbaebbb07e5b3b17b8a42d885f43c726070))
+* disable OTEL_INTERNALS logs by default ([d38f21b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d38f21ba4a5ffbd548cf5c6f529d054253ed6e61))
+
+
+### Documentation Changes
+
+* clarify the `--require` method and gotchas ([a0a5d4c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a0a5d4c1320d3d07489139845507207a55be67a0))
+
 ## [2.0.8](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.7...opentelemetry-v2.0.8) (2024-09-02)
 
 
