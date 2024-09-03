@@ -58,6 +58,8 @@ node --require @dotcom-reliability-kit/opentelemetry/setup ./my-app.js
 
 This will import our setup script _before_ any of your code. OpenTelemetry will be [configured](#configuration-options) with environment variables.
 
+For environments where you can't modify the `node` command directly (e.g. AWS Lambda) you'll need to specify this using the `NODE_OPTIONS` environment variable set to `--require @dotcom-reliability-kit/opentelemetry/setup`.
+
 <table>
     <tr>
         <th>Pros</th>
@@ -109,6 +111,7 @@ OpenTelemetry will be [configured](#configuration-options) with environment vari
         <td>
             <ul>
                 <li>It could be easy to accidentally import something else before OpenTelemetry</li>
+                <li>Some code may not be instrumented correctly if the instrumentation is done asynchronously</li>
             </ul>
         </td>
     </tr>
@@ -147,6 +150,7 @@ opentelemetry.setup({ /* ... */ });
         <td>
             <ul>
                 <li>It could be easy to accidentally add code above the function call, before OpenTelemetry has been set up</li>
+                <li>Some code may not be instrumented correctly if the instrumentation is done asynchronously</li>
                 <li>You need to manage config options yourself which may result in inconsistencies between apps</li>
             </ul>
         </td>
@@ -185,6 +189,8 @@ app.get('/', (request, response) => {
 #### Production metrics
 
 To send metrics in production, you'll need an API Gateway key and the URL of the FT's official metrics collector. [You can find this information in Tech Hub](https://tech.in.ft.com/tech-topics/observability/opentelemetry).
+
+See [configuration options](#configuration-options) for information on how to pass the keys and URL into your app via environment variables.
 
 #### Production tracing
 
