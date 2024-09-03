@@ -16,6 +16,7 @@ declare module '@dotcom-reliability-kit/opentelemetry' {
 	export type Options = {
 		/** @deprecated */
 		authorizationHeader?: string;
+		logInternals?: boolean;
 		metrics?: MetricsOptions;
 		tracing?: TracingOptions;
 	};
