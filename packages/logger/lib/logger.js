@@ -25,15 +25,15 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  * @type {{[key: string]: LogLevelInfo}}
  */
 const logLevelToTransportMethodMap = {
-	data: { logLevel: 'debug', isDeprecated: true },
-	debug: { logLevel: 'debug', isDeprecated: false },
-	default: { logLevel: 'info', isDeprecated: true },
-	error: { logLevel: 'error', isDeprecated: false },
-	fatal: { logLevel: 'fatal', isDeprecated: false },
-	info: { logLevel: 'info', isDeprecated: false },
-	silly: { logLevel: 'debug', isDeprecated: true },
-	verbose: { logLevel: 'debug', isDeprecated: true },
-	warn: { logLevel: 'warn', isDeprecated: false }
+	data: { logLevel: 'debug', isDeprecated: true, isDefaulted: false },
+	debug: { logLevel: 'debug', isDeprecated: false, isDefaulted: false },
+	default: { logLevel: 'info', isDeprecated: false, isDefaulted: true },
+	error: { logLevel: 'error', isDeprecated: false, isDefaulted: false },
+	fatal: { logLevel: 'fatal', isDeprecated: false, isDefaulted: false },
+	info: { logLevel: 'info', isDeprecated: false, isDefaulted: false },
+	silly: { logLevel: 'debug', isDeprecated: true, isDefaulted: false },
+	verbose: { logLevel: 'debug', isDeprecated: true, isDefaulted: false },
+	warn: { logLevel: 'warn', isDeprecated: false, isDefaulted: false }
 };
 
 /**
@@ -104,6 +104,11 @@ module.exports = class Logger {
 	 * @type {string[]}
 	 */
 	#deprecatedMethodTracker = [];
+
+	/**
+	 * @type {string[]}
+	 */
+	#defaultedLogLevelTracker = [];
 
 	/**
 	 * Create a logger.
@@ -268,7 +273,18 @@ module.exports = class Logger {
 			throw new TypeError('The log `level` argument must be a string');
 		}
 		try {
-			const { logLevel, isDeprecated } = Logger.getLogLevelInfo(level);
+			const { logLevel, isDeprecated, isDefaulted } =
+				Logger.getLogLevelInfo(level);
+
+			if (isDefaulted && !this.#defaultedLogLevelTracker.includes(level)) {
+				this.#defaultedLogLevelTracker.push(level);
+				this.transport.warn(new Error('Invalid log level used'), {
+					event: 'LOG_LEVEL_INVALID',
+					message: `The '${level}' log level is invalid, defaulting to '${logLevel}'`,
+					invalidLevel: level,
+					defaultedLevel: logLevel
+				});
+			}
 
 			// Zip and sanitize the log data
 			const sanitizedLogData = Logger.zipLogData(...logData, this.#baseLogData);

@@ -11,6 +11,7 @@ export type LogLevel =
 export type LogLevelInfo = {
 	logLevel: LogLevel;
 	isDeprecated: boolean;
+	isDefaulted: boolean;
 };
 
 export type BaseLogData = { [key: string]: any };
