@@ -12,6 +12,7 @@ jest.mock('pino', () => {
 				flush: jest.fn(),
 				mockCanonicalLevel: jest.fn(),
 				mockDeprecatedCanonocalLevel: jest.fn(),
+				mockInvalidCanonicalLevel: jest.fn(),
 				mockErroringLevel: jest.fn().mockImplementation(() => {
 					throw new Error('mock error');
 				}),
@@ -402,7 +403,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					mockPinoLogger.warn.mockClear();
 					Logger.getLogLevelInfo.mockReturnValue({
 						logLevel: 'mockDeprecatedCanonocalLevel',
-						isDeprecated: true
+						isDeprecated: true,
+						isDefaulted: false
 					});
 					logger.log('mockDeprecatedLevel', 'mock message', { mockData: true });
 				});
@@ -440,6 +442,53 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 			});
 
+			describe('when the given level is invalid', () => {
+				beforeEach(() => {
+					mockPinoLogger.mockInvalidCanonicalLevel.mockClear();
+					mockPinoLogger.warn.mockClear();
+					Logger.getLogLevelInfo.mockReturnValue({
+						logLevel: 'mockInvalidCanonicalLevel',
+						isDeprecated: false,
+						isDefaulted: true
+					});
+					logger.log('mockInvalidLevel', 'mock message', { mockData: true });
+				});
+
+				it('calls the relevant log transport method for the level', () => {
+					expect(mockPinoLogger.mockInvalidCanonicalLevel).toBeCalledTimes(1);
+					expect(mockPinoLogger.mockInvalidCanonicalLevel).toBeCalledWith({
+						isMockZippedData: true,
+						message: 'mock zipped message'
+					});
+				});
+
+				it('logs a warning', () => {
+					expect(mockPinoLogger.warn).toBeCalledTimes(1);
+					expect(mockPinoLogger.warn).toBeCalledWith(
+						new Error('Invalid log level used'),
+						{
+							event: 'LOG_LEVEL_INVALID',
+							message:
+								"The 'mockInvalidLevel' log level is invalid, defaulting to 'mockInvalidCanonicalLevel'",
+							invalidLevel: 'mockInvalidLevel',
+							defaultedLevel: 'mockInvalidCanonicalLevel'
+						}
+					);
+				});
+
+				describe('when an invalid log level is used a second time', () => {
+					beforeEach(() => {
+						logger.log('mockInvalidLevel', 'mock message', {
+							mockData: true
+						});
+					});
+
+					it('does not log a second deprecation warning', () => {
+						expect(mockPinoLogger.warn).toBeCalledTimes(1);
+					});
+				});
+			});
+
 			describe('when an error occurs during logging', () => {
 				beforeEach(() => {
 					serializeError.mockClear();
@@ -449,7 +498,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					jest.spyOn(console, 'log').mockImplementation(() => {});
 					Logger.getLogLevelInfo.mockReturnValue({
 						logLevel: 'mockErroringLevel',
-						isDeprecated: true
+						isDeprecated: true,
+						isDefaulted: false
 					});
 					logger.log('mockErroringLevel', 'mock message', { mockData: true });
 				});
@@ -931,7 +981,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('data')).toEqual({
 					logLevel: 'debug',
-					isDeprecated: true
+					isDeprecated: true,
+					isDefaulted: false
 				});
 			});
 		});
@@ -940,7 +991,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('debug')).toEqual({
 					logLevel: 'debug',
-					isDeprecated: false
+					isDeprecated: false,
+					isDefaulted: false
 				});
 			});
 		});
@@ -949,7 +1001,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('error')).toEqual({
 					logLevel: 'error',
-					isDeprecated: false
+					isDeprecated: false,
+					isDefaulted: false
 				});
 			});
 		});
@@ -958,7 +1011,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('fatal')).toEqual({
 					logLevel: 'fatal',
-					isDeprecated: false
+					isDeprecated: false,
+					isDefaulted: false
 				});
 			});
 		});
@@ -967,7 +1021,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('info')).toEqual({
 					logLevel: 'info',
-					isDeprecated: false
+					isDeprecated: false,
+					isDefaulted: false
 				});
 			});
 		});
@@ -976,7 +1031,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('silly')).toEqual({
 					logLevel: 'debug',
-					isDeprecated: true
+					isDeprecated: true,
+					isDefaulted: false
 				});
 			});
 		});
@@ -985,7 +1041,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('verbose')).toEqual({
 					logLevel: 'debug',
-					isDeprecated: true
+					isDeprecated: true,
+					isDefaulted: false
 				});
 			});
 		});
@@ -994,7 +1051,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns the expected log level information', () => {
 				expect(Logger.getLogLevelInfo('warn')).toEqual({
 					logLevel: 'warn',
-					isDeprecated: false
+					isDeprecated: false,
+					isDefaulted: false
 				});
 			});
 		});
@@ -1003,7 +1061,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns default log level information', () => {
 				expect(Logger.getLogLevelInfo('unknown')).toEqual({
 					logLevel: 'info',
-					isDeprecated: true
+					isDeprecated: false,
+					isDefaulted: true
 				});
 			});
 		});
