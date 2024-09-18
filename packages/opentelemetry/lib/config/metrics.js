@@ -32,11 +32,27 @@ exports.createMetricsConfig = function createMetricsConfig(options) {
 			headers['X-OTel-Key'] = options.apiGatewayKey;
 		}
 		config.metricReader = new PeriodicExportingMetricReader({
-			exporter: new OTLPMetricExporter({
-				url: options.endpoint,
-				compression: CompressionAlgorithm.GZIP,
-				headers
-			})
+			exportIntervalMillis: 5000,
+			exporter: {
+				// Test exporter to log metric names and attributes
+				export(metrics, done) {
+					metrics.scopeMetrics
+						.flatMap(({ metrics }) => metrics)
+						.map((metr) => ({
+							name: metr.descriptor.name,
+							attributes: metr.dataPoints.map((dp) => dp.attributes)
+						}))
+						.forEach((metric) => {
+							logger.info({
+								message: 'Exporting OpenTelementry metric',
+								metric
+							});
+						});
+					done({ code: 0 });
+				},
+				async forceFlush() {},
+				async shutdown() {}
+			}
 		});
 
 		logger.info({

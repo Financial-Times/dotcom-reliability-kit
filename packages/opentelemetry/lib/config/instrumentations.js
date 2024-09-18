@@ -24,6 +24,21 @@ exports.createInstrumentationConfig = function createInstrumentationConfig() {
 	return [
 		getNodeAutoInstrumentations({
 			'@opentelemetry/instrumentation-http': {
+				startOutgoingSpanHook(request) {
+					return {
+						['net.host.name']: `set-by-instrumentation-http-start-outgoing-span-hook: ${request.path}`,
+						['peer.service']: 'test-peer-service',
+						['peer.name']: 'test-peer-name'
+					};
+				},
+				startIncomingSpanHook() {
+					return {
+						['net.host.name']:
+							'set-by-instrumentation-http-start-incoming-span-hook',
+						['peer.service']: 'test-peer-service',
+						['peer.name']: 'test-peer-name'
+					};
+				},
 				ignoreIncomingRequestHook
 			},
 			'@opentelemetry/instrumentation-fs': {
@@ -31,9 +46,19 @@ exports.createInstrumentationConfig = function createInstrumentationConfig() {
 			},
 			'@opentelemetry/instrumentation-pino': {
 				enabled: false
+			},
+			'@opentelemetry/instrumentation-undici': {
+				startSpanHook(request) {
+					return {
+						['server.address']: `set-by-instrumentation-undici-start-span-hook: ${request.path}`,
+						['peer.service']: 'test-peer-service',
+						['peer.name']: 'test-peer-name'
+					};
+				}
 			}
-		}),
-		new RuntimeNodeInstrumentation()
+		})
+		// Commented out to avoid a lot of spam when testing
+		// new RuntimeNodeInstrumentation()
 	];
 };
 
