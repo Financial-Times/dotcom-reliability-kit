@@ -58,13 +58,14 @@ function createErrorRenderingMiddleware(options = {}) {
 			// that any rendering errors are caught properly
 			try {
 				// Render an HTML error page
-				return response.send(
+				response.send(
 					renderErrorPage({
 						request,
 						response,
 						serializedError
 					})
 				);
+				return;
 			} catch (/** @type {any} */ renderingError) {
 				logRecoverableError({
 					error: renderingError,
