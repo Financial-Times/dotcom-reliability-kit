@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.11](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.10...opentelemetry-v2.0.11) (2024-09-30)
+
+
+### Bug Fixes
+
+* instrument node-fetch properly ([19adfe2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/19adfe24172b7e4dcea7db86b839dc11c9efda5f))
+
 ## [2.0.10](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.9...opentelemetry-v2.0.10) (2024-09-12)
 
 
