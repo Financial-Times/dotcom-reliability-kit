@@ -83,14 +83,15 @@ function setupOpenTelemetry({
 	};
 	instances.sdk.start();
 
-	// Set up host metrics if we have a metrics endpoint
-	if (metricsOptions?.endpoint) {
-		const meterProvider = /** @type {MeterProvider} */ (
-			opentelemetry.api.metrics.getMeterProvider()
-		);
-		instances.hostMetrics = new HostMetrics({ meterProvider });
-		instances.hostMetrics.start();
-	}
+	// Commented out to avoid a lot of spam when testing
+	// // Set up host metrics if we have a metrics endpoint
+	// if (metricsOptions?.endpoint) {
+	// 	const meterProvider = /** @type {MeterProvider} */ (
+	// 		opentelemetry.api.metrics.getMeterProvider()
+	// 	);
+	// 	instances.hostMetrics = new HostMetrics({ meterProvider });
+	// 	instances.hostMetrics.start();
+	// }
 
 	return instances;
 }
