@@ -83,6 +83,12 @@ function setupOpenTelemetry({
 	};
 	instances.sdk.start();
 
+	// HACK: this is required to make sure we record metrics for node-fetch.
+	// This is a known issue, the workaround is to import 'https' to ensure
+	// that the instrumented version is used by node-fetch. See:
+	// https://github.com/open-telemetry/opentelemetry-js-contrib/issues/2440
+	require('https');
+
 	// Set up host metrics if we have a metrics endpoint
 	if (metricsOptions?.endpoint) {
 		const meterProvider = /** @type {MeterProvider} */ (
