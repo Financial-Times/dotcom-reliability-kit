@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.12](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.11...opentelemetry-v2.0.12) (2024-10-15)
+
+
+### Bug Fixes
+
+* bump @opentelemetry/auto-instrumentations-node ([2319f4f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2319f4f548069acf27fb2ee346f8a925370e65f9))
+* bump @opentelemetry/host-metrics from 0.35.3 to 0.35.4 ([5be3e20](https://github.com/Financial-Times/dotcom-reliability-kit/commit/5be3e206f6c4f7a19762d1268fe8d083c9e0c981))
+
 ## [2.0.11](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.10...opentelemetry-v2.0.11) (2024-09-30)
 
 
