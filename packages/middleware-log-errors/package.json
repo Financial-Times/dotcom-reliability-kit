@@ -20,7 +20,7 @@
     "@dotcom-reliability-kit/log-error": "^4.2.2"
   },
   "devDependencies": {
-    "@financial-times/n-express": "^31.9.2",
+    "@financial-times/n-express": "^31.9.3",
     "@types/express": "^5.0.0"
   }
 }
