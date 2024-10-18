@@ -26,9 +26,6 @@ exports.createInstrumentationConfig = function createInstrumentationConfig() {
 			'@opentelemetry/instrumentation-http': {
 				ignoreIncomingRequestHook
 			},
-			'@opentelemetry/instrumentation-fs': {
-				enabled: false
-			},
 			'@opentelemetry/instrumentation-pino': {
 				enabled: false
 			}
