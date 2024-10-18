@@ -39,9 +39,6 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 				'@opentelemetry/instrumentation-http': {
 					ignoreIncomingRequestHook: expect.any(Function)
 				},
-				'@opentelemetry/instrumentation-fs': {
-					enabled: false
-				},
 				'@opentelemetry/instrumentation-pino': {
 					enabled: false
 				}
