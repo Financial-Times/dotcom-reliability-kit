@@ -9,6 +9,7 @@ A simple and fast logger based on [Pino](https://getpino.io/), with FT preferenc
     * [`Logger` configuration options](#logger-configuration-options)
       * [`options.baseLogData`](#optionsbaselogdata)
       * [`options.logLevel`](#optionsloglevel)
+      * [`options.serializers`](#optionsserializers)
       * [`options.transforms`](#optionstransforms)
       * [`options.withPrettifier`](#optionswithprettifier)
     * [`logger.log()` and shortcut methods](#loggerlog-and-shortcut-methods)
@@ -146,6 +147,61 @@ It's also possible to set this option as an environment variable, which is how y
 
   * `LOG_LEVEL`: The preferred way to set log level in an environment variable
   * `SPLUNK_LOG_LEVEL`: The legacy way to set log level, to maintain compatibility with [n-logger](https://github.com/Financial-Times/n-logger)
+
+#### `options.serializers`
+
+You can customize the way that the logger converts certain properties to JSON by specifying serializers. This allows you to extract only the information you need or to fully transform a single property value.
+
+This option must be an object. Each key corresponds to the log property you want to serialize, and each value must be a function that performs the serialization. Expressed as a TypeScript type:
+
+```ts
+type Serializer = (value, propertyName) => any
+```
+
+When you define a serializer for a property, your serializer function will be called every time we encounter that property _at the top level_ of a log data object. E.g.
+
+```js
+const fruitEmoji = {
+    apple: '🍏',
+    banana: '🍌',
+    coconut: '🥥'
+};
+function emojifyFruit(value) {
+    return fruitEmoji[value] || value;
+}
+
+const logger = new Logger({
+    serializers: {
+        // If a "snack" property is found in a log, this function will be called
+        snack: emojifyFruit
+    }
+});
+
+logger.info({
+    message: 'Hello World',
+    snack: 'banana'
+});
+// Outputs:
+// {
+//     "level": "info",
+//     "message": "Hello World",
+//     "snack": "🍌"
+// }
+```
+
+> [!WARNING]<br />
+> It's your responsibility to properly handle unexpected data in your log serializers. You should ideally type guard to avoid your logs failing to send. If an unexpected error is encountered in a serializer then you'll see `LOG_METHOD_FAILURE` errors appear in your logs.
+>
+> E.g. taking the example above, we would probably ensure that the property we're working with is a string:
+>
+> ```js
+> function emojifyFruit(value) {
+>     if (typeof value === 'string' && fruitEmoji[value]) {
+>         return fruitEmoji[value];
+>     }
+>     // Always return the original value if you can't process it, so you don't lose log data
+>     return value;
+> }
 
 #### `options.transforms`
 

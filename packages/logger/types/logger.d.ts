@@ -21,6 +21,8 @@ export type LogTransform = (logData: { [key: string]: any }) => {
 	[key: string]: any;
 };
 
+export type LogSerializer = (value: any, propertyName: string) => any;
+
 export type LogTransport = {
 	level?: string;
 	debug: (...args: any) => any;
@@ -35,6 +37,7 @@ export type LoggerOptions = {
 	baseLogData?: object;
 	logLevel?: LogLevel;
 	transforms?: LogTransform[];
+	serializers?: { [key: string]: LogSerializer };
 	withPrettifier?: boolean;
 };
 
