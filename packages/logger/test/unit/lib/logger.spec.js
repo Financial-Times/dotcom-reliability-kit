@@ -368,6 +368,22 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 						error: 'mock serialized error'
 					});
 				});
+
+				describe('when the error property is not an error instance', () => {
+					beforeEach(() => {
+						mockPinoLogger.mockCanonicalLevel.mockClear();
+						jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+							error: 'not an error',
+							isMockZippedData: true
+						});
+						serializeError.mockClear();
+						logger.log('mockLevel', 'mock message', { mockData: true });
+					});
+
+					it('does not serialize the error', () => {
+						expect(serializeError).toBeCalledTimes(0);
+					});
+				});
 			});
 
 			describe('when the log data has an err property as a sub-property', () => {
@@ -617,6 +633,85 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					baseLogData.mockSubObject.a = 1;
 					expect(logger.baseLogData.a).toBeUndefined();
 					expect(logger.baseLogData.mockSubObject.a).toBeUndefined();
+				});
+			});
+		});
+
+		describe('when a `serializers` option is set', () => {
+			let mockSerializers;
+
+			beforeEach(() => {
+				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+					logLevel: 'mockCanonicalLevel',
+					isDeprecated: false
+				});
+				jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+					isMockZippedData: true,
+					message: 'mock zipped message',
+					mockProperty1: 'mock-value-1'
+				});
+				mockPinoLogger.mockCanonicalLevel.mockClear();
+				mockSerializers = {
+					mockProperty1: jest.fn(() => 'mock-serialized-value-1'),
+					mockProperty2: jest.fn(() => 'mock-serialized-value-2')
+				};
+				logger = new Logger({
+					serializers: mockSerializers
+				});
+			});
+
+			describe('.log(level, ...logData)', () => {
+				beforeEach(() => {
+					logger.log('mockLevel', 'mock message', { mockData: true });
+				});
+
+				it('calls all serializers with the zipped log data properties if set', () => {
+					expect(mockSerializers.mockProperty1).toHaveBeenCalledTimes(1);
+					expect(mockSerializers.mockProperty2).toHaveBeenCalledTimes(0);
+					expect(mockSerializers.mockProperty1).toHaveBeenCalledWith(
+						'mock-value-1',
+						'mockProperty1'
+					);
+				});
+
+				it('calls the relevant log transport method with the serialized log data', () => {
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
+						isMockZippedData: true,
+						message: 'mock zipped message',
+						mockProperty1: 'mock-serialized-value-1'
+					});
+				});
+			});
+
+			describe('when the serializers option is not an object', () => {
+				it('throws a type error', () => {
+					expect(() => {
+						logger = new Logger({
+							serializers: []
+						});
+					}).toThrow(
+						new TypeError(
+							'The `serializers` option must be an object where each property value is a function'
+						)
+					);
+				});
+			});
+
+			describe('when one of the serializers is not a function', () => {
+				it('throws a type error', () => {
+					expect(() => {
+						logger = new Logger({
+							serializers: {
+								mockProperty1: jest.fn(() => 'mock-serialized-value-1'),
+								mockProperty2: 'nope'
+							}
+						});
+					}).toThrow(
+						new TypeError(
+							'The `serializers` option must be an object where each property value is a function'
+						)
+					);
 				});
 			});
 		});

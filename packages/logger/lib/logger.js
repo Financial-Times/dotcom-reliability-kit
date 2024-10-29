@@ -11,6 +11,7 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  *   LoggerOptions,
  *   LogLevel,
  *   LogLevelInfo,
+ *   LogSerializer,
  *   LogTransform,
  *   LogTransport,
  *   PrivateLoggerOptions
@@ -91,6 +92,16 @@ module.exports = class Logger {
 	#baseLogData = {};
 
 	/**
+	 * @type {{[key: string]: LogSerializer}}
+	 */
+	#serializers = {};
+
+	/**
+	 * @type {string[]}
+	 */
+	#serializedProperties = [];
+
+	/**
 	 * @type {LogTransform[]}
 	 */
 	#transforms = [];
@@ -133,6 +144,34 @@ module.exports = class Logger {
 			const { logLevel } = Logger.getLogLevelInfo(logLevelOption);
 			this.#logLevel = logLevel;
 		}
+
+		// Default and set the serializers option
+		if (options.serializers) {
+			if (
+				typeof options.serializers !== 'object' ||
+				Array.isArray(options.serializers) ||
+				options.serializers === null ||
+				Object.values(options.serializers).some(
+					(serializer) => typeof serializer !== 'function'
+				)
+			) {
+				throw new TypeError(
+					'The `serializers` option must be an object where each property value is a function'
+				);
+			}
+			this.#serializers = options.serializers;
+		}
+
+		// We always set the error serializer - it's too important and making this configurable
+		// complicates log zipping, we'd have to use the same custom serializer for when top-level
+		// log data is an error instance
+		this.#serializers.error = this.#serializers.err = (error) => {
+			if (error instanceof Error) {
+				return serializeError(error);
+			}
+			return error;
+		};
+		this.#serializedProperties = Object.keys(this.#serializers);
 
 		// Default and set the transforms option
 		if (options.transforms) {
@@ -292,12 +331,14 @@ module.exports = class Logger {
 				sanitizedLogData.message = null;
 			}
 
-			if (sanitizedLogData.error && sanitizedLogData.error instanceof Error) {
-				sanitizedLogData.error = serializeError(sanitizedLogData.error);
-			}
-
-			if (sanitizedLogData.err && sanitizedLogData.err instanceof Error) {
-				sanitizedLogData.err = serializeError(sanitizedLogData.err);
+			// Serialize properties which have a custom serializer
+			for (const key of this.#serializedProperties) {
+				if (sanitizedLogData[key] !== undefined) {
+					sanitizedLogData[key] = this.#serializers[key](
+						sanitizedLogData[key],
+						key
+					);
+				}
 			}
 
 			// Transform the log data
