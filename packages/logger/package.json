@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/logger",
-  "version": "3.1.7",
+  "version": "3.2.0",
   "description": "A simple and fast logger based on Pino, with FT preferences baked in",
   "repository": {
     "type": "git",

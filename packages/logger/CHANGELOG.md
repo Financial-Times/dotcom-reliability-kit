@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.1.7...logger-v3.2.0) (2024-10-30)
+
+
+### Features
+
+* add the ability to set custom serializers ([2c3e896](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2c3e896d8e163abb4d153ac0515ed0e6bdd232ba))
+
+
+### Bug Fixes
+
+* disallow serializing key log properties ([585b6bf](https://github.com/Financial-Times/dotcom-reliability-kit/commit/585b6bfc9a4a8891d66027103729155bf7382efe))
+
 ## [3.1.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.1.6...logger-v3.1.7) (2024-10-29)
 
 
