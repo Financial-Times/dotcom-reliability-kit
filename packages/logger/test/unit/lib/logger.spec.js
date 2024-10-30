@@ -651,13 +651,17 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					time: 'mock zipped time',
 					mockProperty1: 'mock-value-1'
 				});
+				jest.spyOn(console, 'log').mockImplementation(() => {});
 				mockPinoLogger.mockCanonicalLevel.mockClear();
 				mockSerializers = {
 					mockProperty1: jest.fn(() => 'mock-serialized-value-1'),
 					mockProperty2: jest.fn(() => 'mock-serialized-value-2'),
 					level: jest.fn(() => 'mock-serialized-level'),
 					message: jest.fn(() => 'mock-serialized-message'),
-					time: jest.fn(() => 'mock-serialized-time')
+					time: jest.fn(() => 'mock-serialized-time'),
+					naughtyProperty: jest.fn(() => {
+						throw new Error('We do not like this property');
+					})
 				};
 				logger = new Logger({
 					serializers: mockSerializers
@@ -691,6 +695,27 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 						message: 'mock zipped message',
 						time: 'mock zipped time',
 						mockProperty1: 'mock-serialized-value-1'
+					});
+				});
+
+				describe('when a serializer errors', () => {
+					it('logs the error information as JSON using `console.log`', () => {
+						Logger.zipLogData.mockReturnValue({ naughtyProperty: 'hello' });
+						logger.log('mockLevel', 'mock message', { mockData: true });
+
+						// eslint-disable-next-line no-console
+						expect(console.log).toHaveBeenCalledTimes(1);
+						// eslint-disable-next-line no-console
+						expect(console.log).toHaveBeenCalledWith(
+							JSON.stringify({
+								level: 'error',
+								event: 'LOG_METHOD_FAILURE',
+								message: "Failed to log at level 'mockLevel'",
+								error: {
+									isMockSerializedError: true
+								}
+							})
+						);
 					});
 				});
 			});
