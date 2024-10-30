@@ -189,6 +189,9 @@ logger.info({
 // }
 ```
 
+Some properties cannot be serialized in this way to maintain consistent logs:
+ `err`, `error`, `level`, `message`, and `time` are all reserved. Configured serializers for these properties will be ignored.
+
 > [!WARNING]<br />
 > It's your responsibility to properly handle unexpected data in your log serializers. You should ideally type guard to avoid your logs failing to send. If an unexpected error is encountered in a serializer then you'll see `LOG_METHOD_FAILURE` errors appear in your logs.
 >

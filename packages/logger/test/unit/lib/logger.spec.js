@@ -648,12 +648,16 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				jest.spyOn(Logger, 'zipLogData').mockReturnValue({
 					isMockZippedData: true,
 					message: 'mock zipped message',
+					time: 'mock zipped time',
 					mockProperty1: 'mock-value-1'
 				});
 				mockPinoLogger.mockCanonicalLevel.mockClear();
 				mockSerializers = {
 					mockProperty1: jest.fn(() => 'mock-serialized-value-1'),
-					mockProperty2: jest.fn(() => 'mock-serialized-value-2')
+					mockProperty2: jest.fn(() => 'mock-serialized-value-2'),
+					level: jest.fn(() => 'mock-serialized-level'),
+					message: jest.fn(() => 'mock-serialized-message'),
+					time: jest.fn(() => 'mock-serialized-time')
 				};
 				logger = new Logger({
 					serializers: mockSerializers
@@ -674,11 +678,18 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					);
 				});
 
+				it('does not use custom serializers for level, message, and time log properties', () => {
+					expect(mockSerializers.level).toHaveBeenCalledTimes(0);
+					expect(mockSerializers.message).toHaveBeenCalledTimes(0);
+					expect(mockSerializers.time).toHaveBeenCalledTimes(0);
+				});
+
 				it('calls the relevant log transport method with the serialized log data', () => {
 					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
 					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
 						isMockZippedData: true,
 						message: 'mock zipped message',
+						time: 'mock zipped time',
 						mockProperty1: 'mock-serialized-value-1'
 					});
 				});

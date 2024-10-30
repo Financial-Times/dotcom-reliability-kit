@@ -159,8 +159,13 @@ module.exports = class Logger {
 					'The `serializers` option must be an object where each property value is a function'
 				);
 			}
-			this.#serializers = options.serializers;
+			this.#serializers = clone(options.serializers);
 		}
+
+		// We disallow custom serializers for key logging properties that we want to be consistent
+		delete this.#serializers.level;
+		delete this.#serializers.message;
+		delete this.#serializers.time;
 
 		// We always set the error serializer - it's too important and making this configurable
 		// complicates log zipping, we'd have to use the same custom serializer for when top-level
