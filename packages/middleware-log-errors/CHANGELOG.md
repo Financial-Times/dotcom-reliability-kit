@@ -1,5 +1,19 @@
 # Changelog
 
+## [4.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.2.4...middleware-log-errors-v4.2.5) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove npm engines pinning ([9f51dab](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9f51dab7374e05431de236445c6706dbc1fd3172))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.2.4 to ^4.2.5
+
 ## [4.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.2.3...middleware-log-errors-v4.2.4) (2024-10-30)
 
 

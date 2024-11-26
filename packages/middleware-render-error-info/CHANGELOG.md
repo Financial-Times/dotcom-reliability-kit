@@ -1,5 +1,21 @@
 # Changelog
 
+## [5.1.11](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v5.1.10...middleware-render-error-info-v5.1.11) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove npm engines pinning ([9f51dab](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9f51dab7374e05431de236445c6706dbc1fd3172))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.3.0 to ^3.3.1
+    * @dotcom-reliability-kit/log-error bumped from ^4.2.4 to ^4.2.5
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.2.0 to ^3.2.1
+
 ## [5.1.10](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v5.1.9...middleware-render-error-info-v5.1.10) (2024-10-30)
 
 
