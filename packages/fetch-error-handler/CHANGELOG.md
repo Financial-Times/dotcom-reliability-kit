@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.5...fetch-error-handler-v0.2.6) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove npm engines pinning ([9f51dab](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9f51dab7374e05431de236445c6706dbc1fd3172))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/errors bumped from ^3.1.1 to ^3.1.2
+
 ## [0.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.4...fetch-error-handler-v0.2.5) (2024-07-01)
 
 

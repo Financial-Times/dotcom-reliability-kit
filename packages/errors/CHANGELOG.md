@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v3.1.1...errors-v3.1.2) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove npm engines pinning ([9f51dab](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9f51dab7374e05431de236445c6706dbc1fd3172))
+
 ## [3.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v3.1.0...errors-v3.1.1) (2024-06-26)
 
 

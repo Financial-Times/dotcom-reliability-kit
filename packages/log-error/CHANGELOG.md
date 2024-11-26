@@ -1,5 +1,22 @@
 # Changelog
 
+## [4.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.2.4...log-error-v4.2.5) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove npm engines pinning ([9f51dab](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9f51dab7374e05431de236445c6706dbc1fd3172))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^3.3.0 to ^3.3.1
+    * @dotcom-reliability-kit/logger bumped from ^3.2.0 to ^3.2.1
+    * @dotcom-reliability-kit/serialize-error bumped from ^3.2.0 to ^3.2.1
+    * @dotcom-reliability-kit/serialize-request bumped from ^3.1.0 to ^3.1.1
+
 ## [4.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.2.3...log-error-v4.2.4) (2024-10-30)
 
 

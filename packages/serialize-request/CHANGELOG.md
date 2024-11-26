@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v3.1.0...serialize-request-v3.1.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove npm engines pinning ([9f51dab](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9f51dab7374e05431de236445c6706dbc1fd3172))
+
 ## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v3.0.2...serialize-request-v3.1.0) (2024-04-29)
 
 

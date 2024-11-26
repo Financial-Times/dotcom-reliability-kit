@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.3.0...app-info-v3.3.1) (2024-11-26)
+
+
+### Bug Fixes
+
+* remove npm engines pinning ([9f51dab](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9f51dab7374e05431de236445c6706dbc1fd3172))
+
 ## [3.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.2.0...app-info-v3.3.0) (2024-07-02)
 
 
