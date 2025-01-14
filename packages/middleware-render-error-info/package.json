@@ -19,7 +19,7 @@
     "@dotcom-reliability-kit/app-info": "^3.3.1",
     "@dotcom-reliability-kit/log-error": "^4.2.5",
     "@dotcom-reliability-kit/serialize-error": "^3.2.1",
-    "entities": "^5.0.0"
+    "entities": "^6.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0"
