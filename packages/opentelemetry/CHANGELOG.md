@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.16](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.15...opentelemetry-v2.0.16) (2025-01-14)
+
+
+### Bug Fixes
+
+* update all OpenTelemetry packages ([f62e636](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f62e636079267f2a14c5509dcdd0582d2dba6e99))
+
 ## [2.0.15](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v2.0.14...opentelemetry-v2.0.15) (2024-11-26)
 
 
