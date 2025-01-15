@@ -1,5 +1,14 @@
 # Changelog
 
+## [4.2.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.2.5...log-error-v4.2.6) (2025-01-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/logger bumped from ^3.2.1 to ^3.2.2
+
 ## [4.2.5](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v4.2.4...log-error-v4.2.5) (2024-11-26)
 
 
