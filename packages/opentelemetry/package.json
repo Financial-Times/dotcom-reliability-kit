@@ -1,6 +1,6 @@
 {
 	"name": "@dotcom-reliability-kit/opentelemetry",
-	"version": "2.0.17",
+	"version": "3.0.0",
 	"description": "An OpenTelemetry client that's preconfigured for drop-in use in FT apps.",
 	"repository": {
 		"type": "git",
@@ -17,10 +17,10 @@
 	"main": "lib/index.js",
 	"types": "types/index.d.ts",
 	"dependencies": {
-		"@dotcom-reliability-kit/app-info": "^3.3.1",
-		"@dotcom-reliability-kit/errors": "^3.1.2",
-		"@dotcom-reliability-kit/log-error": "^4.2.6",
-		"@dotcom-reliability-kit/logger": "^3.2.2",
+		"@dotcom-reliability-kit/app-info": "^4.0.0",
+		"@dotcom-reliability-kit/errors": "^4.0.0",
+		"@dotcom-reliability-kit/log-error": "^5.0.0",
+		"@dotcom-reliability-kit/logger": "^4.0.0",
 		"@opentelemetry/auto-instrumentations-node": "^0.55.2",
 		"@opentelemetry/exporter-metrics-otlp-proto": "^0.57.1",
 		"@opentelemetry/exporter-trace-otlp-proto": "^0.57.1",
