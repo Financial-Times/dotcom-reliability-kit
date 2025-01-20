@@ -809,7 +809,7 @@ module.exports = [
 					message: 'Express application example started',
 					app: 'example',
 					port: 1234,
-					nodeVersion: 'v18.17.0'
+					nodeVersion: 'v22.13.0'
 				}
 			]
 		},
@@ -820,7 +820,7 @@ module.exports = [
 				message: 'Express application example started',
 				app: 'example',
 				port: 1234,
-				nodeVersion: 'v18.17.0'
+				nodeVersion: 'v22.13.0'
 			},
 			reliabilityKit: {
 				level: 'warn',
@@ -828,7 +828,7 @@ module.exports = [
 				message: 'Express application example started',
 				app: 'example',
 				port: 1234,
-				nodeVersion: 'v18.17.0'
+				nodeVersion: 'v22.13.0'
 			}
 		}
 	},
