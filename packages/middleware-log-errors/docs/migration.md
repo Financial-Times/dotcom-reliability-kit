@@ -15,6 +15,8 @@ Emoji           | Label             | Meaning
   * [Remove Sentry workarounds](#remove-sentry-workarounds)
 * [Migrating from v3 to v4](#migrating-from-v3-to-v4)
   * [Node.js 16 is no longer supported](#nodejs-16-is-no-longer-supported)
+* [Migrating from v4 to v5](#migrating-from-v4-to-v5)
+  * [Node.js 18 is no longer supported](#nodejs-18-is-no-longer-supported)
 
 
 ## Migrating from v1 to v2
@@ -57,3 +59,10 @@ You can safely migrate to this version of the error logging middleware if your a
 ### Node.js 16 is no longer supported
 
 **:red_circle: Breaking:** this version drops support for Node.js v16. If your app is already using Node.js v18 or above then you can migrate with no code changes.
+
+
+## Migrating from v4 to v5
+
+### Node.js 18 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v18. If your app is already using Node.js v20 or above then you can migrate with no code changes.
