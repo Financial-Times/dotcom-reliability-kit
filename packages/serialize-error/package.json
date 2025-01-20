@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/serialize-error",
-  "version": "3.2.1",
+  "version": "4.0.0",
   "description": "A utility function to serialize an error object in a way that's friendly to loggers, view engines, and converting to JSON",
   "repository": {
     "type": "git",

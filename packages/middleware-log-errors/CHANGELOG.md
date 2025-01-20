@@ -1,5 +1,28 @@
 # Changelog
 
+## [5.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.2.6...middleware-log-errors-v5.0.0) (2025-01-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* drop support for Node.js 18
+
+### Documentation Changes
+
+* add migration guides for new major versions ([610c171](https://github.com/Financial-Times/dotcom-reliability-kit/commit/610c17189f0564051b793a0d590a6c9721b41a53))
+
+
+### Miscellaneous
+
+* drop support for Node.js 18 ([3efb889](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3efb8896bc49424d3745753e0a57b06c6ede8165))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^4.2.6 to ^5.0.0
+
 ## [4.2.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v4.2.5...middleware-log-errors-v4.2.6) (2025-01-15)
 
 
