@@ -9,31 +9,33 @@ Emoji           | Label             | Meaning
 :orange_circle: | Possibly Breaking | A breaking change that is unlikely to require code changes but things outside of the code (e.g. logs) may have changed
 :yellow_circle: | Deprecation       | A deprecated feature which will require code changes in the future
 
-  * [Migrating from n-logger](#migrating-from-n-logger)
-    * [Where logs get sent](#n-logger-where-logs-get-sent)
-    * [Error serialization changes](#n-logger-error-serialization-changes)
-    * [Log timestamps](#n-logger-log-timestamps)
-    * [Log level changes](#n-logger-log-level-changes)
-    * [Logger method changes](#n-logger-method-changes)
-    * [Environment variable changes](#n-logger-environment-variable-changes)
-    * [Proxy incompatibility](#n-logger-proxy-incompatibility)
-  * [Migrating from n-mask-logger](#migrating-from-n-mask-logger)
-    * [API changes](#n-mask-logger-api-changes)
-    * [where logs get sent](#n-mask-logger-where-logs-get-sent)
-    * [log timestamps](#n-mask-logger-log-timestamps)
-    * [method changes](#n-mask-logger-method-changes)
-    * [environment variable changes](#n-mask-logger-environment-variable-changes)
-  * [Migrating from n-serverless-logger](#migrating-from-n-serverless-logger)
-    * [Where logs get sent](#n-serverless-logger-where-logs-get-sent)
-    * [Error serialization changes](#n-serverless-logger-error-serialization-changes)
-    * [Logger property changes](#n-serverless-logger-property-changes)
-    * [Logger method changes](#n-serverless-logger-method-changes)
-    * [Environment variable changes](#n-serverless-logger-environment-variable-changes)
-  * [Migrating from v1 to v2](#migrating-from-v1-to-v2)
-    * [Node.js 14 is no longer supported](#nodejs-14-is-no-longer-supported)
-  * [Migrating from v2 to v3](#migrating-from-v2-to-v3)
-    * [Node.js 16 is no longer supported](#nodejs-16-is-no-longer-supported)
-    * [Log times are now ISO 8601 timestamps](#log-times-are-now-iso-8601-timestamps)
+* [Migrating from n-logger](#migrating-from-n-logger)
+  * [n-logger: where logs get sent](#n-logger-where-logs-get-sent)
+  * [n-logger: error serialization changes](#n-logger-error-serialization-changes)
+  * [n-logger: log timestamps](#n-logger-log-timestamps)
+  * [n-logger: log level changes](#n-logger-log-level-changes)
+  * [n-logger: method changes](#n-logger-method-changes)
+  * [n-logger: environment variable changes](#n-logger-environment-variable-changes)
+  * [n-logger: proxy incompatibility](#n-logger-proxy-incompatibility)
+* [Migrating from n-mask-logger](#migrating-from-n-mask-logger)
+  * [n-mask-logger: API changes](#n-mask-logger-api-changes)
+  * [n-mask-logger: where logs get sent](#n-mask-logger-where-logs-get-sent)
+  * [n-mask-logger: log timestamps](#n-mask-logger-log-timestamps)
+  * [n-mask-logger: method changes](#n-mask-logger-method-changes)
+  * [n-mask-logger: environment variable changes](#n-mask-logger-environment-variable-changes)
+* [Migrating from n-serverless-logger](#migrating-from-n-serverless-logger)
+  * [n-serverless-logger: where logs get sent](#n-serverless-logger-where-logs-get-sent)
+  * [n-serverless-logger: error serialization changes](#n-serverless-logger-error-serialization-changes)
+  * [n-serverless-logger: property changes](#n-serverless-logger-property-changes)
+  * [n-serverless-logger: method changes](#n-serverless-logger-method-changes)
+  * [n-serverless-logger: environment variable changes](#n-serverless-logger-environment-variable-changes)
+* [Migrating from v1 to v2](#migrating-from-v1-to-v2)
+  * [Node.js 14 is no longer supported](#nodejs-14-is-no-longer-supported)
+* [Migrating from v2 to v3](#migrating-from-v2-to-v3)
+  * [Node.js 16 is no longer supported](#nodejs-16-is-no-longer-supported)
+  * [Log times are now ISO 8601 timestamps](#log-times-are-now-iso-8601-timestamps)
+* [Migrating from v3 to v4](#migrating-from-v3-to-v4)
+  * [Node.js 18 is no longer supported](#nodejs-18-is-no-longer-supported)
 
 
 ## Migrating from n-logger
@@ -293,3 +295,10 @@ The following environment variables have been deprecated.
   2. If you're using the `withTimestamps` or `useIsoTimeFormat` options with TypeScript, because these options have now been removed from the code and the type definitions.
 
 If neither of the above is true, this should be a safe update with no code changes.
+
+
+## Migrating from v3 to v4
+
+### Node.js 18 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v18. If your app is already using Node.js v20 or above then you can migrate with no code changes.

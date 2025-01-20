@@ -11,6 +11,8 @@ Emoji           | Label             | Meaning
 
 * [Migrating from v1 to v2](#migrating-from-v1-to-v2)
   * [JavaScript API changes](#javascript-api-changes)
+* [Migrating from v2 to v3](#migrating-from-v2-to-v3)
+  * [Node.js 18 is no longer supported](#nodejs-18-is-no-longer-supported)
 
 
 ## Migrating from v1 to v2
@@ -31,3 +33,10 @@ Emoji           | Label             | Meaning
 ```
 
 If you're using the `--require` method or importing `@dotcom-reliability-kit/opentelemetry/setup` then this is not a breaking change.
+
+
+## Migrating from v2 to v3
+
+### Node.js 18 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v18. If your app is already using Node.js v20 or above then you can migrate with no code changes.
