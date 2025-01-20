@@ -14,7 +14,7 @@ references:
       - image: cimg/node:<< parameters.node-version >>
     parameters:
       node-version:
-        default: "20.12" # We default to the highest active LTS
+        default: "22.13" # We default to the highest active LTS
         type: string
 
   workspace_root: &workspace_root ~/project
@@ -151,29 +151,29 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - test:
           requires:
             - build-v<< matrix.node-version >>
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - lint:
           requires:
             - build-v<< matrix.node-version >>
           name: lint-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - release-please:
           filters:
             <<: *filters_only_main
           requires:
             # We release on the highest active LTS version of
             # Node.js that we support
-            - test-v20.12
-            - lint-v20.12
+            - test-v22.13
+            - lint-v22.13
 
   build-test-publish:
     jobs:
@@ -183,7 +183,7 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - test:
           filters:
             <<: *filters_release_build
@@ -192,7 +192,7 @@ workflows:
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - lint:
           filters:
             <<: *filters_release_build
@@ -201,7 +201,7 @@ workflows:
           name: lint-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - publish:
           context: npm-publish-token
           filters:
@@ -209,8 +209,8 @@ workflows:
           requires:
             # We release on the highest active LTS version of
             # Node.js that we support
-            - lint-v20.12
-            - test-v20.12
+            - lint-v22.13
+            - test-v22.13
 
   build-test-prepublish:
     jobs:
@@ -220,7 +220,7 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - test:
           filters:
             <<: *filters_prerelease_build
@@ -229,7 +229,7 @@ workflows:
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - lint:
           filters:
             <<: *filters_prerelease_build
@@ -238,7 +238,7 @@ workflows:
           name: lint-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - prepublish:
           context: npm-publish-token
           filters:
@@ -246,8 +246,8 @@ workflows:
           requires:
             # We release on the highest active LTS version of
             # Node.js that we support
-            - lint-v20.12
-            - test-v20.12
+            - lint-v22.13
+            - test-v22.13
 
   nightly:
     triggers:
@@ -261,7 +261,7 @@ workflows:
           name: build-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
       - test:
           requires:
             - build-v<< matrix.node-version >>
@@ -269,4 +269,4 @@ workflows:
           name: test-v<< matrix.node-version >>
           matrix:
             parameters:
-              node-version: [ "22.0", "20.12", "18.20" ]
+              node-version: [ "22.13", "20.18" ]
