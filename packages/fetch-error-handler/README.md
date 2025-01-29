@@ -3,9 +3,6 @@
 
 Properly handle fetch errors and avoid a lot of boilerplate in your app. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
-> [!WARNING]<br />
-> This package is in beta and hasn't been tested extensively in production yet. Feel free to use, and any feedback is greatly appreciated.
-
   * [Usage](#usage)
     * [Wrap the fetch function](#wrap-the-fetch-function)
     * [Handle errors with `.then`](#handle-errors-with-then)
