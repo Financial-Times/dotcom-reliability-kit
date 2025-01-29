@@ -25,6 +25,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/eslint-config](./packages/eslint-config/#readme):**<br/>
     A linting config, specifically focussed on enhancing code quality and proactively catching errors/bugs before they make it into production.
 
+    * **[@dotcom-reliability-kit/fetch-error-handler](./packages/fetch-error-handler/#readme):**<br/>
+      Properly handle fetch errors and avoid a lot of boilerplate in your app.
+
     * **[@dotcom-reliability-kit/log-error](./packages/log-error/#readme):**<br/>
       A method to consistently log error object with optional request information
 
