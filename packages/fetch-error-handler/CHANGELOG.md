@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.3.0...fetch-error-handler-v1.0.0) (2025-01-30)
+
+
+### Miscellaneous
+
+* mark fetch-error-handler as stable ([f1d50ce](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f1d50ce0cd37c1517ddeed84dd6a55cc59935ba2))
+
 ## [0.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.2.6...fetch-error-handler-v0.3.0) (2025-01-20)
 
 
