@@ -34,6 +34,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/logger](./packages/logger/#readme):**<br/>
       A simple and fast logger based on [Pino](https://getpino.io/), with FT preferences baked in
 
+    * **[@dotcom-reliability-kit/middleware-allow-request-methods](./packages/middleware-allow-request-methods/README.md):**<br/>
+      Express middleware that returns 405 (rather than 404) for disallowed request methods
+
     * **[@dotcom-reliability-kit/middleware-log-errors](./packages/middleware-log-errors/#readme):**<br/>
       Express middleware to consistently log errors
 

@@ -41,6 +41,7 @@
 		"packages/middleware-render-error-info": {},
 		"packages/serialize-error": {},
 		"packages/serialize-request": {},
-		"packages/opentelemetry": {}
+		"packages/opentelemetry": {},
+		"packages/middleware-allow-request-methods": {}
 	}
 }
