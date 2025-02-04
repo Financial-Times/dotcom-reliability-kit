@@ -1,0 +1,18 @@
+{
+  "name": "@dotcom-reliability-kit/middleware-allow-request-methods",
+  "version": "0.0.0",
+  "description": "Express middleware that returns 405 (rather than 404) for disallowed request methods",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "packages/middleware-allow-request-methods"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-allow-request-methods#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: middleware-allow-request-methods\"",
+  "license": "MIT",
+  "engines": {
+    "node": "20.x || 22.x"
+  },
+  "main": "lib/index.js",
+  "types": "types/index.d.ts"
+}
