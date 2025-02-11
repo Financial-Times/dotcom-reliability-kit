@@ -11,7 +11,7 @@ const { UserInputError } = require('@dotcom-reliability-kit/errors');
 /**
  * Create a middleware function to return 405 (rather than 404) for disallowed request methods.
  *
- * @param {RequestMethodOptions} [options]
+ * @param {RequestMethodOptions} options
  * @returns {RequestHandler} - Returns an Express middleware function.
  */
 function allowRequestMethods(options = { allowedMethods: [] }) {
