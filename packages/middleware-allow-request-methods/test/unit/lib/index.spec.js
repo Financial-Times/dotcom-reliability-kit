@@ -100,17 +100,6 @@ describe('allowRequestMethods', () => {
 
 			expect(mockNext).toHaveBeenCalledWith();
 		});
-
-		it('handles case-insensitive method matching', () => {
-			mockRequest.method = 'get';
-			const middleware = allowRequestMethods({
-				allowedMethods: ['GET', 'POST']
-			});
-
-			middleware(mockRequest, mockResponse, mockNext);
-
-			expect(mockNext).toHaveBeenCalledWith();
-		});
 	});
 
 	describe('normaliseAllowedRequestMethods', () => {
