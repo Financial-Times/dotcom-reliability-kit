@@ -2,10 +2,10 @@ import { RequestHandler } from 'express';
 
 declare module '@dotcom-reliability-kit/middleware-allow-request-methods' {
 	export type RequestMethodOptions = {
-		allowedMethods?: string[];
+		allowedMethods: string[];
 	};
 
 	declare function allowRequestMethods(
-		options?: RequestMethodOptions
+		options: RequestMethodOptions
 	): RequestHandler;
 }
