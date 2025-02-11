@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/middleware-allow-request-methods",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Express middleware that returns 405 (rather than 404) for disallowed request methods",
   "repository": {
     "type": "git",
