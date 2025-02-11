@@ -11,5 +11,5 @@
   "packages/serialize-error": "4.0.0",
   "packages/serialize-request": "4.0.0",
   "packages/opentelemetry": "3.0.0",
-  "packages/middleware-allow-request-methods": "0.0.0"
+  "packages/middleware-allow-request-methods": "1.0.0"
 }
