@@ -1,4 +1,5 @@
 const { fork } = require('node:child_process');
+const { setTimeout } = require('node:timers/promises');
 
 describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	let child;
@@ -28,6 +29,19 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	describe('GET /error', () => {
 		beforeAll(async () => {
 			await fetch(`${baseUrl}/error`);
+
+			// Pino uses async logs so we can't guarantee that our log will have been output
+			// immediately. We wait a total of 5s for the log to come through, checking for
+			// the log in 100ms increments
+			let waitTime = 0;
+			while (waitTime < 5000) {
+				if (stdout.includes('HANDLED_ERROR')) {
+					return;
+				}
+				waitTime += 100;
+				await setTimeout(100);
+			}
+			throw new Error('HANDLED_ERROR log took too long to come through');
 		});
 
 		it('logs error information to stdout', () => {
