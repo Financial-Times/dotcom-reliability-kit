@@ -27,6 +27,6 @@
 		"@opentelemetry/host-metrics": "^0.35.5",
 		"@opentelemetry/instrumentation-runtime-node": "^0.12.1",
 		"@opentelemetry/sdk-node": "^0.57.1",
-		"@opentelemetry/semantic-conventions": "^1.28.0"
+		"@opentelemetry/semantic-conventions": "^1.30.0"
 	}
 }
