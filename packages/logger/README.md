@@ -603,7 +603,7 @@ To get formatted and colourised logs locally, you need to meet two conditions:
 
 ### Production usage
 
-Using `@dotcom-reliability-kit/logger` in production requires that your application can handle logs to `stdout` and sends these logs to somewhere more permanent. On Heroku this means you're required to have [migrated to Log Drains](https://financialtimes.atlassian.net/wiki/spaces/DS/pages/7883555001/Migrating+an+app+to+Heroku+log+drains). On AWS Lambda it means you must be sending logs to CloudWatch ([see tech hub documentation](https://tech.in.ft.com/tech-topics/logging/amazon-cloudwatch-logs#cloudformation-code-for-forwarding-lambda-logs-to-splunk)).
+Using `@dotcom-reliability-kit/logger` in production requires that your application can handle logs to `stdout` and sends these logs to somewhere more permanent. On Heroku this means you're required to have [migrated to Log Drains](https://financialtimes.atlassian.net/wiki/spaces/DS/pages/7883555001/Migrating+an+app+to+Heroku+log+drains). On AWS Lambda it means you must be sending logs to CloudWatch ([see tech hub documentation](https://tech.in.ft.com/tech-topics/observability/amazon-cloudwatch-logs#cloudformation-code-for-forwarding-lambda-logs-to-splunk)).
 
 ### Testing
 
