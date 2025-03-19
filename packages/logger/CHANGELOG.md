@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.0.0...logger-v4.0.1) (2025-03-19)
+
+
+### Documentation Changes
+
+* fix a broken link ([0d978cc](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0d978ccd6ffc937dffd9f0522c1306a7aac2bb9a))
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.2.2...logger-v4.0.0) (2025-01-20)
 
 
