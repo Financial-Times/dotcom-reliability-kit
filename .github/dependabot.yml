@@ -6,6 +6,7 @@ updates:
       - /
       - /resources/logos
       - /packages/app-info
+      - /packages/client-metrics-web
       - /packages/crash-handler
       - /packages/errors
       - /packages/eslint-config
