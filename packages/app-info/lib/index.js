@@ -58,7 +58,7 @@ const processType =
  *     Returns the cloud provider type (either aws or heroku).
  */
 const cloudProvider = () => {
-	if (process.env.AWS_LAMBDA_FUNCTION_NAME) {
+	if (process.env.AWS_LAMBDA_FUNCTION_NAME || process.env.HAKO_SERVICE_URL) {
 		return 'aws';
 	}
 	if (process.env.HEROKU_RELEASE_CREATED_AT) {
