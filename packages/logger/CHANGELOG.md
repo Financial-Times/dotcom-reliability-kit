@@ -1,5 +1,24 @@
 # Changelog
 
+## [4.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.0.0...logger-v4.0.1) (2025-03-25)
+
+
+### Bug Fixes
+
+* disable log prettification on AWS ([f6d5804](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f6d580478e6ae9722369b6e570cab5cbffab76df))
+
+
+### Documentation Changes
+
+* fix a broken link ([0d978cc](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0d978ccd6ffc937dffd9f0522c1306a7aac2bb9a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^4.0.0 to ^4.1.0
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v3.2.2...logger-v4.0.0) (2025-01-20)
 
 

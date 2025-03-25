@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v4.0.0...app-info-v4.1.0) (2025-03-25)
+
+
+### Features
+
+* set cloud provider to AWS for Hako apps ([70c4f94](https://github.com/Financial-Times/dotcom-reliability-kit/commit/70c4f947f83361d02cf5b6728a78fbe6d2ec4659))
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v3.3.1...app-info-v4.0.0) (2025-01-20)
 
 
