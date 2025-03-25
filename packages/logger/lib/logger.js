@@ -69,11 +69,14 @@ const prettificationAvailable = (() => {
 /**
  * Whether log prettification is allowed. We never allow log
  * prettification if the `NODE_ENV` environment variable is
- * set to "production".
+ * set to "production". We also disallow prettification if the
+ * cloud provider is AWS, pino-pretty does not work well with
+ * CloudWatch logs
  *
  * @type {boolean}
  */
-const prettificationAllowed = appInfo.environment !== 'production';
+const prettificationAllowed =
+	appInfo.environment !== 'production' && appInfo.cloudProvider !== 'aws';
 
 /**
  * Class representing a logger.
