@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.2...opentelemetry-v3.0.3) (2025-03-25)
+
+
+### Bug Fixes
+
+* update OpenTelemetry to v2 / v0.200 ([0554c51](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0554c510f9456982e85ec79ed378266b7cd37f70))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^4.0.0 to ^4.1.0
+    * @dotcom-reliability-kit/log-error bumped from ^5.0.0 to ^5.0.1
+    * @dotcom-reliability-kit/logger bumped from ^4.0.0 to ^4.0.1
+
 ## [3.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.1...opentelemetry-v3.0.2) (2025-03-05)
 
 
