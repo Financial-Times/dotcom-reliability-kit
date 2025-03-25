@@ -16,17 +16,17 @@ jest.mock('@dotcom-reliability-kit/app-info', () => ({
 		}
 	}
 }));
-jest.mock('@opentelemetry/sdk-node');
+jest.mock('@opentelemetry/sdk-node', () => ({
+	resources: {
+		resourceFromAttributes: jest.fn().mockReturnValue('mock-resource')
+	}
+}));
 jest.mock('@opentelemetry/semantic-conventions', () => ({
-	SEMRESATTRS_CLOUD_PROVIDER: 'mock-semresattrs-cloud-provider',
-	SEMRESATTRS_CLOUD_REGION: 'mock-semresattrs-cloud-region',
-	SEMRESATTRS_DEPLOYMENT_ENVIRONMENT: 'mock-semresattrs-deployment-environment',
-	SEMRESATTRS_SERVICE_NAME: 'mock-semresattrs-service-name',
-	SEMRESATTRS_SERVICE_VERSION: 'mock-semresattrs-service-version',
-	SEMRESATTRS_SERVICE_INSTANCE_ID: 'mock-semresattrs-service-instance-id'
+	ATTR_SERVICE_NAME: 'mock-semresattrs-service-name',
+	ATTR_SERVICE_VERSION: 'mock-semresattrs-service-version'
 }));
 
-const { Resource } = require('@opentelemetry/sdk-node').resources;
+const { resourceFromAttributes } = require('@opentelemetry/sdk-node').resources;
 const { createResourceConfig } = require('../../../../lib/config/resource');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
@@ -42,17 +42,16 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 		});
 
 		it('creates and returns an OpenTelemetry Resource', () => {
-			expect(Resource).toHaveBeenCalledTimes(1);
-			expect(Resource).toHaveBeenCalledWith({
-				'mock-semresattrs-cloud-provider': 'mock-cloud-provider',
-				'mock-semresattrs-cloud-region': 'mock-cloud-region',
-				'mock-semresattrs-deployment-environment':
-					'mock-deployment-environment',
+			expect(resourceFromAttributes).toHaveBeenCalledTimes(1);
+			expect(resourceFromAttributes).toHaveBeenCalledWith({
+				'cloud.provider': 'mock-cloud-provider',
+				'cloud.region': 'mock-cloud-region',
+				'deployment.environment': 'mock-deployment-environment',
 				'mock-semresattrs-service-name': 'mock-service-name',
 				'mock-semresattrs-service-version': 'mock-service-version',
-				'mock-semresattrs-service-instance-id': 'mock-service-instance-id'
+				'service.instance.id': 'mock-service-instance-id'
 			});
-			expect(resource).toStrictEqual(Resource.mock.instances[0]);
+			expect(resource).toStrictEqual('mock-resource');
 		});
 	});
 });

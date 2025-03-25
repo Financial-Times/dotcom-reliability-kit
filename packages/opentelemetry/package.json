@@ -21,12 +21,12 @@
 		"@dotcom-reliability-kit/errors": "^4.0.0",
 		"@dotcom-reliability-kit/log-error": "^5.0.0",
 		"@dotcom-reliability-kit/logger": "^4.0.0",
-		"@opentelemetry/auto-instrumentations-node": "^0.56.1",
-		"@opentelemetry/exporter-metrics-otlp-proto": "^0.57.2",
-		"@opentelemetry/exporter-trace-otlp-proto": "^0.57.2",
-		"@opentelemetry/host-metrics": "^0.35.5",
-		"@opentelemetry/instrumentation-runtime-node": "^0.12.2",
-		"@opentelemetry/sdk-node": "^0.57.2",
+		"@opentelemetry/auto-instrumentations-node": "^0.57.0",
+		"@opentelemetry/exporter-metrics-otlp-proto": "^0.200.0",
+		"@opentelemetry/exporter-trace-otlp-proto": "^0.200.0",
+		"@opentelemetry/host-metrics": "^0.36.0",
+		"@opentelemetry/instrumentation-runtime-node": "^0.13.0",
+		"@opentelemetry/sdk-node": "^0.200.0",
 		"@opentelemetry/semantic-conventions": "^1.30.0"
 	}
 }
