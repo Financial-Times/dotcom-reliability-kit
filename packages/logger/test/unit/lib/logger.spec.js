@@ -28,6 +28,7 @@ jest.mock('pino-pretty', () => {
 });
 
 jest.mock('@dotcom-reliability-kit/app-info', () => ({
+	cloudProvider: null,
 	environment: 'production'
 }));
 const appInfo = require('@dotcom-reliability-kit/app-info');
@@ -1063,6 +1064,32 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			beforeEach(() => {
 				jest.mock('pino-pretty', () => 'mock pino pretty');
 				appInfo.environment = 'production';
+
+				// We have to reset all modules because the checks for pino-pretty are done
+				// on module load for performance reasons. This resets the cache and reloads
+				// everything with a new environment.
+				jest.isolateModules(() => {
+					Logger = require('../../../lib/logger');
+				});
+
+				pino.mockClear();
+				logger = new Logger();
+			});
+
+			afterEach(() => {
+				jest.unmock('pino-pretty');
+			});
+
+			it('does not configure the created Pino logger with prettification', () => {
+				const pinoOptions = pino.mock.calls[0][0];
+				expect(pinoOptions.transport).toBeUndefined();
+			});
+		});
+
+		describe('when pino-pretty is installed and AWS is detected as a cloud provider', () => {
+			beforeEach(() => {
+				jest.mock('pino-pretty', () => 'mock pino pretty');
+				appInfo.cloudProvider = 'aws';
 
 				// We have to reset all modules because the checks for pino-pretty are done
 				// on module load for performance reasons. This resets the cache and reloads
