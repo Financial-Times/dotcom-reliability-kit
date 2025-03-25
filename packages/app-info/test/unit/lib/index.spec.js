@@ -6,7 +6,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 	beforeEach(() => {
 		jest.spyOn(process, 'cwd').mockReturnValue('/mock-cwd');
 		process.env.AWS_LAMBDA_FUNCTION_VERSION = 'mock-aws-release-version';
-		process.env.AWS_LAMBDA_FUNCTION_NAME = 'mock-aws-process-type';
+		process.env.AWS_LAMBDA_FUNCTION_NAME = 'mock-lambda-function-name';
 		process.env.AWS_REGION = 'mock-aws-region';
 		process.env.GIT_COMMIT = 'mock-git-commit';
 		process.env.GIT_COMMIT_LONG = 'mock-git-commit-long';
@@ -341,7 +341,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 
 	describe('.processType', () => {
 		it('is set to `process.env.AWS_LAMBDA_FUNCTION_NAME`', () => {
-			expect(appInfo.processType).toBe('mock-aws-process-type');
+			expect(appInfo.processType).toBe('mock-lambda-function-name');
 		});
 
 		describe('when `process.env.DYNO` is defined and `process.env.AWS_LAMBDA_FUNCTION_NAME` is not', () => {
@@ -371,28 +371,51 @@ describe('@dotcom-reliability-kit/app-info', () => {
 	});
 
 	describe('.cloudProvider', () => {
-		it('is set to `aws` if processType is set to `process.env.AWS_LAMBDA_FUNCTION_NAME`', () => {
-			if (appInfo.processType === process.env.AWS_LAMBDA_FUNCTION_NAME) {
-				expect(appInfo.cloudProvider).toBe('aws');
-			}
+		beforeEach(() => {
+			jest.resetModules();
+			delete process.env.AWS_LAMBDA_FUNCTION_NAME;
+			delete process.env.HEROKU_RELEASE_CREATED_AT;
+			delete process.env.HAKO_SERVICE_URL;
+			appInfo = require('../../../lib');
 		});
 
-		it('is set to `heroku` if `process.env.HEROKU_RELEASE_CREATED_AT` is set to true', () => {
-			if (process.env.HEROKU_RELEASE_CREATED_AT) {
-				expect(appInfo.cloudProvider).toBe('heroku');
-			}
+		it('is set to null', () => {
+			expect(appInfo.cloudProvider).toBe(null);
 		});
 
-		describe('when neither `process.env.AWS_LAMBDA_FUNCTION_NAME` or `process.env.HEROKU_RELEASE_CREATED_AT` are defined', () => {
+		describe('when `process.env.AWS_LAMBDA_FUNCTION_NAME` is defined', () => {
 			beforeEach(() => {
 				jest.resetModules();
-				delete process.env.HEROKU_RELEASE_CREATED_AT;
-				delete process.env.AWS_LAMBDA_FUNCTION_NAME;
+				process.env.AWS_LAMBDA_FUNCTION_NAME = 'mock-lambda-function-name';
 				appInfo = require('../../../lib');
 			});
 
-			it('is set to null', () => {
-				expect(appInfo.cloudProvider).toBe(null);
+			it('is set to "aws"', () => {
+				expect(appInfo.cloudProvider).toBe('aws');
+			});
+		});
+
+		describe('when `process.env.HAKO_SERVICE_URL` is defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				process.env.HAKO_SERVICE_URL = 'mock-hako-service-url';
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to "aws"', () => {
+				expect(appInfo.cloudProvider).toBe('aws');
+			});
+		});
+
+		describe('when `process.env.HEROKU_RELEASE_CREATED_AT` is defined', () => {
+			beforeEach(() => {
+				jest.resetModules();
+				process.env.HEROKU_RELEASE_CREATED_AT = 'mock-release-created-at';
+				appInfo = require('../../../lib');
+			});
+
+			it('is set to "heroku"', () => {
+				expect(appInfo.cloudProvider).toBe('heroku');
 			});
 		});
 	});
