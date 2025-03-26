@@ -1,5 +1,6 @@
 const appInfo = require('@dotcom-reliability-kit/app-info').semanticConventions;
-const { resourceFromAttributes } = require('@opentelemetry/sdk-node').resources;
+const { defaultResource, resourceFromAttributes } =
+	require('@opentelemetry/sdk-node').resources;
 const {
 	ATTR_SERVICE_NAME,
 	ATTR_SERVICE_VERSION
@@ -23,12 +24,14 @@ const ATTR_SERVICE_INSTANCE_ID = 'service.instance.id';
  */
 exports.createResourceConfig = function createResourceConfig() {
 	// We set OpenTelemetry resource attributes based on app data
-	return resourceFromAttributes({
-		[ATTR_SERVICE_NAME]: appInfo.service.name,
-		[ATTR_SERVICE_VERSION]: appInfo.service.version,
-		[ATTR_SERVICE_INSTANCE_ID]: appInfo.service.instance.id,
-		[ATTR_CLOUD_PROVIDER]: appInfo.cloud.provider,
-		[ATTR_CLOUD_REGION]: appInfo.cloud.region,
-		[ATTR_DEPLOYMENT_ENVIRONMENT]: appInfo.deployment.environment
-	});
+	return defaultResource().merge(
+		resourceFromAttributes({
+			[ATTR_SERVICE_NAME]: appInfo.service.name,
+			[ATTR_SERVICE_VERSION]: appInfo.service.version,
+			[ATTR_SERVICE_INSTANCE_ID]: appInfo.service.instance.id,
+			[ATTR_CLOUD_PROVIDER]: appInfo.cloud.provider,
+			[ATTR_CLOUD_REGION]: appInfo.cloud.region,
+			[ATTR_DEPLOYMENT_ENVIRONMENT]: appInfo.deployment.environment
+		})
+	);
 };
