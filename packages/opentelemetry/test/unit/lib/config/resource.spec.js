@@ -18,6 +18,9 @@ jest.mock('@dotcom-reliability-kit/app-info', () => ({
 }));
 jest.mock('@opentelemetry/sdk-node', () => ({
 	resources: {
+		defaultResource: jest.fn().mockReturnValue({
+			merge: jest.fn().mockReturnValue('mock-merged-resource')
+		}),
 		resourceFromAttributes: jest.fn().mockReturnValue('mock-resource')
 	}
 }));
@@ -26,7 +29,8 @@ jest.mock('@opentelemetry/semantic-conventions', () => ({
 	ATTR_SERVICE_VERSION: 'mock-semresattrs-service-version'
 }));
 
-const { resourceFromAttributes } = require('@opentelemetry/sdk-node').resources;
+const { defaultResource, resourceFromAttributes } =
+	require('@opentelemetry/sdk-node').resources;
 const { createResourceConfig } = require('../../../../lib/config/resource');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
@@ -41,7 +45,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 			resource = createResourceConfig();
 		});
 
-		it('creates and returns an OpenTelemetry Resource', () => {
+		it('creates and returns an OpenTelemetry Resource, merging it with defaults', () => {
 			expect(resourceFromAttributes).toHaveBeenCalledTimes(1);
 			expect(resourceFromAttributes).toHaveBeenCalledWith({
 				'cloud.provider': 'mock-cloud-provider',
@@ -51,7 +55,11 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 				'mock-semresattrs-service-version': 'mock-service-version',
 				'service.instance.id': 'mock-service-instance-id'
 			});
-			expect(resource).toStrictEqual('mock-resource');
+			expect(defaultResource).toHaveBeenCalledTimes(1);
+			expect(defaultResource.mock.results[0].value.merge).toHaveBeenCalledWith(
+				'mock-resource'
+			);
+			expect(resource).toStrictEqual('mock-merged-resource');
 		});
 	});
 });
