@@ -80,17 +80,43 @@ exports.commitHash =
 	null;
 
 /**
+ * Normalize environment tag
+ * @param {string} tag
+ *     The environment tag to normalize.
+ * @returns {string}
+ *     Returns the normalized environment tag
+ */
+function normalizeEnvironmentTag(tag) {
+	const tagLower = tag.toLowerCase();
+
+	if (['d', 'dev', 'development'].includes(tagLower)) {
+		return 'development';
+	}
+
+	if (['t', 'test'].includes(tagLower)) {
+		return 'test';
+	}
+
+	if (['p', 'prod', 'production'].includes(tagLower)) {
+		return 'production';
+	}
+
+	return tag;
+}
+
+/**
  * The application deployment environment.
  *
  * @readonly
  * @type {string}
  */
-exports.environment =
+exports.environment = normalizeEnvironmentTag(
 	process.env.DEPLOYMENT_ENVIRONMENT ||
 	process.env.RELEASE_ENV ||
 	process.env.ENVIRONMENT ||
 	process.env.NODE_ENV ||
-	'development';
+	'development'
+);
 
 /**
  * The region the application is running in.
