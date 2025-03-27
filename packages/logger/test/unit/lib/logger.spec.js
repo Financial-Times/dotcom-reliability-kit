@@ -991,6 +991,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 			afterEach(() => {
 				jest.unmock('pino-pretty');
+				appInfo.environment = 'production';
 			});
 
 			it('configures the created Pino logger with prettification', () => {
@@ -1025,6 +1026,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 			afterEach(() => {
 				jest.unmock('pino-pretty');
+				appInfo.environment = 'production';
 			});
 
 			it('does not configure the created Pino logger with prettification', () => {
@@ -1052,6 +1054,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 			afterEach(() => {
 				jest.unmock('pino-pretty');
+				delete process.env.LOG_DISABLE_PRETTIFIER;
 			});
 
 			it('does not configure the created Pino logger with prettification', () => {
@@ -1060,29 +1063,35 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the environment is "production"', () => {
+		describe('when pino-pretty is installed and the environment is "production", "prod", or "p"', () => {
 			beforeEach(() => {
 				jest.mock('pino-pretty', () => 'mock pino pretty');
-				appInfo.environment = 'production';
-
-				// We have to reset all modules because the checks for pino-pretty are done
-				// on module load for performance reasons. This resets the cache and reloads
-				// everything with a new environment.
-				jest.isolateModules(() => {
-					Logger = require('../../../lib/logger');
-				});
-
 				pino.mockClear();
-				logger = new Logger();
+				for (const environment of ['production', 'prod', 'p']) {
+					let Logger;
+
+					appInfo.environment = environment;
+					// We have to reset all modules because the checks for pino-pretty are done
+					// on module load for performance reasons. This resets the cache and reloads
+					// everything with a new environment.
+					jest.isolateModules(() => {
+						Logger = require('../../../lib/logger');
+					});
+
+					logger = new Logger();
+				}
 			});
 
 			afterEach(() => {
 				jest.unmock('pino-pretty');
+				appInfo.environment = 'production';
 			});
 
 			it('does not configure the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(pinoOptions.transport).toBeUndefined();
+				expect(pino).toHaveBeenCalledTimes(3);
+				for (const call of pino.mock.calls) {
+					expect(call[0].transport).toBeUndefined();
+				}
 			});
 		});
 
@@ -1104,6 +1113,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 			afterEach(() => {
 				jest.unmock('pino-pretty');
+				appInfo.cloudProvider = null;
 			});
 
 			it('does not configure the created Pino logger with prettification', () => {
@@ -1114,6 +1124,9 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when pino-pretty is not installed and the environment is "development"', () => {
 			beforeEach(() => {
+				jest.mock('pino-pretty', () => {
+					throw new Error('mock');
+				});
 				appInfo.environment = 'development';
 
 				// We have to reset all modules because the checks for pino-pretty are done
@@ -1125,6 +1138,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 				pino.mockClear();
 				logger = new Logger();
+			});
+
+			afterEach(() => {
+				appInfo.environment = 'production';
 			});
 
 			it('configures the created Pino logger without prettification', () => {
