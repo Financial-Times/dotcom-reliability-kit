@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.0.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v6.0.1...middleware-render-error-info-v6.0.2) (2025-03-27)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.0.1 to ^5.0.2
+
 ## [6.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-render-error-info-v6.0.0...middleware-render-error-info-v6.0.1) (2025-03-25)
 
 

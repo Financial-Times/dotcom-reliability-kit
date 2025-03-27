@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.0.1...logger-v4.1.0) (2025-03-27)
+
+
+### Features
+
+* disable prettifier for more prod env names ([aead95b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/aead95b965d15b7a80721f0d06131cb94c57821e)), closes [#1368](https://github.com/Financial-Times/dotcom-reliability-kit/issues/1368)
+
 ## [4.0.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.0.0...logger-v4.0.1) (2025-03-25)
 
 
