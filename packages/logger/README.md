@@ -249,7 +249,7 @@ You can also use [built-in transforms](#built-in-transforms) to do things like m
 
 ####  `options.withPrettifier`
 
-Whether to send prettified logs if available. This option has no effect if you have the `NODE_ENV` environment variable set to either `production` or if you have not installed [pino-pretty](https://github.com/pinojs/pino-pretty#readme). See [local development usage](#local-development-usage) for more information.
+Whether to send prettified logs if available. This option has no effect if you have the `NODE_ENV` environment variable set to `production` (`prod` or `p` also work) or if you have not installed [pino-pretty](https://github.com/pinojs/pino-pretty#readme). See [local development usage](#local-development-usage) for more information.
 
 Must be a `Boolean` and defaults to `true`.
 

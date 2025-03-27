@@ -76,7 +76,8 @@ const prettificationAvailable = (() => {
  * @type {boolean}
  */
 const prettificationAllowed =
-	appInfo.environment !== 'production' && appInfo.cloudProvider !== 'aws';
+	!['production', 'prod', 'p'].includes(appInfo.environment.toLowerCase()) &&
+	appInfo.cloudProvider !== 'aws';
 
 /**
  * Class representing a logger.
