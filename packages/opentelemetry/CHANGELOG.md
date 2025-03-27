@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.0.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.3...opentelemetry-v3.0.4) (2025-03-27)
+
+
+### Bug Fixes
+
+* merge resource attributes with the defaults ([3bc489b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3bc489ba05e4deea93d483e4eae8c35cd72f571d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.0.1 to ^5.0.2
+    * @dotcom-reliability-kit/logger bumped from ^4.0.1 to ^4.1.0
+
 ## [3.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.2...opentelemetry-v3.0.3) (2025-03-25)
 
 
