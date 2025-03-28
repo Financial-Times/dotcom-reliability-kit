@@ -616,12 +616,17 @@ jest.mock('@dotcom-reliability-kit/logger');
 This is because, in order to mock the logger, Jest will still load the original module which creates a fully fledged logger with bindings to `process.stdout`. You can get around this by providing your own manual mock logger, either as a second argument to `jest.mock` or as a file in `__mocks__/@dotcom-reliability-kit/logger.js`. E.g.
 
 ```js
+const mockedLogger = {
+	debug: jest.fn(),
+	error: jest.fn(),
+	fatal: jest.fn(),
+	info: jest.fn(),
+	warn: jest.fn(),
+};
+
 jest.mock('@dotcom-reliability-kit/logger', () => ({
-    debug: jest.fn(),
-    error: jest.fn(),
-    fatal: jest.fn(),
-    info: jest.fn(),
-    warn: jest.fn()
+	...mockedLogger,
+	Logger: jest.fn(() => mockedLogger),
 }));
 ```
 
