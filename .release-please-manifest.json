@@ -1,5 +1,6 @@
 {
   "packages/app-info": "4.1.0",
+  "packages/client-metrics-web": "0.0.0",
   "packages/crash-handler": "5.0.2",
   "packages/errors": "4.0.0",
   "packages/eslint-config": "4.0.0",
