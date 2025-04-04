@@ -1,0 +1,21 @@
+{
+  "name": "@dotcom-reliability-kit/client-metrics-web",
+  "version": "0.0.0",
+  "description": "A client for sending operational metrics to AWS CloudWatch RUM from the web",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "packages/client-metrics-web"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/client-metrics-web#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: client-metrics-web\"",
+  "license": "MIT",
+  "engines": {
+    "node": "20.x || 22.x"
+  },
+  "main": "lib/index.js",
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "aws-rum-web": "^1.21.0"
+  }
+}
