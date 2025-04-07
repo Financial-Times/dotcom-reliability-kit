@@ -194,15 +194,7 @@ module.exports = [
 		// Reliability kit does not send the `message` as an empty string
 		// if one is not present – it explicitly sets it to `null`.
 		expectedOutput: {
-			nextMaskLogger: {
-				level: 'info',
-				name: 'L. Ogger',
-				age: 32,
-				email: '*****',
-				password: '*****',
-				role: 'Developer',
-				message: ''
-			},
+			// n-mask-logger test case removed - it's not in use anywhere
 			reliabilityKitMaskLogger: {
 				level: 'info',
 				name: 'L. Ogger',
@@ -234,16 +226,7 @@ module.exports = [
 		// Reliability kit does not send the `message` as an empty string
 		// if one is not present – it explicitly sets it to `null`.
 		expectedOutput: {
-			nextMaskLogger: {
-				level: 'info',
-				foo: 'bar',
-				inner: {
-					some: 'field',
-					deep: { password: '*****' },
-					email: '*****'
-				},
-				message: ''
-			},
+			// n-mask-logger test case removed - it's not in use anywhere
 			reliabilityKitMaskLogger: {
 				level: 'info',
 				foo: 'bar',
@@ -264,10 +247,7 @@ module.exports = [
 			args: ['Oh look password = 123abc']
 		},
 		expectedOutput: {
-			nextMaskLogger: {
-				level: 'info',
-				message: 'Oh look password = *****'
-			},
+			// n-mask-logger test case removed - it's not in use anywhere
 			reliabilityKitMaskLogger: {
 				level: 'info',
 				message: 'Oh look password = *****'
@@ -602,21 +582,7 @@ module.exports = [
 			]
 		},
 		expectedOutput: {
-			nextMaskLogger: {
-				level: 'info',
-				message: 'Test message',
-				list: [
-					{
-						email: '*****',
-						subList: [
-							{
-								postcode: '*****'
-							}
-						]
-					},
-					'password = *****'
-				]
-			},
+			// n-mask-logger test case removed - it's not in use anywhere
 			reliabilityKitMaskLogger: {
 				level: 'info',
 				message: 'Test message',
@@ -652,15 +618,7 @@ module.exports = [
 		// properties only. Reliability Kit also doesn't deal with errors found in
 		// other properties, this is for backwards compatibility with n-logger.
 		expectedOutput: {
-			nextMaskLogger: {
-				level: 'info',
-				message: 'password = *****',
-				name: 'Error',
-				nestedError: {
-					message: 'email = *****',
-					name: 'Error'
-				}
-			},
+			// n-mask-logger test case removed - it's not in use anywhere
 			reliabilityKitMaskLogger: {
 				level: 'info',
 				message: null,
@@ -884,13 +842,7 @@ module.exports = [
 			]
 		},
 		expectedOutput: {
-			nextMaskLogger: {
-				level: 'info',
-				message: 'updateProfile',
-				result: 'success',
-				userId: 'abc123',
-				apiEnv: 'PROD'
-			},
+			// n-mask-logger test case removed - it's not in use anywhere
 			reliabilityKitMaskLogger: {
 				level: 'info',
 				message: 'updateProfile',
@@ -927,23 +879,7 @@ module.exports = [
 			]
 		},
 		expectedOutput: {
-			nextMaskLogger: {
-				level: 'error',
-				message: 'editBillingDetails',
-				error: {
-					url: '/example',
-					status: 500,
-					method: 'post',
-					responseBody: {
-						user: {
-							email: '*****'
-						}
-					},
-					headers: {
-						'X-Request-Id': '123'
-					}
-				}
-			},
+			// n-mask-logger test case removed - it's not in use anywhere
 			reliabilityKitMaskLogger: {
 				level: 'error',
 				message: 'editBillingDetails',
