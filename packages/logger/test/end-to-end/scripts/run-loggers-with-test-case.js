@@ -8,11 +8,9 @@ process.env.SPLUNK_LOG_LEVEL = 'silly';
 process.env.LOG_DISABLE_PRETTIFIER = 'true';
 
 const nLogger = require('@financial-times/n-logger').default;
-const MaskLogger = require('@financial-times/n-mask-logger');
 const reliabilityKitLogger = require('../../../lib');
 const testCases = require('../compatibility-test-cases');
 
-const nMaskLogger = new MaskLogger();
 const reliabilityKitMaskLogger = new reliabilityKitLogger.Logger({
 	transforms: [reliabilityKitLogger.transforms.legacyMask()]
 });
@@ -34,11 +32,6 @@ if (nLogger[method]) {
 // Run reliability kit logger
 if (reliabilityKitLogger[method]) {
 	reliabilityKitLogger[method](...args, { _logger: 'reliabilityKit' });
-}
-
-// Run n-mask-logger
-if (nMaskLogger[method]) {
-	nMaskLogger[method](...args, { _logger: 'nextMaskLogger' });
 }
 
 // Run reliability kit masked logger
