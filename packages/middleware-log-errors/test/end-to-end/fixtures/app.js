@@ -1,21 +1,7 @@
-// Environment overrides must come before module imports
-process.env.HEROKU_RELEASE_CREATED_AT = 'mock-release-date';
-process.env.HEROKU_SLUG_COMMIT = 'mock-commit-hash';
-process.env.LOG_LEVEL = 'debug';
-process.env.MIGRATE_TO_HEROKU_LOG_DRAINS = 'true';
-process.env.NODE_ENV = 'production';
-process.env.REGION = 'mock-region';
-process.env.SYSTEM_CODE = 'reliability-kit/middleware-log-errors';
-
-const express = require('@financial-times/n-express');
+const express = require('express');
 const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
 
-const app = express({
-	demo: true,
-	systemCode: process.env.SYSTEM_CODE || 'reliability-kit-automated-tests',
-	withBackendAuthentication: false,
-	withServiceMetrics: false
-});
+const app = express();
 
 app.get('/error', () => {
 	const error = new Error('example error');
@@ -41,7 +27,7 @@ app.use(
 	})
 );
 
-app.listen(undefined).then((server) => {
+const server = app.listen(() => {
 	if (process.send) {
 		process.send({
 			ready: true,
