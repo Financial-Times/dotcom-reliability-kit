@@ -7,7 +7,19 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	let baseUrl;
 
 	beforeAll((done) => {
-		child = fork(`${__dirname}/fixtures/app.js`, { stdio: 'pipe' });
+		child = fork(`${__dirname}/fixtures/app.js`, {
+			stdio: 'pipe',
+			env: {
+				...process.env,
+				HEROKU_RELEASE_CREATED_AT: 'mock-release-date',
+				HEROKU_SLUG_COMMIT: 'mock-commit-hash',
+				LOG_LEVEL: 'debug',
+				MIGRATE_TO_HEROKU_LOG_DRAINS: 'true',
+				NODE_ENV: 'production',
+				REGION: 'mock-region',
+				SYSTEM_CODE: 'reliability-kit/middleware-log-errors'
+			}
+		});
 		child.stdout.on('data', (chunk) => {
 			stdout += chunk.toString();
 		});
