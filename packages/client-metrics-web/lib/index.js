@@ -8,6 +8,8 @@ const { AwsRum } = require('aws-rum-web');
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)+$/i;
 
+console.log('TESTING');
+
 exports.MetricsClient = class MetricsClient {
 	/** @type {null | AwsRum} */
 	#rum = null;
