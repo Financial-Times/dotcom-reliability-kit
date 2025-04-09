@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.1.0...logger-v4.1.1) (2025-04-09)
+
+
+### Documentation Changes
+
+* improve mock logger sample ([82c2d19](https://github.com/Financial-Times/dotcom-reliability-kit/commit/82c2d19c2cf5ceb152c21a3feb2366f5f238effe))
+
 ## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.0.1...logger-v4.1.0) (2025-03-27)
 
 
