@@ -2,21 +2,7 @@ version: 2
 updates:
 
   - package-ecosystem: "npm"
-    directories:
-      - /
-      - /resources/logos
-      - /packages/app-info
-      - /packages/crash-handler
-      - /packages/errors
-      - /packages/eslint-config
-      - /packages/fetch-error-handler
-      - /packages/log-error
-      - /packages/logger
-      - /packages/middleware-log-errors
-      - /packages/middleware-render-error-info
-      - /packages/opentelemetry
-      - /packages/serialize-error
-      - /packages/serialize-request
+    directory: '/'
     schedule:
       interval: "daily"
     commit-message:
