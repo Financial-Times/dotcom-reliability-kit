@@ -27,7 +27,7 @@
 		"@opentelemetry/host-metrics": "^0.36.0",
 		"@opentelemetry/instrumentation-runtime-node": "^0.13.0",
 		"@opentelemetry/sdk-node": "^0.200.0",
-		"@opentelemetry/semantic-conventions": "^1.30.0"
+		"@opentelemetry/semantic-conventions": "^1.32.0"
 	},
 	"devDependencies": {
 		"express": "^4.21.2"
