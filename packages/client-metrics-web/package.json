@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/client-metrics-web",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A client for sending operational metrics to AWS CloudWatch RUM from the web",
   "repository": {
     "type": "git",
