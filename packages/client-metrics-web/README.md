@@ -273,7 +273,7 @@ As well as a client you'll need an AWS CloudWatch AppMonitor to send events to. 
 
 We maintain a system called [Customer Products Client Metrics](https://biz-ops.in.ft.com/System/cp-client-metrics). You can find all required options in Doppler under `cp-shared.prod`, look for those prefixed with `CLIENT_METRICS_`. Speak to the Reliability team about how to access the data once you're recording metrics.
 
-To get these shared configurations to the client side, we recommend referencing the shared secrets in your own Doppler project and using [dotcom-ui-app-context](https://github.com/Financial-Times/dotcom-page-kit/tree/main/packages/dotcom-ui-app-context) to pass them to the client side.
+To get these shared configurations to the client side, we recommend referencing the shared secrets in your own Doppler project and using [dotcom-ui-data-embed](https://github.com/Financial-Times/dotcom-page-kit/tree/main/packages/dotcom-ui-data-embed) to pass them to the client side.
 
 If you want your events to be available as CloudWatch metrics and in Grafana then you'll need to add filters to the AppMonitor's `MetricDestinations`. Speak to the Reliability team about how to do this.
 
