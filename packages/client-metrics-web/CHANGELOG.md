@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.1...client-metrics-web-v0.1.2) (2025-04-22)
+
+
+### Bug Fixes
+
+* bump aws-rum-web from 1.22.0 to 1.22.1 ([3a60ca1](https://github.com/Financial-Times/dotcom-reliability-kit/commit/3a60ca1db06bcdb6cd3d81945a419a5980e77f59))
+* correct metrics client constructor options ([1bd66e0](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1bd66e065bc843e05a6f73cf70be445cda1443f7))
+
+
+### Documentation Changes
+
+* clarify how dom event details map to metrics ([60becc2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/60becc27f99783b9903ddb9b9fad57ac363c809f))
+
 ## [0.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.0...client-metrics-web-v0.1.1) (2025-04-15)
 
 

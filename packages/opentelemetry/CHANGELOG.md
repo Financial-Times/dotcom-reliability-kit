@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.6...opentelemetry-v3.0.7) (2025-04-22)
+
+
+### Bug Fixes
+
+* update auto-instrumentations ([08dc1e9](https://github.com/Financial-Times/dotcom-reliability-kit/commit/08dc1e96538e9387af757401f5e8acca24d191a0))
+
 ## [3.0.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.5...opentelemetry-v3.0.6) (2025-04-15)
 
 
