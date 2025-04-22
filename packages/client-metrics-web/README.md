@@ -165,6 +165,20 @@ element.dispatchEvent(
 ));
 ```
 
+When sending metrics in this way, the `detail` object can have any number of properties. These properties will be extracted into the final metrics event and sent to AWS CloudWatch RUM. For example:
+
+```js
+window.dispatchEvent(
+    new CustomEvent('ft.clientMetric', {
+        detail: { namespace: 'snack.consumed', fruit: 'banana' }
+    }
+));
+
+// is equivalent to:
+
+client.recordEvent('snack.consumed', { fruit: 'banana' });
+```
+
 ### Error handling
 
 If something goes wrong with the configuration of the metrics client _or_ the sending of an event, we don't throw an error - this could result in an infinite loop where we try to record the thrown error and that throws another error.
