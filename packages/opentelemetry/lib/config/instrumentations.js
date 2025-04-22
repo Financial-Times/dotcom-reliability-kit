@@ -1,9 +1,6 @@
 const {
 	getNodeAutoInstrumentations
 } = require('@opentelemetry/auto-instrumentations-node');
-const {
-	RuntimeNodeInstrumentation
-} = require('@opentelemetry/instrumentation-runtime-node');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
@@ -21,17 +18,14 @@ const IGNORED_REQUEST_PATHS = ['/__gtg', '/__health', '/favicon.ico'];
  * @returns {NodeSDKConfiguration['instrumentations']}
  */
 exports.createInstrumentationConfig = function createInstrumentationConfig() {
-	return [
-		getNodeAutoInstrumentations({
-			'@opentelemetry/instrumentation-http': {
-				ignoreIncomingRequestHook
-			},
-			'@opentelemetry/instrumentation-pino': {
-				enabled: false
-			}
-		}),
-		new RuntimeNodeInstrumentation()
-	];
+	return getNodeAutoInstrumentations({
+		'@opentelemetry/instrumentation-http': {
+			ignoreIncomingRequestHook
+		},
+		'@opentelemetry/instrumentation-pino': {
+			enabled: false
+		}
+	});
 };
 
 /**
