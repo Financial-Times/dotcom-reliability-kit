@@ -3,16 +3,12 @@ jest.mock('@opentelemetry/auto-instrumentations-node', () => ({
 		.fn()
 		.mockReturnValue('mock-auto-instrumentations')
 }));
-jest.mock('@opentelemetry/instrumentation-runtime-node');
 jest.mock('@dotcom-reliability-kit/log-error');
 jest.mock('@dotcom-reliability-kit/errors');
 
 const {
 	getNodeAutoInstrumentations
 } = require('@opentelemetry/auto-instrumentations-node');
-const {
-	RuntimeNodeInstrumentation
-} = require('@opentelemetry/instrumentation-runtime-node');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
@@ -29,7 +25,6 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 		let instrumentations;
 
 		beforeEach(() => {
-			RuntimeNodeInstrumentation.mockReset();
 			instrumentations = createInstrumentationConfig();
 		});
 
@@ -43,11 +38,6 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					enabled: false
 				}
 			});
-		});
-
-		it('sets up runtime Node.js instrumentations', () => {
-			expect(RuntimeNodeInstrumentation).toHaveBeenCalledTimes(1);
-			expect(RuntimeNodeInstrumentation).toHaveBeenCalledWith();
 		});
 
 		describe('ignore incoming request hook function', () => {
@@ -131,11 +121,8 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 			});
 		});
 
-		it('returns an array of instrumentations', () => {
-			expect(instrumentations).toEqual([
-				'mock-auto-instrumentations',
-				expect.any(RuntimeNodeInstrumentation)
-			]);
+		it('returns the auto-instrumentations', () => {
+			expect(instrumentations).toEqual('mock-auto-instrumentations');
 		});
 	});
 });
