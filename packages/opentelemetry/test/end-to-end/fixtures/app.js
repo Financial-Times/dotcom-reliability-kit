@@ -14,10 +14,13 @@ app.use(async (request, response) => {
 		url: request.url
 	});
 
-	// This ensures that metrics and traces are flushed
-	await sdk.shutdown();
-
 	response.status(200).send('');
+
+	// This ensures that metrics and traces are flushed but only
+	// once the response traces have been recorded
+	response.on('close', async () => {
+		await sdk.shutdown();
+	});
 });
 
 const server = app.listen((error) => {
