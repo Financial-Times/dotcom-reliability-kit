@@ -1,4 +1,5 @@
 const { fork } = require('node:child_process');
+const { setTimeout } = require('node:timers/promises');
 
 function waitForBaseUrl(childProcess) {
 	return new Promise((resolve) => {
@@ -86,6 +87,12 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 		beforeAll(async () => {
 			try {
 				await fetch(`${exporterBaseUrl}/example`);
+				// This timeout is required because we have to wait for OpenTelemetry
+				// in the app to finish sending traces. This makes the test brittle
+				// however I've set a much longer timeout that we need to address it.
+				// The tests normally pass for me in 100ms but the 1000ms is there to
+				// ensure the tests still pass on a slower machine
+				await setTimeout(1000);
 				collectorLogs = stdoutToLogs(collectorStdout);
 				exporterLogs = stdoutToLogs(exporterStdout);
 			} catch (cause) {
