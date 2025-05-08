@@ -1,5 +1,27 @@
 # Changelog
 
+## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.7...opentelemetry-v3.1.0) (2025-05-08)
+
+
+### Features
+
+* add support for Node.js 24 ([1274a12](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1274a128049a49111fb59be8ca162ce213dcd539))
+
+
+### Bug Fixes
+
+* bump @opentelemetry/auto-instrumentations-node ([9d11507](https://github.com/Financial-Times/dotcom-reliability-kit/commit/9d11507e05778a8414c11d704701233f98044aab))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^4.1.0 to ^4.2.0
+    * @dotcom-reliability-kit/errors bumped from ^4.0.0 to ^4.1.0
+    * @dotcom-reliability-kit/log-error bumped from ^5.0.3 to ^5.1.0
+    * @dotcom-reliability-kit/logger bumped from ^4.1.1 to ^4.2.0
+
 ## [3.0.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.6...opentelemetry-v3.0.7) (2025-04-22)
 
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v1.0.0...fetch-error-handler-v1.1.0) (2025-05-08)
+
+
+### Features
+
+* add support for Node.js 24 ([1274a12](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1274a128049a49111fb59be8ca162ce213dcd539))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/errors bumped from ^4.0.0 to ^4.1.0
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v0.3.0...fetch-error-handler-v1.0.0) (2025-01-30)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v4.0.0...serialize-request-v4.1.0) (2025-05-08)
+
+
+### Features
+
+* add support for Node.js 24 ([1274a12](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1274a128049a49111fb59be8ca162ce213dcd539))
+
 ## [4.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v3.1.1...serialize-request-v4.0.0) (2025-01-20)
 
 

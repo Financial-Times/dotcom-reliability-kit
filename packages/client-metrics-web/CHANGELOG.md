@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.2...client-metrics-web-v0.1.3) (2025-05-08)
+
+
+### Features
+
+* add support for Node.js 24 ([1274a12](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1274a128049a49111fb59be8ca162ce213dcd539))
+
 ## [0.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.1...client-metrics-web-v0.1.2) (2025-04-22)
 
 
