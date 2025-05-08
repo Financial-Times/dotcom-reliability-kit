@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v5.0.3...log-error-v5.1.0) (2025-05-08)
+
+
+### Features
+
+* add support for Node.js 24 ([1274a12](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1274a128049a49111fb59be8ca162ce213dcd539))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^4.1.0 to ^4.2.0
+    * @dotcom-reliability-kit/logger bumped from ^4.1.1 to ^4.2.0
+    * @dotcom-reliability-kit/serialize-error bumped from ^4.0.0 to ^4.1.0
+    * @dotcom-reliability-kit/serialize-request bumped from ^4.0.0 to ^4.1.0
+
 ## [5.0.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/log-error-v5.0.2...log-error-v5.0.3) (2025-04-09)
 
 
