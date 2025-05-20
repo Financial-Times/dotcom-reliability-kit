@@ -16,6 +16,6 @@
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "devDependencies": {
-    "@types/express": "^5.0.1"
+    "@types/express": "^5.0.2"
   }
 }
