@@ -1,5 +1,22 @@
 # Changelog
 
+## [3.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.1.0...opentelemetry-v3.1.1) (2025-08-12)
+
+
+### Bug Fixes
+
+* bump @opentelemetry/exporter-metrics-otlp-proto ([408e3ba](https://github.com/Financial-Times/dotcom-reliability-kit/commit/408e3ba7d9612f5f067ba61ea54a7a971b8b0249))
+* bump @opentelemetry/semantic-conventions from 1.32.0 to 1.33.0 ([b639df9](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b639df911829fbadd81955a6644b6c39e3c70de4))
+* update all OpenTelemetry packages ([e7f68e5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e7f68e52f8b719aceba43a8b3e34f5efeada5aaf))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.1.0 to ^5.1.1
+    * @dotcom-reliability-kit/logger bumped from ^4.2.0 to ^4.2.1
+
 ## [3.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.0.7...opentelemetry-v3.1.0) (2025-05-08)
 
 

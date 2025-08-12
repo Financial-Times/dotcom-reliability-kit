@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v5.1.0...crash-handler-v5.1.1) (2025-08-12)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.1.0 to ^5.1.1
+
 ## [5.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/crash-handler-v5.0.3...crash-handler-v5.1.0) (2025-05-08)
 
 
