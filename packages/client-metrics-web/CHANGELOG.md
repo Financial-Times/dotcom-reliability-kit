@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.3...client-metrics-web-v0.1.4) (2025-08-12)
+
+
+### Bug Fixes
+
+* bump aws-rum-web from 1.22.1 to 1.23.0 ([1ad87d6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/1ad87d688174376d12df23c473142fbf1d9f94c0))
+* bump aws-rum-web from 1.23.0 to 1.25.0 ([51ba4db](https://github.com/Financial-Times/dotcom-reliability-kit/commit/51ba4dbe47a60125f1b3eb0fb5c6a8e0ec5bc618))
+
 ## [0.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.2...client-metrics-web-v0.1.3) (2025-05-08)
 
 
