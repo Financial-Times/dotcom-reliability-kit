@@ -1,16 +1,16 @@
 {
   "packages/app-info": "4.2.0",
   "packages/client-metrics-web": "0.1.4",
-  "packages/crash-handler": "5.1.1",
+  "packages/crash-handler": "5.1.2",
   "packages/errors": "4.1.0",
   "packages/eslint-config": "4.1.0",
   "packages/fetch-error-handler": "1.1.0",
-  "packages/log-error": "5.1.1",
-  "packages/logger": "4.2.1",
-  "packages/middleware-log-errors": "5.1.1",
-  "packages/middleware-render-error-info": "6.1.1",
+  "packages/log-error": "5.1.2",
+  "packages/logger": "4.2.2",
+  "packages/middleware-log-errors": "5.1.2",
+  "packages/middleware-render-error-info": "6.1.2",
   "packages/serialize-error": "4.1.0",
   "packages/serialize-request": "4.1.0",
-  "packages/opentelemetry": "3.1.1",
+  "packages/opentelemetry": "3.1.2",
   "packages/middleware-allow-request-methods": "1.1.0"
 }
