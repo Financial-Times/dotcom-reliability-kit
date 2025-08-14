@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/log-error",
-  "version": "5.1.1",
+  "version": "5.1.2",
   "description": "A method to consistently log error object with optional request information",
   "repository": {
     "type": "git",
@@ -17,7 +17,7 @@
   "types": "types/index.d.ts",
   "dependencies": {
     "@dotcom-reliability-kit/app-info": "^4.2.0",
-    "@dotcom-reliability-kit/logger": "^4.2.1",
+    "@dotcom-reliability-kit/logger": "^4.2.2",
     "@dotcom-reliability-kit/serialize-error": "^4.1.0",
     "@dotcom-reliability-kit/serialize-request": "^4.1.0"
   },
