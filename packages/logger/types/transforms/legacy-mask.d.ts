@@ -10,7 +10,7 @@ export type InternalMaskSettings = {
 	maskedFields: Set<string>;
 	maskRegExp: RegExp;
 	maskString: string;
-	references: WeakSet;
+	references: WeakSet<{ [key: string]: any }>;
 };
 
 export type createLegacyMaskTransform = (
