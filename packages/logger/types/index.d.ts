@@ -3,7 +3,7 @@ import { createLegacyMaskTransform } from './transforms/legacy-mask';
 
 declare module '@dotcom-reliability-kit/logger' {
 	export type Transforms = {
-		legacyMask: typeof createLegacyMaskTransform;
+		legacyMask: createLegacyMaskTransform;
 	};
 
 	export type DefaultLogger = {
@@ -14,7 +14,7 @@ declare module '@dotcom-reliability-kit/logger' {
 	export const transforms: Transforms;
 	export { Logger };
 
-	declare const _exports: Logger & DefaultLogger;
+	const _exports: Logger & DefaultLogger;
 	export = _exports;
 	export default _exports;
 }
