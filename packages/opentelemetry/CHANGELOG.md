@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.1.2...opentelemetry-v3.1.3) (2025-08-21)
+
+
+### Bug Fixes
+
+* bump @opentelemetry/auto-instrumentations-node ([b02b434](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b02b434d452acea5cfaa96e6cd209db00d416f79))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.1.2 to ^5.1.3
+    * @dotcom-reliability-kit/logger bumped from ^4.2.2 to ^4.2.3
+
 ## [3.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.1.1...opentelemetry-v3.1.2) (2025-08-14)
 
 
