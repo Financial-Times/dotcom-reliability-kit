@@ -1,10 +1,5 @@
 declare module '@dotcom-reliability-kit/client-metrics-web' {
 	export type MetricsClientOptions = {
-		allowedHostnamePattern?: RegExp;
-		awsAppMonitorId: string;
-		awsAppMonitorRegion: string;
-		awsIdentityPoolId: string;
-		samplePercentage?: number;
 		systemCode: string;
 		systemVersion?: string;
 	};
@@ -15,7 +10,6 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get isEnabled(): boolean;
 		enable(): void;
 		disable(): void;
-		recordError(error: unknown): void;
 		recordEvent(namespace: string, eventData?: Record<string, any>): void;
 	}
 

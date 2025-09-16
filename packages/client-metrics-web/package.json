@@ -14,8 +14,5 @@
     "node": "20.x || 22.x || 24.x"
   },
   "main": "lib/index.js",
-  "types": "types/index.d.ts",
-  "dependencies": {
-    "aws-rum-web": "^1.25.0"
-  }
+  "types": "types/index.d.ts"
 }

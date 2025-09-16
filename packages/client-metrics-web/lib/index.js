@@ -1,60 +1,31 @@
 /* eslint-disable no-console */
-const { AwsRum } = require('aws-rum-web');
 
 /**
- * @import { AwsRumConfig } from 'aws-rum-web'
  * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
+const bufferSize = 10;
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)+$/i;
 
 exports.MetricsClient = class MetricsClient {
-	/** @type {null | AwsRum} */
-	#rum = null;
+	/** @type {MetricsEvent[]} */
+	#buffer = [];
 
 	/** @type {boolean} */
-	#isAvailable = false;
+	#isAvailable = true;
 
 	/** @type {boolean} */
 	#isEnabled = false;
+
+	/** @type {Required<MetricsClientOptions>} */
+	#options;
 
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
 	constructor(options) {
 		try {
-			const {
-				awsAppMonitorId,
-				awsAppMonitorRegion,
-				awsIdentityPoolId,
-				samplePercentage,
-				systemCode,
-				systemVersion
-			} = MetricsClient.#defaultOptions(options);
-
-			// Convert percentage-based sample rate to a decimal
-			const sessionSampleRate =
-				Math.round(Math.min(Math.max(samplePercentage, 0), 100)) / 100;
-
-			/** @type {AwsRumConfig} */
-			const awsRumConfig = {
-				allowCookies: false,
-				disableAutoPageView: true,
-				enableXRay: false,
-				endpoint: `https://dataplane.rum.${awsAppMonitorRegion}.amazonaws.com`,
-				identityPoolId: awsIdentityPoolId,
-				sessionAttributes: { systemCode },
-				sessionSampleRate,
-				telemetries: ['errors']
-			};
-
-			this.#rum = new AwsRum(
-				awsAppMonitorId,
-				systemVersion,
-				awsAppMonitorRegion,
-				awsRumConfig
-			);
-			this.#isAvailable = true;
+			this.#options = MetricsClient.#defaultOptions(options);
 		} catch (/** @type {any} */ error) {
 			this.#isAvailable = false;
 			console.warn(`Client not initialised: ${error.message}`);
@@ -76,8 +47,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['enable']} */
 	enable() {
-		if (this.#isAvailable && !this.#isEnabled) {
-			this.#rum?.enable();
+		if (this.isAvailable && !this.#isEnabled) {
 			window.addEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = true;
 		}
@@ -85,26 +55,33 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['disable']} */
 	disable() {
-		if (this.#isAvailable && this.#isEnabled) {
-			this.#rum?.disable();
+		if (this.isAvailable && this.#isEnabled) {
 			window.removeEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = false;
 		}
-	}
-
-	/** @type {MetricsClientType['recordError']} */
-	recordError(error) {
-		this.#rum?.recordError(error);
 	}
 
 	/** @type {MetricsClientType['recordEvent']} */
 	recordEvent(namespace, eventData = {}) {
 		try {
 			namespace = MetricsClient.#resolveNamespace(namespace);
-			this.#rum?.recordEvent(namespace, eventData);
+			this.#buffer.push({ namespace, timestamp: Date.now(), data: eventData });
+			if (
+				this.#isAvailable &&
+				this.#isEnabled &&
+				this.#buffer.length >= bufferSize
+			) {
+				this.flush();
+			}
 		} catch (/** @type {any} */ error) {
 			console.warn(`Invalid metrics event: ${error.message}`);
 		}
+	}
+
+	flush() {
+		const events = this.#buffer;
+		// TODO fetch
+		this.#buffer = [];
 	}
 
 	/**
@@ -129,14 +106,7 @@ exports.MetricsClient = class MetricsClient {
 	 */
 	static #defaultOptions(options) {
 		/** @type {Required<MetricsClientOptions>} */
-		const defaultedOptions = Object.assign(
-			{
-				allowedHostnamePattern: /\.ft\.com$/,
-				samplePercentage: 5,
-				systemVersion: '0.0.0'
-			},
-			options
-		);
+		const defaultedOptions = Object.assign({ systemVersion: '0.0.0' }, options);
 		this.#assertValidOptions(defaultedOptions);
 		return defaultedOptions;
 	}
@@ -145,33 +115,12 @@ exports.MetricsClient = class MetricsClient {
 	 * @param {Required<MetricsClientOptions>} options
 	 * @returns {void}
 	 */
-	static #assertValidOptions({
-		allowedHostnamePattern,
-		awsAppMonitorId,
-		awsAppMonitorRegion,
-		awsIdentityPoolId,
-		systemCode
-	}) {
-		if (!(allowedHostnamePattern instanceof RegExp)) {
-			throw new TypeError('option allowedHostnamePattern must be a RegExp');
-		}
-		if (typeof awsAppMonitorId !== 'string') {
-			throw new TypeError('option awsAppMonitorId must be a string');
-		}
-		if (typeof awsAppMonitorRegion !== 'string') {
-			throw new TypeError('option awsAppMonitorRegion must be a string');
-		}
-		if (typeof awsIdentityPoolId !== 'string') {
-			throw new TypeError('option awsIdentityPoolId must be a string');
-		}
+	static #assertValidOptions({ systemCode, systemVersion }) {
 		if (typeof systemCode !== 'string') {
 			throw new TypeError('option systemCode must be a string');
 		}
-
-		// No point trying to send RUM events when we're not running on an allowed domain
-		const hostname = window.location.hostname;
-		if (!allowedHostnamePattern.test(hostname)) {
-			throw new Error(`client errors cannot be handled on ${hostname}`);
+		if (typeof systemVersion !== 'string') {
+			throw new TypeError('option systemVersion must be a string');
 		}
 	}
 
