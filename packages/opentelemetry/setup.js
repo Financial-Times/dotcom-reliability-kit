@@ -21,8 +21,27 @@ if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
 	};
 }
 
+/**
+ * @param {string} input
+ * @returns {number[]}
+ */
+function parseListOfNumbers(input) {
+	return input.split(',').map((item) => Number(item.trim()));
+}
+
+/** @type {opentelemetry.ViewOptions | undefined} */
+let views = undefined;
+if (process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS) {
+	views = {
+		httpServerDurationBuckets: parseListOfNumbers(
+			process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS
+		)
+	};
+}
+
 opentelemetry.setup({
 	logInternals: Boolean(process.env.OPENTELEMETRY_LOG_INTERNALS),
 	metrics,
-	tracing
+	tracing,
+	views
 });

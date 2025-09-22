@@ -63,6 +63,24 @@ describe('setup', () => {
 		});
 	});
 
+	describe('when an HTTP duration bucket is specified', () => {
+		it('includes views configurations', () => {
+			process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS =
+				'1,2,3,  4  ,five';
+			require('../../setup.js');
+
+			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
+			expect(opentelemetry.setup).toHaveBeenCalledWith(
+				expect.objectContaining({
+					views: {
+						httpServerDurationBuckets: [1, 2, 3, 4, NaN]
+					}
+				})
+			);
+			delete process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS;
+		});
+	});
+
 	describe('when a sample rate is specified', () => {
 		it('calls OpenTelemetry with the given sample percentage as a number', () => {
 			delete process.env.OPENTELEMETRY_METRICS_ENDPOINT;
