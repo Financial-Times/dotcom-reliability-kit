@@ -2,6 +2,7 @@ const { createInstrumentationConfig } = require('./config/instrumentations');
 const { createMetricsConfig } = require('./config/metrics');
 const { createResourceConfig } = require('./config/resource');
 const { createTracingConfig } = require('./config/tracing');
+const { createViewConfig } = require('./config/views');
 const { HostMetrics } = require('@opentelemetry/host-metrics');
 const opentelemetry = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
@@ -28,7 +29,8 @@ function setupOpenTelemetry({
 	authorizationHeader,
 	logInternals,
 	metrics: metricsOptions,
-	tracing: tracingOptions
+	tracing: tracingOptions,
+	views: viewOptions
 } = {}) {
 	if (instances) {
 		return instances;
@@ -78,7 +80,10 @@ function setupOpenTelemetry({
 			...createTracingConfig({
 				authorizationHeader,
 				...tracingOptions
-			})
+			}),
+
+			// Add view-specific configurations
+			...createViewConfig(viewOptions || {})
 		})
 	};
 	instances.sdk.start();

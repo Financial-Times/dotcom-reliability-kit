@@ -13,12 +13,17 @@ declare module '@dotcom-reliability-kit/opentelemetry' {
 		samplePercentage?: number;
 	};
 
+	export type ViewOptions = {
+		httpServerDurationBuckets?: number[];
+	};
+
 	export type Options = {
 		/** @deprecated */
 		authorizationHeader?: string;
 		logInternals?: boolean;
 		metrics?: MetricsOptions;
 		tracing?: TracingOptions;
+		views?: ViewOptions;
 	};
 
 	export type Instances = {

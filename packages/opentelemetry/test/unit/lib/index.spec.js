@@ -15,6 +15,9 @@ jest.mock('../../../lib/config/resource', () => ({
 jest.mock('../../../lib/config/tracing', () => ({
 	createTracingConfig: jest.fn().mockReturnValue({ tracing: 'mock-tracing' })
 }));
+jest.mock('../../../lib/config/views', () => ({
+	createViewConfig: jest.fn().mockReturnValue({ views: 'mock-views' })
+}));
 
 describe('@dotcom-reliability-kit/opentelemetry', () => {
 	let api;
@@ -22,6 +25,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 	let createMetricsConfig;
 	let createResourceConfig;
 	let createTracingConfig;
+	let createViewConfig;
 	let HostMetrics;
 	let logger;
 	let mockChildLogger;
@@ -42,6 +46,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			require('../../../lib/config/resource').createResourceConfig;
 		createTracingConfig =
 			require('../../../lib/config/tracing').createTracingConfig;
+		createViewConfig = require('../../../lib/config/views').createViewConfig;
 		api = require('@opentelemetry/sdk-node').api;
 		api.metrics.getMeterProvider.mockReturnValue('mock-meter-provider');
 		HostMetrics = require('@opentelemetry/host-metrics').HostMetrics;
@@ -74,6 +79,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 				},
 				metrics: {
 					endpoint: 'mock-metrics-endpoint'
+				},
+				views: {
+					httpServerDurationBuckets: 'mock-http-duration-buckets'
 				}
 			});
 		});
@@ -109,13 +117,21 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 		});
 
+		it('creates views config', () => {
+			expect(createViewConfig).toHaveBeenCalledTimes(1);
+			expect(createViewConfig).toHaveBeenCalledWith({
+				httpServerDurationBuckets: 'mock-http-duration-buckets'
+			});
+		});
+
 		it('instantiates and starts the OpenTelemetry Node SDK with the created config', () => {
 			expect(NodeSDK).toHaveBeenCalledTimes(1);
 			expect(NodeSDK).toHaveBeenCalledWith({
 				instrumentations: 'mock-instrumentations',
 				resource: 'mock-resource',
 				tracing: 'mock-tracing',
-				metrics: 'mock-metrics'
+				metrics: 'mock-metrics',
+				views: 'mock-views'
 			});
 			expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
 		});
@@ -266,7 +282,8 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 					instrumentations: 'mock-instrumentations',
 					resource: 'mock-resource',
 					tracing: 'mock-tracing',
-					metrics: 'mock-metrics'
+					metrics: 'mock-metrics',
+					views: 'mock-views'
 				});
 			});
 		});
@@ -375,7 +392,8 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 					instrumentations: 'mock-instrumentations',
 					resource: 'mock-resource',
 					tracing: 'mock-tracing',
-					metrics: 'mock-metrics'
+					metrics: 'mock-metrics',
+					views: 'mock-views'
 				});
 				expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
 			});
