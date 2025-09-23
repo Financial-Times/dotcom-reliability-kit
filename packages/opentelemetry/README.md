@@ -32,6 +32,7 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
     * [`options.tracing.authorizationHeader`](#optionstracingauthorizationheader)
     * [`options.tracing.samplePercentage`](#optionstracingsamplepercentage)
     * [`options.views`](#optionsviews)
+    * [`options.views.httpClientDurationBuckets`](#optionsviewshttpclientdurationbuckets)
     * [`options.views.httpServerDurationBuckets`](#optionsviewshttpserverdurationbuckets)
     * [`OTEL_` environment variables](#otel_-environment-variables)
 * [Migrating](#migrating)
@@ -322,6 +323,13 @@ The percentage of traces to send to the exporter. Defaults to `5` which means th
 #### `options.views`
 
 An object containing views-specific configurations. Defaults to `undefined` which means that OpenTelemetry defaults will be used for metric views.
+
+#### `options.views.httpClientDurationBuckets`
+
+The buckets to use for HTTP duration in client requests, [see documentation](https://github.com/open-telemetry/semantic-conventions/blob/main/docs/http/http-metrics.md#http-client). Defaults to `undefined` which means OpenTelemetry defaults will be used.
+
+**Environment variable:** `OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS` (split on commas and parsed as an array of numbers)<br/>
+**Option:** `views.httpClientDurationBuckets` (`Number[]`)
 
 #### `options.views.httpServerDurationBuckets`
 

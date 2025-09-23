@@ -14,6 +14,7 @@ declare module '@dotcom-reliability-kit/opentelemetry' {
 	};
 
 	export type ViewOptions = {
+		httpClientDurationBuckets?: number[];
 		httpServerDurationBuckets?: number[];
 	};
 

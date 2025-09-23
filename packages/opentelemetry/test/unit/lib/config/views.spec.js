@@ -20,7 +20,8 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 
 		beforeAll(() => {
 			config = createViewConfig({
-				httpServerDurationBuckets: [1, 2, 3, 4]
+				httpClientDurationBuckets: [1, 2, 3, 4],
+				httpServerDurationBuckets: [5, 6, 7, 8]
 			});
 		});
 
@@ -28,24 +29,108 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 			expect(config).toEqual({
 				views: [
 					{
-						instrumentName: 'http.server.duration',
+						instrumentName: 'http.client.duration',
 						instrumentType: 'mock-histogram',
 						aggregation: {
 							type: 'mock-explicit-bucket',
 							options: { boundaries: [1, 2, 3, 4] }
+						}
+					},
+					{
+						instrumentName: 'http.server.duration',
+						instrumentType: 'mock-histogram',
+						aggregation: {
+							type: 'mock-explicit-bucket',
+							options: { boundaries: [5, 6, 7, 8] }
 						}
 					}
 				]
 			});
 		});
 
-		describe('when options.httpServerDurationBuckets is not defined', () => {
+		describe('when options.httpClientDurationBuckets is not defined', () => {
 			beforeAll(() => {
-				config = createViewConfig({});
+				config = createViewConfig({
+					httpServerDurationBuckets: [5, 6, 7, 8]
+				});
+			});
+
+			it('returns the configuration without an HTTP client duration view', () => {
+				expect(config).toEqual({
+					views: [
+						{
+							instrumentName: 'http.server.duration',
+							instrumentType: 'mock-histogram',
+							aggregation: {
+								type: 'mock-explicit-bucket',
+								options: { boundaries: [5, 6, 7, 8] }
+							}
+						}
+					]
+				});
+			});
+		});
+
+		describe('when options.httpClientDurationBuckets contains negative numbers', () => {
+			beforeAll(() => {
+				config = createViewConfig({
+					httpClientDurationBuckets: [1, -2, 3, 4]
+				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
 				expect(config).toEqual({});
+			});
+
+			it('logs a warning', () => {
+				expect(logger.warn).toHaveBeenCalledWith({
+					event: 'OTEL_VIEW_CONFIG_ISSUE',
+					message:
+						'HTTP client duration buckets must only contain positive numbers'
+				});
+			});
+		});
+
+		describe('when options.httpClientDurationBuckets contains non-numbers', () => {
+			beforeAll(() => {
+				config = createViewConfig({
+					httpClientDurationBuckets: [1, '2', 3, 4]
+				});
+			});
+
+			it('returns the configuration without an HTTP server duration view', () => {
+				expect(config).toEqual({});
+			});
+
+			it('logs a warning', () => {
+				expect(logger.warn).toHaveBeenCalledWith({
+					event: 'OTEL_VIEW_CONFIG_ISSUE',
+					message:
+						'HTTP client duration buckets must only contain positive numbers'
+				});
+			});
+		});
+
+		describe('when options.httpServerDurationBuckets is not defined', () => {
+			beforeAll(() => {
+				config = createViewConfig({
+					httpClientDurationBuckets: [1, 2, 3, 4]
+				});
+			});
+
+			it('returns the configuration without an HTTP server duration view', () => {
+				expect(config).toEqual({
+					views: [
+						{
+							instrumentName: 'http.client.duration',
+							instrumentType: 'mock-histogram',
+							aggregation: {
+								type: 'mock-explicit-bucket',
+								options: { boundaries: [1, 2, 3, 4] }
+							}
+						}
+					]
+				});
 			});
 		});
 
@@ -63,7 +148,8 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 			it('logs a warning', () => {
 				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
-					message: 'HTTP duration buckets must only contain positive numbers'
+					message:
+						'HTTP server duration buckets must only contain positive numbers'
 				});
 			});
 		});
@@ -82,8 +168,19 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 			it('logs a warning', () => {
 				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
-					message: 'HTTP duration buckets must only contain positive numbers'
+					message:
+						'HTTP server duration buckets must only contain positive numbers'
 				});
+			});
+		});
+
+		describe('when no options are defined', () => {
+			beforeAll(() => {
+				config = createViewConfig({});
+			});
+
+			it('returns the configuration without any views', () => {
+				expect(config).toEqual({});
 			});
 		});
 	});

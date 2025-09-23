@@ -14,10 +14,34 @@ const logger = require('@dotcom-reliability-kit/logger');
  * @returns {Partial<NodeSDKConfiguration>}
  */
 exports.createViewConfig = function createViewConfig({
+	httpClientDurationBuckets,
 	httpServerDurationBuckets
 }) {
 	/** @type {Partial<NodeSDKConfiguration>} */
 	const config = {};
+
+	if (
+		Array.isArray(httpClientDurationBuckets) &&
+		httpClientDurationBuckets?.length
+	) {
+		if (httpClientDurationBuckets.every(isPositiveNumber)) {
+			config.views ??= [];
+			config.views.push({
+				instrumentName: 'http.client.duration',
+				instrumentType: InstrumentType.HISTOGRAM,
+				aggregation: {
+					type: AggregationType.EXPLICIT_BUCKET_HISTOGRAM,
+					options: { boundaries: httpClientDurationBuckets }
+				}
+			});
+		} else {
+			logger.warn({
+				event: 'OTEL_VIEW_CONFIG_ISSUE',
+				message:
+					'HTTP client duration buckets must only contain positive numbers'
+			});
+		}
+	}
 
 	if (
 		Array.isArray(httpServerDurationBuckets) &&
@@ -36,7 +60,8 @@ exports.createViewConfig = function createViewConfig({
 		} else {
 			logger.warn({
 				event: 'OTEL_VIEW_CONFIG_ISSUE',
-				message: 'HTTP duration buckets must only contain positive numbers'
+				message:
+					'HTTP server duration buckets must only contain positive numbers'
 			});
 		}
 	}

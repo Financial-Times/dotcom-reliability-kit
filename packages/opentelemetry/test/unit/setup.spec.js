@@ -25,7 +25,8 @@ describe('setup', () => {
 			metrics: {
 				apiGatewayKey: 'MOCK_API_GATEWAY_KEY',
 				endpoint: 'MOCK_METRICS_ENDPOINT'
-			}
+			},
+			views: {}
 		});
 	});
 
@@ -41,7 +42,8 @@ describe('setup', () => {
 				metrics: {
 					apiGatewayKey: 'MOCK_API_GATEWAY_KEY',
 					endpoint: 'MOCK_METRICS_ENDPOINT'
-				}
+				},
+				views: {}
 			});
 		});
 	});
@@ -58,12 +60,13 @@ describe('setup', () => {
 				tracing: {
 					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT'
-				}
+				},
+				views: {}
 			});
 		});
 	});
 
-	describe('when an HTTP duration bucket is specified', () => {
+	describe('when an HTTP server duration bucket is specified', () => {
 		it('includes views configurations', () => {
 			process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS =
 				'1,2,3,  4  ,five';
@@ -81,6 +84,24 @@ describe('setup', () => {
 		});
 	});
 
+	describe('when an HTTP client duration bucket is specified', () => {
+		it('includes views configurations', () => {
+			process.env.OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS =
+				'1,2,3,  4  ,five';
+			require('../../setup.js');
+
+			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
+			expect(opentelemetry.setup).toHaveBeenCalledWith(
+				expect.objectContaining({
+					views: {
+						httpClientDurationBuckets: [1, 2, 3, 4, NaN]
+					}
+				})
+			);
+			delete process.env.OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS;
+		});
+	});
+
 	describe('when a sample rate is specified', () => {
 		it('calls OpenTelemetry with the given sample percentage as a number', () => {
 			delete process.env.OPENTELEMETRY_METRICS_ENDPOINT;
@@ -94,7 +115,8 @@ describe('setup', () => {
 					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT',
 					samplePercentage: 50
-				}
+				},
+				views: {}
 			});
 		});
 	});
@@ -112,7 +134,8 @@ describe('setup', () => {
 					authorizationHeader: 'MOCK_AUTH_HEADER',
 					endpoint: 'MOCK_TRACING_ENDPOINT',
 					samplePercentage: NaN
-				}
+				},
+				views: {}
 			});
 		});
 	});
