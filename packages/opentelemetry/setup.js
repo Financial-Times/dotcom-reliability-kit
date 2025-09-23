@@ -29,14 +29,17 @@ function parseListOfNumbers(input) {
 	return input.split(',').map((item) => Number(item.trim()));
 }
 
-/** @type {opentelemetry.ViewOptions | undefined} */
-let views = undefined;
+/** @type {opentelemetry.ViewOptions} */
+let views = {};
 if (process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS) {
-	views = {
-		httpServerDurationBuckets: parseListOfNumbers(
-			process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS
-		)
-	};
+	views.httpServerDurationBuckets = parseListOfNumbers(
+		process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS
+	);
+}
+if (process.env.OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS) {
+	views.httpClientDurationBuckets = parseListOfNumbers(
+		process.env.OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS
+	);
 }
 
 opentelemetry.setup({
