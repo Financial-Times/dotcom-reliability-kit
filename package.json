@@ -28,8 +28,8 @@
     "postinstall": "npm run build:logos"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.3",
-    "@babel/eslint-parser": "^7.28.0",
+    "@babel/core": "^7.28.4",
+    "@babel/eslint-parser": "^7.28.4",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@financial-times/eslint-config-next": "^7.1.0",
