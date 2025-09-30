@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.2.2...logger-v4.2.3) (2025-09-30)
+
+
+### Bug Fixes
+
+* correct some type issues with Logger ([7542e9c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/7542e9c70101f5ed324e377e43151e4d61ff13c8))
+
 ## [4.2.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.2.1...logger-v4.2.2) (2025-08-14)
 
 
