@@ -23,13 +23,13 @@ exports.createViewConfig = function createViewConfig({
 			instrumentName: 'http.client.duration',
 			boundaries: httpClientDurationBuckets,
 			errorMessage:
-				'HTTP client duration buckets must only contain positive numbers'
+				'HTTP client duration buckets must only contain numbers greater than zero'
 		}),
 		...buildHistogramView({
 			instrumentName: 'http.server.duration',
 			boundaries: httpServerDurationBuckets,
 			errorMessage:
-				'HTTP server duration buckets must only contain positive numbers'
+				'HTTP server duration buckets must only contain numbers greater than zero'
 		})
 	];
 	return views.length ? { views } : {};
@@ -44,7 +44,7 @@ exports.createViewConfig = function createViewConfig({
  */
 function buildHistogramView({ instrumentName, boundaries, errorMessage }) {
 	if (Array.isArray(boundaries) && boundaries?.length) {
-		if (boundaries.every(isPositiveNumber)) {
+		if (boundaries.every(isNonZeroPositiveNumber)) {
 			return [
 				{
 					instrumentName,
@@ -65,6 +65,6 @@ function buildHistogramView({ instrumentName, boundaries, errorMessage }) {
  * @param {any} value
  * @returns {value is number}
  */
-function isPositiveNumber(value) {
-	return Number.isFinite(value) && value >= 0;
+function isNonZeroPositiveNumber(value) {
+	return Number.isFinite(value) && value > 0;
 }
