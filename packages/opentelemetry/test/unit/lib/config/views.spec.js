@@ -86,7 +86,27 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
-						'HTTP client duration buckets must only contain positive numbers'
+						'HTTP client duration buckets must only contain numbers greater than zero'
+				});
+			});
+		});
+
+		describe('when options.httpClientDurationBuckets contains zero', () => {
+			beforeAll(() => {
+				config = createViewConfig({
+					httpClientDurationBuckets: [0, 1, 2, 3, 4]
+				});
+			});
+
+			it('returns the configuration without an HTTP server duration view', () => {
+				expect(config).toEqual({});
+			});
+
+			it('logs a warning', () => {
+				expect(logger.warn).toHaveBeenCalledWith({
+					event: 'OTEL_VIEW_CONFIG_ISSUE',
+					message:
+						'HTTP client duration buckets must only contain numbers greater than zero'
 				});
 			});
 		});
@@ -106,7 +126,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
-						'HTTP client duration buckets must only contain positive numbers'
+						'HTTP client duration buckets must only contain numbers greater than zero'
 				});
 			});
 		});
@@ -149,7 +169,27 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
-						'HTTP server duration buckets must only contain positive numbers'
+						'HTTP server duration buckets must only contain numbers greater than zero'
+				});
+			});
+		});
+
+		describe('when options.httpServerDurationBuckets contains zero', () => {
+			beforeAll(() => {
+				config = createViewConfig({
+					httpServerDurationBuckets: [0, 1, 2, 3, 4]
+				});
+			});
+
+			it('returns the configuration without an HTTP server duration view', () => {
+				expect(config).toEqual({});
+			});
+
+			it('logs a warning', () => {
+				expect(logger.warn).toHaveBeenCalledWith({
+					event: 'OTEL_VIEW_CONFIG_ISSUE',
+					message:
+						'HTTP server duration buckets must only contain numbers greater than zero'
 				});
 			});
 		});
@@ -169,7 +209,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
-						'HTTP server duration buckets must only contain positive numbers'
+						'HTTP server duration buckets must only contain numbers greater than zero'
 				});
 			});
 		});
