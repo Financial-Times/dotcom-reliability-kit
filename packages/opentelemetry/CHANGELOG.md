@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.1.2...opentelemetry-v3.2.0) (2025-09-30)
+
+
+### Features
+
+* allow config of HTTP client duration buckets ([e5de4f0](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e5de4f0e2b3863dd0457366ac4896480c0905a1c))
+* allow config of HTTP server duration buckets ([c30f021](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c30f021bafb4381fe1cbb2205e9f696960d52f4e))
+
+
+### Bug Fixes
+
+* bump @opentelemetry/auto-instrumentations-node ([b02b434](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b02b434d452acea5cfaa96e6cd209db00d416f79))
+* disallow zeros in histogram views ([fcb30b4](https://github.com/Financial-Times/dotcom-reliability-kit/commit/fcb30b40a246af8e3484067d34e6536cbf769dc5))
+* upgrade all OpenTelemetry packages ([640989b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/640989b133cbafefedb056e1b02f9ac0b6c4b9b7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.1.2 to ^5.1.3
+    * @dotcom-reliability-kit/logger bumped from ^4.2.2 to ^4.2.3
+
 ## [3.1.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.1.1...opentelemetry-v3.1.2) (2025-08-14)
 
 
