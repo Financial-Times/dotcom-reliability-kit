@@ -34,7 +34,7 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@financial-times/eslint-config-next": "^7.1.0",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.15.29",
+    "@types/node": "^24.6.2",
     "eslint": "^8.57.0",
     "eslint-plugin-jsdoc": "^50.7.1",
     "eslint-plugin-prettier": "^5.5.4",
