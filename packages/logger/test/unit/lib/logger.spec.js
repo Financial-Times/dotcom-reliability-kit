@@ -1,27 +1,25 @@
 jest.mock('pino', () => {
-	const pinoDefault = jest.fn();
+	const pino = jest.fn();
 
-	pinoDefault.stdTimeFunctions = {
+	pino.stdTimeFunctions = {
 		isoTime: 'mockIsoTime'
 	};
 
-	return {
-		default: pinoDefault,
-		createMockPinoLogger() {
-			return {
-				flush: jest.fn(),
-				mockCanonicalLevel: jest.fn(),
-				mockDeprecatedCanonocalLevel: jest.fn(),
-				mockInvalidCanonicalLevel: jest.fn(),
-				mockErroringLevel: jest.fn().mockImplementation(() => {
-					throw new Error('mock error');
-				}),
-				warn: jest.fn()
-			};
-		}
-	};
+	pino.createMockPinoLogger = () => ({
+		flush: jest.fn(),
+		mockCanonicalLevel: jest.fn(),
+		mockDeprecatedCanonocalLevel: jest.fn(),
+		mockInvalidCanonicalLevel: jest.fn(),
+		mockErroringLevel: jest.fn().mockImplementation(() => {
+			throw new Error('mock error');
+		}),
+		warn: jest.fn()
+	});
+
+	return pino;
 });
-const { default: pino, createMockPinoLogger } = require('pino');
+const pino = require('pino');
+const { createMockPinoLogger } = pino;
 
 jest.mock('pino-pretty', () => {
 	throw new Error('mock error to simulate missing pino-pretty install');
