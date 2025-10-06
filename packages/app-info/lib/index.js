@@ -11,7 +11,7 @@ const { randomUUID } = require('node:crypto');
 //   - Heroku: https://devcenter.heroku.com/articles/dyno-metadata
 //   - Lambda: https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html
 
-/** @type {null | any} */
+/** @type {null | { name: unknown, version: unknown }} */
 let manifest = null;
 try {
 	manifest = require(path.join(process.cwd(), 'package.json'));

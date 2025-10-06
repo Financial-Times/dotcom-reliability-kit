@@ -20,6 +20,7 @@
 		"indent": "off",
 		"jsdoc/check-access": "error",
 		"jsdoc/no-undefined-types": ["error", {"definedTypes": ["Iterable"]}],
+		"jsdoc/reject-any-type": "off",
 		"jsdoc/require-description-complete-sentence": "off",
 		"jsdoc/require-jsdoc": "off",
 		"jsdoc/require-param-description": "off",

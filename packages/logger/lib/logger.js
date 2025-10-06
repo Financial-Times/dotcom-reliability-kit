@@ -1,4 +1,4 @@
-const pino = require('pino').default;
+const pino = require('pino');
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 const clone = require('lodash.clonedeep');
 const appInfo = require('@dotcom-reliability-kit/app-info');
