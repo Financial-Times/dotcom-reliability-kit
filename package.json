@@ -31,7 +31,7 @@
     "@babel/core": "^7.28.4",
     "@babel/eslint-parser": "^7.28.4",
     "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1",
+    "@commitlint/config-conventional": "^20.0.0",
     "@financial-times/eslint-config-next": "^7.1.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.29",
