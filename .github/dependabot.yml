@@ -21,6 +21,8 @@ updates:
         update-types:
           - "minor"
           - "patch"
+        exclude-patterns:
+          - '@types/*'
       origami:
         patterns:
           - "@financial-times/o-*"
