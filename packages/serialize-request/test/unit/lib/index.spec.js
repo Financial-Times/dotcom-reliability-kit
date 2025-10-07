@@ -22,7 +22,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 		it('is readonly', () => {
 			expect(() => {
 				serializeRequest.DEFAULT_INCLUDED_HEADERS.push('nope');
-			}).toThrowError(TypeError);
+			}).toThrow(TypeError);
 
 			serializeRequest.DEFAULT_INCLUDED_HEADERS[0] = 'nope';
 			expect(serializeRequest.DEFAULT_INCLUDED_HEADERS[0]).not.toEqual('nope');
@@ -338,7 +338,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 						includeHeaders: {}
 					}
 				);
-			}).toThrowError(expectedError);
+			}).toThrow(expectedError);
 			expect(() => {
 				serializeRequest(
 					{},
@@ -346,7 +346,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 						includeHeaders: ['string', 123, 'another string']
 					}
 				);
-			}).toThrowError(expectedError);
+			}).toThrow(expectedError);
 		});
 	});
 });

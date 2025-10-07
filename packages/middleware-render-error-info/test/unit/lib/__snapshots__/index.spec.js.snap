@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`@dotcom-reliability-kit/middleware-render-error-info middleware(error, request, response, next) responds with an HTML representation of the error 1`] = `
 "<!DOCTYPE html>

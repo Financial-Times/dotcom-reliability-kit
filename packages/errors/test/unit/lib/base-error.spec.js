@@ -93,7 +93,7 @@ describe('@dotcom-reliability-kit/errors/lib/base-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(BaseError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(BaseError.normalizeErrorCode).toHaveBeenCalledWith('mock_code');
 		});
 
 		describe('.code', () => {
@@ -147,7 +147,7 @@ describe('@dotcom-reliability-kit/errors/lib/base-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(BaseError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(BaseError.normalizeErrorCode).toHaveBeenCalledWith('mock_code');
 		});
 
 		describe('.code', () => {

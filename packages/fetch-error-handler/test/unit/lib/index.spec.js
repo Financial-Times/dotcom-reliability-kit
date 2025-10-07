@@ -7,8 +7,8 @@ const { createFetchErrorHandler, handleFetchErrors } = require('../../..');
 
 describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 	it('creates a fetch error handler', () => {
-		expect(createHandler).toBeCalledTimes(1);
-		expect(createHandler).toBeCalledWith();
+		expect(createHandler).toHaveBeenCalledTimes(1);
+		expect(createHandler).toHaveBeenCalledWith();
 	});
 
 	describe('.createFetchErrorHandler', () => {

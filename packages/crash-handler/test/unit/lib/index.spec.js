@@ -32,8 +32,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		});
 
 		it('binds a handler to the process `uncaughtException` event', () => {
-			expect(mockProcess.on).toBeCalledTimes(1);
-			expect(mockProcess.on).toBeCalledWith(
+			expect(mockProcess.on).toHaveBeenCalledTimes(1);
+			expect(mockProcess.on).toHaveBeenCalledWith(
 				'uncaughtException',
 				expect.any(Function)
 			);
@@ -50,13 +50,13 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 
 			it('logs the error as being unhandled', () => {
-				expect(logUnhandledError).toBeCalledTimes(1);
-				expect(logUnhandledError).toBeCalledWith({ error });
+				expect(logUnhandledError).toHaveBeenCalledTimes(1);
+				expect(logUnhandledError).toHaveBeenCalledWith({ error });
 			});
 
 			it('exits the process with a code of `1`', () => {
-				expect(mockProcess.exit).toBeCalledTimes(1);
-				expect(mockProcess.exit).toBeCalledWith(1);
+				expect(mockProcess.exit).toHaveBeenCalledTimes(1);
+				expect(mockProcess.exit).toHaveBeenCalledWith(1);
 			});
 
 			describe('when the process has a defined exit code already', () => {
@@ -67,8 +67,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 				});
 
 				it('exits the process with the given code', () => {
-					expect(mockProcess.exit).toBeCalledTimes(1);
-					expect(mockProcess.exit).toBeCalledWith(137);
+					expect(mockProcess.exit).toHaveBeenCalledTimes(1);
+					expect(mockProcess.exit).toHaveBeenCalledWith(137);
 				});
 			});
 		});
@@ -94,8 +94,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 				});
 
 				it('logs the error as being unhandled with the custom logger', () => {
-					expect(logUnhandledError).toBeCalledTimes(1);
-					expect(logUnhandledError).toBeCalledWith({
+					expect(logUnhandledError).toHaveBeenCalledTimes(1);
+					expect(logUnhandledError).toHaveBeenCalledWith({
 						error,
 						logger: 'mock-logger'
 					});
@@ -122,8 +122,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 
 			it('binds a handler to the global process `uncaughtException` event', () => {
-				expect(mockGlobalProcess.on).toBeCalledTimes(1);
-				expect(mockGlobalProcess.on).toBeCalledWith(
+				expect(mockGlobalProcess.on).toHaveBeenCalledTimes(1);
+				expect(mockGlobalProcess.on).toHaveBeenCalledWith(
 					'uncaughtException',
 					expect.any(Function)
 				);
@@ -149,8 +149,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 
 			it('binds a handler to the global process `uncaughtException` event', () => {
-				expect(mockGlobalProcess.on).toBeCalledTimes(1);
-				expect(mockGlobalProcess.on).toBeCalledWith(
+				expect(mockGlobalProcess.on).toHaveBeenCalledTimes(1);
+				expect(mockGlobalProcess.on).toHaveBeenCalledWith(
 					'uncaughtException',
 					expect.any(Function)
 				);
@@ -169,11 +169,11 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 
 			it('does not bind a handler to the process `uncaughtException` event', () => {
-				expect(mockProcess.on).toBeCalledTimes(0);
+				expect(mockProcess.on).toHaveBeenCalledTimes(0);
 			});
 
 			it('logs a warning that the Crash Handler has not been registered', () => {
-				expect(logHandledError).toBeCalledTimes(1);
+				expect(logHandledError).toHaveBeenCalledTimes(1);
 				const call = logHandledError.mock.calls[0][0];
 				expect(call).toBeInstanceOf(Object);
 				expect(call.logger).toStrictEqual('mock-logger');

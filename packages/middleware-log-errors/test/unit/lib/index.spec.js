@@ -40,7 +40,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 		});
 
 		it('logs the error and request', () => {
-			expect(logHandledError).toBeCalledWith({
+			expect(logHandledError).toHaveBeenCalledWith({
 				error,
 				request,
 				includeHeaders: undefined
@@ -48,7 +48,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 		});
 
 		it('calls `next` with the original error', () => {
-			expect(next).toBeCalledWith(error);
+			expect(next).toHaveBeenCalledWith(error);
 		});
 
 		describe('when the filter option is set', () => {
@@ -69,18 +69,18 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 				});
 
 				it('logs the error and request', () => {
-					expect(logHandledError).toBeCalledWith({
+					expect(logHandledError).toHaveBeenCalledWith({
 						error,
 						request
 					});
 				});
 
 				it('does not log a recoverable error', () => {
-					expect(logRecoverableError).toBeCalledTimes(0);
+					expect(logRecoverableError).toHaveBeenCalledTimes(0);
 				});
 
 				it('calls `next` with the original error', () => {
-					expect(next).toBeCalledWith(error);
+					expect(next).toHaveBeenCalledWith(error);
 				});
 			});
 
@@ -94,15 +94,15 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 				});
 
 				it('does not log the error and request', () => {
-					expect(logHandledError).toBeCalledTimes(0);
+					expect(logHandledError).toHaveBeenCalledTimes(0);
 				});
 
 				it('does not log a recoverable error', () => {
-					expect(logRecoverableError).toBeCalledTimes(0);
+					expect(logRecoverableError).toHaveBeenCalledTimes(0);
 				});
 
 				it('calls `next` with the original error', () => {
-					expect(next).toBeCalledWith(error);
+					expect(next).toHaveBeenCalledWith(error);
 				});
 			});
 
@@ -121,7 +121,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 				});
 
 				it('logs the error and request', () => {
-					expect(logHandledError).toBeCalledWith({
+					expect(logHandledError).toHaveBeenCalledWith({
 						error,
 						request
 					});
@@ -131,14 +131,14 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 					const expectedError = new Error('Log filtering failed');
 					expectedError.code = 'LOG_FILTER_FAILURE';
 					expectedError.cause = filterError;
-					expect(logRecoverableError).toBeCalledWith({
+					expect(logRecoverableError).toHaveBeenCalledWith({
 						error: expectedError,
 						request
 					});
 				});
 
 				it('calls `next` with the original error', () => {
-					expect(next).toBeCalledWith(error);
+					expect(next).toHaveBeenCalledWith(error);
 				});
 			});
 		});
@@ -152,12 +152,12 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 					createErrorLoggingMiddleware({
 						filter: {}
 					});
-				}).toThrowError(expectedError);
+				}).toThrow(expectedError);
 				expect(() => {
 					createErrorLoggingMiddleware({
 						filter: 'string'
 					});
-				}).toThrowError(expectedError);
+				}).toThrow(expectedError);
 			});
 		});
 
@@ -170,7 +170,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('logs the error and request passing on the includeHeaders option', () => {
-				expect(logHandledError).toBeCalledWith({
+				expect(logHandledError).toHaveBeenCalledWith({
 					error,
 					request,
 					includeHeaders: ['header-1', 'header-2']
@@ -178,7 +178,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toBeCalledWith(error);
+				expect(next).toHaveBeenCalledWith(error);
 			});
 		});
 
@@ -191,12 +191,12 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 					createErrorLoggingMiddleware({
 						includeHeaders: {}
 					});
-				}).toThrowError(expectedError);
+				}).toThrow(expectedError);
 				expect(() => {
 					createErrorLoggingMiddleware({
 						includeHeaders: ['string', 123, 'another string']
 					});
-				}).toThrowError(expectedError);
+				}).toThrow(expectedError);
 			});
 		});
 
@@ -209,7 +209,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('passes on the custom logger to the log method', () => {
-				expect(logHandledError).toBeCalledWith({
+				expect(logHandledError).toHaveBeenCalledWith({
 					error,
 					request,
 					logger: 'mock-logger'
@@ -226,7 +226,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('it passes the option down to the error logging function', () => {
-				expect(logHandledError).toBeCalledWith({
+				expect(logHandledError).toHaveBeenCalledWith({
 					error,
 					request,
 					logUserErrorsAsWarnings: true
@@ -234,7 +234,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toBeCalledWith(error);
+				expect(next).toHaveBeenCalledWith(error);
 			});
 		});
 
@@ -248,7 +248,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toBeCalledWith(error);
+				expect(next).toHaveBeenCalledWith(error);
 			});
 		});
 	});
