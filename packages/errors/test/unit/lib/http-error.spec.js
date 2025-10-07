@@ -37,7 +37,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		});
 
 		it('gets the status message for the 500 code', () => {
-			expect(HttpError.getMessageForStatusCode).toBeCalledWith(500);
+			expect(HttpError.getMessageForStatusCode).toHaveBeenCalledWith(500);
 		});
 
 		describe('.code', () => {
@@ -95,7 +95,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		});
 
 		it('gets the status message for the 500 code', () => {
-			expect(HttpError.getMessageForStatusCode).toBeCalledWith(500);
+			expect(HttpError.getMessageForStatusCode).toHaveBeenCalledWith(500);
 		});
 
 		describe('.code', () => {
@@ -154,11 +154,11 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		});
 
 		it('normalizes the passed in status code', () => {
-			expect(HttpError.normalizeErrorStatusCode).toBeCalledWith(567);
+			expect(HttpError.normalizeErrorStatusCode).toHaveBeenCalledWith(567);
 		});
 
 		it('gets the status message for the normalized code', () => {
-			expect(HttpError.getMessageForStatusCode).toBeCalledWith(456);
+			expect(HttpError.getMessageForStatusCode).toHaveBeenCalledWith(456);
 		});
 
 		describe('.code', () => {
@@ -223,15 +223,15 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(HttpError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(HttpError.normalizeErrorCode).toHaveBeenCalledWith('mock_code');
 		});
 
 		it('normalizes the passed in status code', () => {
-			expect(HttpError.normalizeErrorStatusCode).toBeCalledWith(567);
+			expect(HttpError.normalizeErrorStatusCode).toHaveBeenCalledWith(567);
 		});
 
 		it('gets the status message for the normalized code', () => {
-			expect(HttpError.getMessageForStatusCode).toBeCalledWith(456);
+			expect(HttpError.getMessageForStatusCode).toHaveBeenCalledWith(456);
 		});
 
 		describe('.code', () => {
@@ -293,11 +293,11 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(HttpError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(HttpError.normalizeErrorCode).toHaveBeenCalledWith('mock_code');
 		});
 
 		it('normalizes the passed in status code', () => {
-			expect(HttpError.normalizeErrorStatusCode).toBeCalledWith(567);
+			expect(HttpError.normalizeErrorStatusCode).toHaveBeenCalledWith(567);
 		});
 
 		describe('.code', () => {
@@ -332,11 +332,11 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(HttpError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(HttpError.normalizeErrorCode).toHaveBeenCalledWith('mock_code');
 		});
 
 		it('normalizes the passed in status code', () => {
-			expect(HttpError.normalizeErrorStatusCode).toBeCalledWith(567);
+			expect(HttpError.normalizeErrorStatusCode).toHaveBeenCalledWith(567);
 		});
 
 		describe('.code', () => {

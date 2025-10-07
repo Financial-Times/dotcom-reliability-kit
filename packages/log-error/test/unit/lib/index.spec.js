@@ -58,17 +58,17 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toBeCalledWith(error);
+			expect(serializeError).toHaveBeenCalledWith(error);
 		});
 
 		it('serializes the request', () => {
-			expect(serializeRequest).toBeCalledWith(request, {
+			expect(serializeRequest).toHaveBeenCalledWith(request, {
 				includeHeaders: undefined
 			});
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.error).toBeCalledWith({
+			expect(logger.error).toHaveBeenCalledWith({
 				event: 'HANDLED_ERROR',
 				message: 'MockError: mock error',
 				error: {
@@ -94,17 +94,17 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			it('serializes the request', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
+				expect(serializeRequest).toHaveBeenCalledWith(request, {
 					includeHeaders: undefined
 				});
 			});
 
 			it('logs without an app name', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.error).toHaveBeenCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -134,17 +134,17 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			it('serializes the request with the configured headers', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
+				expect(serializeRequest).toHaveBeenCalledWith(request, {
 					includeHeaders: ['header-1', 'header-2']
 				});
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.error).toHaveBeenCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -171,15 +171,15 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			it('does not serialize the request', () => {
-				expect(serializeRequest).toBeCalledTimes(0);
+				expect(serializeRequest).toHaveBeenCalledTimes(0);
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.error).toHaveBeenCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -208,7 +208,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.error).toHaveBeenCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'Error: mock error',
 					error: {
@@ -237,7 +237,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.error).toBeCalledWith({
+				expect(logger.error).toHaveBeenCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError',
 					error: {
@@ -273,7 +273,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger', () => {
-				expect(customLogger.error).toBeCalledWith({
+				expect(customLogger.error).toHaveBeenCalledWith({
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -412,7 +412,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			it('logs the serialized error, request, and app details with `console.log`', () => {
 				// eslint-disable-next-line no-console
-				expect(console.log).toBeCalledWith(
+				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						event: 'HANDLED_ERROR',
 						message: 'MockError: mock error',
@@ -435,7 +435,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			it('logs that an error occurred with the logger using `console.log`', () => {
 				// eslint-disable-next-line no-console
-				expect(console.log).toBeCalledWith(
+				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						level: 'error',
 						event: 'LOG_METHOD_FAILURE',
@@ -462,17 +462,17 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toBeCalledWith(error);
+			expect(serializeError).toHaveBeenCalledWith(error);
 		});
 
 		it('serializes the request', () => {
-			expect(serializeRequest).toBeCalledWith(request, {
+			expect(serializeRequest).toHaveBeenCalledWith(request, {
 				includeHeaders: undefined
 			});
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.warn).toBeCalledWith({
+			expect(logger.warn).toHaveBeenCalledWith({
 				event: 'RECOVERABLE_ERROR',
 				message: 'MockError: mock error',
 				error: {
@@ -501,17 +501,17 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			it('serializes the request with the configured headers', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
+				expect(serializeRequest).toHaveBeenCalledWith(request, {
 					includeHeaders: ['header-1', 'header-2']
 				});
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.warn).toBeCalledWith({
+				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -538,15 +538,15 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			it('does not serialize the request', () => {
-				expect(serializeRequest).toBeCalledTimes(0);
+				expect(serializeRequest).toHaveBeenCalledTimes(0);
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.warn).toBeCalledWith({
+				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -575,7 +575,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.warn).toBeCalledWith({
+				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'Error: mock error',
 					error: {
@@ -604,7 +604,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.warn).toBeCalledWith({
+				expect(logger.warn).toHaveBeenCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'MockError',
 					error: {
@@ -640,7 +640,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger', () => {
-				expect(customLogger.warn).toBeCalledWith({
+				expect(customLogger.warn).toHaveBeenCalledWith({
 					event: 'RECOVERABLE_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -686,7 +686,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			it('logs the serialized error, request, and app details with `console.log`', () => {
 				// eslint-disable-next-line no-console
-				expect(console.log).toBeCalledWith(
+				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						event: 'RECOVERABLE_ERROR',
 						message: 'MockError: mock error',
@@ -709,7 +709,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			it('logs that an error occurred with the logger using `console.log`', () => {
 				// eslint-disable-next-line no-console
-				expect(console.log).toBeCalledWith(
+				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						level: 'error',
 						event: 'LOG_METHOD_FAILURE',
@@ -736,17 +736,17 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toBeCalledWith(error);
+			expect(serializeError).toHaveBeenCalledWith(error);
 		});
 
 		it('serializes the request', () => {
-			expect(serializeRequest).toBeCalledWith(request, {
+			expect(serializeRequest).toHaveBeenCalledWith(request, {
 				includeHeaders: undefined
 			});
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.fatal).toBeCalledWith({
+			expect(logger.fatal).toHaveBeenCalledWith({
 				event: 'UNHANDLED_ERROR',
 				message: 'MockError: mock error',
 				error: {
@@ -775,17 +775,17 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			it('serializes the request with the configured headers', () => {
-				expect(serializeRequest).toBeCalledWith(request, {
+				expect(serializeRequest).toHaveBeenCalledWith(request, {
 					includeHeaders: ['header-1', 'header-2']
 				});
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.fatal).toBeCalledWith({
+				expect(logger.fatal).toHaveBeenCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -812,15 +812,15 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			it('does not serialize the request', () => {
-				expect(serializeRequest).toBeCalledTimes(0);
+				expect(serializeRequest).toHaveBeenCalledTimes(0);
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.fatal).toBeCalledWith({
+				expect(logger.fatal).toHaveBeenCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -849,7 +849,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.fatal).toBeCalledWith({
+				expect(logger.fatal).toHaveBeenCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'Error: mock error',
 					error: {
@@ -878,7 +878,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.fatal).toBeCalledWith({
+				expect(logger.fatal).toHaveBeenCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError',
 					error: {
@@ -914,7 +914,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger', () => {
-				expect(customLogger.fatal).toBeCalledWith({
+				expect(customLogger.fatal).toHaveBeenCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -950,7 +950,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger error method', () => {
-				expect(customLogger.error).toBeCalledWith({
+				expect(customLogger.error).toHaveBeenCalledWith({
 					event: 'UNHANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -996,7 +996,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			it('logs the serialized error, request, and app details with `console.log`', () => {
 				// eslint-disable-next-line no-console
-				expect(console.log).toBeCalledWith(
+				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						event: 'UNHANDLED_ERROR',
 						message: 'MockError: mock error',
@@ -1019,7 +1019,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			it('logs that an error occurred with the logger using `console.log`', () => {
 				// eslint-disable-next-line no-console
-				expect(console.log).toBeCalledWith(
+				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						level: 'error',
 						event: 'LOG_METHOD_FAILURE',

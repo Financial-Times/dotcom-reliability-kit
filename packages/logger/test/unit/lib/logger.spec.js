@@ -67,7 +67,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 		});
 
 		it('creates a Pino logger', () => {
-			expect(pino).toBeCalledTimes(1);
+			expect(pino).toHaveBeenCalledTimes(1);
 		});
 
 		it('configures the created Pino logger with no prettifier', () => {
@@ -129,7 +129,9 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns a new child logger with mixed in base log data', () => {
 				expect(childLogger).toBeInstanceOf(Logger);
 				expect(childLogger === logger).toBeFalsy();
-				expect(Logger.getLogLevelInfo).toBeCalledWith('mock parent level');
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith(
+					'mock parent level'
+				);
 				expect(childLogger.transport).toStrictEqual('mock parent transport');
 				expect(childLogger.baseLogData).toEqual({
 					isMockParentBaseData: true,
@@ -163,8 +165,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('logs a deprecation warning', () => {
-				expect(mockPinoLogger.warn).toBeCalledTimes(1);
-				expect(mockPinoLogger.warn).toBeCalledWith({
+				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+				expect(mockPinoLogger.warn).toHaveBeenCalledWith({
 					event: 'LOGGER_METHOD_DEPRECATED',
 					message: "The 'addContext' logger method is deprecated",
 					deprecatedMethod: 'addContext'
@@ -177,7 +179,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('does not log a second deprecation warning', () => {
-					expect(mockPinoLogger.warn).toBeCalledTimes(1);
+					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 				});
 			});
 		});
@@ -212,8 +214,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('logs a deprecation warning', () => {
-				expect(mockPinoLogger.warn).toBeCalledTimes(1);
-				expect(mockPinoLogger.warn).toBeCalledWith({
+				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+				expect(mockPinoLogger.warn).toHaveBeenCalledWith({
 					event: 'LOGGER_METHOD_DEPRECATED',
 					message: "The 'setContext' logger method is deprecated",
 					deprecatedMethod: 'setContext'
@@ -226,7 +228,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('does not log a second deprecation warning', () => {
-					expect(mockPinoLogger.warn).toBeCalledTimes(1);
+					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 				});
 			});
 		});
@@ -255,8 +257,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('logs a deprecation warning', () => {
-				expect(mockPinoLogger.warn).toBeCalledTimes(1);
-				expect(mockPinoLogger.warn).toBeCalledWith({
+				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+				expect(mockPinoLogger.warn).toHaveBeenCalledWith({
 					event: 'LOGGER_METHOD_DEPRECATED',
 					message: "The 'clearContext' logger method is deprecated",
 					deprecatedMethod: 'clearContext'
@@ -269,7 +271,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('does not log a second deprecation warning', () => {
-					expect(mockPinoLogger.warn).toBeCalledTimes(1);
+					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 				});
 			});
 		});
@@ -295,13 +297,13 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('gets the log level information', () => {
-				expect(Logger.getLogLevelInfo).toBeCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toBeCalledWith('mockLevel');
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockLevel');
 			});
 
 			it('zips all the log data alongside the logger `baseLogData` property', () => {
-				expect(Logger.zipLogData).toBeCalledTimes(1);
-				expect(Logger.zipLogData).toBeCalledWith(
+				expect(Logger.zipLogData).toHaveBeenCalledTimes(1);
+				expect(Logger.zipLogData).toHaveBeenCalledWith(
 					'mock message',
 					{
 						mockData: true
@@ -313,15 +315,15 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('calls the relevant log transport method for the level', () => {
-				expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
-				expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+				expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
+				expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
 					isMockZippedData: true,
 					message: 'mock zipped message'
 				});
 			});
 
 			it('does not log a warning', () => {
-				expect(mockPinoLogger.warn).toBeCalledTimes(0);
+				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(0);
 			});
 
 			describe('when the log data does not include a message', () => {
@@ -334,8 +336,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls the relevant log transport method with a null message property', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
 						isMockZippedData: true,
 						message: null
 					});
@@ -355,13 +357,13 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('serializes the contents of the error sub-property', () => {
-					expect(serializeError).toBeCalledTimes(1);
-					expect(serializeError).toBeCalledWith(new Error('mock error'));
+					expect(serializeError).toHaveBeenCalledTimes(1);
+					expect(serializeError).toHaveBeenCalledWith(new Error('mock error'));
 				});
 
 				it('calls the relevant log transport method with an error sub-property which is set to the serialized error', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
 						isMockZippedData: true,
 						message: null,
 						error: 'mock serialized error'
@@ -380,7 +382,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it('does not serialize the error', () => {
-						expect(serializeError).toBeCalledTimes(0);
+						expect(serializeError).toHaveBeenCalledTimes(0);
 					});
 				});
 			});
@@ -398,13 +400,13 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('serializes the contents of the err sub-property', () => {
-					expect(serializeError).toBeCalledTimes(1);
-					expect(serializeError).toBeCalledWith(new Error('mock error'));
+					expect(serializeError).toHaveBeenCalledTimes(1);
+					expect(serializeError).toHaveBeenCalledWith(new Error('mock error'));
 				});
 
 				it('calls the relevant log transport method with an err sub-property which is set to the serialized error', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
 						isMockZippedData: true,
 						message: null,
 						err: 'mock serialized error'
@@ -425,18 +427,20 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls the relevant log transport method for the level', () => {
-					expect(mockPinoLogger.mockDeprecatedCanonocalLevel).toBeCalledTimes(
-						1
-					);
-					expect(mockPinoLogger.mockDeprecatedCanonocalLevel).toBeCalledWith({
+					expect(
+						mockPinoLogger.mockDeprecatedCanonocalLevel
+					).toHaveBeenCalledTimes(1);
+					expect(
+						mockPinoLogger.mockDeprecatedCanonocalLevel
+					).toHaveBeenCalledWith({
 						isMockZippedData: true,
 						message: 'mock zipped message'
 					});
 				});
 
 				it('logs a deprecation warning', () => {
-					expect(mockPinoLogger.warn).toBeCalledTimes(1);
-					expect(mockPinoLogger.warn).toBeCalledWith({
+					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.warn).toHaveBeenCalledWith({
 						event: 'LOG_LEVEL_DEPRECATED',
 						message: "The 'mockDeprecatedLevel' log level is deprecated",
 						deprecatedLevel: 'mockDeprecatedLevel',
@@ -452,7 +456,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it('does not log a second deprecation warning', () => {
-						expect(mockPinoLogger.warn).toBeCalledTimes(1);
+						expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 					});
 				});
 			});
@@ -470,16 +474,20 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls the relevant log transport method for the level', () => {
-					expect(mockPinoLogger.mockInvalidCanonicalLevel).toBeCalledTimes(1);
-					expect(mockPinoLogger.mockInvalidCanonicalLevel).toBeCalledWith({
-						isMockZippedData: true,
-						message: 'mock zipped message'
-					});
+					expect(
+						mockPinoLogger.mockInvalidCanonicalLevel
+					).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockInvalidCanonicalLevel).toHaveBeenCalledWith(
+						{
+							isMockZippedData: true,
+							message: 'mock zipped message'
+						}
+					);
 				});
 
 				it('logs a warning', () => {
-					expect(mockPinoLogger.warn).toBeCalledTimes(1);
-					expect(mockPinoLogger.warn).toBeCalledWith(
+					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.warn).toHaveBeenCalledWith(
 						new Error('Invalid log level used'),
 						{
 							event: 'LOG_LEVEL_INVALID',
@@ -499,7 +507,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it('does not log a second deprecation warning', () => {
-						expect(mockPinoLogger.warn).toBeCalledTimes(1);
+						expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
 					});
 				});
 			});
@@ -521,9 +529,9 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 				it('logs the error information as JSON using `console.log`', () => {
 					// eslint-disable-next-line no-console
-					expect(console.log).toBeCalledTimes(1);
+					expect(console.log).toHaveBeenCalledTimes(1);
 					// eslint-disable-next-line no-console
-					expect(console.log).toBeCalledWith(
+					expect(console.log).toHaveBeenCalledWith(
 						JSON.stringify({
 							level: 'error',
 							event: 'LOG_METHOD_FAILURE',
@@ -564,7 +572,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it(`calls .log() with a level of '${levelMethod}'`, () => {
-					expect(logger.log).toBeCalledTimes(1);
+					expect(logger.log).toHaveBeenCalledTimes(1);
 				});
 
 				describe(`when the method is detatched from the logger instance`, () => {
@@ -575,7 +583,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it(`calls .log() with a level of '${levelMethod}'`, () => {
-						expect(logger.log).toBeCalledTimes(1);
+						expect(logger.log).toHaveBeenCalledTimes(1);
 					});
 				});
 			});
@@ -587,8 +595,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('calls the `flush` method of the log transport', () => {
-				expect(mockPinoLogger.flush).toBeCalledTimes(1);
-				expect(mockPinoLogger.flush).toBeCalledWith();
+				expect(mockPinoLogger.flush).toHaveBeenCalledTimes(1);
+				expect(mockPinoLogger.flush).toHaveBeenCalledWith();
 			});
 
 			describe('when the log transport has no `flush` method', () => {
@@ -601,7 +609,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('does nothing', () => {
-					expect(mockPinoLogger.flush).toBeCalledTimes(0);
+					expect(mockPinoLogger.flush).toHaveBeenCalledTimes(0);
 				});
 			});
 		});
@@ -776,16 +784,16 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls the log transform with the zipped log data', () => {
-					expect(mockTransforms[0]).toBeCalledTimes(1);
-					expect(mockTransforms[0]).toBeCalledWith({
+					expect(mockTransforms[0]).toHaveBeenCalledTimes(1);
+					expect(mockTransforms[0]).toHaveBeenCalledWith({
 						isMockZippedData: true,
 						message: 'mock zipped message'
 					});
 				});
 
 				it('calls the relevant log transport method with the transformed log data', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
 						isTransformedLogData: true
 					});
 				});
@@ -809,20 +817,20 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it('calls each of the log transform with the log data, passing the result of each transform onto the next', () => {
-						expect(mockTransforms[0]).toBeCalledTimes(1);
-						expect(mockTransforms[0]).toBeCalledWith({
+						expect(mockTransforms[0]).toHaveBeenCalledTimes(1);
+						expect(mockTransforms[0]).toHaveBeenCalledWith({
 							isMockZippedData: true,
 							message: 'mock zipped message'
 						});
-						expect(mockTransforms[1]).toBeCalledTimes(1);
-						expect(mockTransforms[1]).toBeCalledWith({
+						expect(mockTransforms[1]).toHaveBeenCalledTimes(1);
+						expect(mockTransforms[1]).toHaveBeenCalledWith({
 							isTransformedLogData: true
 						});
 					});
 
 					it('calls the relevant log transport method with the final transformed log data', () => {
-						expect(mockPinoLogger.mockCanonicalLevel).toBeCalledTimes(1);
-						expect(mockPinoLogger.mockCanonicalLevel).toBeCalledWith({
+						expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
+						expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
 							isSecondTransformedLogData: true
 						});
 					});
@@ -835,7 +843,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 						logger = new Logger({
 							transforms: {}
 						});
-					}).toThrowError(
+					}).toThrow(
 						new TypeError(
 							'The `transforms` option must be an array of functions'
 						)
@@ -849,7 +857,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 						logger = new Logger({
 							transforms: [() => {}, 'nope']
 						});
-					}).toThrowError(
+					}).toThrow(
 						new TypeError(
 							'The `transforms` option must be an array of functions'
 						)
@@ -867,7 +875,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('does not create a Pino logger', () => {
-				expect(pino).toBeCalledTimes(0);
+				expect(pino).toHaveBeenCalledTimes(0);
 			});
 
 			describe('.transport', () => {
@@ -890,8 +898,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('gets the log level information', () => {
-				expect(Logger.getLogLevelInfo).toBeCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toBeCalledWith('mockLevel');
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockLevel');
 			});
 
 			it('sets the Pino logger level to the `logLevel` of the log level information', () => {
@@ -916,8 +924,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('gets the log level information based on the environment variable', () => {
-				expect(Logger.getLogLevelInfo).toBeCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toBeCalledWith('mockEnvLogLevel');
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockEnvLogLevel');
 			});
 		});
 
@@ -932,8 +940,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('gets the log level information based on the environment variable', () => {
-				expect(Logger.getLogLevelInfo).toBeCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toBeCalledWith('mockEnvSplunkLogLevel');
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith(
+					'mockEnvSplunkLogLevel'
+				);
 			});
 		});
 
@@ -1325,8 +1335,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				expect(Logger.zipLogData(error)).toEqual({
 					error: 'mock serialized error'
 				});
-				expect(serializeError).toBeCalledTimes(1);
-				expect(serializeError).toBeCalledWith(error);
+				expect(serializeError).toHaveBeenCalledTimes(1);
+				expect(serializeError).toHaveBeenCalledWith(error);
 			});
 
 			describe('when there are multiple errors', () => {

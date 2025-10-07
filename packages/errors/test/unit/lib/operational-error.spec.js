@@ -136,7 +136,9 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(OperationalError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(OperationalError.normalizeErrorCode).toHaveBeenCalledWith(
+				'mock_code'
+			);
 		});
 
 		describe('.code', () => {
@@ -208,7 +210,9 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(OperationalError.normalizeErrorCode).toBeCalledWith('mock_code');
+			expect(OperationalError.normalizeErrorCode).toHaveBeenCalledWith(
+				'mock_code'
+			);
 		});
 
 		describe('.code', () => {

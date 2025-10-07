@@ -99,27 +99,27 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toBeCalledWith(error);
+			expect(serializeError).toHaveBeenCalledWith(error);
 		});
 
 		it('responds with the serialized error status code', () => {
-			expect(response.status).toBeCalledTimes(1);
-			expect(response.status).toBeCalledWith(456);
+			expect(response.status).toHaveBeenCalledTimes(1);
+			expect(response.status).toHaveBeenCalledWith(456);
 		});
 
 		it('responds with a Content-Type header of "text/html"', () => {
-			expect(response.set).toBeCalledWith('content-type', 'text/html');
+			expect(response.set).toHaveBeenCalledWith('content-type', 'text/html');
 		});
 
 		it('responds with an error-fingerprint header', () => {
-			expect(response.set).toBeCalledWith(
+			expect(response.set).toHaveBeenCalledWith(
 				'error-fingerprint',
 				'mock serialized error fingerprint'
 			);
 		});
 
 		it('responds with an HTML representation of the error', () => {
-			expect(response.send).toBeCalledTimes(1);
+			expect(response.send).toHaveBeenCalledTimes(1);
 			const html = response.send.mock.calls[0][0];
 			expect(typeof html).toBe('string');
 			// We replace multiple line break characters with a single one, and
@@ -134,7 +134,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		});
 
 		it('does not call `next` with the original error', () => {
-			expect(next).toBeCalledTimes(0);
+			expect(next).toHaveBeenCalledTimes(0);
 		});
 
 		describe('when the system code is not set', () => {
@@ -146,7 +146,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('uses the default system code in the Origami Build Service URLs', () => {
-				expect(response.send).toBeCalledTimes(1);
+				expect(response.send).toHaveBeenCalledTimes(1);
 				const html = response.send.mock.calls[0][0];
 				expect(typeof html).toBe('string');
 
@@ -160,7 +160,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('uses a default "application" string in the page title', () => {
-				expect(response.send).toBeCalledTimes(1);
+				expect(response.send).toHaveBeenCalledTimes(1);
 				const html = response.send.mock.calls[0][0];
 				expect(typeof html).toBe('string');
 				expect(html).toMatch(
@@ -202,8 +202,8 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('responds with a 500 status code', () => {
-				expect(response.status).toBeCalledTimes(1);
-				expect(response.status).toBeCalledWith(500);
+				expect(response.status).toHaveBeenCalledTimes(1);
+				expect(response.status).toHaveBeenCalledWith(500);
 			});
 		});
 
@@ -219,8 +219,8 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('responds with a 500 status code', () => {
-				expect(response.status).toBeCalledTimes(1);
-				expect(response.status).toBeCalledWith(500);
+				expect(response.status).toHaveBeenCalledTimes(1);
+				expect(response.status).toHaveBeenCalledWith(500);
 			});
 		});
 
@@ -236,8 +236,8 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('responds with a 500 status code', () => {
-				expect(response.status).toBeCalledTimes(1);
-				expect(response.status).toBeCalledWith(500);
+				expect(response.status).toHaveBeenCalledTimes(1);
+				expect(response.status).toHaveBeenCalledWith(500);
 			});
 		});
 
@@ -255,13 +255,13 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('does not render and send an error info page', () => {
-				expect(response.status).toBeCalledTimes(0);
-				expect(response.set).toBeCalledTimes(0);
-				expect(response.send).toBeCalledTimes(0);
+				expect(response.status).toHaveBeenCalledTimes(0);
+				expect(response.set).toHaveBeenCalledTimes(0);
+				expect(response.send).toHaveBeenCalledTimes(0);
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toBeCalledWith(error);
+				expect(next).toHaveBeenCalledWith(error);
 			});
 		});
 
@@ -283,23 +283,23 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('responds with the serialized error status code', () => {
-				expect(response.status).toBeCalledTimes(1);
-				expect(response.status).toBeCalledWith(500);
+				expect(response.status).toHaveBeenCalledTimes(1);
+				expect(response.status).toHaveBeenCalledWith(500);
 			});
 
 			it('responds with a Content-Type header of "text/html"', () => {
-				expect(response.set).toBeCalledWith('content-type', 'text/html');
+				expect(response.set).toHaveBeenCalledWith('content-type', 'text/html');
 			});
 
 			it('responds with an error-fingerprint header', () => {
-				expect(response.set).toBeCalledWith(
+				expect(response.set).toHaveBeenCalledWith(
 					'error-fingerprint',
 					'mock serialized error fingerprint'
 				);
 			});
 
 			it('responds with a simple status code, message, and fingerprint in the body', () => {
-				expect(response.send).toBeCalledTimes(1);
+				expect(response.send).toHaveBeenCalledTimes(1);
 				const html = response.send.mock.calls[0][0];
 				expect(html).toStrictEqual(
 					'500 Server Error\n(error code: mock serialized error fingerprint)\n'
@@ -307,7 +307,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('does not call `next` with the original error', () => {
-				expect(next).toBeCalledTimes(0);
+				expect(next).toHaveBeenCalledTimes(0);
 			});
 
 			describe('when the serialized error has a nonexistent `statusCode` property', () => {
@@ -322,7 +322,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				});
 
 				it('responds with a simple status code and the default server error message in the body', () => {
-					expect(response.send).toBeCalledTimes(1);
+					expect(response.send).toHaveBeenCalledTimes(1);
 					const html = response.send.mock.calls[0][0];
 					expect(html).toStrictEqual('477 Server Error\n');
 				});
@@ -339,7 +339,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				});
 
 				it('responds with a simple status code and message in the body', () => {
-					expect(response.send).toBeCalledTimes(1);
+					expect(response.send).toHaveBeenCalledTimes(1);
 					const html = response.send.mock.calls[0][0];
 					expect(html).toStrictEqual('500 Server Error\n');
 				});
@@ -372,8 +372,8 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('logs the rendering error as recoverable', () => {
-				expect(logRecoverableError).toBeCalledTimes(1);
-				expect(logRecoverableError).toBeCalledWith({
+				expect(logRecoverableError).toHaveBeenCalledTimes(1);
+				expect(logRecoverableError).toHaveBeenCalledWith({
 					error: renderingError,
 					request,
 					logger: undefined
@@ -381,23 +381,23 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			});
 
 			it('responds with the serialized error status code', () => {
-				expect(response.status).toBeCalledTimes(1);
-				expect(response.status).toBeCalledWith(500);
+				expect(response.status).toHaveBeenCalledTimes(1);
+				expect(response.status).toHaveBeenCalledWith(500);
 			});
 
 			it('responds with a Content-Type header of "text/html"', () => {
-				expect(response.set).toBeCalledTimes(1);
-				expect(response.set).toBeCalledWith('content-type', 'text/html');
+				expect(response.set).toHaveBeenCalledTimes(1);
+				expect(response.set).toHaveBeenCalledWith('content-type', 'text/html');
 			});
 
 			it('responds with a simple status code and message in the body', () => {
-				expect(response.send).toBeCalledTimes(1);
+				expect(response.send).toHaveBeenCalledTimes(1);
 				const html = response.send.mock.calls[0][0];
 				expect(html).toStrictEqual('500 Server Error\n');
 			});
 
 			it('does not call `next` with the original error', () => {
-				expect(next).toBeCalledTimes(0);
+				expect(next).toHaveBeenCalledTimes(0);
 			});
 
 			describe('when the logger option is set', () => {
@@ -409,7 +409,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				});
 
 				it('passes on the custom logger to the log method', () => {
-					expect(logRecoverableError).toBeCalledWith({
+					expect(logRecoverableError).toHaveBeenCalledWith({
 						error: renderingError,
 						request,
 						logger: 'mock-logger'
