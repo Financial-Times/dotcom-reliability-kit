@@ -144,7 +144,8 @@ function createFetchErrorHandler(options = {}) {
 			}
 
 			// If the response isn't OK, we start throwing errors
-			if (!response.ok) {
+			// 304 is considered non-OK by fetch, but we don't consider that an error
+			if (!response.ok && response.status !== 304) {
 				// Parse the response URL so we can use the hostname in error messages
 				let responseHostName = 'unknown';
 				if (typeof response.url === 'string') {
