@@ -33,6 +33,15 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 				expect(resolvedValue).toStrictEqual(mockResponse);
 			});
 
+			describe('when `response.ok` is `false` and `response.status` is 304', () => {
+				it('resolves with the response object', async () => {
+					mockResponse.ok = false;
+					mockResponse.status = 304;
+					resolvedValue = await fetchErrorHandler(mockResponse);
+					expect(resolvedValue).toStrictEqual(mockResponse);
+				});
+			});
+
 			describe('when `response.ok` is `false` and `response.status` is 400', () => {
 				it('rejects with an error describing the issue', async () => {
 					expect.assertions(3);
@@ -160,6 +169,15 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 
 			it('resolves with the response object', () => {
 				expect(resolvedValue).toStrictEqual(mockResponse);
+			});
+
+			describe('when `response.ok` is `false` and `response.status` is 304', () => {
+				it('resolves with the response object', async () => {
+					mockResponse.ok = false;
+					mockResponse.status = 304;
+					resolvedValue = await fetchErrorHandler(mockResponse);
+					expect(resolvedValue).toStrictEqual(mockResponse);
+				});
 			});
 
 			describe('when `response.ok` is `false` and `response.status` is >= 400', () => {
