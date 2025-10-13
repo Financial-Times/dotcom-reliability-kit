@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v4.2.0...app-info-v4.2.1) (2025-10-13)
+
+
+### Bug Fixes
+
+* bump eslint-plugin-jsdoc from 50.7.1 to 60.8.2 ([2c89eb5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2c89eb5b5379842f13405d3701ea565090a2e002))
+
 ## [4.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/app-info-v4.1.0...app-info-v4.2.0) (2025-05-08)
 
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v5.1.3...middleware-log-errors-v5.1.4) (2025-10-13)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.1.3 to ^5.1.4
+
 ## [5.1.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/middleware-log-errors-v5.1.2...middleware-log-errors-v5.1.3) (2025-09-30)
 
 

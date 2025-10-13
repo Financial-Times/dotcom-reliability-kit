@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.2.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.2.3...logger-v4.2.4) (2025-10-13)
+
+
+### Bug Fixes
+
+* bump eslint-plugin-jsdoc from 50.7.1 to 60.8.2 ([2c89eb5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2c89eb5b5379842f13405d3701ea565090a2e002))
+* bump pino from 9.12.0 to 10.0.0 ([0198b33](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0198b331aeb0597efccbbc105e85f3d7700e95a2))
+* bump pino from 9.9.0 to 9.12.0 ([dc9fdc2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/dc9fdc2e1c55141d011be14c0e7f921c7eb406d0))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/app-info bumped from ^4.2.0 to ^4.2.1
+
 ## [4.2.3](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.2.2...logger-v4.2.3) (2025-09-30)
 
 

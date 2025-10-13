@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v1.1.0...fetch-error-handler-v1.1.1) (2025-10-13)
+
+
+### Bug Fixes
+
+* **fetch-error-handler:** don't treat 304 responses as errors ([767109a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/767109a8fac4671fab4796144a3d0bfda0256ebd))
+
 ## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v1.0.0...fetch-error-handler-v1.1.0) (2025-05-08)
 
 
