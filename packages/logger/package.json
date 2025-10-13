@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/logger",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "description": "A simple and fast logger based on Pino, with FT preferences baked in",
   "repository": {
     "type": "git",
@@ -16,7 +16,7 @@
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "dependencies": {
-    "@dotcom-reliability-kit/app-info": "^4.2.0",
+    "@dotcom-reliability-kit/app-info": "^4.2.1",
     "@dotcom-reliability-kit/serialize-error": "^4.1.0",
     "lodash.clonedeep": "^4.5.0",
     "pino": "^10.0.0"
