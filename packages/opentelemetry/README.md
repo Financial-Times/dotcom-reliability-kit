@@ -16,10 +16,6 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
     * [Production metrics](#production-metrics)
     * [Production tracing](#production-tracing)
   * [Running locally](#running-locally)
-    * [Local metrics](#local-metrics)
-    * [Local tracing](#local-tracing)
-      * [Running a backend](#running-a-backend)
-      * [Sending traces to your local backend](#sending-traces-to-your-local-backend)
   * [Implementation details](#implementation-details)
   * [Configuration options](#configuration-options)
     * [`options.authorizationHeader`](#optionsauthorizationheader)
@@ -209,37 +205,24 @@ OpenTelemetry can generate a huge amount of data which, depending on where you s
 
 ### Running locally
 
-#### Local metrics
+To try out metrics and tracing locally, you'll need a backend for them to be sent to. In this example we'll be running [Grafana OTEL-LGTM](https://github.com/grafana/docker-otel-lgtm#readme) via [Docker](https://www.docker.com/).
 
-We don't recommend trying to get a metrics [Collector](https://opentelemetry.io/docs/collector/) set up locally, but you should still import OpenTelemetry in local development. If the environment variables are not present then we'll instrument all your code but not send anything. This means that what you run in development is closer to what you run in production.
+This will give us a running OpenTelemetry collector as well as a Grafana interface to view our metrics and traces in:
 
-#### Local tracing
-
-If you want to debug specific performance issues then setting up a local Collector can help you. You shouldn't be sending traces in local development to your production backend as this could make it harder to debug real production issues. You probably also don't want to sample traces in local development – you'll want to collect all traffic because the volume will be much lower.
-
-##### Running a backend
-
-To view traces locally, you'll need a backend for them to be sent to. In this example we'll be using [Jaeger](https://www.jaegertracing.io/) via [Docker](https://www.docker.com/). You'll need Docker (or a compatible [alternative](https://podman.io/)) to be set up first.
-
-[Jaeger maintains a useful guide for this](https://www.jaegertracing.io/docs/1.53/getting-started/#all-in-one).
-
-##### Sending traces to your local backend
-
-Once your backend is running you'll need to make some configuration changes.
-
-You'll need to set the [tracing endpoint](#optionstracingendpoint) to use Jaeger's tracing endpoint on port `4318` ([OTLP/HTTP](https://opentelemetry.io/docs/specs/otlp/#otlphttp)). E.g. `http://localhost:4318/v1/traces`.
-
-You'll also need to disable sampling by [configuring it](#optionstracingsamplepercentage) to `100`.
-
-Assuming you're using one of the [automated setups](#automated-setup-with---require), environment variables could be set like this:
-
-```
-OPENTELEMETRY_TRACING_ENDPOINT=http://localhost:4318/v1/traces \
-OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE=100 \
-npm start
+```sh
+docker run -p 8080:3000 -p 4318:4318 --rm -ti grafana/otel-lgtm
 ```
 
-Run your application and perform some actions. Open up the Jaeger interface (`http://localhost:16686`). You should start to see traces appear.
+This means you'll be able to configure your locally-running application with the following environment variables (also removing sampling and adding debug logs):
+
+```
+OPENTELEMETRY_LOG_INTERNALS=true
+OPENTELEMETRY_METRICS_ENDPOINT=http://localhost:4318/v1/metrics
+OPENTELEMETRY_TRACING_ENDPOINT=http://localhost:4318/v1/traces
+OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE=100
+```
+
+Once your app is running with the above configuration, open Grafana at <http://localhost:8080/>.
 
 ### Implementation details
 
