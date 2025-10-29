@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v4.1.0...serialize-request-v4.2.0) (2025-10-29)
+
+
+### Features
+
+* include host header in serialized requests ([f195d96](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f195d9690784ac215d7293e045b271b93a287d43))
+
 ## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-request-v4.0.0...serialize-request-v4.1.0) (2025-05-08)
 
 
