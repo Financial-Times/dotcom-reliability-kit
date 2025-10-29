@@ -13,6 +13,7 @@ const DEFAULT_INCLUDED_HEADERS = [
 	'accept-encoding',
 	'accept-language',
 	'content-type',
+	'host',
 	'referer',
 	'user-agent'
 ];
