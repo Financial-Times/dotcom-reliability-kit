@@ -60,7 +60,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/metrics', () => {
 
 		it('returns the configuration', () => {
 			expect(config).toEqual({
-				metricReader: PeriodicExportingMetricReader.mock.instances[0]
+				metricReaders: [PeriodicExportingMetricReader.mock.instances[0]]
 			});
 		});
 

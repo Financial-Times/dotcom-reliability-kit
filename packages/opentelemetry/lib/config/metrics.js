@@ -31,13 +31,15 @@ exports.createMetricsConfig = function createMetricsConfig(options) {
 		if (options.apiGatewayKey) {
 			headers['X-OTel-Key'] = options.apiGatewayKey;
 		}
-		config.metricReader = new PeriodicExportingMetricReader({
-			exporter: new OTLPMetricExporter({
-				url: options.endpoint,
-				compression: CompressionAlgorithm.GZIP,
-				headers
+		config.metricReaders = [
+			new PeriodicExportingMetricReader({
+				exporter: new OTLPMetricExporter({
+					url: options.endpoint,
+					compression: CompressionAlgorithm.GZIP,
+					headers
+				})
 			})
-		});
+		];
 
 		logger.info({
 			event: 'OTEL_METRICS_STATUS',
