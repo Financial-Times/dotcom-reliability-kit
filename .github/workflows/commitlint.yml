@@ -1,4 +1,6 @@
 name: Enforce commit formatting
+permissions:
+  contents: read
 on: [pull_request]
 jobs:
   run-commitlint-on-pr:
