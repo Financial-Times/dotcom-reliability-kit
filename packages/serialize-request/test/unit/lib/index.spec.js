@@ -14,6 +14,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				'accept-encoding',
 				'accept-language',
 				'content-type',
+				'host',
 				'referer',
 				'user-agent'
 			]);
@@ -41,6 +42,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 					'accept-encoding': 'gzip',
 					'accept-language': 'en-US',
 					'content-type': 'application/json',
+					host: 'mock-host',
 					'mock-header': 'mock-param-value',
 					referer: 'https://foo.com',
 					'user-agent': 'Mozilla/5.0',
@@ -59,6 +61,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 					'accept-encoding': 'gzip',
 					'accept-language': 'en-US',
 					'content-type': 'application/json',
+					host: 'mock-host',
 					referer: 'https://foo.com',
 					'user-agent': 'Mozilla/5.0'
 				}
@@ -78,6 +81,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 					'accept-encoding': 'gzip',
 					'accept-language': 'en-US',
 					'content-type': 'application/json',
+					host: 'mock-host',
 					referer: 'https://foo.com',
 					'user-agent': 'Mozilla/5.0',
 					'mock-header': 'mock-param-value',
@@ -102,6 +106,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 					'accept-encoding': 'gzip',
 					'accept-language': 'en-US',
 					'content-type': 'application/json',
+					host: 'mock-host',
 					referer: 'https://foo.com',
 					'user-agent': 'Mozilla/5.0'
 				},
