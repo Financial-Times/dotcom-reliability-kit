@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.2.2](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.2.1...opentelemetry-v3.2.2) (2025-10-29)
+
+
+### Bug Fixes
+
+* remove the hard-coded host header from logs ([67ce226](https://github.com/Financial-Times/dotcom-reliability-kit/commit/67ce226fc18063479e5a09388194c05edd27f02e))
+* stop using a deprecated config option ([8d55d69](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8d55d69a25b85ff452baa2023dbfb9448f90b5ee))
+* update all OpenTelemetry packages ([0457c9d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0457c9d65f196b3a9927ec9cd094745c5e677bcc))
+
+
+### Documentation Changes
+
+* document the logInternals env var ([8f57ff5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8f57ff535a9f21c42b51da0a7fe6207a843c8836))
+* update the guide for running locally ([90ce298](https://github.com/Financial-Times/dotcom-reliability-kit/commit/90ce2984c461e2572e9a3922a5e45bd7c13d0839))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/log-error bumped from ^5.1.4 to ^5.1.5
+    * @dotcom-reliability-kit/logger bumped from ^4.2.4 to ^4.2.5
+
 ## [3.2.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/opentelemetry-v3.2.0...opentelemetry-v3.2.1) (2025-10-13)
 
 
