@@ -54,7 +54,6 @@ function ignoreIncomingRequestHook(request) {
 					code: 'OTEL_REQUEST_FILTER_FAILURE',
 					cause
 				}),
-				includeHeaders: ['host'],
 				request
 			});
 		}

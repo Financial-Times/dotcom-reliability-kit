@@ -114,7 +114,6 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 				expect(logRecoverableError).toHaveBeenCalledWith(
 					expect.objectContaining({
 						error: expect.any(UserInputError),
-						includeHeaders: ['host'],
 						request: mockRequest
 					})
 				);
