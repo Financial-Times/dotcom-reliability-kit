@@ -260,6 +260,9 @@ opentelemetry.setup({
 
 Boolean indicating whether to log internal OpenTelemetry warnings and errors. Defaults to `false`.
 
+**Environment variable:** `OPENTELEMETRY_LOG_INTERNALS`<br/>
+**Option:** `logInternals` (`Boolean`)
+
 #### `options.metrics`
 
 An object containing other metrics-specific configurations. Defaults to `undefined` which means that OpenTelemetry metrics will not be sent.
