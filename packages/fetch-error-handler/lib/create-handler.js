@@ -143,29 +143,29 @@ function createFetchErrorHandler(options = {}) {
 				);
 			}
 
+			// Parse the response URL so we can use the hostname in error messages
+			let responseHostName = 'unknown';
+			if (typeof response.url === 'string') {
+				try {
+					const url = new URL(response.url);
+					responseHostName = url.hostname;
+				} catch (_) {
+					// We ignore this error because having a valid URL isn't essential – it
+					// just helps debug if we do have one. If someone's using a weird non-standard
+					// `fetch` implementation or mocking then this error could be fired
+				}
+			}
+
+			// Some common error options which we'll include in any that are thrown
+			const baseErrorOptions = {
+				message: `The upstream service at "${responseHostName}" responded with a ${response.status} status`,
+				relatesToSystems,
+				upstreamUrl: response.url,
+				upstreamStatusCode: response.status
+			};
 			// If the response isn't OK, we start throwing errors
 			// 304 is considered non-OK by fetch, but we don't consider that an error
 			if (!response.ok && response.status !== 304) {
-				// Parse the response URL so we can use the hostname in error messages
-				let responseHostName = 'unknown';
-				if (typeof response.url === 'string') {
-					try {
-						const url = new URL(response.url);
-						responseHostName = url.hostname;
-					} catch (_) {
-						// We ignore this error because having a valid URL isn't essential – it
-						// just helps debug if we do have one. If someone's using a weird non-standard
-						// `fetch` implementation or mocking then this error could be fired
-					}
-				}
-
-				// Some common error options which we'll include in any that are thrown
-				const baseErrorOptions = {
-					message: `The upstream service at "${responseHostName}" responded with a ${response.status} status`,
-					relatesToSystems,
-					upstreamUrl: response.url,
-					upstreamStatusCode: response.status
-				};
 
 				// If the back end responds with a `4xx` error then it normally indicates
 				// that something is wrong with the _current_ system. Maybe we're sending data
