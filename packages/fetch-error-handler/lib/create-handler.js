@@ -5,6 +5,8 @@ const {
 } = require('@dotcom-reliability-kit/errors');
 const { Writable } = require('node:stream');
 
+const MAX_ERROR_LENGTH = 2000;
+
 /**
  * @typedef {object} ErrorHandlerOptions
  * @property {string} [upstreamSystemCode]
@@ -27,6 +29,8 @@ const { Writable } = require('node:stream');
  *     The URL of the response.
  * @property {NodeFetchResponseBody | ReadableStream<Uint8Array> | null} body
  *     A representation of the response body.
+ * @property {() => Response} clone
+ *     A function to create a clone of a response object.
  */
 
 /* eslint-disable jsdoc/valid-types */
@@ -163,10 +167,33 @@ function createFetchErrorHandler(options = {}) {
 				upstreamUrl: response.url,
 				upstreamStatusCode: response.status
 			};
+
+			// We need to check if response has the clone function because it's possible to pass response
+			// that would not have the clone function
+			if (typeof response.clone === 'function') {
+				let responseBody;
+
+				// We need to clone the response because the readable stream Body can only be read once
+				// And we want the consuming apps to still be able to read it if necessary
+				const clonedResponse = response.clone();
+
+				const contentType = clonedResponse.headers?.get('content-type');
+
+				if (contentType?.includes('application/json')) {
+					responseBody = await clonedResponse.json();
+				} else {
+					responseBody = (await clonedResponse.text()).slice(
+						0,
+						MAX_ERROR_LENGTH
+					);
+				}
+
+				baseErrorOptions.responseBody = responseBody;
+			}
+
 			// If the response isn't OK, we start throwing errors
 			// 304 is considered non-OK by fetch, but we don't consider that an error
 			if (!response.ok && response.status !== 304) {
-
 				// If the back end responds with a `4xx` error then it normally indicates
 				// that something is wrong with the _current_ system. Maybe we're sending data
 				// in an invalid format or our API key is invalid. For this we throw a generic
