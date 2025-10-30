@@ -5,6 +5,8 @@ const {
 } = require('@dotcom-reliability-kit/errors');
 const { Writable } = require('node:stream');
 
+const MAX_ERROR_LENGTH = 2000;
+
 /**
  * @typedef {object} ErrorHandlerOptions
  * @property {string} [upstreamSystemCode]
@@ -27,6 +29,8 @@ const { Writable } = require('node:stream');
  *     The URL of the response.
  * @property {NodeFetchResponseBody | ReadableStream<Uint8Array> | null} body
  *     A representation of the response body.
+ * @property {() => Response} clone
+ *     A function to create a clone of a response object.
  */
 
 /* eslint-disable jsdoc/valid-types */
@@ -143,30 +147,66 @@ function createFetchErrorHandler(options = {}) {
 				);
 			}
 
+			// Parse the response URL so we can use the hostname in error messages
+			let responseHostName = 'unknown';
+			if (typeof response.url === 'string') {
+				try {
+					const url = new URL(response.url);
+					responseHostName = url.hostname;
+				} catch (_) {
+					// We ignore this error because having a valid URL isn't essential – it
+					// just helps debug if we do have one. If someone's using a weird non-standard
+					// `fetch` implementation or mocking then this error could be fired
+				}
+			}
+
+			// Some common error options which we'll include in any that are thrown
+			const baseErrorOptions = {
+				message: `The upstream service at "${responseHostName}" responded with a ${response.status} status`,
+				relatesToSystems,
+				upstreamUrl: response.url,
+				upstreamStatusCode: response.status
+			};
+
+			// We need to check if response has the clone function because it's possible to pass response
+			// that would not have the clone function
+			if (typeof response.clone === 'function') {
+				let responseBody;
+
+				// We need to clone the response because the readable stream Body can only be read once
+				// And we want the consuming apps to still be able to read it if necessary
+				const clonedResponse = response.clone();
+
+				const contentType = clonedResponse.headers?.get('content-type');
+
+				if (contentType?.includes('application/json')) {
+					responseBody = await clonedResponse.json();
+				} else {
+					responseBody = (await clonedResponse.text()).slice(
+						0,
+						MAX_ERROR_LENGTH
+					);
+				}
+
+				baseErrorOptions.responseBody = responseBody;
+
+				// If the response is OK but the returned JSON is invalid
+				if (response.ok && contentType?.includes('application/json')) {
+					try {
+						// We are just parsing the body to test if the JSON is valid
+						JSON.parse(responseBody);
+					} catch (/** @type {any} */ error) {
+						baseErrorOptions.upstreamErrorMessage = error.message;
+						throw new UpstreamServiceError(
+							Object.assign({ code: 'INVALID_JSON_ERROR' }, baseErrorOptions)
+						);
+					}
+				}
+			}
+
 			// If the response isn't OK, we start throwing errors
 			// 304 is considered non-OK by fetch, but we don't consider that an error
 			if (!response.ok && response.status !== 304) {
-				// Parse the response URL so we can use the hostname in error messages
-				let responseHostName = 'unknown';
-				if (typeof response.url === 'string') {
-					try {
-						const url = new URL(response.url);
-						responseHostName = url.hostname;
-					} catch (_) {
-						// We ignore this error because having a valid URL isn't essential – it
-						// just helps debug if we do have one. If someone's using a weird non-standard
-						// `fetch` implementation or mocking then this error could be fired
-					}
-				}
-
-				// Some common error options which we'll include in any that are thrown
-				const baseErrorOptions = {
-					message: `The upstream service at "${responseHostName}" responded with a ${response.status} status`,
-					relatesToSystems,
-					upstreamUrl: response.url,
-					upstreamStatusCode: response.status
-				};
-
 				// If the back end responds with a `4xx` error then it normally indicates
 				// that something is wrong with the _current_ system. Maybe we're sending data
 				// in an invalid format or our API key is invalid. For this we throw a generic
@@ -207,6 +247,7 @@ function createFetchErrorHandler(options = {}) {
 			if (
 				isFetchResponse(response) &&
 				response.body &&
+				typeof response.body === 'object' &&
 				'pipe' in response.body &&
 				typeof response.body.pipe === 'function'
 			) {
