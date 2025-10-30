@@ -247,6 +247,7 @@ function createFetchErrorHandler(options = {}) {
 			if (
 				isFetchResponse(response) &&
 				response.body &&
+				typeof response.body === 'object' &&
 				'pipe' in response.body &&
 				typeof response.body.pipe === 'function'
 			) {
