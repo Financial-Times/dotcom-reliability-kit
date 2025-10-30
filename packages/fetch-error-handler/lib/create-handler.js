@@ -189,6 +189,19 @@ function createFetchErrorHandler(options = {}) {
 				}
 
 				baseErrorOptions.responseBody = responseBody;
+
+				// If the response is OK but the returned JSON is invalid
+				if (response.ok && contentType?.includes('application/json')) {
+					try {
+						// We are just parsing the body to test if the JSON is valid
+						JSON.parse(responseBody);
+					} catch (/** @type {any} */ error) {
+						baseErrorOptions.upstreamErrorMessage = error.message;
+						throw new UpstreamServiceError(
+							Object.assign({ code: 'INVALID_JSON_ERROR' }, baseErrorOptions)
+						);
+					}
+				}
 			}
 
 			// If the response isn't OK, we start throwing errors
