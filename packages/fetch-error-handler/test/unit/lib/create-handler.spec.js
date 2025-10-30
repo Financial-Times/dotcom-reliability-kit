@@ -152,6 +152,145 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 			});
 		});
 
+		describe('fetchErrorHandler(response) with a response that has a body and clone method available', () => {
+			describe('when `response.ok` is false and the reponse has a json format', () => {
+				it('rejects with an error that contains the body of the response', async () => {
+					const mockResponse = {
+						ok: false,
+						status: 400,
+						url: 'https://mock.com/example',
+						body: { error: 'bad bad not good' },
+						headers: {
+							get: jest.fn(() => 'application/json')
+						},
+						clone: jest.fn(() => mockResponse),
+						json: jest.fn(() => mockResponse.body)
+					};
+					expect.assertions(3);
+					try {
+						await fetchErrorHandler(mockResponse);
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.message).toStrictEqual(
+							'The upstream service at "mock.com" responded with a 400 status'
+						);
+						expect(error).toMatchObject({
+							code: 'FETCH_CLIENT_ERROR',
+							statusCode: 500,
+							relatesToSystems: [],
+							data: {
+								upstreamUrl: 'https://mock.com/example',
+								upstreamStatusCode: 400,
+								responseBody: { error: 'bad bad not good' }
+							}
+						});
+					}
+				});
+			});
+
+			describe('when `response.ok` is false and the reponse has not a json format', () => {
+				it('rejects with an error that contains the body of the response', async () => {
+					const mockResponse = {
+						ok: false,
+						status: 400,
+						url: 'https://mock.com/example',
+						body: 'bad bad not good',
+						headers: {
+							get: jest.fn()
+						},
+						clone: jest.fn(() => mockResponse),
+						text: jest.fn(() => JSON.stringify(mockResponse.body))
+					};
+					expect.assertions(3);
+					try {
+						await fetchErrorHandler(mockResponse);
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.message).toStrictEqual(
+							'The upstream service at "mock.com" responded with a 400 status'
+						);
+						expect(error).toMatchObject({
+							code: 'FETCH_CLIENT_ERROR',
+							statusCode: 500,
+							relatesToSystems: [],
+							data: {
+								upstreamUrl: 'https://mock.com/example',
+								upstreamStatusCode: 400,
+								responseBody: '"bad bad not good"'
+							}
+						});
+					}
+				});
+			});
+
+			describe('when `response.ok` is false and the reponse body exceeds the max number of characters', () => {
+				it('rejects with an error that contains the body of the response', async () => {
+					const superLongString = Array(2000).fill('a').join('');
+					const expectedMissingBit = `<span>I will be truncated</span>`;
+					const mockResponse = {
+						ok: false,
+						status: 400,
+						url: 'https://mock.com/example',
+						body: `<html>
+							<div>${superLongString}</div>
+							${expectedMissingBit}
+						</html>`,
+						headers: {
+							get: jest.fn()
+						},
+						clone: jest.fn(() => mockResponse),
+						text: jest.fn(() => JSON.stringify(mockResponse.body))
+					};
+					expect.assertions(3);
+					try {
+						await fetchErrorHandler(mockResponse);
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.data.responseBody.length).toEqual(2000);
+						expect(error.data.responseBody.includes(expectedMissingBit)).toBe(
+							false
+						);
+					}
+				});
+			});
+
+			describe('when `response.ok` is true but the body is a malformed JSON', () => {
+				it('rejects with an error that contains the body of the response and the JSON error', async () => {
+					const malformedBody = '{"message":"hello","issue":"missing comma"';
+					const mockResponse = {
+						ok: true,
+						status: 200,
+						url: 'https://mock.com/example',
+						headers: {
+							get: jest.fn(() => 'application/json')
+						},
+						clone: jest.fn(() => mockResponse),
+						json: jest.fn().mockResolvedValue(malformedBody)
+					};
+					expect.assertions(3);
+					try {
+						await fetchErrorHandler(mockResponse);
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.name).toStrictEqual('UpstreamServiceError');
+						expect(error).toMatchObject({
+							code: 'INVALID_JSON_ERROR',
+							statusCode: 502,
+							relatesToSystems: [],
+							data: {
+								upstreamUrl: 'https://mock.com/example',
+								upstreamStatusCode: 200,
+								responseBody: '{"message":"hello","issue":"missing comma"',
+								upstreamErrorMessage: expect.stringContaining(
+									"Expected ',' or '}' after property value in JSON"
+								)
+							}
+						});
+					}
+				});
+			});
+		});
+
 		describe('fetchErrorHandler(responsePromise)', () => {
 			let mockError;
 			let mockResponse;
