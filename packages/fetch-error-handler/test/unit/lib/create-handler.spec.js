@@ -164,6 +164,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 							get: jest.fn(() => 'application/json')
 						},
 						clone: jest.fn(() => mockResponse),
+						text: jest.fn(() => JSON.stringify(mockResponse.body)),
 						json: jest.fn(() => mockResponse.body)
 					};
 					expect.assertions(3);
@@ -264,7 +265,9 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						headers: {
 							get: jest.fn(() => 'application/json')
 						},
+						body: malformedBody,
 						clone: jest.fn(() => mockResponse),
+						text: jest.fn(() => mockResponse.body),
 						json: jest.fn().mockResolvedValue(malformedBody)
 					};
 					expect.assertions(3);
@@ -274,7 +277,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						expect(error).toBeInstanceOf(Error);
 						expect(error.name).toStrictEqual('UpstreamServiceError');
 						expect(error).toMatchObject({
-							code: 'INVALID_JSON_ERROR',
+							code: 'FETCH_INVALID_JSON_ERROR',
 							statusCode: 502,
 							relatesToSystems: [],
 							data: {
