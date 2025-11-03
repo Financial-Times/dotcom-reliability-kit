@@ -29,7 +29,7 @@ const MAX_ERROR_LENGTH = 2000;
  *     The URL of the response.
  * @property {NodeFetchResponseBody | ReadableStream<Uint8Array> | null} body
  *     A representation of the response body.
- * @property {() => Response} clone
+ * @property {() => Response} [clone]
  *     A function to create a clone of a response object.
  */
 
@@ -178,29 +178,35 @@ function createFetchErrorHandler(options = {}) {
 				const clonedResponse = response.clone();
 
 				const contentType = clonedResponse.headers?.get('content-type');
+				const rawResponseBody = await clonedResponse.text();
 
+				let bodyIsInvalidJson = false;
 				if (contentType?.includes('application/json')) {
-					responseBody = await clonedResponse.json();
+					try {
+						// Attempt to parse the response body as JSON...
+						responseBody = JSON.parse(rawResponseBody);
+					} catch (/** @type {any} */ error) {
+						// If the JSON is invalid, we ignore the error and just set the
+						// response body as text so that we can still see the content
+						// even if it's invalid
+						responseBody = rawResponseBody?.slice(0, MAX_ERROR_LENGTH);
+						baseErrorOptions.upstreamErrorMessage = error.message;
+						bodyIsInvalidJson = true;
+					}
 				} else {
-					responseBody = (await clonedResponse.text()).slice(
-						0,
-						MAX_ERROR_LENGTH
-					);
+					responseBody = rawResponseBody?.slice(0, MAX_ERROR_LENGTH);
 				}
 
 				baseErrorOptions.responseBody = responseBody;
 
 				// If the response is OK but the returned JSON is invalid
-				if (response.ok && contentType?.includes('application/json')) {
-					try {
-						// We are just parsing the body to test if the JSON is valid
-						JSON.parse(responseBody);
-					} catch (/** @type {any} */ error) {
-						baseErrorOptions.upstreamErrorMessage = error.message;
-						throw new UpstreamServiceError(
-							Object.assign({ code: 'INVALID_JSON_ERROR' }, baseErrorOptions)
-						);
-					}
+				if (response.ok && bodyIsInvalidJson) {
+					throw new UpstreamServiceError(
+						Object.assign(
+							{ code: 'FETCH_INVALID_JSON_ERROR' },
+							baseErrorOptions
+						)
+					);
 				}
 			}
 
