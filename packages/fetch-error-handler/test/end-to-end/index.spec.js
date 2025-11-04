@@ -63,6 +63,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						expect(error.name).toStrictEqual('HttpError');
 						expect(error.code).toStrictEqual('FETCH_CLIENT_ERROR');
 						expect(error.statusCode).toStrictEqual(500);
+						expect(error.data.responseBody).toStrictEqual('Bad Request');
 					}
 				});
 
@@ -74,6 +75,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						expect(error.name).toStrictEqual('HttpError');
 						expect(error.code).toStrictEqual('FETCH_CLIENT_ERROR');
 						expect(error.statusCode).toStrictEqual(500);
+						expect(error.data.responseBody).toStrictEqual('Not Found');
 					}
 				});
 
@@ -85,6 +87,9 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						expect(error.name).toStrictEqual('UpstreamServiceError');
 						expect(error.code).toStrictEqual('FETCH_SERVER_ERROR');
 						expect(error.statusCode).toStrictEqual(502);
+						expect(error.data.responseBody).toStrictEqual(
+							'Internal Server Error'
+						);
 					}
 				});
 
@@ -96,6 +101,9 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						expect(error.name).toStrictEqual('UpstreamServiceError');
 						expect(error.code).toStrictEqual('FETCH_SERVER_ERROR');
 						expect(error.statusCode).toStrictEqual(502);
+						expect(error.data.responseBody).toStrictEqual(
+							'Service Unavailable'
+						);
 					}
 				});
 
@@ -154,6 +162,23 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						}
 					});
 				}
+
+				it('handles 200 with malformed JSON body', async () => {
+					expect.hasAssertions();
+					try {
+						await handleFetchErrors(fetch(`${baseUrl}/status/200`));
+					} catch (error) {
+						expect(error.name).toStrictEqual('UpstreamServiceError');
+						expect(error.code).toStrictEqual('FETCH_INVALID_JSON_ERROR');
+						expect(error.statusCode).toStrictEqual(502);
+						expect(error.data.responseBody).toStrictEqual('{json:');
+						expect(error.data.upstreamErrorMessage).toEqual(
+							expect.stringContaining(
+								"Expected property name or '}' in JSON at position 1"
+							)
+						);
+					}
+				});
 			});
 		} else {
 			// The fetch implementation is not available (e.g. native fetch).
