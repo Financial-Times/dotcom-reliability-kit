@@ -9,14 +9,31 @@ app.get('/status/:status', (request, response) => {
 		if (/^\d+$/.test(request.params.status)) {
 			status = Number(request.params.status);
 		}
-		if (status === 200) {
-			response
-				.status(status)
-				.set('Content-Type', 'application/json')
-				.send('{json:');
-		} else {
-			response.status(status).send(STATUS_CODES[status]);
-		}
+		response.status(status).send(STATUS_CODES[status]);
+	}, 50);
+});
+
+app.get('/body/json/valid', (_, response) => {
+	setTimeout(() => {
+		response
+			.status(500)
+			.set('Content-Type', 'application/json')
+			.send({ json: true });
+	}, 50);
+});
+
+app.get('/body/json/invalid', (_, response) => {
+	setTimeout(() => {
+		response.status(200).set('Content-Type', 'application/json').send('{json:');
+	}, 50);
+});
+
+app.get('/body/text/long', (_, response) => {
+	setTimeout(() => {
+		response
+			.status(500)
+			.set('Content-Type', 'text/plain')
+			.send(Array(5000).fill('a').join(''));
 	}, 50);
 });
 

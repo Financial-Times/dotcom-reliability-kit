@@ -163,10 +163,10 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 					});
 				}
 
-				it('handles 200 with malformed JSON body', async () => {
+				it('handles 200 response with malformed JSON body', async () => {
 					expect.hasAssertions();
 					try {
-						await handleFetchErrors(fetch(`${baseUrl}/status/200`));
+						await handleFetchErrors(fetch(`${baseUrl}/body/json/invalid`));
 					} catch (error) {
 						expect(error.name).toStrictEqual('UpstreamServiceError');
 						expect(error.code).toStrictEqual('FETCH_INVALID_JSON_ERROR');
@@ -177,6 +177,32 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 								"Expected property name or '}' in JSON at position 1"
 							)
 						);
+					}
+				});
+
+				it('handles errors with correct JSON body', async () => {
+					expect.hasAssertions();
+					try {
+						await handleFetchErrors(fetch(`${baseUrl}/body/json/valid`));
+					} catch (error) {
+						expect(error.name).toStrictEqual('UpstreamServiceError');
+						expect(error.code).toStrictEqual('FETCH_SERVER_ERROR');
+						expect(error.statusCode).toStrictEqual(502);
+						expect(error.data.responseBody).toStrictEqual({ json: true });
+						expect(error.data.upstreamErrorMessage).toBeUndefined();
+					}
+				});
+
+				it('handles cases when the body error is too long', async () => {
+					expect.hasAssertions();
+					try {
+						await handleFetchErrors(fetch(`${baseUrl}/body/text/long`));
+					} catch (error) {
+						expect(error.name).toStrictEqual('UpstreamServiceError');
+						expect(error.code).toStrictEqual('FETCH_SERVER_ERROR');
+						expect(error.statusCode).toStrictEqual(502);
+						expect(error.data.responseBody).toContain('a');
+						expect(error.data.responseBody.length).toEqual(2000);
 					}
 				});
 			});
