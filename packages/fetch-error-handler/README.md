@@ -3,22 +3,23 @@
 
 Properly handle fetch errors and avoid a lot of boilerplate in your app. This module is part of [FT.com Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit#readme).
 
-  * [Usage](#usage)
-    * [Wrap the fetch function](#wrap-the-fetch-function)
-    * [Handle errors with `.then`](#handle-errors-with-then)
-    * [Handle the response object](#handle-the-response-object)
-    * [Errors thrown](#errors-thrown)
-      * [Client errors](#client-errors)
-      * [Server errors](#server-errors)
-      * [DNS errors](#dns-errors)
-      * [Abort and timeout errors](#abort-and-timeout-errors)
-      * [Socket errors](#socket-errors)
-      * [Unknown errors](#unknown-errors)
-    * [Creating your own handler](#creating-your-own-handler)
-    * [`createFetchErrorHandler` configuration options](#createfetcherrorhandler-configuration-options)
-      * [`options.upstreamSystemCode`](#optionsupstreamsystemcode)
-  * [Contributing](#contributing)
-  * [License](#license)
+* [Usage](#usage)
+  * [Wrap the fetch function](#wrap-the-fetch-function)
+  * [Handle errors with `.then`](#handle-errors-with-then)
+  * [Handle the response object](#handle-the-response-object)
+  * [Errors thrown](#errors-thrown)
+    * [Client errors](#client-errors)
+    * [Server errors](#server-errors)
+    * [DNS errors](#dns-errors)
+    * [Abort and timeout errors](#abort-and-timeout-errors)
+    * [Socket errors](#socket-errors)
+    * [Invalid JSON errors](#invalid-json-errors)
+    * [Unknown errors](#unknown-errors)
+  * [Creating your own handler](#creating-your-own-handler)
+  * [`createFetchErrorHandler` configuration options](#createfetcherrorhandler-configuration-options)
+    * [`options.upstreamSystemCode`](#optionsupstreamsystemcode)
+* [Contributing](#contributing)
+* [License](#license)
 
 
 ## Usage
@@ -90,6 +91,7 @@ error.statusCode // 500
 error.code // FETCH_CLIENT_ERROR
 error.data.upstreamUrl // The URL that was fetched
 error.data.upstreamStatusCode // The status code that the URL responded with
+error.data.responseBody // The body of the initial response
 ```
 
 #### Server errors
@@ -101,6 +103,7 @@ error.statusCode // 502
 error.code // FETCH_SERVER_ERROR
 error.data.upstreamUrl // The URL that was fetched
 error.data.upstreamStatusCode // The status code that the URL responded with
+error.data.responseBody // The body of the initial response
 ```
 
 #### DNS errors
@@ -138,6 +141,22 @@ error.cause // The underlying socket error that was caught
 
 > [!IMPORTANT]<br />
 > This type of error will only be thrown if you use the ["wrap the fetch function"](#wrap-the-fetch-function) API.
+
+#### Invalid JSON errors
+
+If the URL you fetched responds with 200 status code and a JSON body, we try to parse that body to verify it is valid. If the body is invalid, we will throw an [`UpstreamServiceError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#httperror) with the error from the parsing, and the initial body of the response. This error will have the following properties to help you debug:
+
+```js
+error.statusCode // 502
+error.code // FETCH_INVALID_JSON_ERROR
+error.data.upstreamUrl // The URL that was fetched
+error.data.upstreamStatusCode // 200
+error.data.upstreamErrorMessage // The error that was thrown when attempting to parse the body of the response
+error.data.responseBody // The body of the initial response
+```
+
+> [!IMPORTANT]<br />
+> If the body is too long, we are truncating it because Splunk has a limit of characters to log.
 
 #### Unknown errors
 
