@@ -9,7 +9,14 @@ app.get('/status/:status', (request, response) => {
 		if (/^\d+$/.test(request.params.status)) {
 			status = Number(request.params.status);
 		}
-		response.status(status).send(STATUS_CODES[status]);
+		if (status === 200) {
+			response
+				.status(status)
+				.set('Content-Type', 'application/json')
+				.send('{json:');
+		} else {
+			response.status(status).send(STATUS_CODES[status]);
+		}
 	}, 50);
 });
 
