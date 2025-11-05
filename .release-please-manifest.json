@@ -4,7 +4,7 @@
   "packages/crash-handler": "5.1.5",
   "packages/errors": "4.1.0",
   "packages/eslint-config": "4.1.0",
-  "packages/fetch-error-handler": "1.1.1",
+  "packages/fetch-error-handler": "1.2.0",
   "packages/log-error": "5.1.5",
   "packages/logger": "4.2.5",
   "packages/middleware-log-errors": "5.1.5",

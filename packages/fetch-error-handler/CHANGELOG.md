@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v1.1.1...fetch-error-handler-v1.2.0) (2025-11-05)
+
+
+### Features
+
+* add check for incorrect JSON ([41c48ff](https://github.com/Financial-Times/dotcom-reliability-kit/commit/41c48ffe0e00671a4f1c389acf7ec4996f6ac0e9))
+* add more e2e tests ([812e1bc](https://github.com/Financial-Times/dotcom-reliability-kit/commit/812e1bc935f318103422d0a85da4087089e2ad2c))
+* add unit tests for the new cases ([f7cfb6c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f7cfb6cc0f0015069eae343e70e39d9d03f0b16b))
+* adds e2e test for error handling refactor ([2d8d6f2](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2d8d6f26d31bd1e4ccdaf8a86d9d7d026d1ddade))
+* adds the body of the response to errors ([adb31fd](https://github.com/Financial-Times/dotcom-reliability-kit/commit/adb31fdebd230dd00daacdde0eca04452412815e))
+
+
+### Bug Fixes
+
+* in final throw check if response is an object ([bbe5fb3](https://github.com/Financial-Times/dotcom-reliability-kit/commit/bbe5fb38d893d889cb13664b0a93f8f716eac1d9))
+
+
+### Documentation Changes
+
+* add new error details in the readme ([465191a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/465191aca479876e10f0f98f3ed8ada253097a0d))
+
 ## [1.1.1](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v1.1.0...fetch-error-handler-v1.1.1) (2025-10-13)
 
 
