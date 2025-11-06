@@ -3,25 +3,29 @@ const fetchImplementations = [
 		name: 'node-fetch-1',
 		fetch: require('node-fetch-1'),
 		supportsAbortSignal: false,
-		supportsNonStandardTimeoutOption: true
+		supportsNonStandardTimeoutOption: true,
+		supportsDecodingError: false
 	},
 	{
 		name: 'node-fetch-2',
 		fetch: require('node-fetch-2'),
 		supportsAbortSignal: true,
-		supportsNonStandardTimeoutOption: true
+		supportsNonStandardTimeoutOption: true,
+		supportsDecodingError: false
 	},
 	{
 		name: 'undici',
 		fetch: require('undici').fetch,
 		supportsAbortSignal: true,
-		supportsNonStandardTimeoutOption: false
+		supportsNonStandardTimeoutOption: false,
+		supportsDecodingError: true
 	},
 	{
 		name: 'native',
 		fetch: global.fetch,
 		supportsAbortSignal: true,
-		supportsNonStandardTimeoutOption: false
+		supportsNonStandardTimeoutOption: false,
+		supportsDecodingError: true
 	}
 ];
 const { fork } = require('node:child_process');
@@ -50,7 +54,8 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 		name,
 		fetch,
 		supportsAbortSignal,
-		supportsNonStandardTimeoutOption
+		supportsNonStandardTimeoutOption,
+		supportsDecodingError
 	} of fetchImplementations) {
 		if (typeof fetch === 'function') {
 			// eslint-disable-next-line no-loop-func
@@ -205,6 +210,23 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						expect(error.data.responseBody.length).toEqual(2000);
 					}
 				});
+
+				if (supportsDecodingError) {
+					it('handles cases when there is an issue with .text() method', async () => {
+						expect.hasAssertions();
+						try {
+							await handleFetchErrors(fetch(`${baseUrl}/body/text/invalid`));
+						} catch (error) {
+							expect(error.name).toStrictEqual('OperationalError');
+							expect(error.code).toStrictEqual('FETCH_BODY_TYPE_ERROR');
+							expect(error.cause.name).toStrictEqual('TypeError');
+							expect(error.cause.message).toStrictEqual('terminated');
+							expect(error.cause.cause.message).toStrictEqual(
+								'incorrect header check'
+							);
+						}
+					});
+				}
 			});
 		} else {
 			// The fetch implementation is not available (e.g. native fetch).
