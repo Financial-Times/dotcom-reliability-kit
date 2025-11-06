@@ -177,11 +177,38 @@ function createFetchErrorHandler(options = {}) {
 				// And we want the consuming apps to still be able to read it if necessary
 				const clonedResponse = response.clone();
 
-				const contentType = clonedResponse.headers?.get('content-type');
-				const rawResponseBody = await clonedResponse.text();
+				let rawResponseBody;
+				try {
+					rawResponseBody = await clonedResponse.text();
+				} catch (/** @type {any} */ error) {
+					if (error?.name === 'AbortError') {
+						throw new OperationalError({
+							code: 'FETCH_BODY_ABORT_ERROR',
+							message:
+								'The request was cancelled or the connection was closed before the full body could be read.',
+							relatesToSystems,
+							cause: error
+						});
+					}
 
+					if (error?.name === 'TypeError') {
+						throw new OperationalError({
+							code: 'FETCH_BODY_TYPE_ERROR',
+							message:
+								'The body might be distubed or locked, or the content encoding was invalid',
+							relatesToSystems,
+							cause: error
+						});
+					}
+
+					// We don't know what to do with this error so
+					// we throw it as-is
+					throw error;
+				}
+
+				const contentType = clonedResponse.headers?.get('content-type');
 				let bodyIsInvalidJson = false;
-				if (contentType?.includes('application/json')) {
+				if (contentType?.includes('application/json') && rawResponseBody) {
 					try {
 						// Attempt to parse the response body as JSON...
 						responseBody = JSON.parse(rawResponseBody);

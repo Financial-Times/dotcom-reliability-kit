@@ -292,6 +292,80 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 					}
 				});
 			});
+
+			describe('when `response.text()` throws an AbortError exception', () => {
+				it('rejects with an augmented error', async () => {
+					const mockError = Object.assign(new Error('mock abort error'), {
+						name: 'AbortError'
+					});
+
+					const mockResponse = {
+						ok: true,
+						status: 200,
+						url: 'https://mock.com/example',
+						headers: {
+							get: jest.fn(() => 'application/json')
+						},
+						clone: jest.fn(() => mockResponse),
+						text: jest.fn().mockRejectedValue(mockError)
+					};
+					expect.assertions(4);
+					try {
+						await fetchErrorHandler(mockResponse);
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.name).toStrictEqual('OperationalError');
+						expect(error.code).toStrictEqual('FETCH_BODY_ABORT_ERROR');
+						expect(error.cause).toStrictEqual(mockError);
+					}
+				});
+			});
+
+			describe('when `response.text()` throws an TypeError exception', () => {
+				it('rejects with an augmented error', async () => {
+					const mockResponse = {
+						ok: true,
+						status: 200,
+						url: 'https://mock.com/example',
+						headers: {
+							get: jest.fn(() => 'application/json')
+						},
+						clone: jest.fn(() => mockResponse),
+						text: jest.fn().mockRejectedValue(new TypeError('mock body lock'))
+					};
+					expect.assertions(4);
+					try {
+						await fetchErrorHandler(mockResponse);
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.name).toStrictEqual('OperationalError');
+						expect(error.code).toStrictEqual('FETCH_BODY_TYPE_ERROR');
+						expect(error.cause.message).toStrictEqual('mock body lock');
+					}
+				});
+			});
+
+			describe('when `response.text()` throws an unknown exception', () => {
+				it('rejects with the original error', async () => {
+					const mockResponse = {
+						ok: true,
+						status: 200,
+						url: 'https://mock.com/example',
+						headers: {
+							get: jest.fn(() => 'application/json')
+						},
+						clone: jest.fn(() => mockResponse),
+						text: jest.fn().mockRejectedValue(new Error('unknown error'))
+					};
+					expect.assertions(2);
+					try {
+						await fetchErrorHandler(mockResponse);
+					} catch (error) {
+						expect(error).toBeInstanceOf(Error);
+						expect(error.name).toStrictEqual('Error');
+					}
+				});
+			});
 		});
 
 		describe('fetchErrorHandler(responsePromise)', () => {

@@ -28,6 +28,16 @@ app.get('/body/json/invalid', (_, response) => {
 	}, 50);
 });
 
+app.get('/body/text/invalid', (_, response) => {
+	setTimeout(() => {
+		response
+			.status(200)
+			.setHeader('Content-Encoding', 'gzip')
+			.setHeader('Content-Type', 'text/plain')
+			.send('something');
+	}, 50);
+});
+
 app.get('/body/text/long', (_, response) => {
 	setTimeout(() => {
 		response
