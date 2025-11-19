@@ -69,7 +69,6 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 			);
 			expect(handledErrors).toHaveLength(1);
 			expect(handledErrors[0].error).toMatchObject({
-				cause: null,
 				code: 'UNKNOWN',
 				data: {},
 				isOperational: false,

@@ -45,6 +45,8 @@ function serializeError(error) {
 	// If set, error cause (which in turn is an error instance) is serialized
 	if (error.cause && error.cause instanceof Error) {
 		errorProperties.cause = serializeError(error.cause);
+	} else {
+		errorProperties.cause = error.cause;
 	}
 
 	// Only include error stack if it's a string
@@ -100,7 +102,6 @@ function createSerializedError(properties) {
 			message: 'An error occurred',
 			isOperational: false,
 			relatesToSystems: [],
-			cause: null,
 			stack: null,
 			statusCode: null,
 			data: {}
