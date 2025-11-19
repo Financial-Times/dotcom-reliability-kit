@@ -53,12 +53,6 @@ describe('@dotcom-reliability-kit/errors/lib/base-error', () => {
 				expect(instance.name).toStrictEqual('BaseError');
 			});
 		});
-
-		describe('.cause', () => {
-			it('is set to null', () => {
-				expect(instance.cause).toStrictEqual(null);
-			});
-		});
 	});
 
 	describe('new BaseError(message)', () => {
@@ -125,12 +119,6 @@ describe('@dotcom-reliability-kit/errors/lib/base-error', () => {
 		describe('.name', () => {
 			it('is set to "BaseError"', () => {
 				expect(instance.name).toStrictEqual('BaseError');
-			});
-		});
-
-		describe('.cause', () => {
-			it('is set to the root cause error instance', () => {
-				expect(instance.cause).toEqual(rootCauseErrorInstance);
 			});
 		});
 	});

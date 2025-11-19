@@ -22,20 +22,19 @@ class BaseError extends Error {
 	isOperational = false;
 
 	/**
+	 * @protected
+	 * @readonly
+	 * @type {string}
+	 */
+	static defaultCode = 'UNKNOWN';
+
+	/**
 	 * A machine-readable error code which identifies the specific type of error.
 	 *
 	 * @readonly
 	 * @type {BaseErrorType['code']}
 	 */
 	code = BaseError.defaultCode;
-
-	/**
-	 * The root cause error instance.
-	 *
-	 * @readonly
-	 * @type {BaseErrorType['cause']}
-	 */
-	cause = null;
 
 	/**
 	 * Additional error information.
@@ -78,14 +77,13 @@ class BaseError extends Error {
 		} else {
 			data = message || data;
 		}
-		super(data.message || BaseError.defaultMessage);
+
+		const errorOptions = data.cause ? { cause: data.cause } : {};
+
+		super(data.message || BaseError.defaultMessage, errorOptions);
 
 		if (typeof data.code === 'string') {
 			this.code = BaseError.normalizeErrorCode(data.code);
-		}
-
-		if (data.cause instanceof Error) {
-			this.cause = data.cause;
 		}
 
 		for (const [key, value] of Object.entries(data)) {
@@ -103,13 +101,6 @@ class BaseError extends Error {
 	 * @type {string[]}
 	 */
 	static reservedKeys = ['code', 'message', 'cause'];
-
-	/**
-	 * @protected
-	 * @readonly
-	 * @type {string}
-	 */
-	static defaultCode = 'UNKNOWN';
 
 	/**
 	 * @protected
