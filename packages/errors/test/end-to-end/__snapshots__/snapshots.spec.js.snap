@@ -2,7 +2,6 @@
 
 exports[`@dotcom-reliability-kit/errors end-to-end BaseError matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": false,
@@ -24,7 +23,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end BaseError with cause matches 
 
 exports[`@dotcom-reliability-kit/errors end-to-end BaseError with code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": false,
@@ -35,7 +33,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end BaseError with code matches t
 
 exports[`@dotcom-reliability-kit/errors end-to-end BaseError with extra data matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {
     "mockData": 123,
@@ -48,7 +45,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end BaseError with extra data mat
 
 exports[`@dotcom-reliability-kit/errors end-to-end BaseError with message and code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": false,
@@ -59,7 +55,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end BaseError with message and co
 
 exports[`@dotcom-reliability-kit/errors end-to-end BaseError with message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": false,
@@ -70,7 +65,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end BaseError with message matche
 
 exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": true,
@@ -94,7 +88,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with cause mat
 
 exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -106,7 +99,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with code matc
 
 exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with extra data matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {
     "mockData": 123,
@@ -120,7 +112,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with extra dat
 
 exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with message and code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -132,7 +123,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with message a
 
 exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": true,
@@ -144,7 +134,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with message m
 
 exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with related systems matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": true,
@@ -158,7 +147,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end DataStoreError with related s
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_500",
   "data": {},
   "isOperational": true,
@@ -186,7 +174,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with cause matches 
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError with code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -200,7 +187,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with code matches t
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError with extra data matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_500",
   "data": {
     "mockData": 123,
@@ -216,7 +202,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with extra data mat
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError with message and code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -230,7 +215,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with message and co
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError with message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_500",
   "data": {},
   "isOperational": true,
@@ -244,7 +228,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with message matche
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError with related systems matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_500",
   "data": {},
   "isOperational": true,
@@ -260,7 +243,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with related system
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError with status code as message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_404",
   "data": {},
   "isOperational": true,
@@ -274,7 +256,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with status code as
 
 exports[`@dotcom-reliability-kit/errors end-to-end HttpError with status code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_404",
   "data": {},
   "isOperational": true,
@@ -288,7 +269,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end HttpError with status code ma
 
 exports[`@dotcom-reliability-kit/errors end-to-end OperationalError matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": true,
@@ -312,7 +292,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with cause m
 
 exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -324,7 +303,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with code ma
 
 exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with extra data matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {
     "mockData": 123,
@@ -338,7 +316,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with extra d
 
 exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with message and code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -350,7 +327,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with message
 
 exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": true,
@@ -362,7 +338,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with message
 
 exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with related systems matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "UNKNOWN",
   "data": {},
   "isOperational": true,
@@ -376,7 +351,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end OperationalError with related
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_502",
   "data": {},
   "isOperational": true,
@@ -404,7 +378,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with cau
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -418,7 +391,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with cod
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with extra data matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_502",
   "data": {
     "mockData": 123,
@@ -434,7 +406,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with ext
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with message and code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -448,7 +419,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with mes
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_502",
   "data": {},
   "isOperational": true,
@@ -462,7 +432,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with mes
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with related systems matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_502",
   "data": {},
   "isOperational": true,
@@ -478,7 +447,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with rel
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with status code as message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_404",
   "data": {},
   "isOperational": true,
@@ -492,7 +460,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with sta
 
 exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with status code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_404",
   "data": {},
   "isOperational": true,
@@ -506,7 +473,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UpstreamServiceError with sta
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_400",
   "data": {},
   "isOperational": true,
@@ -534,7 +500,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with cause mat
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -548,7 +513,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with code matc
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with extra data matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_400",
   "data": {
     "mockData": 123,
@@ -564,7 +528,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with extra dat
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with message and code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "MOCK_CODE",
   "data": {},
   "isOperational": true,
@@ -578,7 +541,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with message a
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_400",
   "data": {},
   "isOperational": true,
@@ -592,7 +554,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with message m
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with related systems matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_400",
   "data": {},
   "isOperational": true,
@@ -608,7 +569,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with related s
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with status code as message matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_404",
   "data": {},
   "isOperational": true,
@@ -622,7 +582,6 @@ exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with status co
 
 exports[`@dotcom-reliability-kit/errors end-to-end UserInputError with status code matches the snapshot 1`] = `
 {
-  "cause": null,
   "code": "HTTP_404",
   "data": {},
   "isOperational": true,
