@@ -24,7 +24,6 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'mock message',
 				isOperational: false,
 				relatesToSystems: [],
-				cause: null,
 				stack: error.stack,
 				statusCode: null,
 				data: {}
@@ -109,10 +108,10 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			});
 
 			describe('when the `cause` property is not an Error instance', () => {
-				it('leaves the property value unassigned', () => {
+				it('passes the `cause` property without trying to serialize it', () => {
 					error.cause = 'foo';
 					expect(serializeError(error)).toMatchObject({
-						cause: null
+						cause: 'foo'
 					});
 				});
 			});
@@ -214,7 +213,6 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'An error occurred',
 				isOperational: false,
 				relatesToSystems: [],
-				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}
@@ -332,7 +330,6 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'mock message',
 				isOperational: false,
 				relatesToSystems: [],
-				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}
@@ -350,7 +347,6 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: '123',
 				isOperational: false,
 				relatesToSystems: [],
-				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}
@@ -368,7 +364,6 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				message: 'mock,message',
 				isOperational: false,
 				relatesToSystems: [],
-				cause: null,
 				stack: null,
 				statusCode: null,
 				data: {}

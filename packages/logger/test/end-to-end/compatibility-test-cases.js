@@ -125,7 +125,6 @@ module.exports = [
 			},
 			reliabilityKit: {
 				error: {
-					cause: null,
 					code: 'UNKNOWN',
 					data: {},
 					isOperational: false,
@@ -508,7 +507,6 @@ module.exports = [
 				error: {
 					message: 'Test 1',
 					name: 'Error',
-					cause: null,
 					code: 'UNKNOWN',
 					data: {},
 					isOperational: false,
@@ -623,7 +621,6 @@ module.exports = [
 				level: 'info',
 				message: null,
 				error: {
-					cause: null,
 					code: 'UNKNOWN',
 					data: {},
 					isOperational: false,
@@ -719,7 +716,6 @@ module.exports = [
 				event: 'CREATE_GIFT_LINK',
 				contentUUID: 'mock-uuid',
 				error: {
-					cause: null,
 					code: 'UNKNOWN',
 					data: {},
 					isOperational: false,
@@ -812,7 +808,6 @@ module.exports = [
 				event: 'FAILED_TO_GET_FT_LIVE_EVENT',
 				message: null,
 				error: {
-					cause: null,
 					code: 'UNKNOWN',
 					data: {},
 					isOperational: false,
