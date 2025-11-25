@@ -20,7 +20,7 @@
 		"@dotcom-reliability-kit/errors": "^4.1.0",
 		"@dotcom-reliability-kit/log-error": "^5.1.5",
 		"@dotcom-reliability-kit/logger": "^4.2.5",
-		"@opentelemetry/auto-instrumentations-node": "^0.66.0",
+		"@opentelemetry/auto-instrumentations-node": "^0.67.1",
 		"@opentelemetry/exporter-metrics-otlp-proto": "^0.207.0",
 		"@opentelemetry/exporter-trace-otlp-proto": "^0.207.0",
 		"@opentelemetry/host-metrics": "^0.36.2",
