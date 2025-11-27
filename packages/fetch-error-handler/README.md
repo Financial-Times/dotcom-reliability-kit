@@ -14,6 +14,7 @@ Properly handle fetch errors and avoid a lot of boilerplate in your app. This mo
     * [Abort and timeout errors](#abort-and-timeout-errors)
     * [Socket errors](#socket-errors)
     * [Invalid JSON errors](#invalid-json-errors)
+    * [Invalid body errors](#invalid-body-errors)
     * [Unknown errors](#unknown-errors)
   * [Creating your own handler](#creating-your-own-handler)
   * [`createFetchErrorHandler` configuration options](#createfetcherrorhandler-configuration-options)
@@ -157,6 +158,17 @@ error.data.responseBody // The body of the initial response
 
 > [!IMPORTANT]<br />
 > If the body is too long, we are truncating it because Splunk has a limit of characters to log.
+
+#### Invalid body errors
+
+When decrypting the body of the reponse, it is possible that the .text() method throw an [exception](https://developer.mozilla.org/en-US/docs/Web/API/Response/text#exceptions). In that case, we will throw an [`OperationalError`](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#operationalerror). This error will have the following properties to help you debug:
+
+```js
+error.statusCode // 502
+error.code // FETCH_BODY_ABORT_ERROR or FETCH_BODY_TYPE_ERROR depending on the cause
+error.message // A more human readable explaination of the exception
+error.cause // The cause of the error parsing the body
+```
 
 #### Unknown errors
 
