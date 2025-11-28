@@ -7,7 +7,7 @@ const crypto = require('node:crypto');
 /**
  * Serialize an error object so that it can be consistently logged or output as JSON.
  *
- * @param {ErrorLike} error
+ * @param {unknown} error
  * @returns {SerializedError}
  */
 function serializeError(error) {
@@ -20,35 +20,37 @@ function serializeError(error) {
 	const errorProperties = {};
 
 	// If set, error name is cast to a string
-	if (error.name) {
+	if ('name' in error) {
 		errorProperties.name = `${error.name}`;
 	}
 
 	// If set, error code is cast to a string
-	if (error.code) {
+	if ('code' in error) {
 		errorProperties.code = `${error.code}`;
 	}
 
 	// If set, error message is cast to a string
-	if (error.message) {
+	if ('message' in error) {
 		errorProperties.message = `${error.message}`;
 	}
 
-	// The `isOperational` property is cast to a boolean
-	errorProperties.isOperational = Boolean(error.isOperational);
+	if ('isOperational' in error) {
+		// The `isOperational` property is cast to a boolean
+		errorProperties.isOperational = Boolean(error.isOperational);
+	}
 
 	// If set, we include the array of related systems
-	if (error.relatesToSystems && Array.isArray(error.relatesToSystems)) {
+	if ('relatesToSystems' in error && Array.isArray(error.relatesToSystems)) {
 		errorProperties.relatesToSystems = error.relatesToSystems;
 	}
 
 	// If set, error cause (which in turn is an error instance) is serialized
-	if (error.cause && error.cause instanceof Error) {
+	if ('cause' in error) {
 		errorProperties.cause = serializeError(error.cause);
 	}
 
 	// Only include error stack if it's a string
-	if (typeof error.stack === 'string') {
+	if ('stack' in error && typeof error.stack === 'string') {
 		errorProperties.stack = error.stack;
 
 		// Calculate the error fingerprint
@@ -61,12 +63,21 @@ function serializeError(error) {
 	}
 
 	// If set, cast the error status code to a number
-	if (error.statusCode || error.status) {
-		errorProperties.statusCode = parseInt(error.statusCode || error.status, 10);
+	if ('statusCode' in error) {
+		errorProperties.statusCode =
+			typeof error.statusCode === 'string'
+				? parseInt(error.statusCode, 10)
+				: error.statusCode;
+	} else if ('status' in error) {
+		errorProperties.statusCode =
+			typeof error.status === 'string'
+				? parseInt(error.status, 10)
+				: error.status;
 	}
 
 	// Only include additional error data if it's defined as an object
 	if (
+		'data' in error &&
 		typeof error.data === 'object' &&
 		!Array.isArray(error.data) &&
 		error.data !== null

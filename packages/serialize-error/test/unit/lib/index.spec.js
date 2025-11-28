@@ -109,10 +109,10 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			});
 
 			describe('when the `cause` property is not an Error instance', () => {
-				it('leaves the property value unassigned', () => {
+				it('serializes it', () => {
 					error.cause = 'foo';
-					expect(serializeError(error)).toMatchObject({
-						cause: null
+					expect(serializeError(error).cause).toMatchObject({
+						message: 'foo'
 					});
 				});
 			});
