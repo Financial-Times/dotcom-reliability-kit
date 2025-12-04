@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v4.1.0...errors-v4.2.0) (2025-12-04)
+
+
+### Features
+
+* replace custom cause with native cause ([b09d62a](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b09d62a63dec02a2764eedebf76439e866acb0f6))
+
 ## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/errors-v4.0.0...errors-v4.1.0) (2025-05-08)
 
 
