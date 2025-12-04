@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.3.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v1.2.0...fetch-error-handler-v1.3.0) (2025-12-04)
+
+
+### Features
+
+* catch the expections from response.text() ([b3d0dd1](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b3d0dd1827ea7d25ba236af9ce213089df0f4763))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @dotcom-reliability-kit/errors bumped from ^4.1.0 to ^4.2.0
+
 ## [1.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/fetch-error-handler-v1.1.1...fetch-error-handler-v1.2.0) (2025-11-05)
 
 

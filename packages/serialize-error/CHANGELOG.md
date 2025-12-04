@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v4.1.0...serialize-error-v4.2.0) (2025-12-04)
+
+
+### Features
+
+* update serializer with non error cause ([4bba157](https://github.com/Financial-Times/dotcom-reliability-kit/commit/4bba157387249525f3902ec0e3eab852656d01d7))
+
 ## [4.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/serialize-error-v4.0.0...serialize-error-v4.1.0) (2025-05-08)
 
 
