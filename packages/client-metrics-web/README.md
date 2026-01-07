@@ -27,6 +27,7 @@ A lightweight client for sending operational metrics events from the browser to 
     * [`options.environment`](#optionsenvironment)
 * [Usage (shared libraries)](#usage-shared-libraries)
 * [Usage (infrastructure)](#usage-infrastructure)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -218,6 +219,12 @@ my-library.failure
 ## Usage (infrastructure)
 
 As well as a client you'll need to add a namespace on the [Client Metrics Server](https://github.com/Financial-Times/cp-client-metrics-server/tree/main/config/namespace) to send events to. You can set this up yourselves following the script in the repo. This should set you up to send logs to Splunk and metrics to CloudWatch. You can then use your CloudWatch metrics to create graphs and alerts in Grafana.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
 
 ## Contributing
 

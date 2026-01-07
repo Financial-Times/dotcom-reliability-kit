@@ -36,6 +36,8 @@ Emoji           | Label             | Meaning
   * [Log times are now ISO 8601 timestamps](#log-times-are-now-iso-8601-timestamps)
 * [Migrating from v3 to v4](#migrating-from-v3-to-v4)
   * [Node.js 18 is no longer supported](#nodejs-18-is-no-longer-supported)
+* [Migrating from v4 to v5](#migrating-from-v4-to-v5)
+  * [Node.js 20 is no longer supported](#nodejs-20-is-no-longer-supported)
 
 
 ## Migrating from n-logger
@@ -302,3 +304,10 @@ If neither of the above is true, this should be a safe update with no code chang
 ### Node.js 18 is no longer supported
 
 **:red_circle: Breaking:** this version drops support for Node.js v18. If your app is already using Node.js v20 or above then you can migrate with no code changes.
+
+
+## Migrating from v4 to v5
+
+### Node.js 20 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v20. If your app is already using Node.js v22 then you may be able to migrate without code changes.
