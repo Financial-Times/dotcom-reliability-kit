@@ -14,7 +14,7 @@
     "test": "jest"
   },
   "engines": {
-    "node": "20.x || 22.x || 24.x"
+    "node": "22.x || 24.x"
   },
   "main": "lib/index.js",
   "types": "types/index.d.ts"

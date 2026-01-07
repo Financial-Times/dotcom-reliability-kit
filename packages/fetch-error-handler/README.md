@@ -19,6 +19,7 @@ Properly handle fetch errors and avoid a lot of boilerplate in your app. This mo
   * [Creating your own handler](#creating-your-own-handler)
   * [`createFetchErrorHandler` configuration options](#createfetcherrorhandler-configuration-options)
     * [`options.upstreamSystemCode`](#optionsupstreamsystemcode)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -217,6 +218,11 @@ const handleFetchErrors = createFetchErrorHandler({
 ```
 
 When this is set, any errors thrown by `handleFetchErrors` will have a [`relatesToSystems` property](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#operationalerrorrelatestosystems) which includes the given system code.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing
