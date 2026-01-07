@@ -81,9 +81,16 @@ An array of HTTP methods that are allowed for the route. This must be an `Array`
 
 This option defaults to `[]`.
 
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
+
 ## Contributing
 
 See the [central contributing guide for Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit/blob/main/docs/contributing.md).
+
 
 ## License
 
