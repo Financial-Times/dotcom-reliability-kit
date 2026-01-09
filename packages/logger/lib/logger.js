@@ -373,10 +373,7 @@ module.exports = class Logger {
 				});
 			}
 		} catch (/** @type {any} */ error) {
-			// We allow use of `console.log` here to ensure that critical
-			// logging failures are caught and logged. This ensures that we
-			// know if an app has broken logging.
-			// eslint-disable-next-line no-console
+			// biome-ignore lint/suspicious/noConsole: a fallback to log when logging is broken
 			console.log(
 				JSON.stringify({
 					level: 'error',

@@ -33,17 +33,9 @@ const MAX_ERROR_LENGTH = 2000;
  *     A function to create a clone of a response object.
  */
 
-/* eslint-disable jsdoc/valid-types */
-// The ESLint JSDoc plugin we're using marks this as invalid despite it being fine.
-// This is covered by the following GitHub issues. If these are closed then this should
-// no longer be an issue:
-// https://github.com/gajus/eslint-plugin-jsdoc/issues/145
-// https://github.com/jsdoc-type-pratt-parser/jsdoc-type-pratt-parser/issues/96
-// https://github.com/jsdoctypeparser/jsdoctypeparser/issues/50
 /**
  * @typedef {<Response extends FetchResponse>(fetchPromise: Response | Promise<Response>) => Promise<Response>} FetchErrorHandler
  */
-/* eslint-enable jsdoc/valid-types */
 
 /**
  * Create a fetch error handler function.

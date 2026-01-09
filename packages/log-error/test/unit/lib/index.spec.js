@@ -411,7 +411,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with `console.log`', () => {
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: used in the code
 				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						event: 'HANDLED_ERROR',
@@ -434,7 +434,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs that an error occurred with the logger using `console.log`', () => {
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: used in the code
 				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						level: 'error',
@@ -685,7 +685,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with `console.log`', () => {
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: used in the code
 				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						event: 'RECOVERABLE_ERROR',
@@ -708,7 +708,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs that an error occurred with the logger using `console.log`', () => {
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: used in the code
 				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						level: 'error',
@@ -995,7 +995,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with `console.log`', () => {
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: used in the code
 				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						event: 'UNHANDLED_ERROR',
@@ -1018,7 +1018,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs that an error occurred with the logger using `console.log`', () => {
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: used in the code
 				expect(console.log).toHaveBeenCalledWith(
 					JSON.stringify({
 						level: 'error',

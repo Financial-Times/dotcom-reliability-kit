@@ -58,7 +58,6 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 		supportsDecodingError
 	} of fetchImplementations) {
 		if (typeof fetch === 'function') {
-			// eslint-disable-next-line no-loop-func
 			describe(name, () => {
 				it('handles 400 errors', async () => {
 					expect.hasAssertions();

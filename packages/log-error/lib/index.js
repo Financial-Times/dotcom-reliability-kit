@@ -45,10 +45,7 @@ function logError({
 		const logMethod = logger[level] || logger.error;
 		logMethod.call(logger, logData);
 	} catch (/** @type {any} */ loggingError) {
-		// We allow use of `console.log` here to ensure that critical
-		// logging failures are caught and logged. This ensures that we
-		// know if an app has broken logging.
-		// eslint-disable-next-line no-console
+		// biome-ignore lint/suspicious/noConsole: a fallback to log when logging is broken
 		console.log(
 			JSON.stringify({
 				level: 'error',
@@ -57,7 +54,7 @@ function logError({
 				error: serializeError(loggingError)
 			})
 		);
-		// eslint-disable-next-line no-console
+		// biome-ignore lint/suspicious/noConsole: a fallback to log when logging is broken
 		console.log(JSON.stringify(logData));
 	}
 }

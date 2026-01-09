@@ -161,7 +161,7 @@ If we decide to drop support for a Node.js version, e.g. we want to start using 
 
 ### Linters
 
-JavaScript files are expected to pass the linting rules defined by the project ([ESLint](https://eslint.org/) and [Prettier](https://prettier.io/)). We attempt to run the linters on every commit, but you can also check lint errors manually either by installing the [VS Code ESLint extension](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) or by running the following locally:
+JavaScript files are expected to pass the linting rules defined by the project ([Biome](https://biomejs.dev/)). We attempt to run the linters on every commit, but you can also check lint errors manually either by installing the [VS Code Biome extension](https://biomejs.dev/reference/vscode/) or by running the following locally:
 
 ```
 npm run lint
@@ -179,7 +179,7 @@ We do not compile the code in our packages, but we do check that all variables a
 npm run lint
 ```
 
-As with ESLint, we check types in pull requests and errors will block merging, so it's useful to check before opening a PR.
+As with Biome, we check types in pull requests and errors will block merging, so it's useful to check before opening a PR.
 
 ### Unit tests
 
