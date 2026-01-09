@@ -1,5 +1,6 @@
 {
   "packages/app-info": "4.2.1",
+  "packages/biome-config": "0.0.0",
   "packages/client-metrics-web": "0.1.4",
   "packages/crash-handler": "5.1.6",
   "packages/errors": "4.2.0",
