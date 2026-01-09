@@ -31,6 +31,7 @@
 	],
 	"packages": {
 		"packages/app-info": {},
+		"packages/biome-config": {},
 		"packages/client-metrics-web": {},
 		"packages/crash-handler": {},
 		"packages/errors": {},
