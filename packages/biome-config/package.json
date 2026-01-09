@@ -1,0 +1,19 @@
+{
+  "name": "@dotcom-reliability-kit/biome-config",
+  "version": "0.0.0",
+  "description": "A Biome configuration focused on resolving code quality and reliability issues without making any code style decisions",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "packages/biome-config"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/biome-config#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: biome-config\"",
+  "license": "MIT",
+  "engines": {
+    "node": "^22.12 || ^24"
+  },
+  "peerDependencies": {
+    "@biomejs/biome": ">=2.3.11"
+  }
+}
