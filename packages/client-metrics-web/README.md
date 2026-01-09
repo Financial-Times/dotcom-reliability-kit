@@ -34,6 +34,7 @@ A client for sending operational metrics events to [AWS CloudWatch RUM](https://
 * [Usage (infrastructure)](#usage-infrastructure)
   * [Customer Products Client Metrics](#customer-products-client-metrics)
   * [Running your own infrastructure](#running-your-own-infrastructure)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -361,6 +362,12 @@ Resources:
         Telemetries:
           - errors
 ```
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
 
 ## Contributing
 
