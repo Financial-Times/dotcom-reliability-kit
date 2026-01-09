@@ -15,6 +15,7 @@ Emoji           | Label             | Meaning
   * [Node.js 18 is no longer supported](#nodejs-18-is-no-longer-supported)
 * [Migrating from v3 to v4](#migrating-from-v3-to-v4)
   * [Node.js 20 is no longer supported](#nodejs-20-is-no-longer-supported)
+  * [Node.js 22.11 is no longer supported](#nodejs-2211-is-no-longer-supported)
 
 
 ## Migrating from v1 to v2
@@ -49,3 +50,7 @@ If you're using the `--require` method or importing `@dotcom-reliability-kit/ope
 ### Node.js 20 is no longer supported
 
 **:red_circle: Breaking:** this version drops support for Node.js v20. If your app is already using Node.js v22 then you may be able to migrate without code changes.
+
+### Node.js 22.11 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v22.11 or lower. If your app is already using Node.js v22.12 then you may be able to migrate without code changes. This is so that we can publish native ESM modules without requiring complex changes in our consuming applications. [See #1479 for more information](https://github.com/Financial-Times/dotcom-reliability-kit/issues/1479).
