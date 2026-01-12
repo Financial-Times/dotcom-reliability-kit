@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.2.7](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.2.6...logger-v4.2.7) (2026-01-12)
+
+
+### Bug Fixes
+
+* bump pino from 10.1.0 to 10.1.1 ([33377aa](https://github.com/Financial-Times/dotcom-reliability-kit/commit/33377aaa8b0a4cb341f67f217550b1ed08012c81))
+
 ## [4.2.6](https://github.com/Financial-Times/dotcom-reliability-kit/compare/logger-v4.2.5...logger-v4.2.6) (2025-12-04)
 
 
