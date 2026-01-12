@@ -1,0 +1,36 @@
+{
+	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+	"extends": ["./packages/biome-config/config.json"],
+	"files": {
+		"includes": [
+			"!test/modules"
+		]
+	},
+	"formatter": {
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"lineWidth": 100
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "single",
+			"jsxQuoteStyle": "double",
+			"trailingCommas": "none"
+		},
+		"globals": [
+			"afterAll",
+			"afterEach",
+			"beforeAll",
+			"beforeEach",
+			"describe",
+			"expect",
+			"it",
+			"jest"
+		]
+	},
+	"json": {
+		"formatter": {
+			"enabled": false
+		}
+	}
+}

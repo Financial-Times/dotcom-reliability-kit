@@ -205,11 +205,9 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		describe('when neither environment variable is defined but a package.json exists', () => {
 			beforeEach(() => {
 				jest.resetModules();
-				jest.mock(
-					'/mock-cwd/package.json',
-					() => ({ version: 'mock-package-version' }),
-					{ virtual: true }
-				);
+				jest.mock('/mock-cwd/package.json', () => ({ version: 'mock-package-version' }), {
+					virtual: true
+				});
 				delete process.env.HEROKU_RELEASE_VERSION;
 				delete process.env.AWS_LAMBDA_FUNCTION_VERSION;
 				appInfo = require('../../../lib');
@@ -236,7 +234,9 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			describe('when the package.json is not an object', () => {
 				beforeEach(() => {
 					jest.resetModules();
-					jest.mock('/mock-cwd/package.json', () => null, { virtual: true });
+					jest.mock('/mock-cwd/package.json', () => null, {
+						virtual: true
+					});
 					appInfo = require('../../../lib');
 				});
 
@@ -269,11 +269,9 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		describe('when `process.env.SYSTEM_CODE` is not defined but a package.json exists', () => {
 			beforeEach(() => {
 				jest.resetModules();
-				jest.mock(
-					'/mock-cwd/package.json',
-					() => ({ name: 'mock-package-name' }),
-					{ virtual: true }
-				);
+				jest.mock('/mock-cwd/package.json', () => ({ name: 'mock-package-name' }), {
+					virtual: true
+				});
 				delete process.env.SYSTEM_CODE;
 				appInfo = require('../../../lib');
 			});
@@ -285,11 +283,9 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			describe('when the package.json `name` property begins with "ft-"', () => {
 				beforeEach(() => {
 					jest.resetModules();
-					jest.mock(
-						'/mock-cwd/package.json',
-						() => ({ name: 'ft-mock-package-name' }),
-						{ virtual: true }
-					);
+					jest.mock('/mock-cwd/package.json', () => ({ name: 'ft-mock-package-name' }), {
+						virtual: true
+					});
 					appInfo = require('../../../lib');
 				});
 
@@ -315,7 +311,9 @@ describe('@dotcom-reliability-kit/app-info', () => {
 			describe('when the package.json is not an object', () => {
 				beforeEach(() => {
 					jest.resetModules();
-					jest.mock('/mock-cwd/package.json', () => null, { virtual: true });
+					jest.mock('/mock-cwd/package.json', () => null, {
+						virtual: true
+					});
 					appInfo = require('../../../lib');
 				});
 
@@ -465,9 +463,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		describe('.cloud', () => {
 			describe('.provider', () => {
 				it('is an alias of `cloudProvider`', () => {
-					expect(appInfo.semanticConventions.cloud.provider).toBe(
-						appInfo.cloudProvider
-					);
+					expect(appInfo.semanticConventions.cloud.provider).toBe(appInfo.cloudProvider);
 				});
 			});
 
@@ -491,9 +487,7 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		describe('.service', () => {
 			describe('.name', () => {
 				it('is an alias of `systemCode`', () => {
-					expect(appInfo.semanticConventions.service.name).toBe(
-						appInfo.systemCode
-					);
+					expect(appInfo.semanticConventions.service.name).toBe(appInfo.systemCode);
 				});
 			});
 

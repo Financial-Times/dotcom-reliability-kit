@@ -91,7 +91,7 @@ jobs:
     steps:
       - *attach_workspace
       - run:
-          name: Run ESLint
+          name: Run linters
           command: npm run lint
 
   test:

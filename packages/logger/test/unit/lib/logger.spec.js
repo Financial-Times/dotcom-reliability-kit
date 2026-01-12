@@ -528,9 +528,9 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('logs the error information as JSON using `console.log`', () => {
-					// eslint-disable-next-line no-console
+					// biome-ignore lint/suspicious/noConsole: used in the code
 					expect(console.log).toHaveBeenCalledTimes(1);
-					// eslint-disable-next-line no-console
+					// biome-ignore lint/suspicious/noConsole: used in the code
 					expect(console.log).toHaveBeenCalledWith(
 						JSON.stringify({
 							level: 'error',
@@ -564,7 +564,6 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			'warn'
 		];
 		for (const levelMethod of logMethods) {
-			// eslint-disable-next-line no-loop-func
 			describe(`.${levelMethod}(...logData)`, () => {
 				beforeEach(() => {
 					logger.log = jest.fn();
@@ -710,9 +709,9 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 						Logger.zipLogData.mockReturnValue({ naughtyProperty: 'hello' });
 						logger.log('mockLevel', 'mock message', { mockData: true });
 
-						// eslint-disable-next-line no-console
+						// biome-ignore lint/suspicious/noConsole: used in the code
 						expect(console.log).toHaveBeenCalledTimes(1);
-						// eslint-disable-next-line no-console
+						// biome-ignore lint/suspicious/noConsole: used in the code
 						expect(console.log).toHaveBeenCalledWith(
 							JSON.stringify({
 								level: 'error',

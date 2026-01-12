@@ -96,9 +96,9 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 				collectorLogs = stdoutToLogs(collectorStdout);
 				exporterLogs = stdoutToLogs(exporterStdout);
 			} catch (cause) {
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: required for tests to work
 				console.log('COLLECTOR:', stdoutToLogs(collectorStdout));
-				// eslint-disable-next-line no-console
+				// biome-ignore lint/suspicious/noConsole: required for tests to work
 				console.log('EXPORTER:', stdoutToLogs(exporterStdout));
 				throw new Error('Fetch failed, see logs');
 			}

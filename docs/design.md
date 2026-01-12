@@ -52,7 +52,7 @@ When testing a monorepo, running tests and linting can happen in one of two ways
 
   2. Have tooling installed in each package and have commands in the top level package to run these
 
-We have opted to have tooling installed at the top level. This speeds up build times, because Jest and ESLint have non-trivial start up times and multiplying this by the number of packages can lead to a lot of overhead. This also means that the tooling is consistent between all of the different packages and upgrading the tooling happens in one place. There is more information on [how to run tests](./contributing.md#testing) in the contributing guide.
+We have opted to have tooling installed at the top level. This speeds up build times, because Jest has a non-trivial start up time and multiplying this by the number of packages can lead to a lot of overhead. This also means that the tooling is consistent between all of the different packages and upgrading the tooling happens in one place. There is more information on [how to run tests](./contributing.md#testing) in the contributing guide.
 
 ### Monorepo management
 

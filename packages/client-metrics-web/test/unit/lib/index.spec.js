@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+// biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
 jest.mock('aws-rum-web');
 
 const { AwsRum } = require('aws-rum-web');

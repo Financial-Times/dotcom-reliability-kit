@@ -15,7 +15,7 @@ const { randomUUID } = require('node:crypto');
 let manifest = null;
 try {
 	manifest = require(path.join(process.cwd(), 'package.json'));
-} catch (error) {}
+} catch (_) {}
 
 /** @type {string | null} */
 const manifestName =
@@ -187,6 +187,6 @@ exports.semanticConventions = {
 	}
 };
 
-// @ts-ignore
+// @ts-expect-error
 module.exports.default = module.exports;
 module.exports = Object.freeze(module.exports);
