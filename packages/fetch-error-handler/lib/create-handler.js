@@ -47,8 +47,7 @@ const MAX_ERROR_LENGTH = 2000;
  */
 function createFetchErrorHandler(options = {}) {
 	const { upstreamSystemCode } = options;
-	const relatesToSystems =
-		typeof upstreamSystemCode === 'string' ? [upstreamSystemCode] : [];
+	const relatesToSystems = typeof upstreamSystemCode === 'string' ? [upstreamSystemCode] : [];
 
 	return async function handleFetchErrors(input) {
 		let response = input;
@@ -96,10 +95,7 @@ function createFetchErrorHandler(options = {}) {
 					}
 
 					// Handle non-standardised timeout errors
-					if (
-						error?.name === 'FetchError' &&
-						error?.type === 'request-timeout'
-					) {
+					if (error?.name === 'FetchError' && error?.type === 'request-timeout') {
 						throw new OperationalError({
 							code: 'FETCH_TIMEOUT_ERROR',
 							message: abortErrorMessage,
@@ -109,10 +105,7 @@ function createFetchErrorHandler(options = {}) {
 					}
 
 					// Handle socket hangups
-					if (
-						errorCode === 'ECONNRESET' ||
-						error?.cause?.name === 'SocketError'
-					) {
+					if (errorCode === 'ECONNRESET' || error?.cause?.name === 'SocketError') {
 						throw new UpstreamServiceError({
 							code: 'FETCH_SOCKET_HANGUP_ERROR',
 							message: 'The connection to the upstream service was terminated',
@@ -221,10 +214,7 @@ function createFetchErrorHandler(options = {}) {
 				// If the response is OK but the returned JSON is invalid
 				if (response.ok && bodyIsInvalidJson) {
 					throw new UpstreamServiceError(
-						Object.assign(
-							{ code: 'FETCH_INVALID_JSON_ERROR' },
-							baseErrorOptions
-						)
+						Object.assign({ code: 'FETCH_INVALID_JSON_ERROR' }, baseErrorOptions)
 					);
 				}
 			}
@@ -319,7 +309,7 @@ class BlackHoleStream extends Writable {
 	/**
 	 * @override
 	 */
-	_write(chunk, encoding, done) {
+	_write(_chunk, _encoding, done) {
 		done();
 	}
 }

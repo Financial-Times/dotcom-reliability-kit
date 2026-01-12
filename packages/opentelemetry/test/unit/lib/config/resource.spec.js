@@ -29,8 +29,7 @@ jest.mock('@opentelemetry/semantic-conventions', () => ({
 	ATTR_SERVICE_VERSION: 'mock-semresattrs-service-version'
 }));
 
-const { defaultResource, resourceFromAttributes } =
-	require('@opentelemetry/sdk-node').resources;
+const { defaultResource, resourceFromAttributes } = require('@opentelemetry/sdk-node').resources;
 const { createResourceConfig } = require('../../../../lib/config/resource');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {

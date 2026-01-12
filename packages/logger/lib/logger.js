@@ -58,7 +58,6 @@ const prettificationAvailable = (() => {
 		// same file system work though, and it's only done once
 		// when the module first loads. It's also safe to ts-ignore
 		// this one because it's never actually used directly.
-		// @ts-ignore
 		require('pino-pretty');
 		return true;
 	} catch (_) {
@@ -186,13 +185,9 @@ module.exports = class Logger {
 		if (options.transforms) {
 			if (
 				!Array.isArray(options.transforms) ||
-				!options.transforms.every(
-					(transform) => typeof transform === 'function'
-				)
+				!options.transforms.every((transform) => typeof transform === 'function')
 			) {
-				throw new TypeError(
-					'The `transforms` option must be an array of functions'
-				);
+				throw new TypeError('The `transforms` option must be an array of functions');
 			}
 			this.#transforms = options.transforms;
 		}
@@ -201,7 +196,7 @@ module.exports = class Logger {
 		const withPrettifier =
 			typeof options.withPrettifier === 'boolean'
 				? options.withPrettifier
-				: !Boolean(process.env.LOG_DISABLE_PRETTIFIER);
+				: !process.env.LOG_DISABLE_PRETTIFIER;
 
 		if (options._transport) {
 			// If we have a configured transport, use it. This means
@@ -321,8 +316,7 @@ module.exports = class Logger {
 			throw new TypeError('The log `level` argument must be a string');
 		}
 		try {
-			const { logLevel, isDeprecated, isDefaulted } =
-				Logger.getLogLevelInfo(level);
+			const { logLevel, isDeprecated, isDefaulted } = Logger.getLogLevelInfo(level);
 
 			if (isDefaulted && !this.#defaultedLogLevelTracker.includes(level)) {
 				this.#defaultedLogLevelTracker.push(level);
@@ -343,10 +337,7 @@ module.exports = class Logger {
 			// Serialize properties which have a custom serializer
 			for (const key of this.#serializedProperties) {
 				if (sanitizedLogData[key] !== undefined) {
-					sanitizedLogData[key] = this.#serializers[key](
-						sanitizedLogData[key],
-						key
-					);
+					sanitizedLogData[key] = this.#serializers[key](sanitizedLogData[key], key);
 				}
 			}
 
@@ -460,10 +451,7 @@ module.exports = class Logger {
 	 *     Returns information about the log level.
 	 */
 	static getLogLevelInfo(level) {
-		return (
-			logLevelToTransportMethodMap[level] ||
-			logLevelToTransportMethodMap.default
-		);
+		return logLevelToTransportMethodMap[level] || logLevelToTransportMethodMap.default;
 	}
 
 	/**
@@ -492,7 +480,9 @@ module.exports = class Logger {
 						return Object.assign(collect, { message: item });
 					}
 					if (item instanceof Error) {
-						return Object.assign(collect, { error: serializeError(item) });
+						return Object.assign(collect, {
+							error: serializeError(item)
+						});
 					}
 					return Object.assign(collect, item);
 				},

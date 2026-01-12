@@ -1,5 +1,5 @@
-import { ErrorRequestHandler } from 'express';
 import { Logger } from '@dotcom-reliability-kit/logger';
+import { ErrorRequestHandler } from '@types/express';
 
 declare module '@dotcom-reliability-kit/middleware-render-error-info' {
 	export type ErrorRenderingOptions = {

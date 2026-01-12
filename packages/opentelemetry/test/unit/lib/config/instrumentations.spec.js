@@ -1,20 +1,14 @@
 jest.mock('@opentelemetry/auto-instrumentations-node', () => ({
-	getNodeAutoInstrumentations: jest
-		.fn()
-		.mockReturnValue('mock-auto-instrumentations')
+	getNodeAutoInstrumentations: jest.fn().mockReturnValue('mock-auto-instrumentations')
 }));
 jest.mock('@dotcom-reliability-kit/log-error');
 jest.mock('@dotcom-reliability-kit/errors');
 
-const {
-	getNodeAutoInstrumentations
-} = require('@opentelemetry/auto-instrumentations-node');
+const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
-const {
-	createInstrumentationConfig
-} = require('../../../../lib/config/instrumentations');
+const { createInstrumentationConfig } = require('../../../../lib/config/instrumentations');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () => {
 	it('exports a function', () => {

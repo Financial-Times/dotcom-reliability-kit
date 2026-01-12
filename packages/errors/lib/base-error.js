@@ -113,7 +113,7 @@ class BaseError extends Error {
 	 * @type {(typeof BaseErrorType)['isErrorMarkedAsOperational']}
 	 */
 	static isErrorMarkedAsOperational(error) {
-		// @ts-ignore Error.prototype.isOperational does not exist, but it's OK to check in this
+		// @ts-expect-error Error.prototype.isOperational does not exist, but it's OK to check in this
 		// case as we're manually casting `undefined` to a Boolean
 		return Boolean(error.isOperational);
 	}

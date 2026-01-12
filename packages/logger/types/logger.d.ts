@@ -1,12 +1,4 @@
-export type LogLevel =
-	| 'silly'
-	| 'data'
-	| 'debug'
-	| 'verbose'
-	| 'info'
-	| 'warn'
-	| 'error'
-	| 'fatal';
+export type LogLevel = 'silly' | 'data' | 'debug' | 'verbose' | 'info' | 'warn' | 'error' | 'fatal';
 
 export type LogLevelInfo = {
 	logLevel: LogLevel;

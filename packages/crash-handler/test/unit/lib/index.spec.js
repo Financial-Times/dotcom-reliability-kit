@@ -4,10 +4,7 @@ jest.mock('@dotcom-reliability-kit/log-error', () => ({
 	logHandledError: jest.fn(),
 	logUnhandledError: jest.fn()
 }));
-const {
-	logHandledError,
-	logUnhandledError
-} = require('@dotcom-reliability-kit/log-error');
+const { logHandledError, logUnhandledError } = require('@dotcom-reliability-kit/log-error');
 
 describe('@dotcom-reliability-kit/crash-handler', () => {
 	describe('.default', () => {
@@ -33,10 +30,7 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 
 		it('binds a handler to the process `uncaughtException` event', () => {
 			expect(mockProcess.on).toHaveBeenCalledTimes(1);
-			expect(mockProcess.on).toHaveBeenCalledWith(
-				'uncaughtException',
-				expect.any(Function)
-			);
+			expect(mockProcess.on).toHaveBeenCalledWith('uncaughtException', expect.any(Function));
 		});
 
 		describe('uncaughtExceptionHandler(error)', () => {

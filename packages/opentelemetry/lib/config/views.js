@@ -1,5 +1,4 @@
-const { AggregationType, InstrumentType } =
-	require('@opentelemetry/sdk-node').metrics;
+const { AggregationType, InstrumentType } = require('@opentelemetry/sdk-node').metrics;
 const logger = require('@dotcom-reliability-kit/logger');
 
 /**
@@ -22,14 +21,12 @@ exports.createViewConfig = function createViewConfig({
 		...buildHistogramView({
 			instrumentName: 'http.client.duration',
 			boundaries: httpClientDurationBuckets,
-			errorMessage:
-				'HTTP client duration buckets must only contain numbers greater than zero'
+			errorMessage: 'HTTP client duration buckets must only contain numbers greater than zero'
 		}),
 		...buildHistogramView({
 			instrumentName: 'http.server.duration',
 			boundaries: httpServerDurationBuckets,
-			errorMessage:
-				'HTTP server duration buckets must only contain numbers greater than zero'
+			errorMessage: 'HTTP server duration buckets must only contain numbers greater than zero'
 		})
 	];
 	return views.length ? { views } : {};

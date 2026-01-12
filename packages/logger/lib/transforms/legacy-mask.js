@@ -114,7 +114,7 @@ function maskObject(object, settings) {
 	const maskedObject = {};
 
 	// Loop over object properties to mask all keys and values
-	for (let key in object) {
+	for (const key in object) {
 		// If the key is sensitive mask the value entirely
 		if (settings.maskedFields.has(key)) {
 			maskedObject[key] = settings.maskString;
@@ -152,9 +152,7 @@ module.exports = function createLegacyMaskTransform({
 } = {}) {
 	// Deduplicate the mask list and filter out explicitly allowed values
 	const maskedFields = new Set(
-		[...DEFAULT_MASKED_FIELDS, ...denyList].filter(
-			(item) => !allowList.includes(item)
-		)
+		[...DEFAULT_MASKED_FIELDS, ...denyList].filter((item) => !allowList.includes(item))
 	);
 
 	// Regular expression defined in a string has to have escaped characters escaped

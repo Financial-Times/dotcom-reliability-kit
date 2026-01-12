@@ -113,9 +113,7 @@ exports.MetricsClient = class MetricsClient {
 	#handleMetricsEvent = (event) => {
 		try {
 			if (event instanceof CustomEvent) {
-				const { namespace, ...data } = MetricsClient.#resolveEventDetail(
-					event.detail
-				);
+				const { namespace, ...data } = MetricsClient.#resolveEventDetail(event.detail);
 				this.recordEvent(namespace, data);
 			}
 		} catch (/** @type {any} */ error) {
@@ -205,9 +203,7 @@ exports.MetricsClient = class MetricsClient {
 			throw new TypeError('detail must be an object');
 		}
 		if (typeof detail.namespace !== 'string') {
-			throw new TypeError(
-				`detail.namespace (${typeof detail.namespace}) must be a string`
-			);
+			throw new TypeError(`detail.namespace (${typeof detail.namespace}) must be a string`);
 		}
 		return detail;
 	}

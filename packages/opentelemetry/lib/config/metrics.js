@@ -1,10 +1,7 @@
-const {
-	OTLPMetricExporter
-} = require('@opentelemetry/exporter-metrics-otlp-proto');
+const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-proto');
 const { CompressionAlgorithm } = require('@opentelemetry/otlp-exporter-base');
 require('@opentelemetry/sdk-node');
-const { PeriodicExportingMetricReader } =
-	require('@opentelemetry/sdk-node').metrics;
+const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-node').metrics;
 const logger = require('@dotcom-reliability-kit/logger');
 const { METRICS_USER_AGENT } = require('./user-agents');
 
@@ -50,8 +47,7 @@ exports.createMetricsConfig = function createMetricsConfig(options) {
 	} else {
 		logger.info({
 			event: 'OTEL_METRICS_STATUS',
-			message:
-				'OpenTelemetry metrics are disabled because no metrics endpoint was set',
+			message: 'OpenTelemetry metrics are disabled because no metrics endpoint was set',
 			enabled: false,
 			endpoint: null
 		});

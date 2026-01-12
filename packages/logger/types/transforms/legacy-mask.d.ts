@@ -13,6 +13,4 @@ export type InternalMaskSettings = {
 	references: WeakSet<{ [key: string]: any }>;
 };
 
-export type createLegacyMaskTransform = (
-	options?: LegacyMaskTransformOptions
-) => LogTransform;
+export type createLegacyMaskTransform = (options?: LegacyMaskTransformOptions) => LogTransform;

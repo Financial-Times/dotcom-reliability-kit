@@ -7,11 +7,8 @@ jest.mock('../../../../lib/config/user-agents', () => ({
 }));
 
 const logger = require('@dotcom-reliability-kit/logger');
-const {
-	OTLPMetricExporter
-} = require('@opentelemetry/exporter-metrics-otlp-proto');
-const { PeriodicExportingMetricReader } =
-	require('@opentelemetry/sdk-node').metrics;
+const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-proto');
+const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-node').metrics;
 const { createMetricsConfig } = require('../../../../lib/config/metrics');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/metrics', () => {
@@ -53,8 +50,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/metrics', () => {
 				enabled: true,
 				endpoint: 'mock-endpoint',
 				event: 'OTEL_METRICS_STATUS',
-				message:
-					'OpenTelemetry metrics are enabled and exporting to endpoint mock-endpoint'
+				message: 'OpenTelemetry metrics are enabled and exporting to endpoint mock-endpoint'
 			});
 		});
 

@@ -163,9 +163,7 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				expect(response.send).toHaveBeenCalledTimes(1);
 				const html = response.send.mock.calls[0][0];
 				expect(typeof html).toBe('string');
-				expect(html).toMatch(
-					/<title>MockSerializedError in application<\/title>/
-				);
+				expect(html).toMatch(/<title>MockSerializedError in application<\/title>/);
 			});
 		});
 

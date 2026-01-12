@@ -96,9 +96,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 
 		describe('when the error has a `cause` property', () => {
 			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
-				const rootCauseErrorInstance = new Error(
-					'mock root cause error message'
-				);
+				const rootCauseErrorInstance = new Error('mock root cause error message');
 				error.cause = rootCauseErrorInstance;
 				expect(serializeError(error)).toMatchObject({
 					cause: serializeError(rootCauseErrorInstance)
@@ -121,11 +119,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the error is an AggregateError', () => {
 			it('serialises its errors', () => {
 				const aggregateError = new AggregateError(
-					[
-						new Error('error one'),
-						new Error('error two'),
-						new Error('error three')
-					],
+					[new Error('error one'), new Error('error two'), new Error('error three')],
 					'aggregate error message'
 				);
 
@@ -277,9 +271,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 
 		describe('when the object has a `cause` property', () => {
 			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
-				const rootCauseErrorInstance = new Error(
-					'mock root cause error message'
-				);
+				const rootCauseErrorInstance = new Error('mock root cause error message');
 				error.cause = rootCauseErrorInstance;
 				expect(serializeError(error)).toMatchObject({
 					cause: serializeError(rootCauseErrorInstance)

@@ -1,6 +1,4 @@
-jest.mock('../../../lib/create-handler', () =>
-	jest.fn().mockReturnValue('mock-handler')
-);
+jest.mock('../../../lib/create-handler', () => jest.fn().mockReturnValue('mock-handler'));
 const createHandler = require('../../../lib/create-handler');
 
 const { createFetchErrorHandler, handleFetchErrors } = require('../../..');

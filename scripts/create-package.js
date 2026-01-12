@@ -37,10 +37,7 @@ const releasePleaseManifest = require('../.release-please-manifest.json');
 		types: 'types/index.d.ts'
 	};
 	console.log('📦 initialising "package.json"');
-	await fs.writeFile(
-		path.join(packagePath, 'package.json'),
-		JSON.stringify(manifest, null, 2)
-	);
+	await fs.writeFile(path.join(packagePath, 'package.json'), JSON.stringify(manifest, null, 2));
 
 	console.log('📖 writing "README.md"');
 	await fs.writeFile(

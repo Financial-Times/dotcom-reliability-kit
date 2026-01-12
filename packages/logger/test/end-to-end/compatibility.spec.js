@@ -38,11 +38,7 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 
 			if (expectedOutput.reliabilityKit) {
 				it('outputs the expected reliability-kit logs', () => {
-					const log = findLogWithPropertyValue(
-						logs,
-						'_logger',
-						'reliabilityKit'
-					);
+					const log = findLogWithPropertyValue(logs, '_logger', 'reliabilityKit');
 					expect(log).toBeTruthy();
 					const cleanLog = cleanLogForTesting(log);
 					expect(cleanLog).toEqual(expectedOutput.reliabilityKit);
@@ -64,11 +60,7 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 
 			if (expectedOutput.deprecation) {
 				it('outputs a deprecation message', () => {
-					const log = findLogWithPropertyValue(
-						logs,
-						'event',
-						'LOG_LEVEL_DEPRECATED'
-					);
+					const log = findLogWithPropertyValue(logs, 'event', 'LOG_LEVEL_DEPRECATED');
 					expect(log).toBeTruthy();
 					const cleanLog = cleanLogForTesting(log);
 					expect(cleanLog).toEqual(expectedOutput.deprecation);

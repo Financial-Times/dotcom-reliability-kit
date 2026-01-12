@@ -248,9 +248,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 					} catch (error) {
 						expect(error).toBeInstanceOf(Error);
 						expect(error.data.responseBody.length).toEqual(2000);
-						expect(error.data.responseBody.includes(expectedMissingBit)).toBe(
-							false
-						);
+						expect(error.data.responseBody.includes(expectedMissingBit)).toBe(false);
 					}
 				});
 			});
@@ -416,7 +414,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 							mockResponse.status = 400;
 							mockResponse.body.pipe = jest.fn();
 							await fetchErrorHandler(Promise.resolve(mockResponse));
-						} catch (error) {
+						} catch (_) {
 							expect(mockResponse.body.pipe).toHaveBeenCalledTimes(1);
 							expect(mockResponse.body.pipe).toHaveBeenCalledWith(
 								expect.any(Writable)
@@ -615,9 +613,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						await fetchErrorHandler(null);
 					} catch (error) {
 						expect(error).toBeInstanceOf(TypeError);
-						expect(error.code).toStrictEqual(
-							'FETCH_ERROR_HANDLER_INVALID_INPUT'
-						);
+						expect(error.code).toStrictEqual('FETCH_ERROR_HANDLER_INVALID_INPUT');
 					}
 				});
 			});
@@ -632,9 +628,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						});
 					} catch (error) {
 						expect(error).toBeInstanceOf(TypeError);
-						expect(error.code).toStrictEqual(
-							'FETCH_ERROR_HANDLER_INVALID_INPUT'
-						);
+						expect(error.code).toStrictEqual('FETCH_ERROR_HANDLER_INVALID_INPUT');
 					}
 				});
 			});
@@ -649,9 +643,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						});
 					} catch (error) {
 						expect(error).toBeInstanceOf(TypeError);
-						expect(error.code).toStrictEqual(
-							'FETCH_ERROR_HANDLER_INVALID_INPUT'
-						);
+						expect(error.code).toStrictEqual('FETCH_ERROR_HANDLER_INVALID_INPUT');
 					}
 				});
 			});

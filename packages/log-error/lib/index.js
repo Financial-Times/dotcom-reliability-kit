@@ -16,14 +16,7 @@ const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
  *     The data to log.
  * @returns {void}
  */
-function logError({
-	error,
-	event,
-	includeHeaders,
-	level,
-	logger = reliabilityKitLogger,
-	request
-}) {
+function logError({ error, event, includeHeaders, level, logger = reliabilityKitLogger, request }) {
 	const logData = {
 		event,
 		message: extractErrorMessage(error),
@@ -91,10 +84,7 @@ function logHandledError({
 		error: serializedError,
 		event: 'HANDLED_ERROR',
 		includeHeaders,
-		level:
-			logUserErrorsAsWarnings && isUserError(serializedError)
-				? 'warn'
-				: 'error',
+		level: logUserErrorsAsWarnings && isUserError(serializedError) ? 'warn' : 'error',
 		logger,
 		request
 	});
@@ -139,11 +129,7 @@ function logUnhandledError({ error, includeHeaders, logger, request }) {
  * @returns {boolean}
  */
 function isUserError(error) {
-	return (
-		error.statusCode !== null &&
-		error.statusCode >= 400 &&
-		error.statusCode < 500
-	);
+	return error.statusCode !== null && error.statusCode >= 400 && error.statusCode < 500;
 }
 
 exports.logHandledError = logHandledError;

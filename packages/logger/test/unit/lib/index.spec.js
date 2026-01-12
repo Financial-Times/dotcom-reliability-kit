@@ -20,9 +20,7 @@ describe('@dotcom-reliability-kit/logger', () => {
 	describe('.transforms', () => {
 		describe('.legacyMask', () => {
 			it('aliases lib/transforms/legacy-mask', () => {
-				expect(logger.transforms.legacyMask).toStrictEqual(
-					createLegacyMaskTransform
-				);
+				expect(logger.transforms.legacyMask).toStrictEqual(createLegacyMaskTransform);
 			});
 		});
 	});

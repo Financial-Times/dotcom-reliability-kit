@@ -14,10 +14,7 @@ jest.mock('@opentelemetry/exporter-trace-otlp-proto/package.json', () => ({
 	version: '6.7.8'
 }));
 
-const {
-	METRICS_USER_AGENT,
-	TRACING_USER_AGENT
-} = require('../../../../lib/config/user-agents');
+const { METRICS_USER_AGENT, TRACING_USER_AGENT } = require('../../../../lib/config/user-agents');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 	describe('.METRICS_USER_AGENT', () => {

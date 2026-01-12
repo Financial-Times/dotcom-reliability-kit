@@ -91,9 +91,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						expect(error.name).toStrictEqual('UpstreamServiceError');
 						expect(error.code).toStrictEqual('FETCH_SERVER_ERROR');
 						expect(error.statusCode).toStrictEqual(502);
-						expect(error.data.responseBody).toStrictEqual(
-							'Internal Server Error'
-						);
+						expect(error.data.responseBody).toStrictEqual('Internal Server Error');
 					}
 				});
 
@@ -105,9 +103,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 						expect(error.name).toStrictEqual('UpstreamServiceError');
 						expect(error.code).toStrictEqual('FETCH_SERVER_ERROR');
 						expect(error.statusCode).toStrictEqual(502);
-						expect(error.data.responseBody).toStrictEqual(
-							'Service Unavailable'
-						);
+						expect(error.data.responseBody).toStrictEqual('Service Unavailable');
 					}
 				});
 
@@ -227,10 +223,6 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 					});
 				}
 			});
-		} else {
-			// The fetch implementation is not available (e.g. native fetch).
-			// TODO: this can be removed when we drop Node.js 16 support.
-			it.skip(`${name}`, () => {});
 		}
 	}
 });

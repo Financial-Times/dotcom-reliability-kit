@@ -15,10 +15,7 @@ app.get('/status/:status', (request, response) => {
 
 app.get('/body/json/valid', (_, response) => {
 	setTimeout(() => {
-		response
-			.status(500)
-			.set('Content-Type', 'application/json')
-			.send({ json: true });
+		response.status(500).set('Content-Type', 'application/json').send({ json: true });
 	}, 50);
 });
 
@@ -40,14 +37,11 @@ app.get('/body/text/invalid', (_, response) => {
 
 app.get('/body/text/long', (_, response) => {
 	setTimeout(() => {
-		response
-			.status(500)
-			.set('Content-Type', 'text/plain')
-			.send(Array(5000).fill('a').join(''));
+		response.status(500).set('Content-Type', 'text/plain').send(Array(5000).fill('a').join(''));
 	}, 50);
 });
 
-app.get('/hangup', (request, response) => {
+app.get('/hangup', (_request, response) => {
 	response.socket.destroy();
 });
 

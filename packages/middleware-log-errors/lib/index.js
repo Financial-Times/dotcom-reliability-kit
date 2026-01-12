@@ -1,7 +1,4 @@
-const {
-	logHandledError,
-	logRecoverableError
-} = require('@dotcom-reliability-kit/log-error');
+const { logHandledError, logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 
 /**
  * @import { ErrorLoggingOptions } from '@dotcom-reliability-kit/middleware-log-errors'
@@ -25,9 +22,7 @@ function createErrorLoggingMiddleware(options = {}) {
 			!Array.isArray(includeHeaders) ||
 			!includeHeaders.every((header) => typeof header === 'string')
 		) {
-			throw new TypeError(
-				'The `includeHeaders` option must be an array of strings'
-			);
+			throw new TypeError('The `includeHeaders` option must be an array of strings');
 		}
 	}
 
@@ -37,7 +32,7 @@ function createErrorLoggingMiddleware(options = {}) {
 		throw new TypeError('The `filter` option must be a function');
 	}
 
-	return function errorLoggingMiddleware(error, request, response, next) {
+	return function errorLoggingMiddleware(error, request, _response, next) {
 		// We add a paranoid try/catch here because it'd be really embarassing
 		// if the error logging middleware threw an unhandled error, wouldn't it
 		try {

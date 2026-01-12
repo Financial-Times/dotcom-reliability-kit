@@ -33,11 +33,7 @@ const URL_TRUNCATION_LENGTH = 200;
 function serializeRequest(request, options = {}) {
 	// If the request is not an object, assume it's the request
 	// URL and return early
-	if (
-		typeof request !== 'object' ||
-		Array.isArray(request) ||
-		request === null
-	) {
+	if (typeof request !== 'object' || Array.isArray(request) || request === null) {
 		return createSerializedRequest({
 			url: `${request}`
 		});
@@ -49,9 +45,7 @@ function serializeRequest(request, options = {}) {
 		!Array.isArray(includeHeaders) ||
 		!includeHeaders.every((header) => typeof header === 'string')
 	) {
-		throw new TypeError(
-			'The `includeHeaders` option must be an array of strings'
-		);
+		throw new TypeError('The `includeHeaders` option must be an array of strings');
 	}
 	includeHeaders = includeHeaders.map((header) => header.toLowerCase());
 
@@ -72,7 +66,7 @@ function serializeRequest(request, options = {}) {
 	if (request.url) {
 		let url = `${request.url}`;
 		if (url.length > URL_TRUNCATION_LENGTH) {
-			url = url.slice(0, URL_TRUNCATION_LENGTH) + ' [truncated]';
+			url = `${url.slice(0, URL_TRUNCATION_LENGTH)} [truncated]`;
 		}
 		requestProperties.url = url;
 	}
@@ -82,14 +76,8 @@ function serializeRequest(request, options = {}) {
 		typeof request.headers === 'object' &&
 		!Array.isArray(request.headers) &&
 		request.headers !== null;
-	if (
-		request.headers &&
-		(headersIsObject || isIterableHeadersObject(request.headers))
-	) {
-		requestProperties.headers = serializeHeaders(
-			request.headers,
-			includeHeaders
-		);
+	if (request.headers && (headersIsObject || isIterableHeadersObject(request.headers))) {
+		requestProperties.headers = serializeHeaders(request.headers, includeHeaders);
 	}
 
 	// If the request route is present and valid, add it
@@ -112,7 +100,7 @@ function serializeRequest(request, options = {}) {
  */
 function serializeHeaders(headers, includeHeaders) {
 	const headersObject = {};
-	let iterableHeaders =
+	const iterableHeaders =
 		Array.isArray(headers) || isIterableHeadersObject(headers)
 			? headers
 			: Object.entries(headers);
@@ -124,9 +112,7 @@ function serializeHeaders(headers, includeHeaders) {
 	}
 
 	return Object.fromEntries(
-		Object.entries(headersObject).filter(([header]) =>
-			includeHeaders.includes(header)
-		)
+		Object.entries(headersObject).filter(([header]) => includeHeaders.includes(header))
 	);
 }
 
@@ -167,6 +153,4 @@ module.exports.default = module.exports;
 // array is edited within a dependent app, then any changes
 // will apply to _all_ uses of `serializeRequest`. This
 // could cause some weird issues so we lock it down.
-module.exports.DEFAULT_INCLUDED_HEADERS = Object.freeze([
-	...DEFAULT_INCLUDED_HEADERS
-]);
+module.exports.DEFAULT_INCLUDED_HEADERS = Object.freeze([...DEFAULT_INCLUDED_HEADERS]);

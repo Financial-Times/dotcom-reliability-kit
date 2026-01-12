@@ -2,9 +2,7 @@ jest.mock('@opentelemetry/host-metrics');
 jest.mock('@opentelemetry/sdk-node');
 jest.mock('@dotcom-reliability-kit/logger');
 jest.mock('../../../lib/config/instrumentations', () => ({
-	createInstrumentationConfig: jest
-		.fn()
-		.mockReturnValue('mock-instrumentations')
+	createInstrumentationConfig: jest.fn().mockReturnValue('mock-instrumentations')
 }));
 jest.mock('../../../lib/config/metrics', () => ({
 	createMetricsConfig: jest.fn().mockReturnValue({ metrics: 'mock-metrics' })
@@ -40,12 +38,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		jest.resetModules();
 		createInstrumentationConfig =
 			require('../../../lib/config/instrumentations').createInstrumentationConfig;
-		createMetricsConfig =
-			require('../../../lib/config/metrics').createMetricsConfig;
-		createResourceConfig =
-			require('../../../lib/config/resource').createResourceConfig;
-		createTracingConfig =
-			require('../../../lib/config/tracing').createTracingConfig;
+		createMetricsConfig = require('../../../lib/config/metrics').createMetricsConfig;
+		createResourceConfig = require('../../../lib/config/resource').createResourceConfig;
+		createTracingConfig = require('../../../lib/config/tracing').createTracingConfig;
 		createViewConfig = require('../../../lib/config/views').createViewConfig;
 		api = require('@opentelemetry/sdk-node').api;
 		api.metrics.getMeterProvider.mockReturnValue('mock-meter-provider');
@@ -204,12 +199,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 					it('logs an error via the Reliability Kit child logger', () => {
 						customLogger.error('mock message 1', 'mock message 2');
 						expect(mockChildLogger.error).toHaveBeenCalledTimes(1);
-						expect(mockChildLogger.error).toHaveBeenCalledWith(
-							'mock message 1',
-							{
-								details: ['mock message 2']
-							}
-						);
+						expect(mockChildLogger.error).toHaveBeenCalledWith('mock message 1', {
+							details: ['mock message 2']
+						});
 					});
 				});
 
@@ -217,12 +209,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 					it('logs info via the Reliability Kit child logger', () => {
 						customLogger.info('mock message 1', 'mock message 2');
 						expect(mockChildLogger.info).toHaveBeenCalledTimes(1);
-						expect(mockChildLogger.info).toHaveBeenCalledWith(
-							'mock message 1',
-							{
-								details: ['mock message 2']
-							}
-						);
+						expect(mockChildLogger.info).toHaveBeenCalledWith('mock message 1', {
+							details: ['mock message 2']
+						});
 					});
 				});
 
@@ -237,12 +226,9 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 					it('logs an warning via the Reliability Kit child logger', () => {
 						customLogger.warn('mock message 1', 'mock message 2');
 						expect(mockChildLogger.warn).toHaveBeenCalledTimes(1);
-						expect(mockChildLogger.warn).toHaveBeenCalledWith(
-							'mock message 1',
-							{
-								details: ['mock message 2']
-							}
-						);
+						expect(mockChildLogger.warn).toHaveBeenCalledWith('mock message 1', {
+							details: ['mock message 2']
+						});
 					});
 				});
 			});
@@ -411,11 +397,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			reloadAllModules();
 			api.metrics.getMeter.mockReturnValue('mock-meter');
 			opentelemetry.setup();
-			meter = opentelemetry.getMeter(
-				'mock-name',
-				'mock-version',
-				'mock-options'
-			);
+			meter = opentelemetry.getMeter('mock-name', 'mock-version', 'mock-options');
 		});
 
 		it('creates and returns a global meter', () => {

@@ -1,11 +1,9 @@
-import { RequestHandler } from 'express';
+import { RequestHandler } from '@types/express';
 
 declare module '@dotcom-reliability-kit/middleware-allow-request-methods' {
 	export type RequestMethodOptions = {
 		allowedMethods: string[];
 	};
 
-	declare function allowRequestMethods(
-		options: RequestMethodOptions
-	): RequestHandler;
+	declare function allowRequestMethods(options: RequestMethodOptions): RequestHandler;
 }

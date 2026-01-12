@@ -70,9 +70,7 @@ function serializeError(error) {
 				: error.statusCode;
 	} else if ('status' in error) {
 		errorProperties.statusCode =
-			typeof error.status === 'string'
-				? parseInt(error.status, 10)
-				: error.status;
+			typeof error.status === 'string' ? parseInt(error.status, 10) : error.status;
 	}
 
 	// Only include additional error data if it's defined as an object

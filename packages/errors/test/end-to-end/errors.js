@@ -72,12 +72,9 @@ module.exports = {
 	'OperationalError with code': new OperationalError({
 		code: 'mock_code'
 	}),
-	'OperationalError with message and code': new OperationalError(
-		'mock message',
-		{
-			code: 'mock_code'
-		}
-	),
+	'OperationalError with message and code': new OperationalError('mock message', {
+		code: 'mock_code'
+	}),
 	'OperationalError with cause': new OperationalError({
 		cause: new Error('mock cause')
 	}),
@@ -91,18 +88,13 @@ module.exports = {
 	// UpstreamServiceError tests
 	UpstreamServiceError: new UpstreamServiceError(),
 	'UpstreamServiceError with message': new UpstreamServiceError('mock message'),
-	'UpstreamServiceError with status code as message': new UpstreamServiceError(
-		404
-	),
+	'UpstreamServiceError with status code as message': new UpstreamServiceError(404),
 	'UpstreamServiceError with code': new UpstreamServiceError({
 		code: 'mock_code'
 	}),
-	'UpstreamServiceError with message and code': new UpstreamServiceError(
-		'mock message',
-		{
-			code: 'mock_code'
-		}
-	),
+	'UpstreamServiceError with message and code': new UpstreamServiceError('mock message', {
+		code: 'mock_code'
+	}),
 	'UpstreamServiceError with cause': new UpstreamServiceError({
 		cause: new Error('mock cause')
 	}),

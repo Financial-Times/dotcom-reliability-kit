@@ -30,9 +30,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new HttpError();
 		});
 
@@ -88,9 +86,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new HttpError('mock message');
 		});
 
@@ -147,9 +143,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 
 		beforeEach(() => {
 			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new HttpError(567);
 		});
 
@@ -211,9 +205,7 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 		beforeEach(() => {
 			jest.spyOn(BaseError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new HttpError({
 				message: 'mock message',
 				code: 'mock_code',
@@ -387,33 +379,25 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 	describe('.getMessageForStatusCode(statusCode)', () => {
 		describe('when the status code is a valid HTTP status code', () => {
 			it('returns the matching message', () => {
-				expect(HttpError.getMessageForStatusCode(456)).toStrictEqual(
-					'mock 456 message'
-				);
+				expect(HttpError.getMessageForStatusCode(456)).toStrictEqual('mock 456 message');
 			});
 		});
 
 		describe('when the status code is an invalid HTTP status code between 400 and 499', () => {
 			it('returns the message for a 400 error', () => {
-				expect(HttpError.getMessageForStatusCode(468)).toStrictEqual(
-					'mock 400 message'
-				);
+				expect(HttpError.getMessageForStatusCode(468)).toStrictEqual('mock 400 message');
 			});
 		});
 
 		describe('when the status code is an invalid HTTP status code greater than 499', () => {
 			it('returns the message for a 500 error', () => {
-				expect(HttpError.getMessageForStatusCode(567)).toStrictEqual(
-					'mock 500 message'
-				);
+				expect(HttpError.getMessageForStatusCode(567)).toStrictEqual('mock 500 message');
 			});
 		});
 
 		describe('when the status code is an invalid HTTP status code less than 400', () => {
 			it('returns the message for a 500 error', () => {
-				expect(HttpError.getMessageForStatusCode(137)).toStrictEqual(
-					'mock 500 message'
-				);
+				expect(HttpError.getMessageForStatusCode(137)).toStrictEqual('mock 500 message');
 			});
 		});
 	});

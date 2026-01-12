@@ -68,8 +68,7 @@ describe('setup', () => {
 
 	describe('when an HTTP server duration bucket is specified', () => {
 		it('includes views configurations', () => {
-			process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS =
-				'1,2,3,  4  ,five';
+			process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS = '1,2,3,  4  ,five';
 			require('../../setup.js');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
@@ -86,8 +85,7 @@ describe('setup', () => {
 
 	describe('when an HTTP client duration bucket is specified', () => {
 		it('includes views configurations', () => {
-			process.env.OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS =
-				'1,2,3,  4  ,five';
+			process.env.OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS = '1,2,3,  4  ,five';
 			require('../../setup.js');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
