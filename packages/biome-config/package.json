@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/biome-config",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A Biome configuration focused on resolving code quality and reliability issues without making any code style decisions",
   "repository": {
     "type": "git",
