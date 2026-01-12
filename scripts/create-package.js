@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable no-console */
+// biome-ignore-all lint/suspicious/noConsole: only used in local dev
 
 const fs = require('node:fs/promises');
 const path = require('node:path');

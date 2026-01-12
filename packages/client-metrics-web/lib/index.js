@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+// biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
 const { AwsRum } = require('aws-rum-web');
 
 /**
@@ -137,7 +137,7 @@ exports.MetricsClient = class MetricsClient {
 			},
 			options
 		);
-		this.#assertValidOptions(defaultedOptions);
+		MetricsClient.#assertValidOptions(defaultedOptions);
 		return defaultedOptions;
 	}
 
@@ -201,11 +201,7 @@ exports.MetricsClient = class MetricsClient {
 	 * @returns {MetricsEvent}
 	 */
 	static #resolveEventDetail(detail) {
-		if (
-			typeof detail !== 'object' ||
-			detail === null ||
-			Array.isArray(detail)
-		) {
+		if (typeof detail !== 'object' || detail === null || Array.isArray(detail)) {
 			throw new TypeError('detail must be an object');
 		}
 		if (typeof detail.namespace !== 'string') {
