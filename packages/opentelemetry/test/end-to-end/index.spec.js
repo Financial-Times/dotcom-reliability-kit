@@ -95,7 +95,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 				await setTimeout(1000);
 				collectorLogs = stdoutToLogs(collectorStdout);
 				exporterLogs = stdoutToLogs(exporterStdout);
-			} catch (cause) {
+			} catch (_) {
 				// biome-ignore lint/suspicious/noConsole: required for tests to work
 				console.log('COLLECTOR:', stdoutToLogs(collectorStdout));
 				// biome-ignore lint/suspicious/noConsole: required for tests to work

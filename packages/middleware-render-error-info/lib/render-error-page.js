@@ -48,7 +48,7 @@ function renderErrorPage({ request, response, serializedError }) {
 			${renderAppInfo(appInfo)}
 		`,
 		request,
-		title: escape(`${serializedError.name} in ${appName}`)
+		title: escapeHTML(`${serializedError.name} in ${appName}`)
 	});
 }
 
@@ -137,15 +137,13 @@ function renderError(error) {
 			},
 			{
 				label: 'Stack',
-				helpText:
-					'The full stack trace for the error, indicating where it was thrown',
+				helpText: 'The full stack trace for the error, indicating where it was thrown',
 				value: error.stack,
 				formatter: renderCodeBlock
 			},
 			{
 				label: 'Cause',
-				helpText:
-					'The original thrown error which resulted in this operational error',
+				helpText: 'The original thrown error which resulted in this operational error',
 				value: error.cause,
 				formatter: renderError
 			}
@@ -244,8 +242,7 @@ function renderAppInfo(appInfo) {
 			},
 			{
 				label: 'Environment',
-				helpText:
-					'The environment (production/development) that the app is running in',
+				helpText: 'The environment (production/development) that the app is running in',
 				value: appInfo.environment
 			},
 			{
@@ -307,7 +304,7 @@ function renderAppInfo(appInfo) {
 function renderSection({ id, title, body, fields }) {
 	return `
 		<section class="o-layout__main__full-span">
-			<h2 id="${escape(id)}">${escape(title)}</h2>
+			<h2 id="${escapeHTML(id)}">${escapeHTML(title)}</h2>
 			${body ? body : ''}
 			<dl class="kv-list">
 				${fields.map(renderField).join('\n')}
@@ -352,7 +349,7 @@ function renderWarning({ title, body }) {
  * @returns {string}
  *     Returns the rendered field.
  */
-function renderField({ label, helpText, value, formatter = escape }) {
+function renderField({ label, helpText, value, formatter = escapeHTML }) {
 	if (!value && value !== false) {
 		return '';
 	}
@@ -361,7 +358,7 @@ function renderField({ label, helpText, value, formatter = escape }) {
 	}
 	return `
 		<dt class="kv-list__key">
-			<span class="kv-list__label">${escape(label)}:</span>
+			<span class="kv-list__label">${escapeHTML(label)}:</span>
 			${helpText || ''}
 		</dt>
 		<dd class="kv-list__value">${formatter(value)}</dd>
@@ -378,7 +375,7 @@ function renderField({ label, helpText, value, formatter = escape }) {
  *     Returns the rendered code block.
  */
 function renderCodeBlock(block) {
-	return `<pre><code>${escape(block)}</code></pre>`;
+	return `<pre><code>${escapeHTML(block)}</code></pre>`;
 }
 
 /**
@@ -394,11 +391,7 @@ function renderCodeBlock(block) {
  * @returns {string}
  *     Returns the rendered boolean.
  */
-function renderBoolean(
-	boolean,
-	trueModifier = 'positive',
-	falseModifier = 'negative'
-) {
+function renderBoolean(boolean, trueModifier = 'positive', falseModifier = 'negative') {
 	return boolean
 		? `<span class="boolean boolean--${trueModifier}">Yes</span>`
 		: `<span class="boolean boolean--${falseModifier}">No</span>`;
@@ -429,9 +422,9 @@ function renderBizOpsSystems(systems) {
 function renderBizOpsSystem(systemCode) {
 	return `
 		<a
-			href="https://biz-ops.in.ft.com/System/${escape(systemCode)}"
+			href="https://biz-ops.in.ft.com/System/${escapeHTML(systemCode)}"
 			target="_blank"
-		>${escape(systemCode)}</a>
+		>${escapeHTML(systemCode)}</a>
 	`;
 }
 
@@ -457,7 +450,7 @@ function renderAsJson(value) {
  * @returns {string}
  *     Returns the HTML-escaped value.
  */
-function escape(value) {
+function escapeHTML(value) {
 	return entities.escapeUTF8(`${value}`);
 }
 

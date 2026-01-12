@@ -163,9 +163,7 @@ describe('@dotcom-reliability-kit/errors/lib/base-error', () => {
 		describe('when called with an OperationalError instance', () => {
 			it('returns `true`', () => {
 				expect(
-					BaseError.isErrorMarkedAsOperational(
-						new OperationalError('mock message')
-					)
+					BaseError.isErrorMarkedAsOperational(new OperationalError('mock message'))
 				).toStrictEqual(true);
 			});
 		});

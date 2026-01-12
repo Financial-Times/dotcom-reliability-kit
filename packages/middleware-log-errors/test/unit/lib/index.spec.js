@@ -4,10 +4,7 @@ jest.mock('@dotcom-reliability-kit/log-error', () => ({
 	logHandledError: jest.fn(),
 	logRecoverableError: jest.fn()
 }));
-const {
-	logHandledError,
-	logRecoverableError
-} = require('@dotcom-reliability-kit/log-error');
+const { logHandledError, logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 
 describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 	let middleware;
@@ -145,9 +142,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 
 		describe('when the filter option is set incorrectly', () => {
 			it('throws an error', () => {
-				const expectedError = new TypeError(
-					'The `filter` option must be a function'
-				);
+				const expectedError = new TypeError('The `filter` option must be a function');
 				expect(() => {
 					createErrorLoggingMiddleware({
 						filter: {}

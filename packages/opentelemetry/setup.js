@@ -1,7 +1,7 @@
 const opentelemetry = require('.');
 
 /** @type {opentelemetry.TracingOptions | undefined} */
-let tracing = undefined;
+let tracing;
 if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 	tracing = {
 		authorizationHeader: process.env.OPENTELEMETRY_AUTHORIZATION_HEADER,
@@ -13,7 +13,7 @@ if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 }
 
 /** @type {opentelemetry.MetricsOptions | undefined} */
-let metrics = undefined;
+let metrics;
 if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
 	metrics = {
 		apiGatewayKey: process.env.OPENTELEMETRY_API_GATEWAY_KEY,
@@ -30,7 +30,7 @@ function parseListOfNumbers(input) {
 }
 
 /** @type {opentelemetry.ViewOptions} */
-let views = {};
+const views = {};
 if (process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS) {
 	views.httpServerDurationBuckets = parseListOfNumbers(
 		process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS

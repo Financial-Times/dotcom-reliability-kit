@@ -124,9 +124,7 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(OperationalError.normalizeErrorCode).toHaveBeenCalledWith(
-				'mock_code'
-			);
+			expect(OperationalError.normalizeErrorCode).toHaveBeenCalledWith('mock_code');
 		});
 
 		describe('.code', () => {
@@ -163,19 +161,14 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 
 		describe('.relatesToSystems', () => {
 			it('is an array', () => {
-				expect(instance.relatesToSystems).toStrictEqual([
-					'system-one',
-					'system-two'
-				]);
+				expect(instance.relatesToSystems).toStrictEqual(['system-one', 'system-two']);
 			});
 
 			it('will store a string as an array', () => {
-				let singleSystemError = new OperationalError({
+				const singleSystemError = new OperationalError({
 					relatesToSystems: 'system-one'
 				});
-				expect(singleSystemError.relatesToSystems).toStrictEqual([
-					'system-one'
-				]);
+				expect(singleSystemError.relatesToSystems).toStrictEqual(['system-one']);
 			});
 		});
 
@@ -198,9 +191,7 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 		});
 
 		it('normalizes the passed in error code', () => {
-			expect(OperationalError.normalizeErrorCode).toHaveBeenCalledWith(
-				'mock_code'
-			);
+			expect(OperationalError.normalizeErrorCode).toHaveBeenCalledWith('mock_code');
 		});
 
 		describe('.code', () => {
@@ -239,18 +230,16 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 			it('returns `true`', () => {
 				const error = new Error('mock message');
 				error.isOperational = true;
-				expect(
-					OperationalError.isErrorMarkedAsOperational(error)
-				).toStrictEqual(true);
+				expect(OperationalError.isErrorMarkedAsOperational(error)).toStrictEqual(true);
 			});
 		});
 	});
 
 	describe('.normalizeErrorCode(code)', () => {
 		it('uppercases and normalizes spacing in the code', () => {
-			expect(
-				OperationalError.normalizeErrorCode(' ABC-123_foo   bar ')
-			).toStrictEqual('ABC_123_FOO_BAR');
+			expect(OperationalError.normalizeErrorCode(' ABC-123_foo   bar ')).toStrictEqual(
+				'ABC_123_FOO_BAR'
+			);
 		});
 	});
 

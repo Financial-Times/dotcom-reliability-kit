@@ -1,10 +1,6 @@
 const appInfo = require('@dotcom-reliability-kit/app-info').semanticConventions;
-const { defaultResource, resourceFromAttributes } =
-	require('@opentelemetry/sdk-node').resources;
-const {
-	ATTR_SERVICE_NAME,
-	ATTR_SERVICE_VERSION
-} = require('@opentelemetry/semantic-conventions');
+const { defaultResource, resourceFromAttributes } = require('@opentelemetry/sdk-node').resources;
+const { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } = require('@opentelemetry/semantic-conventions');
 
 /**
  * @import { resources } from '@opentelemetry/sdk-node'

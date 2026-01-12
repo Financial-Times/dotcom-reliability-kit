@@ -22,14 +22,10 @@ function allowRequestMethods(options = { allowedMethods: [] }) {
 		allowedMethodsSpecified.length === 0 ||
 		allowedMethodsSpecified.every((method) => typeof method !== 'string')
 	) {
-		throw new TypeError(
-			'The `allowedMethods` option must be an array of strings'
-		);
+		throw new TypeError('The `allowedMethods` option must be an array of strings');
 	}
 
-	const normalisedAllowedRequestMethods = normaliseAllowedRequestMethods(
-		allowedMethodsSpecified
-	);
+	const normalisedAllowedRequestMethods = normaliseAllowedRequestMethods(allowedMethodsSpecified);
 
 	return function allowRequestMethodsMiddleware(request, response, next) {
 		// We can't set the Allow header if headers have already been sent, otherwise the middleware will error

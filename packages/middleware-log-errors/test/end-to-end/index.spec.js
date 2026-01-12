@@ -60,13 +60,11 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 			const jsonLogs = stdout.split('\n').map((line) => {
 				try {
 					return JSON.parse(line);
-				} catch (error) {
+				} catch (_) {
 					return {};
 				}
 			});
-			const handledErrors = jsonLogs.filter(
-				(log) => log.event === 'HANDLED_ERROR'
-			);
+			const handledErrors = jsonLogs.filter((log) => log.event === 'HANDLED_ERROR');
 			expect(handledErrors).toHaveLength(1);
 			expect(handledErrors[0].error).toMatchObject({
 				cause: null,

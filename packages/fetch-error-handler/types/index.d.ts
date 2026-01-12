@@ -1,4 +1,4 @@
-import { Writable } from 'stream';
+import { Writable } from 'node:stream';
 
 declare module '@dotcom-reliability-kit/fetch-error-handler' {
 	export type ErrorHandlerOptions = {
@@ -20,9 +20,7 @@ declare module '@dotcom-reliability-kit/fetch-error-handler' {
 		fetchPromise: Response | Promise<Response>
 	) => Promise<Response>;
 
-	export function createFetchErrorHandler(
-		options?: ErrorHandlerOptions
-	): FetchErrorHandler;
+	export function createFetchErrorHandler(options?: ErrorHandlerOptions): FetchErrorHandler;
 
 	export const handleFetchErrors: FetchErrorHandler;
 }

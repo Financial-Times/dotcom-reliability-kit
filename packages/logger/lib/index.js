@@ -9,9 +9,9 @@ const legacyMask = require('./transforms/legacy-mask');
 const transforms = { legacyMask };
 
 /** @type {Logger & DefaultLogger} */
-exports = module.exports = new Logger();
-exports.Logger = Logger;
-exports.transforms = transforms;
+module.exports = new Logger();
+module.exports.Logger = Logger;
+module.exports.transforms = transforms;
 
-// @ts-ignore
-exports.default = exports;
+// @ts-expect-error
+module.exports.default = module.exports;

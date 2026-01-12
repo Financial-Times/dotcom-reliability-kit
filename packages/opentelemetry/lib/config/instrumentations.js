@@ -1,6 +1,4 @@
-const {
-	getNodeAutoInstrumentations
-} = require('@opentelemetry/auto-instrumentations-node');
+const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
 

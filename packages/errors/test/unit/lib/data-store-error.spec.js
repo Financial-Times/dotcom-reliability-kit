@@ -85,9 +85,7 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(OperationalError, 'normalizeErrorCode')
-				.mockReturnValue('MOCK_CODE');
+			jest.spyOn(OperationalError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 			instance = new DataStoreError({
 				message: 'mock message',
 				code: 'mock_code',
@@ -126,9 +124,7 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(OperationalError, 'normalizeErrorCode')
-				.mockReturnValue('MOCK_CODE');
+			jest.spyOn(OperationalError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 			instance = new DataStoreError('mock message', {
 				code: 'mock_code'
 			});

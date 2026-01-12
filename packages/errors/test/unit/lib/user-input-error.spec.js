@@ -29,9 +29,7 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new UserInputError();
 		});
 
@@ -83,9 +81,7 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new UserInputError('mock message');
 		});
 
@@ -138,9 +134,7 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 
 		beforeEach(() => {
 			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new UserInputError(456);
 		});
 
@@ -194,9 +188,7 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		beforeEach(() => {
 			jest.spyOn(HttpError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
 			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
-			jest
-				.spyOn(HttpError, 'getMessageForStatusCode')
-				.mockReturnValue('mock status message');
+			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
 			instance = new UserInputError({
 				message: 'mock message',
 				code: 'mock_code',

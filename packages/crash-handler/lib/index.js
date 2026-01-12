@@ -1,7 +1,4 @@
-const {
-	logHandledError,
-	logUnhandledError
-} = require('@dotcom-reliability-kit/log-error');
+const { logHandledError, logUnhandledError } = require('@dotcom-reliability-kit/log-error');
 
 /**
  * @import { CrashHandlerOptions } from '@dotcom-reliability-kit/crash-handler'

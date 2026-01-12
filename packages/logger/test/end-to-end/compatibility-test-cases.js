@@ -644,10 +644,7 @@ module.exports = [
 		description: '.info() with function in log object',
 		call: {
 			method: 'info',
-			args: [
-				'mock message',
-				{ example: () => 'hello', nested: { fn: () => {} } }
-			]
+			args: ['mock message', { example: () => 'hello', nested: { fn: () => {} } }]
 		},
 		expectedOutput: {
 			nextLogger: {
@@ -691,10 +688,7 @@ module.exports = [
 		description: '.error() with data and error (next-article)',
 		call: {
 			method: 'error',
-			args: [
-				{ event: 'CREATE_GIFT_LINK', contentUUID: 'mock-uuid' },
-				new Error('mock-error')
-			]
+			args: [{ event: 'CREATE_GIFT_LINK', contentUUID: 'mock-uuid' }, new Error('mock-error')]
 		},
 		// DIFFERENCE:
 		// Reliability kit does not send the `message` as an empty string
@@ -828,8 +822,7 @@ module.exports = [
 	// Test cases based on real-world usage of n-mask-logger
 	{
 		id: 'next-profile-1',
-		description:
-			'.info() with message and data, no masked fields (next-profile)',
+		description: '.info() with message and data, no masked fields (next-profile)',
 		call: {
 			method: 'info',
 			args: [

@@ -2,8 +2,7 @@ jest.mock('@dotcom-reliability-kit/logger');
 jest.mock('@opentelemetry/sdk-node');
 
 const logger = require('@dotcom-reliability-kit/logger');
-const { AggregationType, InstrumentType } =
-	require('@opentelemetry/sdk-node').metrics;
+const { AggregationType, InstrumentType } = require('@opentelemetry/sdk-node').metrics;
 
 AggregationType.EXPLICIT_BUCKET_HISTOGRAM = 'mock-explicit-bucket';
 InstrumentType.HISTOGRAM = 'mock-histogram';

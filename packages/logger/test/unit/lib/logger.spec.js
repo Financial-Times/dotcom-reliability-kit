@@ -129,9 +129,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			it('returns a new child logger with mixed in base log data', () => {
 				expect(childLogger).toBeInstanceOf(Logger);
 				expect(childLogger === logger).toBeFalsy();
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith(
-					'mock parent level'
-				);
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mock parent level');
 				expect(childLogger.transport).toStrictEqual('mock parent transport');
 				expect(childLogger.baseLogData).toEqual({
 					isMockParentBaseData: true,
@@ -427,12 +425,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls the relevant log transport method for the level', () => {
-					expect(
-						mockPinoLogger.mockDeprecatedCanonocalLevel
-					).toHaveBeenCalledTimes(1);
-					expect(
-						mockPinoLogger.mockDeprecatedCanonocalLevel
-					).toHaveBeenCalledWith({
+					expect(mockPinoLogger.mockDeprecatedCanonocalLevel).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockDeprecatedCanonocalLevel).toHaveBeenCalledWith({
 						isMockZippedData: true,
 						message: 'mock zipped message'
 					});
@@ -474,15 +468,11 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls the relevant log transport method for the level', () => {
-					expect(
-						mockPinoLogger.mockInvalidCanonicalLevel
-					).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockInvalidCanonicalLevel).toHaveBeenCalledWith(
-						{
-							isMockZippedData: true,
-							message: 'mock zipped message'
-						}
-					);
+					expect(mockPinoLogger.mockInvalidCanonicalLevel).toHaveBeenCalledTimes(1);
+					expect(mockPinoLogger.mockInvalidCanonicalLevel).toHaveBeenCalledWith({
+						isMockZippedData: true,
+						message: 'mock zipped message'
+					});
 				});
 
 				it('logs a warning', () => {
@@ -553,16 +543,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		const logMethods = [
-			'data',
-			'debug',
-			'error',
-			'fatal',
-			'info',
-			'silly',
-			'verbose',
-			'warn'
-		];
+		const logMethods = ['data', 'debug', 'error', 'fatal', 'info', 'silly', 'verbose', 'warn'];
 		for (const levelMethod of logMethods) {
 			describe(`.${levelMethod}(...logData)`, () => {
 				beforeEach(() => {
@@ -843,9 +824,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 							transforms: {}
 						});
 					}).toThrow(
-						new TypeError(
-							'The `transforms` option must be an array of functions'
-						)
+						new TypeError('The `transforms` option must be an array of functions')
 					);
 				});
 			});
@@ -857,9 +836,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 							transforms: [() => {}, 'nope']
 						});
 					}).toThrow(
-						new TypeError(
-							'The `transforms` option must be an array of functions'
-						)
+						new TypeError('The `transforms` option must be an array of functions')
 					);
 				});
 			});
@@ -940,9 +917,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 			it('gets the log level information based on the environment variable', () => {
 				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith(
-					'mockEnvSplunkLogLevel'
-				);
+				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockEnvSplunkLogLevel');
 			});
 		});
 
@@ -1296,15 +1271,9 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				expect(Logger.zipLogData({ error: mockError })).toEqual({
 					error: mockError
 				});
-				expect(Logger.zipLogData({ error: mockError }).error).toBeInstanceOf(
-					MockError
-				);
-				expect(Logger.zipLogData({ error: mockError }).error.name).toEqual(
-					'MockError'
-				);
-				expect(Logger.zipLogData({ error: mockError }).error.code).toEqual(
-					'MOCK_ERROR'
-				);
+				expect(Logger.zipLogData({ error: mockError }).error).toBeInstanceOf(MockError);
+				expect(Logger.zipLogData({ error: mockError }).error.name).toEqual('MockError');
+				expect(Logger.zipLogData({ error: mockError }).error.code).toEqual('MOCK_ERROR');
 			});
 		});
 
@@ -1357,9 +1326,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				serializeError.mockReturnValueOnce('mock serialized error');
 				const error = new Error('mock error');
 
-				expect(
-					Logger.zipLogData('mock message', error, { a: 1 }, { b: 2 })
-				).toEqual({
+				expect(Logger.zipLogData('mock message', error, { a: 1 }, { b: 2 })).toEqual({
 					message: 'mock message',
 					error: 'mock serialized error',
 					a: 1,

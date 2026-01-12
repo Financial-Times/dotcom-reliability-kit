@@ -11,6 +11,13 @@
 		"indentWidth": 4,
 		"lineWidth": 100
 	},
+	"linter": {
+		"rules": {
+			"suspicious": {
+				"noExplicitAny": "off"
+			}
+		}
+	},
 	"javascript": {
 		"formatter": {
 			"quoteStyle": "single",

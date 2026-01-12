@@ -182,9 +182,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('hands the error to the AWS RUM client', () => {
 				expect(AwsRum.mock.instances[0].recordError).toHaveBeenCalledTimes(1);
-				expect(AwsRum.mock.instances[0].recordError).toHaveBeenCalledWith(
-					error
-				);
+				expect(AwsRum.mock.instances[0].recordError).toHaveBeenCalledWith(error);
 			});
 		});
 

@@ -2,7 +2,7 @@ declare module '@dotcom-reliability-kit/errors' {
 	type BaseErrorData = {
 		code?: string;
 		message?: string;
-		cause?: unknown;
+		cause?: any;
 	} & { [key: string]: any };
 
 	type OperationalErrorData = { relatesToSystems?: string[] } & BaseErrorData;
@@ -17,7 +17,7 @@ declare module '@dotcom-reliability-kit/errors' {
 		public override readonly name: string;
 		public readonly isOperational: boolean;
 		public readonly code: string;
-		public readonly cause: unknown;
+		public readonly cause: any;
 		public readonly data: { [key: string]: any };
 
 		public static isErrorMarkedAsOperational(error: Error): boolean;

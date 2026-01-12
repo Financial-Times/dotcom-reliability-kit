@@ -6,11 +6,8 @@ jest.mock('../../../../lib/config/user-agents', () => ({
 }));
 
 const logger = require('@dotcom-reliability-kit/logger');
-const {
-	OTLPTraceExporter
-} = require('@opentelemetry/exporter-trace-otlp-proto');
-const { NoopSpanProcessor, TraceIdRatioBasedSampler } =
-	require('@opentelemetry/sdk-node').tracing;
+const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-proto');
+const { NoopSpanProcessor, TraceIdRatioBasedSampler } = require('@opentelemetry/sdk-node').tracing;
 const { createTracingConfig } = require('../../../../lib/config/tracing');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
@@ -54,8 +51,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 				enabled: true,
 				endpoint: 'mock-endpoint',
 				event: 'OTEL_TRACE_STATUS',
-				message:
-					'OpenTelemetry tracing is enabled and exporting to endpoint mock-endpoint',
+				message: 'OpenTelemetry tracing is enabled and exporting to endpoint mock-endpoint',
 				samplePercentage: 10
 			});
 		});
@@ -127,8 +123,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 					enabled: false,
 					endpoint: null,
 					event: 'OTEL_TRACE_STATUS',
-					message:
-						'OpenTelemetry tracing is disabled because no tracing endpoint was set'
+					message: 'OpenTelemetry tracing is disabled because no tracing endpoint was set'
 				});
 			});
 

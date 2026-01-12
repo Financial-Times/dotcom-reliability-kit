@@ -18,6 +18,7 @@
   "dependencies": {
     "@dotcom-reliability-kit/app-info": "^4.2.1",
     "@dotcom-reliability-kit/log-error": "^5.1.6",
+    "@dotcom-reliability-kit/logger": "^4.2.6",
     "@dotcom-reliability-kit/serialize-error": "^4.2.0",
     "entities": "^7.0.0"
   },

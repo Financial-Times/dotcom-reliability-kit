@@ -10,12 +10,12 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 	};
 
 	export class MetricsClient {
-		constructor(options: MetricsClientOptions): MetricsClient;
+		constructor(options: MetricsClientOptions);
 		get isAvailable(): boolean;
 		get isEnabled(): boolean;
 		enable(): void;
 		disable(): void;
-		recordError(error: unknown): void;
+		recordError(error: any): void;
 		recordEvent(namespace: string, eventData?: Record<string, any>): void;
 	}
 

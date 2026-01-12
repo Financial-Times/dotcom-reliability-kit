@@ -110,10 +110,7 @@ describe('allowRequestMethods', () => {
 
 			middleware(mockRequest, mockResponse, mockNext);
 
-			expect(mockResponse.header).toHaveBeenCalledWith(
-				'Allow',
-				'GET, POST, DELETE'
-			);
+			expect(mockResponse.header).toHaveBeenCalledWith('Allow', 'GET, POST, DELETE');
 		});
 	});
 });

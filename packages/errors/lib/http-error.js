@@ -12,7 +12,7 @@ const OperationalError = require('./operational-error');
  * @see HttpError.getMessageForStatusCode
  * @type {{[key: string]: any}}
  */
-const STATUS_CODES = require('http').STATUS_CODES;
+const STATUS_CODES = require('node:http').STATUS_CODES;
 
 /**
  * Class representing an HTTP error.
@@ -117,11 +117,7 @@ class HttpError extends OperationalError {
 	 * @protected
 	 * @type {string[]}
 	 */
-	static reservedKeys = [
-		...OperationalError.reservedKeys,
-		'statusCode',
-		'statusMessage'
-	];
+	static reservedKeys = [...OperationalError.reservedKeys, 'statusCode', 'statusMessage'];
 
 	/**
 	 * @protected

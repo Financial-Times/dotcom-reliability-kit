@@ -31,8 +31,7 @@ const manifestName =
 		: null;
 
 /** @type {string | null} */
-const manifestVersion =
-	typeof manifest?.version === 'string' ? manifest.version : null;
+const manifestVersion = typeof manifest?.version === 'string' ? manifest.version : null;
 
 /**
  * Extract the process type from a Heroku dyno name.
@@ -74,10 +73,7 @@ const cloudProvider = () => {
  * @type {string | null}
  */
 exports.commitHash =
-	process.env.HEROKU_SLUG_COMMIT ||
-	process.env.GIT_COMMIT_LONG ||
-	process.env.GIT_COMMIT ||
-	null;
+	process.env.HEROKU_SLUG_COMMIT || process.env.GIT_COMMIT_LONG || process.env.GIT_COMMIT || null;
 
 /**
  * The application deployment environment.
@@ -187,6 +183,5 @@ exports.semanticConventions = {
 	}
 };
 
-// @ts-expect-error
 module.exports.default = module.exports;
 module.exports = Object.freeze(module.exports);

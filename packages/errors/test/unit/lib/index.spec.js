@@ -4,10 +4,7 @@ jest.mock('../../../lib/base-error', () => 'mock-base-error');
 jest.mock('../../../lib/data-store-error', () => 'mock-data-store-error');
 jest.mock('../../../lib/http-error', () => 'mock-http-error');
 jest.mock('../../../lib/operational-error', () => 'mock-operational-error');
-jest.mock(
-	'../../../lib/upstream-service-error',
-	() => 'mock-upstream-service-error'
-);
+jest.mock('../../../lib/upstream-service-error', () => 'mock-upstream-service-error');
 jest.mock('../../../lib/user-input-error', () => 'mock-user-input-error');
 
 describe('@dotcom-reliability-kit/errors', () => {
@@ -43,9 +40,7 @@ describe('@dotcom-reliability-kit/errors', () => {
 
 	describe('.UpstreamServiceError', () => {
 		it('aliases lib/upstream-service-error', () => {
-			expect(errors.UpstreamServiceError).toStrictEqual(
-				'mock-upstream-service-error'
-			);
+			expect(errors.UpstreamServiceError).toStrictEqual('mock-upstream-service-error');
 		});
 	});
 

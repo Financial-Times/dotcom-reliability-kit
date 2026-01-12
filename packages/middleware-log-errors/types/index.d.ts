@@ -1,11 +1,8 @@
-import { ErrorRequestHandler, Request } from 'express';
 import { Logger } from '@dotcom-reliability-kit/logger';
+import { ErrorRequestHandler, Request } from 'express';
 
 declare module '@dotcom-reliability-kit/middleware-log-errors' {
-	export type ErrorLoggingFilter = (
-		error: any,
-		request: Request
-	) => boolean | void;
+	export type ErrorLoggingFilter = (error: any, request: Request) => boolean | undefined;
 
 	export type ErrorLoggingOptions = {
 		filter?: ErrorLoggingFilter;
