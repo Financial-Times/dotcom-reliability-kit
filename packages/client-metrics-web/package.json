@@ -16,6 +16,6 @@
   "main": "lib/index.js",
   "types": "types/index.d.ts",
   "dependencies": {
-    "aws-rum-web": "^1.25.0"
+    "aws-rum-web": "^2.0.0"
   }
 }
