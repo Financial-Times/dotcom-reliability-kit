@@ -31,6 +31,17 @@ import createErrorLogger from '@dotcom-reliability-kit/middleware-log-errors';
 const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `createErrorLogger`
 
 The `createErrorLogger` function can be used to generate Express middleware which logs errors to the console and Splunk via [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger).

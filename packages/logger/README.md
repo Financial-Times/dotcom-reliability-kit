@@ -52,6 +52,17 @@ import logger from '@dotcom-reliability-kit/logger';
 const logger = require('@dotcom-reliability-kit/logger');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 Perform logging at different levels using methods with the same name:
 
 ```js
