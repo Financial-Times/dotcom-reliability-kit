@@ -16,6 +16,10 @@
   "engines": {
     "node": "^22.12 || ^24"
   },
-  "main": "lib/index.js",
-  "types": "types/index.d.ts"
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  }
 }

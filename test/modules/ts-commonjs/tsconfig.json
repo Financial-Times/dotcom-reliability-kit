@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
-		"esModuleInterop": false,
-		"module": "CommonJS",
-		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "ES2022",

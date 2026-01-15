@@ -24,6 +24,17 @@ extends: ['@dotcom-reliability-kit/eslint-config']
 }
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 Avoid using .eslintrc file format (without a file extension), as [this has been depracated](https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file-formats).
 
 ### Static Code Analysis

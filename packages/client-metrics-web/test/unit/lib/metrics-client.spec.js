@@ -3,8 +3,8 @@ jest.mock('../../../package.json', () => ({
 	version: '0.0.0-test'
 }));
 
-const { MetricsClient } = require('../../..');
-const { Queue } = require('../../../lib/queue/queue');
+const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
+const { Queue } = require('../../../lib/queue/queue.js');
 
 class MockQueue extends Queue {
 	mockItems = [];

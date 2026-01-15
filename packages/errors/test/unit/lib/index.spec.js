@@ -1,4 +1,4 @@
-const errors = require('../../..');
+const errors = require('@dotcom-reliability-kit/errors');
 
 jest.mock('../../../lib/base-error', () => 'mock-base-error');
 jest.mock('../../../lib/data-store-error', () => 'mock-data-store-error');
