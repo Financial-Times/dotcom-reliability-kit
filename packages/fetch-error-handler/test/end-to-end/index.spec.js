@@ -29,7 +29,7 @@ const fetchImplementations = [
 	}
 ];
 const { fork } = require('node:child_process');
-const { handleFetchErrors } = require('../..');
+const { handleFetchErrors } = require('@dotcom-reliability-kit/fetch-error-handler');
 
 describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 	let child;

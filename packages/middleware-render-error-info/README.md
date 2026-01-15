@@ -26,6 +26,17 @@ import renderErrorInfoPage from '@dotcom-reliability-kit/middleware-render-error
 const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `renderErrorInfoPage`
 
 The `renderErrorInfoPage` function can be used to generate Express middleware which renders an error debugging page in local development and a sensible stripped-back error page in production.
