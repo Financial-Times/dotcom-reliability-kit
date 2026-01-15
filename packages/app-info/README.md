@@ -37,6 +37,17 @@ import appInfo from '@dotcom-reliability-kit/app-info';
 const appInfo = require('@dotcom-reliability-kit/app-info');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 The `appInfo` object has several properties which can be used to access application information.
 
 ### `appInfo.commitHash`

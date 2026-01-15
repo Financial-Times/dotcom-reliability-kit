@@ -35,6 +35,17 @@ import {OperationalError} from '@dotcom-reliability-kit/errors';
 const {OperationalError} = require('@dotcom-reliability-kit/errors');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 This module exports different Error classes which have different jobs. All can be imported in the same way as the example above.
 
 ### `OperationalError`

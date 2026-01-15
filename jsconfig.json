@@ -2,8 +2,10 @@
 	"compilerOptions": {
 		"alwaysStrict": true,
 		"checkJs": true,
+		"esModuleInterop": true,
 		"maxNodeModuleJsDepth": 0,
-		"module": "commonjs",
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"noEmit": true,
 		"noImplicitOverride": true,
 		"noImplicitThis": true,
@@ -12,7 +14,7 @@
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
-		"target": "es2022",
+		"target": "es2024",
 		"useUnknownInCatchVariables": true,
 		"types": []
 	},

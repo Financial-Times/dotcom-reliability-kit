@@ -57,6 +57,17 @@ import { MetricsClient } from '@dotcom-reliability-kit/client-metrics-web';
 const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `MetricsClient`
 
 The `MetricsClient` class wraps an AWS CloudWatch RUM client with some FT-specific configurations and limitations. This class should only ever be constructed once or you'll end up sending duplicate metrics.
