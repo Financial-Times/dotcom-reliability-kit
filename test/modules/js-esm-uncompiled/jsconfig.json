@@ -1,8 +1,9 @@
 {
 	"compilerOptions": {
 		"checkJs": true,
-		"module": "ES2022",
-		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"noEmit": true,
 		"skipLibCheck": true,
 		"strict": true,

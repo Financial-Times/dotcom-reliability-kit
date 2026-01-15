@@ -3,7 +3,7 @@ jest.mock('../../../package.json', () => ({
 	version: '0.0.0-test'
 }));
 
-const { MetricsClient } = require('../../..');
+const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 
 describe('@dotcom-reliability-kit/client-metrics-web', () => {
 	beforeEach(() => {

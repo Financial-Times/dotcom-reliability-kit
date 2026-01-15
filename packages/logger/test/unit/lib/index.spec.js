@@ -1,4 +1,4 @@
-const logger = require('../../..');
+const logger = require('@dotcom-reliability-kit/logger');
 
 jest.mock('../../../lib/logger', () => jest.fn());
 const MockLogger = require('../../../lib/logger');

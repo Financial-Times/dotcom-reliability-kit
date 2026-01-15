@@ -44,6 +44,17 @@ Install `@dotcom-reliability-kit/opentelemetry` as a dependency:
 npm install --save @dotcom-reliability-kit/opentelemetry
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### Setup
 
 You can set up OpenTelemetry in a number of ways, each has pros and cons which we'll outline in the sections below.

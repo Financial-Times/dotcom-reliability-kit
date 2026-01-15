@@ -1,9 +1,9 @@
 {
 	"compilerOptions": {
-		"esModuleInterop": false,
+		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
-		"module": "ES2022",
-		"moduleResolution": "node",
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
 		"skipLibCheck": true,
 		"strict": true,
 		"target": "ES2022",

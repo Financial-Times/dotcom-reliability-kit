@@ -34,6 +34,17 @@ import {logRecoverableError} from '@dotcom-reliability-kit/log-error';
 const {logRecoverableError} = require('@dotcom-reliability-kit/log-error');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `logHandledError`
 
 The `logHandledError` function can be used to log errors consistently to the console and Splunk via [Reliability Kit logger](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/logger). This method is used to indicate that the error being logged has been correctly handled and the application can continue to run.

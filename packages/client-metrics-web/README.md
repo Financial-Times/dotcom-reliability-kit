@@ -50,6 +50,17 @@ import { MetricsClient } from '@dotcom-reliability-kit/client-metrics-web';
 const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `MetricsClient`
 
 The MetricsClient sends events to the Client Metrics Server, using POST to the following endpoint `/api/v1/ingest`.
