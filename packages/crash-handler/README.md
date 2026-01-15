@@ -31,6 +31,17 @@ import registerCrashHandler from '@dotcom-reliability-kit/crash-handler';
 const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `registerCrashHandler`
 
 The `registerCrashHandler` function can be used to bind an event handler to the [Node.js `process.uncaughtException` event](https://nodejs.org/api/process.html#event-uncaughtexception). This ensures that your application logs a final message before crashing in the event on an unexpected error or promise rejection.

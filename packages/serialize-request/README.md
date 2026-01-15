@@ -34,6 +34,17 @@ import serializeRequest from '@dotcom-reliability-kit/serialize-request';
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `serializeRequest`
 
 The `serializeRequest` function accepts a request-like object (e.g. an instance of `Express.Request` or an object with `method` and `url` properties) and returns a plain JavaScript object (conforming to the [`SerializedRequest` type](#serializedrequest-type)) which contains the relevant properties. The example below assumes that `app` is an Express application:

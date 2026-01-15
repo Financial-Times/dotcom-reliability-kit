@@ -3,8 +3,8 @@ describe('setup', () => {
 
 	beforeEach(() => {
 		jest.resetModules();
-		jest.mock('../..', () => ({ setup: jest.fn() }));
-		opentelemetry = require('../..');
+		jest.mock('@dotcom-reliability-kit/opentelemetry', () => ({ setup: jest.fn() }));
+		opentelemetry = require('@dotcom-reliability-kit/opentelemetry');
 	});
 
 	it('should call opentelemetry.setup with the correct parameters', () => {
@@ -13,7 +13,7 @@ describe('setup', () => {
 		process.env.OPENTELEMETRY_AUTHORIZATION_HEADER = 'MOCK_AUTH_HEADER';
 		process.env.OPENTELEMETRY_METRICS_ENDPOINT = 'MOCK_METRICS_ENDPOINT';
 		process.env.OPENTELEMETRY_API_GATEWAY_KEY = 'MOCK_API_GATEWAY_KEY';
-		require('../../setup.js');
+		require('@dotcom-reliability-kit/opentelemetry/setup');
 
 		expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 		expect(opentelemetry.setup).toHaveBeenCalledWith({
@@ -34,7 +34,7 @@ describe('setup', () => {
 		it('should not include tracing configuration', () => {
 			delete process.env.OPENTELEMETRY_TRACING_ENDPOINT;
 			process.env.OPENTELEMETRY_METRICS_ENDPOINT = 'MOCK_METRICS_ENDPOINT';
-			require('../../setup.js');
+			require('@dotcom-reliability-kit/opentelemetry/setup');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 			expect(opentelemetry.setup).toHaveBeenCalledWith({
@@ -52,7 +52,7 @@ describe('setup', () => {
 		it('should not include metrics configuration', () => {
 			delete process.env.OPENTELEMETRY_METRICS_ENDPOINT;
 			process.env.OPENTELEMETRY_TRACING_ENDPOINT = 'MOCK_TRACING_ENDPOINT';
-			require('../../setup.js');
+			require('@dotcom-reliability-kit/opentelemetry/setup');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 			expect(opentelemetry.setup).toHaveBeenCalledWith({
@@ -69,7 +69,7 @@ describe('setup', () => {
 	describe('when an HTTP server duration bucket is specified', () => {
 		it('includes views configurations', () => {
 			process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS = '1,2,3,  4  ,five';
-			require('../../setup.js');
+			require('@dotcom-reliability-kit/opentelemetry/setup');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 			expect(opentelemetry.setup).toHaveBeenCalledWith(
@@ -86,7 +86,7 @@ describe('setup', () => {
 	describe('when an HTTP client duration bucket is specified', () => {
 		it('includes views configurations', () => {
 			process.env.OPENTELEMETRY_VIEWS_HTTP_CLIENT_DURATION_BUCKETS = '1,2,3,  4  ,five';
-			require('../../setup.js');
+			require('@dotcom-reliability-kit/opentelemetry/setup');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 			expect(opentelemetry.setup).toHaveBeenCalledWith(
@@ -104,7 +104,7 @@ describe('setup', () => {
 		it('calls OpenTelemetry with the given sample percentage as a number', () => {
 			delete process.env.OPENTELEMETRY_METRICS_ENDPOINT;
 			process.env.OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE = '50';
-			require('../../setup.js');
+			require('@dotcom-reliability-kit/opentelemetry/setup');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 			expect(opentelemetry.setup).toHaveBeenCalledWith({
@@ -123,7 +123,7 @@ describe('setup', () => {
 		it('calls OpenTelemetry with NaN as a percentage', () => {
 			delete process.env.OPENTELEMETRY_METRICS_ENDPOINT;
 			process.env.OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE = 'nope';
-			require('../../setup.js');
+			require('@dotcom-reliability-kit/opentelemetry/setup');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 			expect(opentelemetry.setup).toHaveBeenCalledWith({
@@ -141,7 +141,7 @@ describe('setup', () => {
 	describe('when internal logs are enabled', () => {
 		it('calls OpenTelemetry with the logInternal option set to true', () => {
 			process.env.OPENTELEMETRY_LOG_INTERNALS = 'true';
-			require('../../setup.js');
+			require('@dotcom-reliability-kit/opentelemetry/setup');
 
 			expect(opentelemetry.setup).toHaveBeenCalledTimes(1);
 			expect(opentelemetry.setup).toHaveBeenCalledWith(

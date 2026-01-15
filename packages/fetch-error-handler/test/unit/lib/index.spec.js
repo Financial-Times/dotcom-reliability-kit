@@ -1,7 +1,10 @@
 jest.mock('../../../lib/create-handler', () => jest.fn().mockReturnValue('mock-handler'));
 const createHandler = require('../../../lib/create-handler');
 
-const { createFetchErrorHandler, handleFetchErrors } = require('../../..');
+const {
+	createFetchErrorHandler,
+	handleFetchErrors
+} = require('@dotcom-reliability-kit/fetch-error-handler');
 
 describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 	it('creates a fetch error handler', () => {

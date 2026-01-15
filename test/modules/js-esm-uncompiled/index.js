@@ -22,7 +22,7 @@ const result = {
 	// These test that the default logger exports
 	// are instances of the Logger export
 	logger1,
-	logger2,
+	logger2: logger2.default,
 	// These test that appInfo can be imported either
 	// as a default or named exports
 	environment1: environment,
