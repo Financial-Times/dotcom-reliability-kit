@@ -23,7 +23,7 @@
 		"@opentelemetry/auto-instrumentations-node": "^0.66.0",
 		"@opentelemetry/exporter-metrics-otlp-proto": "^0.207.0",
 		"@opentelemetry/exporter-trace-otlp-proto": "^0.207.0",
-		"@opentelemetry/host-metrics": "^0.36.2",
+		"@opentelemetry/host-metrics": "^0.38.1",
 		"@opentelemetry/otlp-exporter-base": "^0.207.0",
 		"@opentelemetry/sdk-node": "^0.207.0",
 		"@opentelemetry/semantic-conventions": "^1.37.0"
