@@ -183,10 +183,16 @@ As with Biome, we check types in pull requests and errors will block merging, so
 
 ### Unit tests
 
-We run unit tests with [Jest](https://jestjs.io/) and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`) and are run in parallel. You can run the tests with the following:
+We run unit tests with [Jest](https://jestjs.io/) across most of our packages and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`). You can run the tests with the following:
 
 ```
 npm run test
+```
+
+To run the tests for a single package, use:
+
+```
+npm run test -w packages/<name>
 ```
 
 Tests are also run on pull requests and failing tests will block merging, so it's useful to check before opening a PR.

@@ -10,6 +10,9 @@
   "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/log-error#readme",
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: log-error\"",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "engines": {
     "node": "20.x || 22.x || 24.x"
   },

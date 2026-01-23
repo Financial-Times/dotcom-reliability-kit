@@ -17,7 +17,7 @@
 		"types": []
 	},
 	"exclude": [
-		"coverage",
+		"**/coverage",
 		"node_modules",
 		"**/*.spec.js",
 		"test/**/*",
