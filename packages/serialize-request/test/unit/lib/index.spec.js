@@ -1,15 +1,17 @@
+const { beforeEach, describe, it } = require('node:test');
+const assert = require('node:assert/strict');
 const serializeRequest = require('../../../lib/index');
 
 describe('@dotcom-reliability-kit/serialize-request', () => {
 	describe('.default', () => {
 		it('aliases the module exports', () => {
-			expect(serializeRequest.default).toStrictEqual(serializeRequest);
+			assert.strictEqual(serializeRequest.default, serializeRequest);
 		});
 	});
 
 	describe('.DEFAULT_INCLUDED_HEADERS', () => {
 		it('is an array of included headers', () => {
-			expect(serializeRequest.DEFAULT_INCLUDED_HEADERS).toEqual([
+			assert.deepEqual(serializeRequest.DEFAULT_INCLUDED_HEADERS, [
 				'accept',
 				'accept-encoding',
 				'accept-language',
@@ -21,12 +23,12 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 		});
 
 		it('is readonly', () => {
-			expect(() => {
+			assert.throws(() => {
 				serializeRequest.DEFAULT_INCLUDED_HEADERS.push('nope');
-			}).toThrow(TypeError);
+			}, TypeError);
 
 			serializeRequest.DEFAULT_INCLUDED_HEADERS[0] = 'nope';
-			expect(serializeRequest.DEFAULT_INCLUDED_HEADERS[0]).not.toEqual('nope');
+			assert.notStrictEqual(serializeRequest.DEFAULT_INCLUDED_HEADERS[0], 'nope');
 		});
 	});
 
@@ -52,7 +54,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 		});
 
 		it('returns the expected serialized request properties', () => {
-			expect(serializeRequest(request)).toEqual({
+			assert.deepEqual(serializeRequest(request), {
 				id: 'mock-id',
 				method: 'GET',
 				url: '/mock-url',
@@ -97,7 +99,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 		});
 
 		it('returns the expected serialized request properties', () => {
-			expect(serializeRequest(request)).toEqual({
+			assert.deepEqual(serializeRequest(request), {
 				id: 'mock-id',
 				method: 'GET',
 				url: '/mock-url',
@@ -148,7 +150,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('defaults the serialized ID to `null`', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					id: null
 				});
 			});
@@ -160,7 +162,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('defaults the serialized method to "-"', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					method: '-'
 				});
 			});
@@ -172,7 +174,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('casts the method to a string', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					method: '123'
 				});
 			});
@@ -184,7 +186,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('defaults the serialized url to "/"', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					url: '/'
 				});
 			});
@@ -196,7 +198,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('casts the url to a string', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					url: '123'
 				});
 			});
@@ -209,7 +211,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('casts the url to a string and truncates it', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					url: '/url-that-is-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-very-ve [truncated]'
 				});
 			});
@@ -221,7 +223,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('defaults the serialized headers to an empty object', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					headers: {}
 				});
 			});
@@ -233,7 +235,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('defaults the serialized headers to an empty object', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					headers: {}
 				});
 			});
@@ -246,7 +248,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				]);
 			});
 			it('should handle headers as an iterable', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					headers: { 'content-type': 'application/json' }
 				});
 			});
@@ -260,7 +262,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				]);
 			});
 			it('should ignore the headers with non-string values', () => {
-				expect(serializeRequest(request)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request), {
 					headers: {}
 				});
 			});
@@ -272,7 +274,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('does not include a `route` property in the output', () => {
-				expect(serializeRequest(request).route).toBeUndefined();
+				assert.strictEqual(serializeRequest(request).route, undefined);
 			});
 		});
 
@@ -282,7 +284,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			});
 
 			it('defaults the serialized route params to an empty object', () => {
-				expect(serializeRequest(request).route).toMatchObject({
+				assert.partialDeepStrictEqual(serializeRequest(request).route, {
 					params: {}
 				});
 			});
@@ -292,7 +294,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 	describe('when called with a string', () => {
 		it('returns the expected serialized request properties', () => {
 			const request = 'mock message';
-			expect(serializeRequest(request)).toEqual({
+			assert.deepEqual(serializeRequest(request), {
 				id: null,
 				method: '-',
 				url: 'mock message',
@@ -318,16 +320,17 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 		});
 
 		it('only includes the specified headers in the serialized request object', () => {
-			expect(
+			assert.partialDeepStrictEqual(
 				serializeRequest(request, {
 					includeHeaders: ['mock-header', 'content-type', 'mock-second-header']
-				})
-			).toMatchObject({
-				headers: {
-					'content-type': 'application/json',
-					'mock-header': 'mock-param-value'
+				}),
+				{
+					headers: {
+						'content-type': 'application/json',
+						'mock-header': 'mock-param-value'
+					}
 				}
-			});
+			);
 		});
 	});
 
@@ -336,22 +339,22 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 			const expectedError = new TypeError(
 				'The `includeHeaders` option must be an array of strings'
 			);
-			expect(() => {
+			assert.throws(() => {
 				serializeRequest(
 					{},
 					{
 						includeHeaders: {}
 					}
 				);
-			}).toThrow(expectedError);
-			expect(() => {
+			}, expectedError);
+			assert.throws(() => {
 				serializeRequest(
 					{},
 					{
 						includeHeaders: ['string', 123, 'another string']
 					}
 				);
-			}).toThrow(expectedError);
+			}, expectedError);
 		});
 	});
 });
