@@ -183,7 +183,7 @@ As with Biome, we check types in pull requests and errors will block merging, so
 
 ### Unit tests
 
-We run unit tests with [Jest](https://jestjs.io/) across most of our packages and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`). You can run the tests with the following:
+We run unit tests with either [Jest](https://jestjs.io/) (legacy) or [the Node test runner](https://nodejs.org/api/test.html) across most of our packages and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`). You can run the tests with the following:
 
 ```
 npm run test
@@ -202,7 +202,7 @@ Tests are also run on pull requests and failing tests will block merging, so it'
 We intentionally fail the unit tests if coverage drops below 100%. This library is meant to help our applications be more reliable and so it's important that we cover as many edge cases as possible. If you have a valid reason for some code not to be covered, e.g. an empty function as a default parameter, then [use code comments to disable coverage](https://github.com/gotwarlost/istanbul/blob/master/ignoring-code-for-coverage.md) for that line or block:
 
 ```js
-/* istanbul ignore next */
+/* node:coverage ignore next */
 function example() { console.log('this is not covered'); }
 ```
 
