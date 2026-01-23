@@ -10,6 +10,9 @@
   "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/middleware-allow-request-methods#readme",
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: middleware-allow-request-methods\"",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "engines": {
     "node": "20.x || 22.x || 24.x"
   },

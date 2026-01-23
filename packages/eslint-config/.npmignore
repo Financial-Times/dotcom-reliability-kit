@@ -1,5 +1,5 @@
-!*.d.ts
-!*.d.ts.map
 CHANGELOG.md
+coverage
 docs
+jest.config.json
 test
