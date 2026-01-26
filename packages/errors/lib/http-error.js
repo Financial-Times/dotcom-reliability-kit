@@ -1,4 +1,4 @@
-const OperationalError = require('./operational-error');
+const OperationalError = require('./operational-error.js');
 
 /**
  * @import { HttpError as HttpErrorType, HttpErrorData as ErrorData } from '@dotcom-reliability-kit/errors'

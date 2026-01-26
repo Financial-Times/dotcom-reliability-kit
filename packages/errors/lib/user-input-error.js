@@ -1,4 +1,4 @@
-const HttpError = require('./http-error');
+const HttpError = require('./http-error.js');
 
 /**
  * @import { UserInputError as UserInputErrorType } from '@dotcom-reliability-kit/errors'
