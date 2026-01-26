@@ -1,4 +1,4 @@
-const BaseError = require('./base-error');
+const BaseError = require('./base-error.js');
 
 /**
  * @import { OperationalError as OperationalErrorType, OperationalErrorData as ErrorData } from '@dotcom-reliability-kit/errors'
