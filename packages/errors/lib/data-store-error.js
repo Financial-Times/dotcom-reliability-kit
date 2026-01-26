@@ -1,4 +1,4 @@
-const OperationalError = require('./operational-error');
+const OperationalError = require('./operational-error.js');
 
 /**
  * @import { DataStoreError as DataStoreErrorType } from '@dotcom-reliability-kit/errors'

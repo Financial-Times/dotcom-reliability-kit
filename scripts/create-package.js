@@ -33,7 +33,7 @@ const releasePleaseManifest = require('../.release-please-manifest.json');
 		bugs: `https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:"package: ${name}"`,
 		license: rootManifest.license,
 		scripts: {
-			test: 'node --test --experimental-test-coverage --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100'
+			test: 'node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100'
 		},
 		engines: rootManifest.engines,
 		main: 'lib/index.js',
