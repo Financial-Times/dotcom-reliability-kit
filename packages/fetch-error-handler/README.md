@@ -19,6 +19,7 @@ Properly handle fetch errors and avoid a lot of boilerplate in your app. This mo
   * [Creating your own handler](#creating-your-own-handler)
   * [`createFetchErrorHandler` configuration options](#createfetcherrorhandler-configuration-options)
     * [`options.upstreamSystemCode`](#optionsupstreamsystemcode)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -38,6 +39,17 @@ import { handleFetchErrors } from '@dotcom-reliability-kit/fetch-error-handler';
 // or
 const { handleFetchErrors } = require('@dotcom-reliability-kit/fetch-error-handler');
 ```
+
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
 
 You can use this function with any `fetch` call to throw appropriate errors based on the [HTTP status code](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) that you get back.
 
@@ -217,6 +229,11 @@ const handleFetchErrors = createFetchErrorHandler({
 ```
 
 When this is set, any errors thrown by `handleFetchErrors` will have a [`relatesToSystems` property](https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/errors#operationalerrorrelatestosystems) which includes the given system code.
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
 
 
 ## Contributing

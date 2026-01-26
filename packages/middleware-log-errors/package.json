@@ -14,10 +14,14 @@
     "test": "jest"
   },
   "engines": {
-    "node": "20.x || 22.x || 24.x"
+    "node": "^22.12 || ^24"
   },
-  "main": "lib/index.js",
-  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
   "dependencies": {
     "@dotcom-reliability-kit/log-error": "^5.1.7",
     "@dotcom-reliability-kit/logger": "^4.2.7"

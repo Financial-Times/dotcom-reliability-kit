@@ -38,6 +38,17 @@ import serializeError from '@dotcom-reliability-kit/serialize-error';
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### `serializeError`
 
 The `serializeError` function accepts an error-like object (e.g. an instance of `Error` or an object with a `message` property) and returns a plain JavaScript object (conforming to the [`SerializedError` type](#serializederror-type)) which contains the relevant properties:

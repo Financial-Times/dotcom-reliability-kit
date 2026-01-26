@@ -34,6 +34,7 @@ A client for sending operational metrics events to [AWS CloudWatch RUM](https://
 * [Usage (infrastructure)](#usage-infrastructure)
   * [Customer Products Client Metrics](#customer-products-client-metrics)
   * [Running your own infrastructure](#running-your-own-infrastructure)
+* [Migrating](#migrating)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -55,6 +56,17 @@ import { MetricsClient } from '@dotcom-reliability-kit/client-metrics-web';
 // or
 const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 ```
+
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
 
 ### `MetricsClient`
 
@@ -361,6 +373,12 @@ Resources:
         Telemetries:
           - errors
 ```
+
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
 
 ## Contributing
 
