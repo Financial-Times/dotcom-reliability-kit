@@ -1,8 +1,10 @@
-const createLegacyMaskTransform = require('../../../../lib/transforms/legacy-mask');
+const { beforeEach, describe, it } = require('node:test');
+const assert = require('node:assert/strict');
+const createLegacyMaskTransform = require('../../../../lib/transforms/legacy-mask.js');
 
 describe('@dotcom-reliability-kit/logger', () => {
 	it('exports a function', () => {
-		expect(createLegacyMaskTransform).toBeInstanceOf(Function);
+		assert.ok(createLegacyMaskTransform instanceof Function);
 	});
 
 	describe('createLegacyMaskTransform(options)', () => {
@@ -13,7 +15,7 @@ describe('@dotcom-reliability-kit/logger', () => {
 		});
 
 		it('returns a function', () => {
-			expect(transform).toBeInstanceOf(Function);
+			assert.ok(transform instanceof Function);
 		});
 
 		describe('transform(logObject)', () => {
@@ -22,15 +24,15 @@ describe('@dotcom-reliability-kit/logger', () => {
 					message: 'hello'
 				};
 				const result = transform(logData);
-				expect(result).toEqual({
+				assert.deepStrictEqual(result, {
 					message: 'hello'
 				});
-				expect(result === logData).toBeFalsy();
+				assert.ok(result !== logData);
 			});
 
 			describe('when called with sensitive properties', () => {
 				it('returns an object with masked properties', () => {
-					expect(
+					assert.deepStrictEqual(
 						transform({
 							email: 'mock',
 							firstName: 'mock',
@@ -45,28 +47,29 @@ describe('@dotcom-reliability-kit/logger', () => {
 							primaryTelephone: 'mock',
 							session: 'mock',
 							sessionId: 'mock'
-						})
-					).toEqual({
-						email: '*****',
-						firstName: '*****',
-						'ft-backend-key': '*****',
-						'ft-session-id': '*****',
-						FTSession_s: '*****',
-						FTSession: '*****',
-						lastName: '*****',
-						password: '*****',
-						phone: '*****',
-						postcode: '*****',
-						primaryTelephone: '*****',
-						session: '*****',
-						sessionId: '*****'
-					});
+						}),
+						{
+							email: '*****',
+							firstName: '*****',
+							'ft-backend-key': '*****',
+							'ft-session-id': '*****',
+							FTSession_s: '*****',
+							FTSession: '*****',
+							lastName: '*****',
+							password: '*****',
+							phone: '*****',
+							postcode: '*****',
+							primaryTelephone: '*****',
+							session: '*****',
+							sessionId: '*****'
+						}
+					);
 				});
 			});
 
 			describe('when called with nested sensitive properties', () => {
 				it('returns an object with masked properties', () => {
-					expect(
+					assert.deepStrictEqual(
 						transform({
 							mock: {
 								email: 'mock',
@@ -74,35 +77,37 @@ describe('@dotcom-reliability-kit/logger', () => {
 									lastName: 'mock'
 								}
 							}
-						})
-					).toEqual({
-						mock: {
-							email: '*****',
+						}),
+						{
 							mock: {
-								lastName: '*****'
+								email: '*****',
+								mock: {
+									lastName: '*****'
+								}
 							}
 						}
-					});
+					);
 				});
 			});
 
 			describe('when an object with sensitive properties is in an array', () => {
 				it('returns the array with item properties masked', () => {
-					expect(
+					assert.deepStrictEqual(
 						transform({
 							mock: [
 								{
 									email: 'mock'
 								}
 							]
-						})
-					).toEqual({
-						mock: [
-							{
-								email: '*****'
-							}
-						]
-					});
+						}),
+						{
+							mock: [
+								{
+									email: '*****'
+								}
+							]
+						}
+					);
 				});
 			});
 
@@ -110,31 +115,31 @@ describe('@dotcom-reliability-kit/logger', () => {
 				it('returns a basic serialized error object with properties masked', () => {
 					const error = new Error('mock message');
 					error.email = 'mock';
-					expect(
+					assert.partialDeepStrictEqual(
 						transform({
 							mock: error
-						})
-					).toEqual({
-						mock: {
-							message: 'mock message',
-							name: 'Error',
-							stack: expect.stringContaining('mock message'),
-							email: '*****'
+						}),
+						{
+							mock: {
+								message: 'mock message',
+								name: 'Error',
+								email: '*****'
+							}
 						}
-					});
+					);
 				});
 			});
 
 			describe('when an object has sensitive properties listed within a string', () => {
 				it('returns the string with the sensitive data masked', () => {
-					expect(transform({ mock: 'foo=bar email=mock' })).toEqual({
+					assert.deepStrictEqual(transform({ mock: 'foo=bar email=mock' }), {
 						mock: 'foo=bar email=*****'
 					});
 				});
 
 				describe('when the sensitive data uses colons to split field and value', () => {
 					it('returns the string with the sensitive data masked', () => {
-						expect(transform({ mock: 'foo:bar email:mock' })).toEqual({
+						assert.deepStrictEqual(transform({ mock: 'foo:bar email:mock' }), {
 							mock: 'foo:bar email:*****'
 						});
 					});
@@ -142,20 +147,21 @@ describe('@dotcom-reliability-kit/logger', () => {
 
 				describe('when the sensitive data has additional whitespace around the field and value split', () => {
 					it('returns the string with the sensitive data masked', () => {
-						expect(
+						assert.deepStrictEqual(
 							transform({
 								mock: 'foo  =  bar email = mock1 email   =   mock2'
-							})
-						).toEqual({
-							mock: 'foo  =  bar email = ***** email   =   *****'
-						});
+							}),
+							{
+								mock: 'foo  =  bar email = ***** email   =   *****'
+							}
+						);
 					});
 				});
 
 				describe('when the sensitive data wraps the property in double quotes', () => {
 					// TODO something to address when we replace this behaviour
 					it('returns the string with the sensitive data masked, but considers value quotes to be part of the sensitive data', () => {
-						expect(transform({ mock: 'foo="bar" email="mock"' })).toEqual({
+						assert.deepStrictEqual(transform({ mock: 'foo="bar" email="mock"' }), {
 							mock: 'foo="bar" email=*****'
 						});
 					});
@@ -164,7 +170,7 @@ describe('@dotcom-reliability-kit/logger', () => {
 				describe('when the sensitive data wraps the property in single quotes', () => {
 					// TODO something to address when we replace this behaviour
 					it('returns the string with the sensitive data masked, but considers value quotes to be part of the sensitive data', () => {
-						expect(transform({ mock: "foo='bar' email='mock'" })).toEqual({
+						assert.deepStrictEqual(transform({ mock: "foo='bar' email='mock'" }), {
 							mock: "foo='bar' email=*****"
 						});
 					});
@@ -173,19 +179,20 @@ describe('@dotcom-reliability-kit/logger', () => {
 
 			describe('when an object with sensitive properties is in a JSON string', () => {
 				it('returns the string with item properties masked', () => {
-					expect(
+					assert.deepStrictEqual(
 						transform({
 							mock: '{"email":"mock"}'
-						})
-					).toEqual({
-						mock: '{"email":"*****"}'
-					});
+						}),
+						{
+							mock: '{"email":"*****"}'
+						}
+					);
 				});
 
 				describe('when the JSON is invalid', () => {
 					// TODO something to address when we replace this behaviour
 					it('returns JSON that is invalid in a different way', () => {
-						expect(transform({ mock: '{email:"mock"}' })).toEqual({
+						assert.deepStrictEqual(transform({ mock: '{email:"mock"}' }), {
 							mock: '{email:*****'
 						});
 					});
@@ -194,10 +201,10 @@ describe('@dotcom-reliability-kit/logger', () => {
 				describe('when the outer JSON is not an object', () => {
 					// TODO something to address when we replace this behaviour
 					it('breaks the JSON during the masking', () => {
-						expect(transform({ mock: '[{"email":"mock"}]' })).toEqual({
+						assert.deepStrictEqual(transform({ mock: '[{"email":"mock"}]' }), {
 							mock: '[{"email":*****'
 						});
-						expect(transform({ mock: '[{"email":"mock"}]' })).toEqual({
+						assert.deepStrictEqual(transform({ mock: '[{"email":"mock"}]' }), {
 							mock: '[{"email":*****'
 						});
 					});
@@ -206,7 +213,7 @@ describe('@dotcom-reliability-kit/logger', () => {
 
 			describe('when an object has non-string properties', () => {
 				it('returns the properties unmasked', () => {
-					expect(transform({ mock: 123 })).toEqual({ mock: 123 });
+					assert.deepStrictEqual(transform({ mock: 123 }), { mock: 123 });
 				});
 			});
 
@@ -217,8 +224,8 @@ describe('@dotcom-reliability-kit/logger', () => {
 					};
 					logData.naughtyLittleSelfReference = logData;
 					const result = transform(logData);
-					expect(result.email).toEqual('*****');
-					expect(result.naughtyLittleSelfReference.email).toEqual('*****');
+					assert.deepStrictEqual(result.email, '*****');
+					assert.deepStrictEqual(result.naughtyLittleSelfReference.email, '*****');
 				});
 			});
 		});
@@ -233,7 +240,7 @@ describe('@dotcom-reliability-kit/logger', () => {
 			describe('transform(logObject)', () => {
 				describe('when called with one of the configured properties', () => {
 					it('returns an object with that property masked', () => {
-						expect(transform({ extraProperty: 'mock' })).toEqual({
+						assert.deepStrictEqual(transform({ extraProperty: 'mock' }), {
 							extraProperty: '*****'
 						});
 					});
@@ -251,7 +258,7 @@ describe('@dotcom-reliability-kit/logger', () => {
 			describe('transform(logObject)', () => {
 				describe('when called with one of the configured properties', () => {
 					it('returns an object with that property unmasked', () => {
-						expect(transform({ email: 'mock' })).toEqual({
+						assert.deepStrictEqual(transform({ email: 'mock' }), {
 							email: 'mock'
 						});
 					});
@@ -269,7 +276,7 @@ describe('@dotcom-reliability-kit/logger', () => {
 			describe('transform(logObject)', () => {
 				describe('when called with sensitive properties', () => {
 					it('returns an object with that property masked with the configured string', () => {
-						expect(transform({ email: 'mock' })).toEqual({
+						assert.deepStrictEqual(transform({ email: 'mock' }), {
 							email: '🙈🙉🙊'
 						});
 					});

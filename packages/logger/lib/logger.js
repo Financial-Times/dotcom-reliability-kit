@@ -58,8 +58,12 @@ const prettificationAvailable = (() => {
 		// same file system work though, and it's only done once
 		// when the module first loads. It's also safe to ts-ignore
 		// this one because it's never actually used directly.
-		require('pino-pretty');
-		return true;
+		const pretty = require('pino-pretty');
+		return pretty !== undefined;
+		// We have to disable coverage of the next three lines
+		// because it's currently impossible to mock a missing
+		// module with Node.js test module mocks.
+		/* node:coverage ignore next 3 */
 	} catch (_) {
 		return false;
 	}
