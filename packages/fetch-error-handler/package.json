@@ -11,7 +11,7 @@
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: fetch-error-handler\"",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-include lib/**/* --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 **/*.spec.js"
   },
   "engines": {
     "node": "^22.12 || ^24"
