@@ -1,5 +1,5 @@
-const Logger = require('./logger');
-const legacyMask = require('./transforms/legacy-mask');
+const Logger = require('./logger.js');
+const legacyMask = require('./transforms/legacy-mask.js');
 
 /**
  * @import { DefaultLogger, Transforms } from '@dotcom-reliability-kit/logger'

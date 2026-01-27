@@ -1,62 +1,58 @@
-jest.mock('pino', () => {
-	const pino = jest.fn();
+const { afterEach, beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-	pino.stdTimeFunctions = {
-		isoTime: 'mockIsoTime'
-	};
-
-	pino.createMockPinoLogger = () => ({
-		flush: jest.fn(),
-		mockCanonicalLevel: jest.fn(),
-		mockDeprecatedCanonocalLevel: jest.fn(),
-		mockInvalidCanonicalLevel: jest.fn(),
-		mockErroringLevel: jest.fn().mockImplementation(() => {
-			throw new Error('mock error');
-		}),
-		warn: jest.fn()
-	});
-
-	return pino;
+const pino = mock.fn();
+pino.stdTimeFunctions = { isoTime: 'mockIsoTime' };
+pino.createMockPinoLogger = () => ({
+	flush: mock.fn(),
+	mockCanonicalLevel: mock.fn(),
+	mockDeprecatedCanonocalLevel: mock.fn(),
+	mockInvalidCanonicalLevel: mock.fn(),
+	mockErroringLevel: mock.fn(() => {
+		throw new Error('mock error');
+	}),
+	warn: mock.fn()
 });
-const pino = require('pino');
-const { createMockPinoLogger } = pino;
+mock.module('pino', { defaultExport: pino });
 
-jest.mock('pino-pretty', () => {
-	throw new Error('mock error to simulate missing pino-pretty install');
+// An undefined export is used to simulate pino-pretty not being installed
+mock.module('pino-pretty', { defaultExport: undefined });
+
+mock.module('@dotcom-reliability-kit/app-info', {
+	defaultExport: {
+		cloudProvider: null,
+		environment: 'production'
+	}
 });
 
-jest.mock('@dotcom-reliability-kit/app-info', () => ({
-	cloudProvider: null,
-	environment: 'production'
-}));
-const appInfo = require('@dotcom-reliability-kit/app-info');
-
-jest.mock('@dotcom-reliability-kit/serialize-error', () => jest.fn());
+mock.module('@dotcom-reliability-kit/serialize-error', {
+	defaultExport: mock.fn(() => ({
+		isMockSerializedError: true
+	}))
+});
 const serializeError = require('@dotcom-reliability-kit/serialize-error');
 
 // Set environment variables explicitly before importing the logger
 delete process.env.LOG_LEVEL;
 delete process.env.SPLUNK_LOG_LEVEL;
 
-let Logger = require('../../../lib/logger');
+const Logger = require('../../../lib/logger.js');
 
 describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 	let mockPinoLogger;
 
 	beforeEach(() => {
-		mockPinoLogger = createMockPinoLogger();
-		pino.mockReturnValue(mockPinoLogger);
+		mockPinoLogger = pino.createMockPinoLogger();
+		pino.mock.mockImplementation(() => mockPinoLogger);
 	});
 
 	afterEach(() => {
-		jest.restoreAllMocks();
+		mock.restoreAll();
 	});
 
 	it('exports a class', () => {
-		expect(Logger).toBeInstanceOf(Function);
-		expect(() => {
-			Logger();
-		}).toThrow(/class constructor/i);
+		assert.ok(Logger instanceof Function);
+		assert.throws(() => Logger(), /class constructor/i);
 	});
 
 	describe('new Logger(options)', () => {
@@ -67,44 +63,44 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 		});
 
 		it('creates a Pino logger', () => {
-			expect(pino).toHaveBeenCalledTimes(1);
+			assert.strictEqual(pino.mock.callCount(), 1);
 		});
 
 		it('configures the created Pino logger with no prettifier', () => {
-			const pinoOptions = pino.mock.calls[0][0];
-			expect(typeof pinoOptions).toStrictEqual('object');
-			expect(pinoOptions.base).toEqual({});
-			expect(pinoOptions.messageKey).toStrictEqual('message');
-			expect(pinoOptions.timestamp).toStrictEqual('mockIsoTime');
+			const pinoOptions = pino.mock.calls[0].arguments[0];
+			assert.strictEqual(typeof pinoOptions, 'object');
+			assert.deepStrictEqual(pinoOptions.base, {});
+			assert.strictEqual(pinoOptions.messageKey, 'message');
+			assert.strictEqual(pinoOptions.timestamp, 'mockIsoTime');
 
-			expect(typeof pinoOptions.formatters).toStrictEqual('object');
-			expect(typeof pinoOptions.formatters.level).toStrictEqual('function');
-			expect(pinoOptions.formatters.level('mock-level')).toEqual({
+			assert.strictEqual(typeof pinoOptions.formatters, 'object');
+			assert.strictEqual(typeof pinoOptions.formatters.level, 'function');
+			assert.deepStrictEqual(pinoOptions.formatters.level('mock-level'), {
 				level: 'mock-level'
 			});
 
-			expect(pinoOptions.transport).toBeUndefined();
+			assert.strictEqual(pinoOptions.transport, undefined);
 		});
 
 		it('sets the Pino logger level to "debug"', () => {
-			expect(mockPinoLogger.level).toStrictEqual('debug');
+			assert.strictEqual(mockPinoLogger.level, 'debug');
 		});
 
 		describe('.baseLogData', () => {
 			it('is set to an empty object', () => {
-				expect(logger.baseLogData).toEqual({});
+				assert.deepStrictEqual(logger.baseLogData, {});
 			});
 		});
 
 		describe('.logLevel', () => {
 			it('is set to "debug"', () => {
-				expect(logger.logLevel).toEqual('debug');
+				assert.deepStrictEqual(logger.logLevel, 'debug');
 			});
 		});
 
 		describe('.transport', () => {
 			it('is set to the created Pino logger', () => {
-				expect(logger.transport).toStrictEqual(mockPinoLogger);
+				assert.strictEqual(logger.transport, mockPinoLogger);
 			});
 		});
 
@@ -112,7 +108,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			let childLogger;
 
 			beforeEach(() => {
-				jest.spyOn(Logger, 'getLogLevelInfo');
+				mock.method(Logger, 'getLogLevelInfo', Logger.getLogLevelInfo);
 				logger = new Logger({
 					baseLogData: {
 						isMockParentBaseData: true,
@@ -127,11 +123,14 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('returns a new child logger with mixed in base log data', () => {
-				expect(childLogger).toBeInstanceOf(Logger);
-				expect(childLogger === logger).toBeFalsy();
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mock parent level');
-				expect(childLogger.transport).toStrictEqual('mock parent transport');
-				expect(childLogger.baseLogData).toEqual({
+				assert.ok(childLogger instanceof Logger);
+				assert.ok(childLogger !== logger);
+				assert.ok(Logger.getLogLevelInfo.mock.callCount() > 0);
+				assert.deepStrictEqual(Logger.getLogLevelInfo.mock.calls[0].arguments, [
+					'mock parent level'
+				]);
+				assert.strictEqual(childLogger.transport, 'mock parent transport');
+				assert.deepStrictEqual(childLogger.baseLogData, {
 					isMockParentBaseData: true,
 					isMockChildBaseData: true
 				});
@@ -140,7 +139,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('.addContext(additionalLogData)', () => {
 			beforeEach(() => {
-				mockPinoLogger.warn.mockClear();
+				mockPinoLogger.warn.mock.resetCalls();
 				logger = new Logger({
 					baseLogData: {
 						isExistingBaseLogData: true,
@@ -155,7 +154,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('merges the additional data into the `baseLogData` property', () => {
-				expect(logger.baseLogData).toEqual({
+				assert.deepStrictEqual(logger.baseLogData, {
 					isExistingBaseLogData: true,
 					isNewBaseLogData: true,
 					mockProperty: 2
@@ -163,12 +162,14 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('logs a deprecation warning', () => {
-				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
-				expect(mockPinoLogger.warn).toHaveBeenCalledWith({
-					event: 'LOGGER_METHOD_DEPRECATED',
-					message: "The 'addContext' logger method is deprecated",
-					deprecatedMethod: 'addContext'
-				});
+				assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(mockPinoLogger.warn.mock.calls[0].arguments, [
+					{
+						event: 'LOGGER_METHOD_DEPRECATED',
+						message: "The 'addContext' logger method is deprecated",
+						deprecatedMethod: 'addContext'
+					}
+				]);
 			});
 
 			describe('when called a second time', () => {
@@ -177,14 +178,14 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('does not log a second deprecation warning', () => {
-					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+					assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
 				});
 			});
 		});
 
 		describe('.setContext(contextData)', () => {
 			beforeEach(() => {
-				mockPinoLogger.warn.mockClear();
+				mockPinoLogger.warn.mock.resetCalls();
 				logger = new Logger({
 					baseLogData: {
 						isBaseLogData: true,
@@ -201,23 +202,25 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('sets the `baseLogData.context` property', () => {
-				expect(logger.baseLogData.context).toEqual({
+				assert.deepStrictEqual(logger.baseLogData.context, {
 					isContextData: true,
 					mockProperty: 2
 				});
 			});
 
 			it('does not modify other `baseLogData` properties', () => {
-				expect(logger.baseLogData.isBaseLogData).toStrictEqual(true);
+				assert.strictEqual(logger.baseLogData.isBaseLogData, true);
 			});
 
 			it('logs a deprecation warning', () => {
-				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
-				expect(mockPinoLogger.warn).toHaveBeenCalledWith({
-					event: 'LOGGER_METHOD_DEPRECATED',
-					message: "The 'setContext' logger method is deprecated",
-					deprecatedMethod: 'setContext'
-				});
+				assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(mockPinoLogger.warn.mock.calls[0].arguments, [
+					{
+						event: 'LOGGER_METHOD_DEPRECATED',
+						message: "The 'setContext' logger method is deprecated",
+						deprecatedMethod: 'setContext'
+					}
+				]);
 			});
 
 			describe('when called a second time', () => {
@@ -226,14 +229,14 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('does not log a second deprecation warning', () => {
-					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+					assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
 				});
 			});
 		});
 
 		describe('.clearContext(contextData)', () => {
 			beforeEach(() => {
-				mockPinoLogger.warn.mockClear();
+				mockPinoLogger.warn.mock.resetCalls();
 				logger = new Logger({
 					baseLogData: {
 						isBaseLogData: true,
@@ -247,20 +250,22 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('sets the `baseLogData.context` property to `undefined`', () => {
-				expect(logger.baseLogData.context).toBeUndefined();
+				assert.strictEqual(logger.baseLogData.context, undefined);
 			});
 
 			it('does not modify other `baseLogData` properties', () => {
-				expect(logger.baseLogData.isBaseLogData).toStrictEqual(true);
+				assert.strictEqual(logger.baseLogData.isBaseLogData, true);
 			});
 
 			it('logs a deprecation warning', () => {
-				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
-				expect(mockPinoLogger.warn).toHaveBeenCalledWith({
-					event: 'LOGGER_METHOD_DEPRECATED',
-					message: "The 'clearContext' logger method is deprecated",
-					deprecatedMethod: 'clearContext'
-				});
+				assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(mockPinoLogger.warn.mock.calls[0].arguments, [
+					{
+						event: 'LOGGER_METHOD_DEPRECATED',
+						message: "The 'clearContext' logger method is deprecated",
+						deprecatedMethod: 'clearContext'
+					}
+				]);
 			});
 
 			describe('when called a second time', () => {
@@ -269,7 +274,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('does not log a second deprecation warning', () => {
-					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+					assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
 				});
 			});
 		});
@@ -281,165 +286,194 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 						mockBaseData: true
 					}
 				});
-				mockPinoLogger.mockCanonicalLevel.mockClear();
-				mockPinoLogger.warn.mockClear();
-				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+				mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
+				mockPinoLogger.warn.mock.resetCalls();
+				mock.method(Logger, 'getLogLevelInfo', () => ({
 					logLevel: 'mockCanonicalLevel',
 					isDeprecated: false
-				});
-				jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+				}));
+				mock.method(Logger, 'zipLogData', () => ({
 					isMockZippedData: true,
 					message: 'mock zipped message'
-				});
+				}));
 				logger.log('mockLevel', 'mock message', { mockData: true });
 			});
 
 			it('gets the log level information', () => {
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockLevel');
+				assert.strictEqual(Logger.getLogLevelInfo.mock.callCount(), 1);
+				assert.deepStrictEqual(Logger.getLogLevelInfo.mock.calls[0].arguments, [
+					'mockLevel'
+				]);
 			});
 
 			it('zips all the log data alongside the logger `baseLogData` property', () => {
-				expect(Logger.zipLogData).toHaveBeenCalledTimes(1);
-				expect(Logger.zipLogData).toHaveBeenCalledWith(
+				assert.strictEqual(Logger.zipLogData.mock.callCount(), 1);
+				assert.deepStrictEqual(Logger.zipLogData.mock.calls[0].arguments, [
 					'mock message',
-					{
-						mockData: true
-					},
-					{
-						mockBaseData: true
-					}
-				);
+					{ mockData: true },
+					{ mockBaseData: true }
+				]);
 			});
 
 			it('calls the relevant log transport method for the level', () => {
-				expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
-				expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
-					isMockZippedData: true,
-					message: 'mock zipped message'
-				});
+				assert.strictEqual(mockPinoLogger.mockCanonicalLevel.mock.callCount(), 1);
+				assert.deepStrictEqual(mockPinoLogger.mockCanonicalLevel.mock.calls[0].arguments, [
+					{
+						isMockZippedData: true,
+						message: 'mock zipped message'
+					}
+				]);
 			});
 
 			it('does not log a warning', () => {
-				expect(mockPinoLogger.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 0);
 			});
 
 			describe('when the log data does not include a message', () => {
 				beforeEach(() => {
-					mockPinoLogger.mockCanonicalLevel.mockClear();
-					jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+					mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
+					Logger.zipLogData.mock.mockImplementation(() => ({
 						isMockZippedData: true
-					});
+					}));
 					logger.log('mockLevel', 'mock message', { mockData: true });
 				});
 
 				it('calls the relevant log transport method with a null message property', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
-						isMockZippedData: true,
-						message: null
-					});
+					assert.strictEqual(mockPinoLogger.mockCanonicalLevel.mock.callCount(), 1);
+					assert.deepStrictEqual(
+						mockPinoLogger.mockCanonicalLevel.mock.calls[0].arguments,
+						[
+							{
+								isMockZippedData: true,
+								message: null
+							}
+						]
+					);
 				});
 			});
 
 			describe('when the log data has an error property as a sub-property', () => {
 				beforeEach(() => {
-					mockPinoLogger.mockCanonicalLevel.mockClear();
-					jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+					mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
+					Logger.zipLogData.mock.mockImplementation(() => ({
 						error: new Error('mock error'),
 						isMockZippedData: true
-					});
-					serializeError.mockClear();
-					serializeError.mockReturnValueOnce('mock serialized error');
+					}));
+					serializeError.mock.resetCalls();
+					serializeError.mock.mockImplementationOnce(() => 'mock serialized error');
 					logger.log('mockLevel', 'mock message', { mockData: true });
 				});
 
 				it('serializes the contents of the error sub-property', () => {
-					expect(serializeError).toHaveBeenCalledTimes(1);
-					expect(serializeError).toHaveBeenCalledWith(new Error('mock error'));
+					assert.strictEqual(serializeError.mock.callCount(), 1);
+					assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [
+						new Error('mock error')
+					]);
 				});
 
 				it('calls the relevant log transport method with an error sub-property which is set to the serialized error', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
-						isMockZippedData: true,
-						message: null,
-						error: 'mock serialized error'
-					});
+					assert.strictEqual(mockPinoLogger.mockCanonicalLevel.mock.callCount(), 1);
+					assert.deepStrictEqual(
+						mockPinoLogger.mockCanonicalLevel.mock.calls[0].arguments,
+						[
+							{
+								isMockZippedData: true,
+								message: null,
+								error: 'mock serialized error'
+							}
+						]
+					);
 				});
 
 				describe('when the error property is not an error instance', () => {
 					beforeEach(() => {
-						mockPinoLogger.mockCanonicalLevel.mockClear();
-						jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+						mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
+						Logger.zipLogData.mock.mockImplementation(() => ({
 							error: 'not an error',
 							isMockZippedData: true
-						});
-						serializeError.mockClear();
+						}));
+						serializeError.mock.resetCalls();
 						logger.log('mockLevel', 'mock message', { mockData: true });
 					});
 
 					it('does not serialize the error', () => {
-						expect(serializeError).toHaveBeenCalledTimes(0);
+						assert.strictEqual(serializeError.mock.callCount(), 0);
 					});
 				});
 			});
 
 			describe('when the log data has an err property as a sub-property', () => {
 				beforeEach(() => {
-					mockPinoLogger.mockCanonicalLevel.mockClear();
-					jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+					mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
+					Logger.zipLogData.mock.mockImplementation(() => ({
 						err: new Error('mock error'),
 						isMockZippedData: true
-					});
-					serializeError.mockClear();
-					serializeError.mockReturnValueOnce('mock serialized error');
+					}));
+					serializeError.mock.resetCalls();
+					serializeError.mock.mockImplementationOnce(() => 'mock serialized error');
 					logger.log('mockLevel', 'mock message', { mockData: true });
 				});
 
 				it('serializes the contents of the err sub-property', () => {
-					expect(serializeError).toHaveBeenCalledTimes(1);
-					expect(serializeError).toHaveBeenCalledWith(new Error('mock error'));
+					assert.strictEqual(serializeError.mock.callCount(), 1);
+					assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [
+						new Error('mock error')
+					]);
 				});
 
 				it('calls the relevant log transport method with an err sub-property which is set to the serialized error', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
-						isMockZippedData: true,
-						message: null,
-						err: 'mock serialized error'
-					});
+					assert.strictEqual(mockPinoLogger.mockCanonicalLevel.mock.callCount(), 1);
+					assert.deepStrictEqual(
+						mockPinoLogger.mockCanonicalLevel.mock.calls[0].arguments,
+						[
+							{
+								isMockZippedData: true,
+								message: null,
+								err: 'mock serialized error'
+							}
+						]
+					);
 				});
 			});
 
 			describe('when the given level is deprecated', () => {
 				beforeEach(() => {
-					mockPinoLogger.mockDeprecatedCanonocalLevel.mockClear();
-					mockPinoLogger.warn.mockClear();
-					Logger.getLogLevelInfo.mockReturnValue({
+					mockPinoLogger.mockDeprecatedCanonocalLevel.mock.resetCalls();
+					mockPinoLogger.warn.mock.resetCalls();
+					Logger.getLogLevelInfo.mock.mockImplementation(() => ({
 						logLevel: 'mockDeprecatedCanonocalLevel',
 						isDeprecated: true,
 						isDefaulted: false
-					});
+					}));
 					logger.log('mockDeprecatedLevel', 'mock message', { mockData: true });
 				});
 
 				it('calls the relevant log transport method for the level', () => {
-					expect(mockPinoLogger.mockDeprecatedCanonocalLevel).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockDeprecatedCanonocalLevel).toHaveBeenCalledWith({
-						isMockZippedData: true,
-						message: 'mock zipped message'
-					});
+					assert.strictEqual(
+						mockPinoLogger.mockDeprecatedCanonocalLevel.mock.callCount(),
+						1
+					);
+					assert.deepStrictEqual(
+						mockPinoLogger.mockDeprecatedCanonocalLevel.mock.calls[0].arguments,
+						[
+							{
+								isMockZippedData: true,
+								message: 'mock zipped message'
+							}
+						]
+					);
 				});
 
 				it('logs a deprecation warning', () => {
-					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.warn).toHaveBeenCalledWith({
-						event: 'LOG_LEVEL_DEPRECATED',
-						message: "The 'mockDeprecatedLevel' log level is deprecated",
-						deprecatedLevel: 'mockDeprecatedLevel',
-						suggestedLevel: 'mockDeprecatedCanonocalLevel'
-					});
+					assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(mockPinoLogger.warn.mock.calls[0].arguments, [
+						{
+							event: 'LOG_LEVEL_DEPRECATED',
+							message: "The 'mockDeprecatedLevel' log level is deprecated",
+							deprecatedLevel: 'mockDeprecatedLevel',
+							suggestedLevel: 'mockDeprecatedCanonocalLevel'
+						}
+					]);
 				});
 
 				describe('when a deprecated log level is used a second time', () => {
@@ -450,34 +484,42 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it('does not log a second deprecation warning', () => {
-						expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+						assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
 					});
 				});
 			});
 
 			describe('when the given level is invalid', () => {
 				beforeEach(() => {
-					mockPinoLogger.mockInvalidCanonicalLevel.mockClear();
-					mockPinoLogger.warn.mockClear();
-					Logger.getLogLevelInfo.mockReturnValue({
+					mockPinoLogger.mockInvalidCanonicalLevel.mock.resetCalls();
+					mockPinoLogger.warn.mock.resetCalls();
+					Logger.getLogLevelInfo.mock.mockImplementation(() => ({
 						logLevel: 'mockInvalidCanonicalLevel',
 						isDeprecated: false,
 						isDefaulted: true
-					});
+					}));
 					logger.log('mockInvalidLevel', 'mock message', { mockData: true });
 				});
 
 				it('calls the relevant log transport method for the level', () => {
-					expect(mockPinoLogger.mockInvalidCanonicalLevel).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockInvalidCanonicalLevel).toHaveBeenCalledWith({
-						isMockZippedData: true,
-						message: 'mock zipped message'
-					});
+					assert.strictEqual(
+						mockPinoLogger.mockInvalidCanonicalLevel.mock.callCount(),
+						1
+					);
+					assert.deepStrictEqual(
+						mockPinoLogger.mockInvalidCanonicalLevel.mock.calls[0].arguments,
+						[
+							{
+								isMockZippedData: true,
+								message: 'mock zipped message'
+							}
+						]
+					);
 				});
 
 				it('logs a warning', () => {
-					expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.warn).toHaveBeenCalledWith(
+					assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(mockPinoLogger.warn.mock.calls[0].arguments, [
 						new Error('Invalid log level used'),
 						{
 							event: 'LOG_LEVEL_INVALID',
@@ -486,7 +528,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 							invalidLevel: 'mockInvalidLevel',
 							defaultedLevel: 'mockInvalidCanonicalLevel'
 						}
-					);
+					]);
 				});
 
 				describe('when an invalid log level is used a second time', () => {
@@ -497,31 +539,28 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it('does not log a second deprecation warning', () => {
-						expect(mockPinoLogger.warn).toHaveBeenCalledTimes(1);
+						assert.strictEqual(mockPinoLogger.warn.mock.callCount(), 1);
 					});
 				});
 			});
 
 			describe('when an error occurs during logging', () => {
 				beforeEach(() => {
-					serializeError.mockClear();
-					serializeError.mockReturnValue({
-						isMockSerializedError: true
-					});
-					jest.spyOn(console, 'log').mockImplementation(() => {});
-					Logger.getLogLevelInfo.mockReturnValue({
+					serializeError.mock.resetCalls();
+					mock.method(console, 'log', () => {});
+					Logger.getLogLevelInfo.mock.mockImplementation(() => ({
 						logLevel: 'mockErroringLevel',
 						isDeprecated: true,
 						isDefaulted: false
-					});
+					}));
 					logger.log('mockErroringLevel', 'mock message', { mockData: true });
 				});
 
 				it('logs the error information as JSON using `console.log`', () => {
 					// biome-ignore lint/suspicious/noConsole: used in the code
-					expect(console.log).toHaveBeenCalledTimes(1);
+					assert.strictEqual(console.log.mock.callCount(), 1);
 					// biome-ignore lint/suspicious/noConsole: used in the code
-					expect(console.log).toHaveBeenCalledWith(
+					assert.deepStrictEqual(console.log.mock.calls[0].arguments, [
 						JSON.stringify({
 							level: 'error',
 							event: 'LOG_METHOD_FAILURE',
@@ -530,13 +569,14 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 								isMockSerializedError: true
 							}
 						})
-					);
+					]);
 				});
 			});
 
 			describe('when `level` is not a string', () => {
 				it('throws a type error', () => {
-					expect(() => logger.log({})).toThrow(
+					assert.throws(
+						() => logger.log({}),
 						new TypeError('The log `level` argument must be a string')
 					);
 				});
@@ -547,23 +587,25 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 		for (const levelMethod of logMethods) {
 			describe(`.${levelMethod}(...logData)`, () => {
 				beforeEach(() => {
-					logger.log = jest.fn();
+					logger.log = mock.fn();
 					logger[levelMethod]('mock message', { mockData: true });
 				});
 
 				it(`calls .log() with a level of '${levelMethod}'`, () => {
-					expect(logger.log).toHaveBeenCalledTimes(1);
+					assert.strictEqual(logger.log.mock.callCount(), 1);
+					assert.deepStrictEqual(logger.log.mock.calls[0].arguments[0], levelMethod);
 				});
 
 				describe(`when the method is detatched from the logger instance`, () => {
 					beforeEach(() => {
-						logger.log.mockReset();
+						logger.log.mock.resetCalls();
 						const detatchedLogMethod = logger[levelMethod];
 						detatchedLogMethod('mock message', { mockData: true });
 					});
 
 					it(`calls .log() with a level of '${levelMethod}'`, () => {
-						expect(logger.log).toHaveBeenCalledTimes(1);
+						assert.strictEqual(logger.log.mock.callCount(), 1);
+						assert.deepStrictEqual(logger.log.mock.calls[0].arguments[0], levelMethod);
 					});
 				});
 			});
@@ -575,8 +617,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 
 			it('calls the `flush` method of the log transport', () => {
-				expect(mockPinoLogger.flush).toHaveBeenCalledTimes(1);
-				expect(mockPinoLogger.flush).toHaveBeenCalledWith();
+				assert.strictEqual(mockPinoLogger.flush.mock.callCount(), 1);
+				assert.deepStrictEqual(mockPinoLogger.flush.mock.calls[0].arguments, []);
 			});
 
 			describe('when the log transport has no `flush` method', () => {
@@ -584,12 +626,12 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					logger = new Logger({
 						_transport: {}
 					});
-					mockPinoLogger.flush = jest.fn();
+					mockPinoLogger.flush = mock.fn();
 					logger.flush();
 				});
 
 				it('does nothing', () => {
-					expect(mockPinoLogger.flush).toHaveBeenCalledTimes(0);
+					assert.strictEqual(mockPinoLogger.flush.mock.callCount(), 0);
 				});
 			});
 		});
@@ -609,7 +651,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 			describe('.baseLogData', () => {
 				it('is set to the value of the `baseLogData` option', () => {
-					expect(logger.baseLogData).toEqual({
+					assert.deepStrictEqual(logger.baseLogData, {
 						isMockBaseData: true,
 						mockSubObject: { isMockSubObject: true }
 					});
@@ -618,8 +660,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				it('is a deep cloned copy of the original option', () => {
 					baseLogData.a = 1;
 					baseLogData.mockSubObject.a = 1;
-					expect(logger.baseLogData.a).toBeUndefined();
-					expect(logger.baseLogData.mockSubObject.a).toBeUndefined();
+					assert.strictEqual(logger.baseLogData.a, undefined);
+					assert.strictEqual(logger.baseLogData.mockSubObject.a, undefined);
 				});
 			});
 		});
@@ -628,25 +670,25 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			let mockSerializers;
 
 			beforeEach(() => {
-				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+				mock.method(Logger, 'getLogLevelInfo', () => ({
 					logLevel: 'mockCanonicalLevel',
 					isDeprecated: false
-				});
-				jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+				}));
+				mock.method(Logger, 'zipLogData', () => ({
 					isMockZippedData: true,
 					message: 'mock zipped message',
 					time: 'mock zipped time',
 					mockProperty1: 'mock-value-1'
-				});
-				jest.spyOn(console, 'log').mockImplementation(() => {});
-				mockPinoLogger.mockCanonicalLevel.mockClear();
+				}));
+				mock.method(console, 'log', () => {});
+				mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
 				mockSerializers = {
-					mockProperty1: jest.fn(() => 'mock-serialized-value-1'),
-					mockProperty2: jest.fn(() => 'mock-serialized-value-2'),
-					level: jest.fn(() => 'mock-serialized-level'),
-					message: jest.fn(() => 'mock-serialized-message'),
-					time: jest.fn(() => 'mock-serialized-time'),
-					naughtyProperty: jest.fn(() => {
+					mockProperty1: mock.fn(() => 'mock-serialized-value-1'),
+					mockProperty2: mock.fn(() => 'mock-serialized-value-2'),
+					level: mock.fn(() => 'mock-serialized-level'),
+					message: mock.fn(() => 'mock-serialized-message'),
+					time: mock.fn(() => 'mock-serialized-time'),
+					naughtyProperty: mock.fn(() => {
 						throw new Error('We do not like this property');
 					})
 				};
@@ -661,39 +703,46 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls all serializers with the zipped log data properties if set', () => {
-					expect(mockSerializers.mockProperty1).toHaveBeenCalledTimes(1);
-					expect(mockSerializers.mockProperty2).toHaveBeenCalledTimes(0);
-					expect(mockSerializers.mockProperty1).toHaveBeenCalledWith(
+					assert.strictEqual(mockSerializers.mockProperty1.mock.callCount(), 1);
+					assert.strictEqual(mockSerializers.mockProperty2.mock.callCount(), 0);
+					assert.deepStrictEqual(mockSerializers.mockProperty1.mock.calls[0].arguments, [
 						'mock-value-1',
 						'mockProperty1'
-					);
+					]);
 				});
 
 				it('does not use custom serializers for level, message, and time log properties', () => {
-					expect(mockSerializers.level).toHaveBeenCalledTimes(0);
-					expect(mockSerializers.message).toHaveBeenCalledTimes(0);
-					expect(mockSerializers.time).toHaveBeenCalledTimes(0);
+					assert.strictEqual(mockSerializers.level.mock.callCount(), 0);
+					assert.strictEqual(mockSerializers.message.mock.callCount(), 0);
+					assert.strictEqual(mockSerializers.time.mock.callCount(), 0);
 				});
 
 				it('calls the relevant log transport method with the serialized log data', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
-						isMockZippedData: true,
-						message: 'mock zipped message',
-						time: 'mock zipped time',
-						mockProperty1: 'mock-serialized-value-1'
-					});
+					assert.strictEqual(mockPinoLogger.mockCanonicalLevel.mock.callCount(), 1);
+					assert.deepStrictEqual(
+						mockPinoLogger.mockCanonicalLevel.mock.calls[0].arguments,
+						[
+							{
+								isMockZippedData: true,
+								message: 'mock zipped message',
+								time: 'mock zipped time',
+								mockProperty1: 'mock-serialized-value-1'
+							}
+						]
+					);
 				});
 
 				describe('when a serializer errors', () => {
 					it('logs the error information as JSON using `console.log`', () => {
-						Logger.zipLogData.mockReturnValue({ naughtyProperty: 'hello' });
+						Logger.zipLogData.mock.mockImplementation(() => ({
+							naughtyProperty: 'hello'
+						}));
 						logger.log('mockLevel', 'mock message', { mockData: true });
 
 						// biome-ignore lint/suspicious/noConsole: used in the code
-						expect(console.log).toHaveBeenCalledTimes(1);
+						assert.strictEqual(console.log.mock.callCount(), 1);
 						// biome-ignore lint/suspicious/noConsole: used in the code
-						expect(console.log).toHaveBeenCalledWith(
+						assert.deepStrictEqual(console.log.mock.calls[0].arguments, [
 							JSON.stringify({
 								level: 'error',
 								event: 'LOG_METHOD_FAILURE',
@@ -702,39 +751,35 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 									isMockSerializedError: true
 								}
 							})
-						);
+						]);
 					});
 				});
 			});
 
 			describe('when the serializers option is not an object', () => {
 				it('throws a type error', () => {
-					expect(() => {
+					assert.throws(() => {
 						logger = new Logger({
 							serializers: []
 						});
-					}).toThrow(
-						new TypeError(
-							'The `serializers` option must be an object where each property value is a function'
-						)
-					);
+					}, new TypeError(
+						'The `serializers` option must be an object where each property value is a function'
+					));
 				});
 			});
 
 			describe('when one of the serializers is not a function', () => {
 				it('throws a type error', () => {
-					expect(() => {
+					assert.throws(() => {
 						logger = new Logger({
 							serializers: {
-								mockProperty1: jest.fn(() => 'mock-serialized-value-1'),
+								mockProperty1: mock.fn(() => 'mock-serialized-value-1'),
 								mockProperty2: 'nope'
 							}
 						});
-					}).toThrow(
-						new TypeError(
-							'The `serializers` option must be an object where each property value is a function'
-						)
-					);
+					}, new TypeError(
+						'The `serializers` option must be an object where each property value is a function'
+					));
 				});
 			});
 		});
@@ -743,16 +788,16 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			let mockTransforms;
 
 			beforeEach(() => {
-				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+				mock.method(Logger, 'getLogLevelInfo', () => ({
 					logLevel: 'mockCanonicalLevel',
 					isDeprecated: false
-				});
-				jest.spyOn(Logger, 'zipLogData').mockReturnValue({
+				}));
+				mock.method(Logger, 'zipLogData', () => ({
 					isMockZippedData: true,
 					message: 'mock zipped message'
-				});
-				mockPinoLogger.mockCanonicalLevel.mockClear();
-				mockTransforms = [jest.fn(() => ({ isTransformedLogData: true }))];
+				}));
+				mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
+				mockTransforms = [mock.fn(() => ({ isTransformedLogData: true }))];
 				logger = new Logger({
 					transforms: mockTransforms
 				});
@@ -764,27 +809,27 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 
 				it('calls the log transform with the zipped log data', () => {
-					expect(mockTransforms[0]).toHaveBeenCalledTimes(1);
-					expect(mockTransforms[0]).toHaveBeenCalledWith({
-						isMockZippedData: true,
-						message: 'mock zipped message'
-					});
+					assert.strictEqual(mockTransforms[0].mock.callCount(), 1);
+					assert.deepStrictEqual(mockTransforms[0].mock.calls[0].arguments, [
+						{ isMockZippedData: true, message: 'mock zipped message' }
+					]);
 				});
 
 				it('calls the relevant log transport method with the transformed log data', () => {
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
-					expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
-						isTransformedLogData: true
-					});
+					assert.strictEqual(mockPinoLogger.mockCanonicalLevel.mock.callCount(), 1);
+					assert.deepStrictEqual(
+						mockPinoLogger.mockCanonicalLevel.mock.calls[0].arguments,
+						[{ isTransformedLogData: true }]
+					);
 				});
 			});
 
 			describe('when multiple transforms are used', () => {
 				beforeEach(() => {
-					mockPinoLogger.mockCanonicalLevel.mockClear();
+					mockPinoLogger.mockCanonicalLevel.mock.resetCalls();
 					mockTransforms = [
 						...mockTransforms,
-						jest.fn(() => ({ isSecondTransformedLogData: true }))
+						mock.fn(() => ({ isSecondTransformedLogData: true }))
 					];
 					logger = new Logger({
 						transforms: mockTransforms
@@ -797,66 +842,62 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					});
 
 					it('calls each of the log transform with the log data, passing the result of each transform onto the next', () => {
-						expect(mockTransforms[0]).toHaveBeenCalledTimes(1);
-						expect(mockTransforms[0]).toHaveBeenCalledWith({
-							isMockZippedData: true,
-							message: 'mock zipped message'
-						});
-						expect(mockTransforms[1]).toHaveBeenCalledTimes(1);
-						expect(mockTransforms[1]).toHaveBeenCalledWith({
-							isTransformedLogData: true
-						});
+						assert.strictEqual(mockTransforms[0].mock.callCount(), 1);
+						assert.deepStrictEqual(mockTransforms[0].mock.calls[0].arguments, [
+							{ isMockZippedData: true, message: 'mock zipped message' }
+						]);
+						assert.strictEqual(mockTransforms[1].mock.callCount(), 1);
+						assert.deepStrictEqual(mockTransforms[1].mock.calls[0].arguments, [
+							{ isTransformedLogData: true }
+						]);
 					});
 
 					it('calls the relevant log transport method with the final transformed log data', () => {
-						expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledTimes(1);
-						expect(mockPinoLogger.mockCanonicalLevel).toHaveBeenCalledWith({
-							isSecondTransformedLogData: true
-						});
+						assert.strictEqual(mockPinoLogger.mockCanonicalLevel.mock.callCount(), 1);
+						assert.deepStrictEqual(
+							mockPinoLogger.mockCanonicalLevel.mock.calls[0].arguments,
+							[{ isSecondTransformedLogData: true }]
+						);
 					});
 				});
 			});
 
 			describe('when the transforms option is not an array', () => {
 				it('throws a type error', () => {
-					expect(() => {
+					assert.throws(() => {
 						logger = new Logger({
 							transforms: {}
 						});
-					}).toThrow(
-						new TypeError('The `transforms` option must be an array of functions')
-					);
+					}, new TypeError('The `transforms` option must be an array of functions'));
 				});
 			});
 
 			describe('when one of the transforms is not a function', () => {
 				it('throws a type error', () => {
-					expect(() => {
+					assert.throws(() => {
 						logger = new Logger({
 							transforms: [() => {}, 'nope']
 						});
-					}).toThrow(
-						new TypeError('The `transforms` option must be an array of functions')
-					);
+					}, new TypeError('The `transforms` option must be an array of functions'));
 				});
 			});
 		});
 
 		describe('when a `transport` option is set', () => {
 			beforeEach(() => {
-				pino.mockClear();
+				pino.mock.resetCalls();
 				logger = new Logger({
 					_transport: 'mock transport'
 				});
 			});
 
 			it('does not create a Pino logger', () => {
-				expect(pino).toHaveBeenCalledTimes(0);
+				assert.strictEqual(pino.mock.callCount(), 0);
 			});
 
 			describe('.transport', () => {
 				it('is set to the value of the `transport` option', () => {
-					expect(logger.transport).toStrictEqual('mock transport');
+					assert.strictEqual(logger.transport, 'mock transport');
 				});
 			});
 		});
@@ -865,26 +906,28 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			beforeEach(() => {
 				process.env.LOG_LEVEL = 'mockEnvLogLevel';
 				process.env.SPLUNK_LOG_LEVEL = 'mockEnvSplunkLogLevel';
-				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+				mock.method(Logger, 'getLogLevelInfo', () => ({
 					logLevel: 'mockCanonicalLevel'
-				});
+				}));
 				logger = new Logger({
 					logLevel: 'mockLevel'
 				});
 			});
 
 			it('gets the log level information', () => {
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockLevel');
+				assert.strictEqual(Logger.getLogLevelInfo.mock.callCount(), 1);
+				assert.deepStrictEqual(Logger.getLogLevelInfo.mock.calls[0].arguments, [
+					'mockLevel'
+				]);
 			});
 
 			it('sets the Pino logger level to the `logLevel` of the log level information', () => {
-				expect(mockPinoLogger.level).toStrictEqual('mockCanonicalLevel');
+				assert.strictEqual(mockPinoLogger.level, 'mockCanonicalLevel');
 			});
 
 			describe('.logLevel', () => {
 				it('is set to the `logLevel` of the log level information', () => {
-					expect(logger.logLevel).toStrictEqual('mockCanonicalLevel');
+					assert.strictEqual(logger.logLevel, 'mockCanonicalLevel');
 				});
 			});
 		});
@@ -893,15 +936,17 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			beforeEach(() => {
 				process.env.LOG_LEVEL = 'mockEnvLogLevel';
 				process.env.SPLUNK_LOG_LEVEL = 'mockEnvSplunkLogLevel';
-				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+				mock.method(Logger, 'getLogLevelInfo', () => ({
 					logLevel: 'mockCanonicalLevel'
-				});
+				}));
 				logger = new Logger();
 			});
 
 			it('gets the log level information based on the environment variable', () => {
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockEnvLogLevel');
+				assert.strictEqual(Logger.getLogLevelInfo.mock.callCount(), 1);
+				assert.deepStrictEqual(Logger.getLogLevelInfo.mock.calls[0].arguments, [
+					'mockEnvLogLevel'
+				]);
 			});
 		});
 
@@ -909,42 +954,46 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			beforeEach(() => {
 				delete process.env.LOG_LEVEL;
 				process.env.SPLUNK_LOG_LEVEL = 'mockEnvSplunkLogLevel';
-				jest.spyOn(Logger, 'getLogLevelInfo').mockReturnValue({
+				mock.method(Logger, 'getLogLevelInfo', () => ({
 					logLevel: 'mockCanonicalLevel'
-				});
+				}));
 				logger = new Logger();
 			});
 
 			it('gets the log level information based on the environment variable', () => {
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledTimes(1);
-				expect(Logger.getLogLevelInfo).toHaveBeenCalledWith('mockEnvSplunkLogLevel');
+				assert.strictEqual(Logger.getLogLevelInfo.mock.callCount(), 1);
+				assert.deepStrictEqual(Logger.getLogLevelInfo.mock.calls[0].arguments, [
+					'mockEnvSplunkLogLevel'
+				]);
 			});
 		});
 
 		describe('when pino-pretty is installed and the environment is not "production" - e.g. "development', () => {
-			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
-				appInfo.environment = 'development';
+			let Logger;
 
-				// We have to reset all modules because the checks for pino-pretty are done
-				// on module load for performance reasons. This resets the cache and reloads
-				// everything with a new environment.
-				jest.isolateModules(() => {
-					Logger = require('../../../lib/logger');
+			beforeEach((test) => {
+				test.mock.module('@dotcom-reliability-kit/serialize-error', {
+					defaultExport: serializeError
+				});
+				test.mock.module('pino', { defaultExport: pino });
+				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
+				test.mock.module('@dotcom-reliability-kit/app-info', {
+					defaultExport: { cloudProvider: null, environment: 'development' }
 				});
 
-				pino.mockClear();
+				// We have to clear the module cache the checks for pino-pretty are done
+				// on module load for performance reasons
+				delete require.cache[require.resolve('../../../lib/logger.js')];
+				Logger = require('../../../lib/logger.js');
+
+				pino.mock.resetCalls();
 				logger = new Logger();
 			});
 
-			afterEach(() => {
-				jest.unmock('pino-pretty');
-			});
-
 			it('configures the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(typeof pinoOptions.transport).toStrictEqual('object');
-				expect(pinoOptions.transport).toEqual({
+				const pinoOptions = pino.mock.calls[0].arguments[0];
+				assert.strictEqual(typeof pinoOptions.transport, 'object');
+				assert.deepStrictEqual(pinoOptions.transport, {
 					target: 'pino-pretty',
 					worker: { execArgv: [] },
 					options: {
@@ -956,30 +1005,31 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 		});
 
 		describe('when pino-pretty is installed and the environment is not "production" - e.g. "test', () => {
-			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
-				appInfo.environment = 'test';
+			let Logger;
 
-				// We have to reset all modules because the checks for pino-pretty are done
-				// on module load for performance reasons. This resets the cache and reloads
-				// everything with a new environment.
-				jest.isolateModules(() => {
-					Logger = require('../../../lib/logger');
+			beforeEach((test) => {
+				test.mock.module('@dotcom-reliability-kit/serialize-error', {
+					defaultExport: serializeError
+				});
+				test.mock.module('pino', { defaultExport: pino });
+				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
+				test.mock.module('@dotcom-reliability-kit/app-info', {
+					defaultExport: { cloudProvider: null, environment: 'test' }
 				});
 
-				pino.mockClear();
+				// We have to clear the module cache the checks for pino-pretty are done
+				// on module load for performance reasons
+				delete require.cache[require.resolve('../../../lib/logger.js')];
+				Logger = require('../../../lib/logger.js');
+
+				pino.mock.resetCalls();
 				logger = new Logger();
 			});
 
-			afterEach(() => {
-				jest.unmock('pino-pretty');
-				appInfo.environment = 'production';
-			});
-
 			it('configures the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(typeof pinoOptions.transport).toStrictEqual('object');
-				expect(pinoOptions.transport).toEqual({
+				const pinoOptions = pino.mock.calls[0].arguments[0];
+				assert.strictEqual(typeof pinoOptions.transport, 'object');
+				assert.deepStrictEqual(pinoOptions.transport, {
 					target: 'pino-pretty',
 					worker: { execArgv: [] },
 					options: {
@@ -991,144 +1041,152 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 		});
 
 		describe('when pino-pretty is installed and the `withPrettifier` option is set to `false`', () => {
-			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
-				appInfo.environment = 'development';
+			let Logger;
 
-				// We have to reset all modules because the checks for pino-pretty are done
-				// on module load for performance reasons. This resets the cache and reloads
-				// everything with a new environment.
-				jest.isolateModules(() => {
-					Logger = require('../../../lib/logger');
+			beforeEach((test) => {
+				test.mock.module('@dotcom-reliability-kit/serialize-error', {
+					defaultExport: serializeError
+				});
+				test.mock.module('pino', { defaultExport: pino });
+				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
+				test.mock.module('@dotcom-reliability-kit/app-info', {
+					defaultExport: { cloudProvider: null, environment: 'development' }
 				});
 
-				pino.mockClear();
+				// We have to clear the module cache the checks for pino-pretty are done
+				// on module load for performance reasons
+				delete require.cache[require.resolve('../../../lib/logger.js')];
+				Logger = require('../../../lib/logger.js');
+
+				pino.mock.resetCalls();
 				logger = new Logger({ withPrettifier: false });
 			});
 
-			afterEach(() => {
-				jest.unmock('pino-pretty');
-				appInfo.environment = 'production';
-			});
-
 			it('does not configure the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(pinoOptions.transport).toBeUndefined();
+				const pinoOptions = pino.mock.calls[0].arguments[0];
+				assert.strictEqual(pinoOptions.transport, undefined);
 			});
 		});
 
 		describe('when pino-pretty is installed and the `LOG_DISABLE_PRETTIFIER` environment variable is set', () => {
-			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
-				appInfo.environment = 'development';
+			let Logger;
+
+			beforeEach((test) => {
+				test.mock.module('@dotcom-reliability-kit/serialize-error', {
+					defaultExport: serializeError
+				});
+				test.mock.module('pino', { defaultExport: pino });
+				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
+				test.mock.module('@dotcom-reliability-kit/app-info', {
+					defaultExport: { cloudProvider: null, environment: 'development' }
+				});
 				process.env.LOG_DISABLE_PRETTIFIER = 'true';
 
-				// We have to reset all modules because the checks for pino-pretty are done
-				// on module load for performance reasons. This resets the cache and reloads
-				// everything with a new environment.
-				jest.isolateModules(() => {
-					Logger = require('../../../lib/logger');
-				});
+				// We have to clear the module cache the checks for pino-pretty are done
+				// on module load for performance reasons
+				delete require.cache[require.resolve('../../../lib/logger.js')];
+				Logger = require('../../../lib/logger.js');
 
-				pino.mockClear();
+				pino.mock.resetCalls();
 				logger = new Logger();
 			});
 
-			afterEach(() => {
-				jest.unmock('pino-pretty');
-				delete process.env.LOG_DISABLE_PRETTIFIER;
-			});
-
 			it('does not configure the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(pinoOptions.transport).toBeUndefined();
+				const pinoOptions = pino.mock.calls[0].arguments[0];
+				assert.strictEqual(pinoOptions.transport, undefined);
 			});
 		});
 
 		describe('when pino-pretty is installed and the environment is "production", "prod", or "p"', () => {
-			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
-				pino.mockClear();
+			beforeEach((test) => {
+				test.mock.module('@dotcom-reliability-kit/serialize-error', {
+					defaultExport: serializeError
+				});
+				test.mock.module('pino', { defaultExport: pino });
+				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
+
+				const appInfo = { cloudProvider: null, environment: 'nope' };
+				test.mock.module('@dotcom-reliability-kit/app-info', {
+					cache: true,
+					defaultExport: appInfo
+				});
+
+				pino.mock.resetCalls();
 				for (const environment of ['production', 'prod', 'p']) {
 					let Logger;
 
 					appInfo.environment = environment;
-					// We have to reset all modules because the checks for pino-pretty are done
-					// on module load for performance reasons. This resets the cache and reloads
-					// everything with a new environment.
-					jest.isolateModules(() => {
-						Logger = require('../../../lib/logger');
-					});
+
+					// We have to clear the module cache the checks for pino-pretty are done
+					// on module load for performance reasons
+					delete require.cache[require.resolve('../../../lib/logger.js')];
+					Logger = require('../../../lib/logger.js');
 
 					logger = new Logger();
 				}
 			});
 
-			afterEach(() => {
-				jest.unmock('pino-pretty');
-				appInfo.environment = 'production';
-			});
-
 			it('does not configure the created Pino logger with prettification', () => {
-				expect(pino).toHaveBeenCalledTimes(3);
+				assert.strictEqual(pino.mock.callCount(), 3);
 				for (const call of pino.mock.calls) {
-					expect(call[0].transport).toBeUndefined();
+					assert.strictEqual(call.arguments[0].transport, undefined);
 				}
 			});
 		});
 
 		describe('when pino-pretty is installed and AWS is detected as a cloud provider', () => {
-			beforeEach(() => {
-				jest.mock('pino-pretty', () => 'mock pino pretty');
-				appInfo.cloudProvider = 'aws';
+			let Logger;
 
-				// We have to reset all modules because the checks for pino-pretty are done
-				// on module load for performance reasons. This resets the cache and reloads
-				// everything with a new environment.
-				jest.isolateModules(() => {
-					Logger = require('../../../lib/logger');
+			beforeEach((test) => {
+				test.mock.module('@dotcom-reliability-kit/serialize-error', {
+					defaultExport: serializeError
+				});
+				test.mock.module('pino', { defaultExport: pino });
+				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
+				test.mock.module('@dotcom-reliability-kit/app-info', {
+					defaultExport: { cloudProvider: 'aws', environment: 'development' }
 				});
 
-				pino.mockClear();
+				// We have to clear the module cache the checks for pino-pretty are done
+				// on module load for performance reasons
+				delete require.cache[require.resolve('../../../lib/logger.js')];
+				Logger = require('../../../lib/logger.js');
+
+				pino.mock.resetCalls();
 				logger = new Logger();
 			});
 
-			afterEach(() => {
-				jest.unmock('pino-pretty');
-				appInfo.cloudProvider = null;
-			});
-
 			it('does not configure the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(pinoOptions.transport).toBeUndefined();
+				const pinoOptions = pino.mock.calls[0].arguments[0];
+				assert.strictEqual(pinoOptions.transport, undefined);
 			});
 		});
 
 		describe('when pino-pretty is not installed and the environment is "development"', () => {
-			beforeEach(() => {
-				jest.mock('pino-pretty', () => {
-					throw new Error('mock');
-				});
-				appInfo.environment = 'development';
+			let Logger;
 
-				// We have to reset all modules because the checks for pino-pretty are done
-				// on module load for performance reasons. This resets the cache and reloads
-				// everything with a new environment.
-				jest.isolateModules(() => {
-					Logger = require('../../../lib/logger');
+			beforeEach((test) => {
+				test.mock.module('@dotcom-reliability-kit/serialize-error', {
+					defaultExport: serializeError
+				});
+				test.mock.module('pino', { defaultExport: pino });
+				test.mock.module('pino-pretty', { defaultExport: undefined });
+				test.mock.module('@dotcom-reliability-kit/app-info', {
+					defaultExport: { cloudProvider: null, environment: 'development' }
 				});
 
-				pino.mockClear();
+				// We have to clear the module cache the checks for pino-pretty are done
+				// on module load for performance reasons
+				delete require.cache[require.resolve('../../../lib/logger.js')];
+				Logger = require('../../../lib/logger.js');
+
+				pino.mock.resetCalls();
 				logger = new Logger();
 			});
 
-			afterEach(() => {
-				appInfo.environment = 'production';
-			});
-
 			it('configures the created Pino logger without prettification', () => {
-				const pinoOptions = pino.mock.calls[0][0];
-				expect(pinoOptions.transport).toBeUndefined();
+				const pinoOptions = pino.mock.calls[0].arguments[0];
+				assert.strictEqual(pinoOptions.transport, undefined);
 			});
 		});
 	});
@@ -1136,7 +1194,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 	describe('Logger.getLogLevelInfo(level)', () => {
 		describe('when `level` is "data"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('data')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('data'), {
 					logLevel: 'debug',
 					isDeprecated: true,
 					isDefaulted: false
@@ -1146,7 +1204,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is "debug"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('debug')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('debug'), {
 					logLevel: 'debug',
 					isDeprecated: false,
 					isDefaulted: false
@@ -1156,7 +1214,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is "error"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('error')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('error'), {
 					logLevel: 'error',
 					isDeprecated: false,
 					isDefaulted: false
@@ -1166,7 +1224,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is "fatal"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('fatal')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('fatal'), {
 					logLevel: 'fatal',
 					isDeprecated: false,
 					isDefaulted: false
@@ -1176,7 +1234,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is "info"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('info')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('info'), {
 					logLevel: 'info',
 					isDeprecated: false,
 					isDefaulted: false
@@ -1186,7 +1244,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is "silly"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('silly')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('silly'), {
 					logLevel: 'debug',
 					isDeprecated: true,
 					isDefaulted: false
@@ -1196,7 +1254,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is "verbose"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('verbose')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('verbose'), {
 					logLevel: 'debug',
 					isDeprecated: true,
 					isDefaulted: false
@@ -1206,7 +1264,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is "warn"', () => {
 			it('returns the expected log level information', () => {
-				expect(Logger.getLogLevelInfo('warn')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('warn'), {
 					logLevel: 'warn',
 					isDeprecated: false,
 					isDefaulted: false
@@ -1216,7 +1274,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when `level` is invalid', () => {
 			it('returns default log level information', () => {
-				expect(Logger.getLogLevelInfo('unknown')).toEqual({
+				assert.deepStrictEqual(Logger.getLogLevelInfo('unknown'), {
 					logLevel: 'info',
 					isDeprecated: false,
 					isDefaulted: true
@@ -1227,7 +1285,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 	describe('Logger.zipLogData(...logData)', () => {
 		it('zips multiple log data items into a single object', () => {
-			expect(Logger.zipLogData({ a: 1 }, { b: 2 }, { c: 3 })).toEqual({
+			assert.deepStrictEqual(Logger.zipLogData({ a: 1 }, { b: 2 }, { c: 3 }), {
 				a: 1,
 				b: 2,
 				c: 3
@@ -1238,21 +1296,21 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			const object1 = { a: 1, sub: { a: true } };
 			const object2 = { b: 2, sub: { b: true } };
 			const zip = Logger.zipLogData(object1, object2);
-			expect(zip).not.toStrictEqual(object1);
-			expect(zip).not.toStrictEqual(object2);
-			expect(object1.b).toBeUndefined();
-			expect(object2.a).toBeUndefined();
+			assert.notStrictEqual(zip, object1);
+			assert.notStrictEqual(zip, object2);
+			assert.strictEqual(object1.b, undefined);
+			assert.strictEqual(object2.a, undefined);
 			object1.newProperty = true;
 			object1.sub.newProperty = true;
 			object2.newProperty = true;
 			object2.sub.newProperty = true;
-			expect(zip.newProperty).toBeUndefined();
-			expect(zip.sub.newProperty).toBeUndefined();
+			assert.strictEqual(zip.newProperty, undefined);
+			assert.strictEqual(zip.sub.newProperty, undefined);
 		});
 
 		describe('when there are property conflicts between objects', () => {
 			it('prioritizes the first instance of that property', () => {
-				expect(Logger.zipLogData({ a: 1 }, { a: 2 }, { a: 3 })).toEqual({
+				assert.deepStrictEqual(Logger.zipLogData({ a: 1 }, { a: 2 }, { a: 3 }), {
 					a: 1
 				});
 			});
@@ -1268,18 +1326,24 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					}
 				}
 				const mockError = new MockError('mock error');
-				expect(Logger.zipLogData({ error: mockError })).toEqual({
+				assert.deepStrictEqual(Logger.zipLogData({ error: mockError }), {
 					error: mockError
 				});
-				expect(Logger.zipLogData({ error: mockError }).error).toBeInstanceOf(MockError);
-				expect(Logger.zipLogData({ error: mockError }).error.name).toEqual('MockError');
-				expect(Logger.zipLogData({ error: mockError }).error.code).toEqual('MOCK_ERROR');
+				assert.ok(Logger.zipLogData({ error: mockError }).error instanceof MockError);
+				assert.deepStrictEqual(
+					Logger.zipLogData({ error: mockError }).error.name,
+					'MockError'
+				);
+				assert.deepStrictEqual(
+					Logger.zipLogData({ error: mockError }).error.code,
+					'MOCK_ERROR'
+				);
 			});
 		});
 
 		describe('when one of the log data items is a string', () => {
 			it('adds it as a `message` property', () => {
-				expect(Logger.zipLogData('mock message', { a: 1 })).toEqual({
+				assert.deepStrictEqual(Logger.zipLogData('mock message', { a: 1 }), {
 					message: 'mock message',
 					a: 1
 				});
@@ -1287,7 +1351,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 			describe('when there are multiple strings', () => {
 				it('prioritizes the first', () => {
-					expect(Logger.zipLogData('message 1', 'message 2')).toEqual({
+					assert.deepStrictEqual(Logger.zipLogData('message 1', 'message 2'), {
 						message: 'message 1'
 					});
 				});
@@ -1296,25 +1360,25 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when one of the log data items is an error object', () => {
 			it('serializes it and adds it as an `error` property', () => {
-				serializeError.mockClear();
-				serializeError.mockReturnValueOnce('mock serialized error');
+				serializeError.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(() => 'mock serialized error');
 				const error = new Error('mock error');
 
-				expect(Logger.zipLogData(error)).toEqual({
+				assert.deepStrictEqual(Logger.zipLogData(error), {
 					error: 'mock serialized error'
 				});
-				expect(serializeError).toHaveBeenCalledTimes(1);
-				expect(serializeError).toHaveBeenCalledWith(error);
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 			});
 
 			describe('when there are multiple errors', () => {
 				it('prioritizes the first', () => {
-					serializeError.mockImplementation((error) => {
+					serializeError.mock.mockImplementation((error) => {
 						return `mock serialized ${error.message}`;
 					});
 					const error1 = new Error('error 1');
 					const error2 = new Error('error 2');
-					expect(Logger.zipLogData(error1, error2)).toEqual({
+					assert.deepStrictEqual(Logger.zipLogData(error1, error2), {
 						error: 'mock serialized error 1'
 					});
 				});
@@ -1323,15 +1387,18 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 		describe('when a mix of data types is used', () => {
 			it('correctly zips all of them', () => {
-				serializeError.mockReturnValueOnce('mock serialized error');
+				serializeError.mock.mockImplementationOnce(() => 'mock serialized error');
 				const error = new Error('mock error');
 
-				expect(Logger.zipLogData('mock message', error, { a: 1 }, { b: 2 })).toEqual({
-					message: 'mock message',
-					error: 'mock serialized error',
-					a: 1,
-					b: 2
-				});
+				assert.deepStrictEqual(
+					Logger.zipLogData('mock message', error, { a: 1 }, { b: 2 }),
+					{
+						message: 'mock message',
+						error: 'mock serialized error',
+						a: 1,
+						b: 2
+					}
+				);
 			});
 		});
 	});
