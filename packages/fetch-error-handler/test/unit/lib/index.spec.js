@@ -1,5 +1,10 @@
-jest.mock('../../../lib/create-handler', () => jest.fn().mockReturnValue('mock-handler'));
-const createHandler = require('../../../lib/create-handler');
+const { describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
+
+const createHandler = mock.fn(() => 'mock-handler');
+mock.module('../../../lib/create-handler.js', {
+	defaultExport: createHandler
+});
 
 const {
 	createFetchErrorHandler,
@@ -8,19 +13,19 @@ const {
 
 describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 	it('creates a fetch error handler', () => {
-		expect(createHandler).toHaveBeenCalledTimes(1);
-		expect(createHandler).toHaveBeenCalledWith();
+		assert.strictEqual(createHandler.mock.callCount(), 1);
+		assert.deepStrictEqual(createHandler.mock.calls[0].arguments, []);
 	});
 
 	describe('.createFetchErrorHandler', () => {
 		it('aliases lib/create-handler', () => {
-			expect(createFetchErrorHandler).toStrictEqual(createHandler);
+			assert.strictEqual(createFetchErrorHandler, createHandler);
 		});
 	});
 
 	describe('.handleFetchErrors', () => {
 		it('is the created fetch error handler', () => {
-			expect(handleFetchErrors).toStrictEqual('mock-handler');
+			assert.strictEqual(handleFetchErrors, 'mock-handler');
 		});
 	});
 });

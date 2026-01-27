@@ -1,7 +1,10 @@
-jest.mock('node:stream');
+const { beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-const createFetchErrorHandler = require('../../../lib/create-handler');
-const { Writable } = require('node:stream');
+const Writable = mock.fn(class Writable {});
+mock.module('node:stream', { namedExports: { Writable } });
+
+const createFetchErrorHandler = require('../../../lib/create-handler.js');
 
 describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () => {
 	let fetchErrorHandler;
@@ -12,7 +15,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 		});
 
 		it('returns a handler function', () => {
-			expect(fetchErrorHandler).toBeInstanceOf(Function);
+			assert.ok(fetchErrorHandler instanceof Function);
 		});
 
 		describe('fetchErrorHandler(response)', () => {
@@ -30,7 +33,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 			});
 
 			it('resolves with the response object', () => {
-				expect(resolvedValue).toStrictEqual(mockResponse);
+				assert.strictEqual(resolvedValue, mockResponse);
 			});
 
 			describe('when `response.ok` is `false` and `response.status` is 304', () => {
@@ -38,23 +41,24 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 					mockResponse.ok = false;
 					mockResponse.status = 304;
 					resolvedValue = await fetchErrorHandler(mockResponse);
-					expect(resolvedValue).toStrictEqual(mockResponse);
+					assert.strictEqual(resolvedValue, mockResponse);
 				});
 			});
 
 			describe('when `response.ok` is `false` and `response.status` is 400', () => {
 				it('rejects with an error describing the issue', async () => {
-					expect.assertions(3);
 					try {
 						mockResponse.ok = false;
 						mockResponse.status = 400;
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.message).toStrictEqual(
+						assert.ok(error instanceof Error);
+						assert.strictEqual(
+							error.message,
 							'The upstream service at "mock.com" responded with a 400 status'
 						);
-						expect(error).toMatchObject({
+						assert.partialDeepStrictEqual(Object.assign({}, error), {
 							code: 'FETCH_CLIENT_ERROR',
 							statusCode: 500,
 							relatesToSystems: [],
@@ -69,17 +73,18 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 
 			describe('when `response.ok` is `false` and `response.status` is 500', () => {
 				it('rejects with an error describing the issue', async () => {
-					expect.assertions(3);
 					try {
 						mockResponse.ok = false;
 						mockResponse.status = 500;
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.message).toStrictEqual(
+						assert.ok(error instanceof Error);
+						assert.strictEqual(
+							error.message,
 							'The upstream service at "mock.com" responded with a 500 status'
 						);
-						expect(error).toMatchObject({
+						assert.partialDeepStrictEqual(Object.assign({}, error), {
 							code: 'FETCH_SERVER_ERROR',
 							statusCode: 502,
 							relatesToSystems: [],
@@ -94,17 +99,18 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 
 			describe('when `response.ok` is `false` and `response.status` is 600', () => {
 				it('rejects with an error describing the issue', async () => {
-					expect.assertions(3);
 					try {
 						mockResponse.ok = false;
 						mockResponse.status = 600;
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.message).toStrictEqual(
+						assert.ok(error instanceof Error);
+						assert.strictEqual(
+							error.message,
 							'The upstream service at "mock.com" responded with a 600 status'
 						);
-						expect(error).toMatchObject({
+						assert.partialDeepStrictEqual(Object.assign({}, error), {
 							code: 'FETCH_UNKNOWN_ERROR',
 							statusCode: 500,
 							relatesToSystems: [],
@@ -119,15 +125,16 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 
 			describe('when `response.ok` is `false` and `response.url` is not a string', () => {
 				it('uses "unknown" in the error message rather than a hostname', async () => {
-					expect.assertions(2);
 					try {
 						mockResponse.ok = false;
 						mockResponse.status = 400;
 						mockResponse.url = null;
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.message).toStrictEqual(
+						assert.ok(error instanceof Error);
+						assert.strictEqual(
+							error.message,
 							'The upstream service at "unknown" responded with a 400 status'
 						);
 					}
@@ -136,15 +143,16 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 
 			describe('when `response.ok` is `false` and `response.url` is a string but is not a valid URL', () => {
 				it('uses "unknown" in the error message rather than a hostname', async () => {
-					expect.assertions(2);
 					try {
 						mockResponse.ok = false;
 						mockResponse.status = 400;
 						mockResponse.url = 'mock-url';
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.message).toStrictEqual(
+						assert.ok(error instanceof Error);
+						assert.strictEqual(
+							error.message,
 							'The upstream service at "unknown" responded with a 400 status'
 						);
 					}
@@ -161,21 +169,22 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						url: 'https://mock.com/example',
 						body: { error: 'bad bad not good' },
 						headers: {
-							get: jest.fn(() => 'application/json')
+							get: mock.fn(() => 'application/json')
 						},
-						clone: jest.fn(() => mockResponse),
-						text: jest.fn(() => JSON.stringify(mockResponse.body)),
-						json: jest.fn(() => mockResponse.body)
+						clone: mock.fn(() => mockResponse),
+						text: mock.fn(() => JSON.stringify(mockResponse.body)),
+						json: mock.fn(() => mockResponse.body)
 					};
-					expect.assertions(3);
 					try {
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.message).toStrictEqual(
+						assert.ok(error instanceof Error);
+						assert.strictEqual(
+							error.message,
 							'The upstream service at "mock.com" responded with a 400 status'
 						);
-						expect(error).toMatchObject({
+						assert.partialDeepStrictEqual(Object.assign({}, error), {
 							code: 'FETCH_CLIENT_ERROR',
 							statusCode: 500,
 							relatesToSystems: [],
@@ -197,20 +206,21 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						url: 'https://mock.com/example',
 						body: 'bad bad not good',
 						headers: {
-							get: jest.fn()
+							get: mock.fn()
 						},
-						clone: jest.fn(() => mockResponse),
-						text: jest.fn(() => JSON.stringify(mockResponse.body))
+						clone: mock.fn(() => mockResponse),
+						text: mock.fn(() => JSON.stringify(mockResponse.body))
 					};
-					expect.assertions(3);
 					try {
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.message).toStrictEqual(
+						assert.ok(error instanceof Error);
+						assert.strictEqual(
+							error.message,
 							'The upstream service at "mock.com" responded with a 400 status'
 						);
-						expect(error).toMatchObject({
+						assert.partialDeepStrictEqual(Object.assign({}, error), {
 							code: 'FETCH_CLIENT_ERROR',
 							statusCode: 500,
 							relatesToSystems: [],
@@ -237,18 +247,21 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 							${expectedMissingBit}
 						</html>`,
 						headers: {
-							get: jest.fn()
+							get: mock.fn()
 						},
-						clone: jest.fn(() => mockResponse),
-						text: jest.fn(() => JSON.stringify(mockResponse.body))
+						clone: mock.fn(() => mockResponse),
+						text: mock.fn(() => JSON.stringify(mockResponse.body))
 					};
-					expect.assertions(3);
 					try {
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.data.responseBody.length).toEqual(2000);
-						expect(error.data.responseBody.includes(expectedMissingBit)).toBe(false);
+						assert.ok(error instanceof Error);
+						assert.strictEqual(error.data.responseBody.length, 2000);
+						assert.strictEqual(
+							error.data.responseBody.includes(expectedMissingBit),
+							false
+						);
 					}
 				});
 			});
@@ -261,32 +274,33 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						status: 200,
 						url: 'https://mock.com/example',
 						headers: {
-							get: jest.fn(() => 'application/json')
+							get: mock.fn(() => 'application/json')
 						},
 						body: malformedBody,
-						clone: jest.fn(() => mockResponse),
-						text: jest.fn(() => mockResponse.body),
-						json: jest.fn().mockResolvedValue(malformedBody)
+						clone: mock.fn(() => mockResponse),
+						text: mock.fn(() => mockResponse.body),
+						json: mock.fn(async () => malformedBody)
 					};
-					expect.assertions(3);
 					try {
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.name).toStrictEqual('UpstreamServiceError');
-						expect(error).toMatchObject({
+						assert.ok(error instanceof Error);
+						assert.strictEqual(error.name, 'UpstreamServiceError');
+						assert.partialDeepStrictEqual(Object.assign({}, error), {
 							code: 'FETCH_INVALID_JSON_ERROR',
 							statusCode: 502,
 							relatesToSystems: [],
 							data: {
 								upstreamUrl: 'https://mock.com/example',
 								upstreamStatusCode: 200,
-								responseBody: '{"message":"hello","issue":"missing comma"',
-								upstreamErrorMessage: expect.stringContaining(
-									"Expected ',' or '}' after property value in JSON"
-								)
+								responseBody: '{"message":"hello","issue":"missing comma"'
 							}
 						});
+						assert.match(
+							error.data.upstreamErrorMessage,
+							/expected ',' or '}' after property value in json/i
+						);
 					}
 				});
 			});
@@ -302,19 +316,21 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						status: 200,
 						url: 'https://mock.com/example',
 						headers: {
-							get: jest.fn(() => 'application/json')
+							get: mock.fn(() => 'application/json')
 						},
-						clone: jest.fn(() => mockResponse),
-						text: jest.fn().mockRejectedValue(mockError)
+						clone: mock.fn(() => mockResponse),
+						text: mock.fn(async () => {
+							throw mockError;
+						})
 					};
-					expect.assertions(4);
 					try {
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.name).toStrictEqual('OperationalError');
-						expect(error.code).toStrictEqual('FETCH_BODY_ABORT_ERROR');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.ok(error instanceof Error);
+						assert.strictEqual(error.name, 'OperationalError');
+						assert.strictEqual(error.code, 'FETCH_BODY_ABORT_ERROR');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
@@ -326,19 +342,21 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						status: 200,
 						url: 'https://mock.com/example',
 						headers: {
-							get: jest.fn(() => 'application/json')
+							get: mock.fn(() => 'application/json')
 						},
-						clone: jest.fn(() => mockResponse),
-						text: jest.fn().mockRejectedValue(new TypeError('mock body lock'))
+						clone: mock.fn(() => mockResponse),
+						text: mock.fn(async () => {
+							throw new TypeError('mock body lock');
+						})
 					};
-					expect.assertions(4);
 					try {
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.name).toStrictEqual('OperationalError');
-						expect(error.code).toStrictEqual('FETCH_BODY_TYPE_ERROR');
-						expect(error.cause.message).toStrictEqual('mock body lock');
+						assert.ok(error instanceof Error);
+						assert.strictEqual(error.name, 'OperationalError');
+						assert.strictEqual(error.code, 'FETCH_BODY_TYPE_ERROR');
+						assert.strictEqual(error.cause.message, 'mock body lock');
 					}
 				});
 			});
@@ -350,17 +368,19 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 						status: 200,
 						url: 'https://mock.com/example',
 						headers: {
-							get: jest.fn(() => 'application/json')
+							get: mock.fn(() => 'application/json')
 						},
-						clone: jest.fn(() => mockResponse),
-						text: jest.fn().mockRejectedValue(new Error('unknown error'))
+						clone: mock.fn(() => mockResponse),
+						text: mock.fn(async () => {
+							throw new Error('unknown error');
+						})
 					};
-					expect.assertions(2);
 					try {
 						await fetchErrorHandler(mockResponse);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
-						expect(error.name).toStrictEqual('Error');
+						assert.ok(error instanceof Error);
+						assert.strictEqual(error.name, 'Error');
 					}
 				});
 			});
@@ -382,7 +402,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 			});
 
 			it('resolves with the response object', () => {
-				expect(resolvedValue).toStrictEqual(mockResponse);
+				assert.strictEqual(resolvedValue, mockResponse);
 			});
 
 			describe('when `response.ok` is `false` and `response.status` is 304', () => {
@@ -390,46 +410,44 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 					mockResponse.ok = false;
 					mockResponse.status = 304;
 					resolvedValue = await fetchErrorHandler(mockResponse);
-					expect(resolvedValue).toStrictEqual(mockResponse);
+					assert.strictEqual(resolvedValue, mockResponse);
 				});
 			});
 
 			describe('when `response.ok` is `false` and `response.status` is >= 400', () => {
 				it('rejects with an error', async () => {
-					expect.assertions(1);
 					try {
 						mockResponse.ok = false;
 						mockResponse.status = 400;
 						await fetchErrorHandler(Promise.resolve(mockResponse));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(Error);
+						assert.ok(error instanceof Error);
 					}
 				});
 
 				describe('when the response body has a pipe method (node-fetch)', () => {
 					it('pipes the body into a stream that voids the body data', async () => {
-						expect.assertions(5);
 						try {
 							mockResponse.ok = false;
 							mockResponse.status = 400;
-							mockResponse.body.pipe = jest.fn();
+							mockResponse.body.pipe = mock.fn();
 							await fetchErrorHandler(Promise.resolve(mockResponse));
+							assert.fail('Unreachable: function above should error before this');
 						} catch (_) {
-							expect(mockResponse.body.pipe).toHaveBeenCalledTimes(1);
-							expect(mockResponse.body.pipe).toHaveBeenCalledWith(
-								expect.any(Writable)
-							);
-							const stream = mockResponse.body.pipe.mock.calls[0][0];
-							expect(typeof stream._write).toEqual('function');
+							assert.strictEqual(mockResponse.body.pipe.mock.callCount(), 1);
+							const stream = mockResponse.body.pipe.mock.calls[0].arguments[0];
+							assert.ok(stream instanceof Writable);
+							assert.strictEqual(typeof stream._write, 'function');
 
 							// We make sure the _write function doesn't do anything with
 							// any of the data aside from calling `done`
 							const chunk = {}; // The test will error if we try to call any chunk methods, e.g. toString
 							const encoding = {}; // The test will error if we try to perform string operations on the encoding
-							const done = jest.fn();
+							const done = mock.fn();
 							stream._write(chunk, encoding, done);
-							expect(done).toHaveBeenCalledTimes(1);
-							expect(done).toHaveBeenCalledWith();
+							assert.strictEqual(done.mock.callCount(), 1);
+							assert.deepStrictEqual(done.mock.calls[0].arguments, []);
 						}
 					});
 				});
@@ -437,44 +455,45 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 
 			describe('when the promise rejects', () => {
 				it('rejects with an error', async () => {
-					expect.assertions(1);
 					try {
 						mockError = new Error('mock fetch error');
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toStrictEqual(mockError);
+						assert.strictEqual(error, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with a DNS error', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock DNS error'), {
 							code: 'ENOTFOUND'
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('OperationalError');
-						expect(error.code).toStrictEqual('FETCH_DNS_LOOKUP_ERROR');
-						expect(error.message).toStrictEqual('Cound not resolve DNS entry');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.name, 'OperationalError');
+						assert.strictEqual(error.code, 'FETCH_DNS_LOOKUP_ERROR');
+						assert.strictEqual(error.message, 'Cound not resolve DNS entry');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with a DNS error that has a hostname', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock DNS error'), {
 							code: 'ENOTFOUND',
 							hostname: 'mockhost'
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.message).toStrictEqual(
+						assert.strictEqual(
+							error.message,
 							'Cound not resolve DNS entry for host mockhost'
 						);
 					}
@@ -483,7 +502,6 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 
 			describe('when the promise rejects with an error that has a DNS error as the cause', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock outer error'), {
 							cause: Object.assign(new Error('mock DNS error'), {
@@ -492,85 +510,86 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 							})
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('OperationalError');
-						expect(error.code).toStrictEqual('FETCH_DNS_LOOKUP_ERROR');
-						expect(error.message).toStrictEqual(
+						assert.strictEqual(error.name, 'OperationalError');
+						assert.strictEqual(error.code, 'FETCH_DNS_LOOKUP_ERROR');
+						assert.strictEqual(
+							error.message,
 							'Cound not resolve DNS entry for host mockhost'
 						);
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with an abort error', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock abort error'), {
 							name: 'AbortError'
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('OperationalError');
-						expect(error.code).toStrictEqual('FETCH_ABORT_ERROR');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.name, 'OperationalError');
+						assert.strictEqual(error.code, 'FETCH_ABORT_ERROR');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with a timeout error', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock timeout error'), {
 							name: 'TimeoutError'
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('OperationalError');
-						expect(error.code).toStrictEqual('FETCH_TIMEOUT_ERROR');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.name, 'OperationalError');
+						assert.strictEqual(error.code, 'FETCH_TIMEOUT_ERROR');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with a fetch request-timeout error', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock timeout error'), {
 							name: 'FetchError',
 							type: 'request-timeout'
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('OperationalError');
-						expect(error.code).toStrictEqual('FETCH_TIMEOUT_ERROR');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.name, 'OperationalError');
+						assert.strictEqual(error.code, 'FETCH_TIMEOUT_ERROR');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with a socket error', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock socket error'), {
 							code: 'ECONNRESET'
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('UpstreamServiceError');
-						expect(error.code).toStrictEqual('FETCH_SOCKET_HANGUP_ERROR');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.name, 'UpstreamServiceError');
+						assert.strictEqual(error.code, 'FETCH_SOCKET_HANGUP_ERROR');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with a socket error as the cause', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock error'), {
 							cause: Object.assign(new Error('mock socket error'), {
@@ -578,17 +597,17 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 							})
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('UpstreamServiceError');
-						expect(error.code).toStrictEqual('FETCH_SOCKET_HANGUP_ERROR');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.name, 'UpstreamServiceError');
+						assert.strictEqual(error.code, 'FETCH_SOCKET_HANGUP_ERROR');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
 
 			describe('when the promise rejects with a SocketError instance as the cause', () => {
 				it('rejects with an augmented error', async () => {
-					expect.hasAssertions();
 					try {
 						mockError = Object.assign(new Error('mock error'), {
 							cause: Object.assign(new Error('mock socket error'), {
@@ -596,10 +615,11 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 							})
 						});
 						await fetchErrorHandler(Promise.reject(mockError));
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error.name).toStrictEqual('UpstreamServiceError');
-						expect(error.code).toStrictEqual('FETCH_SOCKET_HANGUP_ERROR');
-						expect(error.cause).toStrictEqual(mockError);
+						assert.strictEqual(error.name, 'UpstreamServiceError');
+						assert.strictEqual(error.code, 'FETCH_SOCKET_HANGUP_ERROR');
+						assert.strictEqual(error.cause, mockError);
 					}
 				});
 			});
@@ -608,42 +628,42 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 		describe('fetchErrorHandler(nonResponse)', () => {
 			describe('when nonResponse is a non-object', () => {
 				it('rejects with an error', async () => {
-					expect.assertions(2);
 					try {
 						await fetchErrorHandler(null);
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(TypeError);
-						expect(error.code).toStrictEqual('FETCH_ERROR_HANDLER_INVALID_INPUT');
+						assert.ok(error instanceof TypeError);
+						assert.strictEqual(error.code, 'FETCH_ERROR_HANDLER_INVALID_INPUT');
 					}
 				});
 			});
 
 			describe('when nonResponse has a non-boolean `ok` property', () => {
 				it('rejects with an error', async () => {
-					expect.assertions(2);
 					try {
 						await fetchErrorHandler({
 							ok: 'nope',
 							status: 400
 						});
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(TypeError);
-						expect(error.code).toStrictEqual('FETCH_ERROR_HANDLER_INVALID_INPUT');
+						assert.ok(error instanceof TypeError);
+						assert.strictEqual(error.code, 'FETCH_ERROR_HANDLER_INVALID_INPUT');
 					}
 				});
 			});
 
 			describe('when nonResponse has a non-number `status` property', () => {
 				it('rejects with an error', async () => {
-					expect.assertions(2);
 					try {
 						await fetchErrorHandler({
 							ok: false,
 							status: '400'
 						});
+						assert.fail('Unreachable: function above should error before this');
 					} catch (error) {
-						expect(error).toBeInstanceOf(TypeError);
-						expect(error.code).toStrictEqual('FETCH_ERROR_HANDLER_INVALID_INPUT');
+						assert.ok(error instanceof TypeError);
+						assert.strictEqual(error.code, 'FETCH_ERROR_HANDLER_INVALID_INPUT');
 					}
 				});
 			});
@@ -661,16 +681,16 @@ describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () =>
 			describe('fetchErrorHandler(response)', () => {
 				describe('when `response.ok` is `false` and `response.status` is >= 400', () => {
 					it('rejects with an error that includes the upstream system code', async () => {
-						expect.assertions(2);
 						try {
 							await fetchErrorHandler({
 								ok: false,
 								status: 400,
 								body: {}
 							});
+							assert.fail('Unreachable: function above should error before this');
 						} catch (error) {
-							expect(error).toBeInstanceOf(Error);
-							expect(error.relatesToSystems).toEqual(['mock-system']);
+							assert.ok(error instanceof Error);
+							assert.deepStrictEqual(error.relatesToSystems, ['mock-system']);
 						}
 					});
 				});
