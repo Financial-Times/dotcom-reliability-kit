@@ -1,3 +1,5 @@
+const { before, describe, it } = require('node:test');
+const assert = require('node:assert/strict');
 const cleanLogForTesting = require('./helpers/clean-log-for-testing');
 const { exec } = require('node:child_process');
 const findLogWithPropertyValue = require('./helpers/find-log-with-property-value');
@@ -11,7 +13,7 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 		describe(description, () => {
 			let logs;
 
-			beforeAll((done) => {
+			before((_, done) => {
 				// Execute a child process which performs logging with both
 				// n-logger and Reliability Kit
 				exec(`node ${loggingScript} ${id}`, (execError, stdout, stderr) => {
@@ -30,18 +32,18 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 			if (expectedOutput.nextLogger) {
 				it('outputs the expected n-logger logs', () => {
 					const log = findLogWithPropertyValue(logs, '_logger', 'nextLogger');
-					expect(log).toBeTruthy();
+					assert.ok(log);
 					const cleanLog = cleanLogForTesting(log);
-					expect(cleanLog).toEqual(expectedOutput.nextLogger);
+					assert.deepStrictEqual(cleanLog, expectedOutput.nextLogger);
 				});
 			}
 
 			if (expectedOutput.reliabilityKit) {
 				it('outputs the expected reliability-kit logs', () => {
 					const log = findLogWithPropertyValue(logs, '_logger', 'reliabilityKit');
-					expect(log).toBeTruthy();
+					assert.ok(log);
 					const cleanLog = cleanLogForTesting(log);
-					expect(cleanLog).toEqual(expectedOutput.reliabilityKit);
+					assert.deepStrictEqual(cleanLog, expectedOutput.reliabilityKit);
 				});
 			}
 
@@ -52,18 +54,18 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 						'_logger',
 						'reliabilityKitMaskLogger'
 					);
-					expect(log).toBeTruthy();
+					assert.ok(log);
 					const cleanLog = cleanLogForTesting(log);
-					expect(cleanLog).toEqual(expectedOutput.reliabilityKitMaskLogger);
+					assert.deepStrictEqual(cleanLog, expectedOutput.reliabilityKitMaskLogger);
 				});
 			}
 
 			if (expectedOutput.deprecation) {
 				it('outputs a deprecation message', () => {
 					const log = findLogWithPropertyValue(logs, 'event', 'LOG_LEVEL_DEPRECATED');
-					expect(log).toBeTruthy();
+					assert.ok(log);
 					const cleanLog = cleanLogForTesting(log);
-					expect(cleanLog).toEqual(expectedOutput.deprecation);
+					assert.deepStrictEqual(cleanLog, expectedOutput.deprecation);
 				});
 			}
 		});
