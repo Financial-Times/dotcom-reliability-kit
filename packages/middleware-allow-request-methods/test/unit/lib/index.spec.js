@@ -1,4 +1,7 @@
-const { allowRequestMethods } = require('../../../lib/index');
+const { afterEach, beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
+
+const { allowRequestMethods } = require('@dotcom-reliability-kit/middleware-allow-request-methods');
 const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
 // Mock Express request and response objects
@@ -14,44 +17,40 @@ describe('allowRequestMethods', () => {
 		};
 		mockResponse = {
 			headersSent: false,
-			header: jest.fn()
+			header: mock.fn()
 		};
-		mockNext = jest.fn();
+		mockNext = mock.fn();
 	});
 
 	afterEach(() => {
 		// Clear all mocks after each test
-		jest.clearAllMocks();
+		mock.restoreAll();
 	});
 
 	describe('initialisation and validation', () => {
 		it('throws TypeError when no allowedMethods are provided', () => {
-			expect(() => {
+			assert.throws(() => {
 				allowRequestMethods();
-			}).toThrow(TypeError);
-
-			expect(() => {
-				allowRequestMethods({});
-			}).toThrow('The `allowedMethods` option must be an array of strings');
+			}, new TypeError('The `allowedMethods` option must be an array of strings'));
 		});
 
 		it('throws TypeError when allowedMethods is an empty array', () => {
-			expect(() => {
+			assert.throws(() => {
 				allowRequestMethods({ allowedMethods: [] });
-			}).toThrow(TypeError);
+			}, TypeError);
 		});
 
 		it('throws TypeError when allowedMethods contains non-string values', () => {
-			expect(() => {
+			assert.throws(() => {
 				allowRequestMethods({ allowedMethods: [123, true] });
-			}).toThrow(TypeError);
+			}, TypeError);
 		});
 
 		it('creates middleware function when valid allowedMethods are provided', () => {
 			const middleware = allowRequestMethods({
 				allowedMethods: ['GET', 'POST']
 			});
-			expect(typeof middleware).toBe('function');
+			assert.strictEqual(typeof middleware, 'function');
 		});
 	});
 
@@ -63,7 +62,11 @@ describe('allowRequestMethods', () => {
 
 			middleware(mockRequest, mockResponse, mockNext);
 
-			expect(mockResponse.header).toHaveBeenCalledWith('Allow', 'GET, POST');
+			assert.strictEqual(mockResponse.header.mock.callCount(), 1);
+			assert.deepStrictEqual(mockResponse.header.mock.calls[0].arguments, [
+				'Allow',
+				'GET, POST'
+			]);
 		});
 
 		it('skips setting header if headers are already sent', () => {
@@ -74,7 +77,7 @@ describe('allowRequestMethods', () => {
 
 			middleware(mockRequest, mockResponse, mockNext);
 
-			expect(mockResponse.header).not.toHaveBeenCalled();
+			assert.strictEqual(mockResponse.header.mock.callCount(), 0);
 		});
 
 		it('calls next() with 405 error for disallowed method', () => {
@@ -85,9 +88,10 @@ describe('allowRequestMethods', () => {
 
 			middleware(mockRequest, mockResponse, mockNext);
 
-			expect(mockNext).toHaveBeenCalledWith(expect.any(UserInputError));
-			const error = mockNext.mock.calls[0][0];
-			expect(error.statusCode).toBe(405);
+			assert.strictEqual(mockNext.mock.callCount(), 1);
+			const error = mockNext.mock.calls[0].arguments[0];
+			assert.ok(error instanceof UserInputError);
+			assert.strictEqual(error.statusCode, 405);
 		});
 
 		it('calls next() without error for allowed method', () => {
@@ -98,7 +102,8 @@ describe('allowRequestMethods', () => {
 
 			middleware(mockRequest, mockResponse, mockNext);
 
-			expect(mockNext).toHaveBeenCalledWith();
+			assert.strictEqual(mockNext.mock.callCount(), 1);
+			assert.deepStrictEqual(mockNext.mock.calls[0].arguments, []);
 		});
 	});
 
@@ -110,7 +115,11 @@ describe('allowRequestMethods', () => {
 
 			middleware(mockRequest, mockResponse, mockNext);
 
-			expect(mockResponse.header).toHaveBeenCalledWith('Allow', 'GET, POST, DELETE');
+			assert.strictEqual(mockResponse.header.mock.callCount(), 1);
+			assert.deepStrictEqual(mockResponse.header.mock.calls[0].arguments, [
+				'Allow',
+				'GET, POST, DELETE'
+			]);
 		});
 	});
 });
