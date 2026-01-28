@@ -1,3 +1,6 @@
+const { after, before, describe, it } = require('node:test');
+const assert = require('node:assert/strict');
+
 const { fork } = require('node:child_process');
 const { setTimeout } = require('node:timers/promises');
 
@@ -6,7 +9,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	let stdout = '';
 	let baseUrl;
 
-	beforeAll((done) => {
+	before((_, done) => {
 		child = fork(`${__dirname}/fixtures/app.js`, {
 			stdio: 'pipe',
 			env: {
@@ -34,12 +37,12 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 		});
 	});
 
-	afterAll(() => {
+	after(() => {
 		child.kill('SIGINT');
 	});
 
 	describe('GET /error', () => {
-		beforeAll(async () => {
+		before(async () => {
 			await fetch(`${baseUrl}/error`);
 
 			// Pino uses async logs so we can't guarantee that our log will have been output
@@ -65,8 +68,8 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 				}
 			});
 			const handledErrors = jsonLogs.filter((log) => log.event === 'HANDLED_ERROR');
-			expect(handledErrors).toHaveLength(1);
-			expect(handledErrors[0].error).toMatchObject({
+			assert.strictEqual(handledErrors.length, 1);
+			assert.partialDeepStrictEqual(handledErrors[0].error, {
 				cause: null,
 				code: 'UNKNOWN',
 				data: {},
@@ -77,7 +80,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 				stack: 'mock stack',
 				statusCode: null
 			});
-			expect(handledErrors[0].request).toMatchObject({
+			assert.partialDeepStrictEqual(handledErrors[0].request, {
 				headers: {
 					accept: '*/*'
 				},
@@ -89,7 +92,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 				},
 				url: '/error'
 			});
-			expect(handledErrors[0].app).toMatchObject({
+			assert.partialDeepStrictEqual(handledErrors[0].app, {
 				commit: 'mock-commit-hash',
 				name: 'reliability-kit/middleware-log-errors',
 				region: 'mock-region',
@@ -99,12 +102,12 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	});
 
 	describe('GET /error-filtered', () => {
-		beforeAll(async () => {
+		before(async () => {
 			await fetch(`${baseUrl}/error-filtered`);
 		});
 
 		it('does not log error information to stdout', () => {
-			expect(stdout).not.toContain('FILTERED_ERROR');
+			assert.doesNotMatch(stdout, /FILTERED_ERROR/);
 		});
 	});
 });
