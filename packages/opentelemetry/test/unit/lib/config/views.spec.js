@@ -1,23 +1,27 @@
-jest.mock('@dotcom-reliability-kit/logger');
-jest.mock('@opentelemetry/sdk-node');
+const { before, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-const logger = require('@dotcom-reliability-kit/logger');
-const { AggregationType, InstrumentType } = require('@opentelemetry/sdk-node').metrics;
+const logger = { warn: mock.fn() };
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
 
-AggregationType.EXPLICIT_BUCKET_HISTOGRAM = 'mock-explicit-bucket';
-InstrumentType.HISTOGRAM = 'mock-histogram';
+const metrics = {
+	AggregationType: { EXPLICIT_BUCKET_HISTOGRAM: 'mock-explicit-bucket' },
+	InstrumentType: { HISTOGRAM: 'mock-histogram' }
+};
+mock.module('@opentelemetry/sdk-node', { defaultExport: { metrics } });
 
 const { createViewConfig } = require('../../../../lib/config/views');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 	it('exports a function', () => {
-		expect(typeof createViewConfig).toBe('function');
+		assert.strictEqual(typeof createViewConfig, 'function');
 	});
 
 	describe('createViewConfig(options)', () => {
 		let config;
 
-		beforeAll(() => {
+		before(() => {
+			logger.warn.mock.resetCalls();
 			config = createViewConfig({
 				httpClientDurationBuckets: [1, 2, 3, 4],
 				httpServerDurationBuckets: [5, 6, 7, 8]
@@ -25,7 +29,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		it('returns the configuration', () => {
-			expect(config).toEqual({
+			assert.deepStrictEqual(config, {
 				views: [
 					{
 						instrumentName: 'http.client.duration',
@@ -48,14 +52,15 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpClientDurationBuckets is not defined', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpServerDurationBuckets: [5, 6, 7, 8]
 				});
 			});
 
 			it('returns the configuration without an HTTP client duration view', () => {
-				expect(config).toEqual({
+				assert.deepStrictEqual(config, {
 					views: [
 						{
 							instrumentName: 'http.server.duration',
@@ -71,18 +76,20 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpClientDurationBuckets contains negative numbers', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpClientDurationBuckets: [1, -2, 3, 4]
 				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 
 			it('logs a warning', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments[0], {
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
 						'HTTP client duration buckets must only contain numbers greater than zero'
@@ -91,18 +98,20 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpClientDurationBuckets contains zero', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpClientDurationBuckets: [0, 1, 2, 3, 4]
 				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 
 			it('logs a warning', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments[0], {
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
 						'HTTP client duration buckets must only contain numbers greater than zero'
@@ -111,18 +120,20 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpClientDurationBuckets contains non-numbers', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpClientDurationBuckets: [1, '2', 3, 4]
 				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 
 			it('logs a warning', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments[0], {
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
 						'HTTP client duration buckets must only contain numbers greater than zero'
@@ -131,14 +142,15 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpServerDurationBuckets is not defined', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpClientDurationBuckets: [1, 2, 3, 4]
 				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
-				expect(config).toEqual({
+				assert.deepStrictEqual(config, {
 					views: [
 						{
 							instrumentName: 'http.client.duration',
@@ -154,18 +166,20 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpServerDurationBuckets contains negative numbers', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpServerDurationBuckets: [1, -2, 3, 4]
 				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 
 			it('logs a warning', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments[0], {
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
 						'HTTP server duration buckets must only contain numbers greater than zero'
@@ -174,18 +188,20 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpServerDurationBuckets contains zero', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpServerDurationBuckets: [0, 1, 2, 3, 4]
 				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 
 			it('logs a warning', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments[0], {
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
 						'HTTP server duration buckets must only contain numbers greater than zero'
@@ -194,18 +210,20 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when options.httpServerDurationBuckets contains non-numbers', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({
 					httpServerDurationBuckets: [1, '2', 3, 4]
 				});
 			});
 
 			it('returns the configuration without an HTTP server duration view', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 
 			it('logs a warning', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments[0], {
 					event: 'OTEL_VIEW_CONFIG_ISSUE',
 					message:
 						'HTTP server duration buckets must only contain numbers greater than zero'
@@ -214,12 +232,13 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 		});
 
 		describe('when no options are defined', () => {
-			beforeAll(() => {
+			before(() => {
+				logger.warn.mock.resetCalls();
 				config = createViewConfig({});
 			});
 
 			it('returns the configuration without any views', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 		});
 	});

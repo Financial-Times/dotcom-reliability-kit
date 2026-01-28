@@ -1,24 +1,33 @@
-jest.mock('@opentelemetry/exporter-trace-otlp-proto');
-jest.mock('@opentelemetry/sdk-trace-base');
-jest.mock('@dotcom-reliability-kit/logger');
-jest.mock('../../../../lib/config/user-agents', () => ({
-	TRACING_USER_AGENT: 'mock-tracing-user-agent'
-}));
+const { before, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-const logger = require('@dotcom-reliability-kit/logger');
-const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-proto');
-const { NoopSpanProcessor, TraceIdRatioBasedSampler } = require('@opentelemetry/sdk-node').tracing;
-const { createTracingConfig } = require('../../../../lib/config/tracing');
+const logger = { info: mock.fn() };
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
+
+mock.module('../../../../lib/config/user-agents.js', {
+	namedExports: { TRACING_USER_AGENT: 'mock-tracing-user-agent' }
+});
+
+const OTLPTraceExporter = mock.fn(class OTLPTraceExporter {});
+mock.module('@opentelemetry/exporter-trace-otlp-proto', { namedExports: { OTLPTraceExporter } });
+
+const NoopSpanProcessor = mock.fn(class NoopSpanProcessor {});
+const TraceIdRatioBasedSampler = mock.fn(class TraceIdRatioBasedSampler {});
+mock.module('@opentelemetry/sdk-node', {
+	namedExports: { tracing: { NoopSpanProcessor, TraceIdRatioBasedSampler } }
+});
+
+const { createTracingConfig } = require('../../../../lib/config/tracing.js');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 	it('exports a function', () => {
-		expect(typeof createTracingConfig).toBe('function');
+		assert.strictEqual(typeof createTracingConfig, 'function');
 	});
 
 	describe('createTracingConfig(options)', () => {
 		let config;
 
-		beforeAll(() => {
+		before(() => {
 			config = createTracingConfig({
 				authorizationHeader: 'mock-auth-header',
 				endpoint: 'mock-endpoint',
@@ -27,45 +36,52 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 		});
 
 		it('creates a trace exporter', () => {
-			expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
-			expect(OTLPTraceExporter).toHaveBeenCalledWith({
-				url: 'mock-endpoint',
-				headers: {
-					authorization: 'mock-auth-header',
-					'user-agent': 'mock-tracing-user-agent'
+			assert.strictEqual(OTLPTraceExporter.mock.callCount(), 1);
+			assert.ok(OTLPTraceExporter.mock.calls[0].target);
+			assert.deepStrictEqual(OTLPTraceExporter.mock.calls[0].arguments, [
+				{
+					url: 'mock-endpoint',
+					headers: {
+						authorization: 'mock-auth-header',
+						'user-agent': 'mock-tracing-user-agent'
+					}
 				}
-			});
+			]);
 		});
 
 		it('creates a ratio-based trace sampler', () => {
-			expect(TraceIdRatioBasedSampler).toHaveBeenCalledTimes(1);
-			expect(TraceIdRatioBasedSampler).toHaveBeenCalledWith(0.1);
+			assert.strictEqual(TraceIdRatioBasedSampler.mock.callCount(), 1);
+			assert.deepStrictEqual(TraceIdRatioBasedSampler.mock.calls[0].arguments, [0.1]);
 		});
 
 		it('does not create a noop span processor', () => {
-			expect(NoopSpanProcessor).toHaveBeenCalledTimes(0);
+			assert.strictEqual(NoopSpanProcessor.mock.callCount(), 0);
 		});
 
 		it('logs that tracing is enabled', () => {
-			expect(logger.info).toHaveBeenCalledWith({
-				enabled: true,
-				endpoint: 'mock-endpoint',
-				event: 'OTEL_TRACE_STATUS',
-				message: 'OpenTelemetry tracing is enabled and exporting to endpoint mock-endpoint',
-				samplePercentage: 10
-			});
+			assert.strictEqual(logger.info.mock.callCount(), 1);
+			assert.deepStrictEqual(logger.info.mock.calls[0].arguments, [
+				{
+					enabled: true,
+					endpoint: 'mock-endpoint',
+					event: 'OTEL_TRACE_STATUS',
+					message:
+						'OpenTelemetry tracing is enabled and exporting to endpoint mock-endpoint',
+					samplePercentage: 10
+				}
+			]);
 		});
 
 		it('returns the configuration', () => {
-			expect(config).toEqual({
-				traceExporter: OTLPTraceExporter.mock.instances[0],
-				sampler: TraceIdRatioBasedSampler.mock.instances[0]
+			assert.deepStrictEqual(config, {
+				traceExporter: OTLPTraceExporter.mock.calls[0].result,
+				sampler: TraceIdRatioBasedSampler.mock.calls[0].result
 			});
 		});
 
 		describe('when options.authorizationHeader is not defined', () => {
-			beforeAll(() => {
-				OTLPTraceExporter.mockClear();
+			before(() => {
+				OTLPTraceExporter.mock.resetCalls();
 				config = createTracingConfig({
 					endpoint: 'mock-endpoint',
 					samplePercentage: 10
@@ -73,19 +89,22 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 			});
 
 			it('creates a trace exporter without an authorization header', () => {
-				expect(OTLPTraceExporter).toHaveBeenCalledTimes(1);
-				expect(OTLPTraceExporter).toHaveBeenCalledWith({
-					url: 'mock-endpoint',
-					headers: {
-						'user-agent': 'mock-tracing-user-agent'
+				assert.strictEqual(OTLPTraceExporter.mock.callCount(), 1);
+				assert.ok(OTLPTraceExporter.mock.calls[0].target);
+				assert.deepStrictEqual(OTLPTraceExporter.mock.calls[0].arguments, [
+					{
+						url: 'mock-endpoint',
+						headers: {
+							'user-agent': 'mock-tracing-user-agent'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when options.samplePercentage is not defined', () => {
-			beforeAll(() => {
-				TraceIdRatioBasedSampler.mockClear();
+			before(() => {
+				TraceIdRatioBasedSampler.mock.resetCalls();
 				config = createTracingConfig({
 					authorizationHeader: 'mock-auth-header',
 					endpoint: 'mock-endpoint'
@@ -93,43 +112,49 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/tracing', () => {
 			});
 
 			it('creates a ratio-based trace sampler with a default sample ratio', () => {
-				expect(TraceIdRatioBasedSampler).toHaveBeenCalledTimes(1);
-				expect(TraceIdRatioBasedSampler).toHaveBeenCalledWith(0.05);
+				assert.strictEqual(TraceIdRatioBasedSampler.mock.callCount(), 1);
+				assert.deepStrictEqual(TraceIdRatioBasedSampler.mock.calls[0].arguments, [0.05]);
 			});
 		});
 
 		describe('when options.endpoint is not defined', () => {
-			beforeAll(() => {
-				OTLPTraceExporter.mockClear();
-				TraceIdRatioBasedSampler.mockClear();
+			before(() => {
+				logger.info.mock.resetCalls();
+				OTLPTraceExporter.mock.resetCalls();
+				TraceIdRatioBasedSampler.mock.resetCalls();
 				config = createTracingConfig({});
 			});
 
 			it('does not creates a trace exporter', () => {
-				expect(OTLPTraceExporter).toHaveBeenCalledTimes(0);
+				assert.strictEqual(OTLPTraceExporter.mock.callCount(), 0);
 			});
 
 			it('does not create a ratio-based trace sampler', () => {
-				expect(TraceIdRatioBasedSampler).toHaveBeenCalledTimes(0);
+				assert.strictEqual(TraceIdRatioBasedSampler.mock.callCount(), 0);
 			});
 
 			it('creates a noop span processor', () => {
-				expect(NoopSpanProcessor).toHaveBeenCalledTimes(1);
-				expect(NoopSpanProcessor).toHaveBeenCalledWith();
+				assert.strictEqual(NoopSpanProcessor.mock.callCount(), 1);
+				assert.ok(NoopSpanProcessor.mock.calls[0].target);
+				assert.deepStrictEqual(NoopSpanProcessor.mock.calls[0].arguments, []);
 			});
 
 			it('logs that tracing is disabled', () => {
-				expect(logger.info).toHaveBeenCalledWith({
-					enabled: false,
-					endpoint: null,
-					event: 'OTEL_TRACE_STATUS',
-					message: 'OpenTelemetry tracing is disabled because no tracing endpoint was set'
-				});
+				assert.strictEqual(logger.info.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.info.mock.calls[0].arguments, [
+					{
+						enabled: false,
+						endpoint: null,
+						event: 'OTEL_TRACE_STATUS',
+						message:
+							'OpenTelemetry tracing is disabled because no tracing endpoint was set'
+					}
+				]);
 			});
 
 			it('returns the configuration', () => {
-				expect(config).toEqual({
-					spanProcessors: [NoopSpanProcessor.mock.instances[0]]
+				assert.deepStrictEqual(config, {
+					spanProcessors: [NoopSpanProcessor.mock.calls[0].result]
 				});
 			});
 		});

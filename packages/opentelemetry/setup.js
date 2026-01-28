@@ -1,4 +1,4 @@
-const opentelemetry = require('./lib/index');
+const opentelemetry = require('./lib/index.js');
 
 /**
  * @import { MetricsOptions, TracingOptions, ViewOptions } from '@dotcom-reliability-kit/opentelemetry'

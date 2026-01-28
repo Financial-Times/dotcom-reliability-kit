@@ -1,8 +1,8 @@
-const { createInstrumentationConfig } = require('./config/instrumentations');
-const { createMetricsConfig } = require('./config/metrics');
-const { createResourceConfig } = require('./config/resource');
-const { createTracingConfig } = require('./config/tracing');
-const { createViewConfig } = require('./config/views');
+const { createInstrumentationConfig } = require('./config/instrumentations.js');
+const { createMetricsConfig } = require('./config/metrics.js');
+const { createResourceConfig } = require('./config/resource.js');
+const { createTracingConfig } = require('./config/tracing.js');
+const { createViewConfig } = require('./config/views.js');
 const { HostMetrics } = require('@opentelemetry/host-metrics');
 const opentelemetry = require('@opentelemetry/sdk-node');
 const logger = require('@dotcom-reliability-kit/logger');
