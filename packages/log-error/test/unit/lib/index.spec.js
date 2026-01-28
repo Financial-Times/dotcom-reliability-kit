@@ -1,28 +1,27 @@
-const logError = require('../../../lib');
-const { logHandledError, logRecoverableError, logUnhandledError } = logError;
+const { afterEach, beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-jest.mock('@dotcom-reliability-kit/logger', () => ({
-	error: jest.fn(),
-	fatal: jest.fn(),
-	warn: jest.fn()
+const logger = {
+	error: mock.fn(),
+	fatal: mock.fn(),
+	warn: mock.fn()
+};
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
+
+const serializeError = mock.fn(() => ({
+	name: 'MockError',
+	message: 'mock error'
 }));
-const logger = require('@dotcom-reliability-kit/logger');
+mock.module('@dotcom-reliability-kit/serialize-error', { defaultExport: serializeError });
 
-jest.mock('@dotcom-reliability-kit/serialize-error', () =>
-	jest.fn().mockReturnValue({
-		name: 'MockError',
-		message: 'mock error'
-	})
-);
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
+const serializeRequest = mock.fn(() => 'mock-serialized-request');
+mock.module('@dotcom-reliability-kit/serialize-request', { defaultExport: serializeRequest });
 
-jest.mock('@dotcom-reliability-kit/serialize-request', () =>
-	jest.fn().mockReturnValue('mock-serialized-request')
-);
-const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
+const appInfo = {};
+mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });
 
-jest.mock('@dotcom-reliability-kit/app-info', () => ({}));
-const appInfo = require('@dotcom-reliability-kit/app-info');
+const logError = require('@dotcom-reliability-kit/log-error');
+const { logHandledError, logRecoverableError, logUnhandledError } = logError;
 
 describe('@dotcom-reliability-kit/log-error', () => {
 	beforeEach(() => {
@@ -34,15 +33,16 @@ describe('@dotcom-reliability-kit/log-error', () => {
 	});
 
 	afterEach(() => {
-		serializeError.mockClear();
-		serializeRequest.mockClear();
-		logger.error.mockClear();
-		logger.warn.mockClear();
+		serializeError.mock.resetCalls();
+		serializeRequest.mock.resetCalls();
+		logger.error.mock.resetCalls();
+		logger.fatal.mock.resetCalls();
+		logger.warn.mock.resetCalls();
 	});
 
 	describe('.default', () => {
 		it('aliases the module exports', () => {
-			expect(logError.default).toStrictEqual(logError);
+			assert.strictEqual(logError.default, logError);
 		});
 	});
 
@@ -58,53 +58,22 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toHaveBeenCalledWith(error);
+			assert.strictEqual(serializeError.mock.callCount(), 1);
+			assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 		});
 
 		it('serializes the request', () => {
-			expect(serializeRequest).toHaveBeenCalledWith(request, {
-				includeHeaders: undefined
-			});
+			assert.strictEqual(serializeRequest.mock.callCount(), 1);
+			assert.deepStrictEqual(serializeRequest.mock.calls[0].arguments, [
+				request,
+				{ includeHeaders: undefined }
+			]);
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.error).toHaveBeenCalledWith({
-				event: 'HANDLED_ERROR',
-				message: 'MockError: mock error',
-				error: {
-					name: 'MockError',
-					message: 'mock error'
-				},
-				request: 'mock-serialized-request',
-				app: {
-					commit: 'mock-commit-hash',
-					name: 'mock-system-code',
-					nodeVersion: process.versions.node,
-					region: 'mock-region',
-					releaseDate: 'mock-release-date',
-					processType: 'mock-process-type'
-				}
-			});
-		});
-
-		describe('when a system code is not defined', () => {
-			beforeEach(() => {
-				appInfo.systemCode = null;
-				logHandledError({ error, request });
-			});
-
-			it('serializes the error', () => {
-				expect(serializeError).toHaveBeenCalledWith(error);
-			});
-
-			it('serializes the request', () => {
-				expect(serializeRequest).toHaveBeenCalledWith(request, {
-					includeHeaders: undefined
-				});
-			});
-
-			it('logs without an app name', () => {
-				expect(logger.error).toHaveBeenCalledWith({
+			assert.strictEqual(logger.error.mock.callCount(), 1);
+			assert.deepStrictEqual(logger.error.mock.calls[0].arguments, [
+				{
 					event: 'HANDLED_ERROR',
 					message: 'MockError: mock error',
 					error: {
@@ -114,18 +83,67 @@ describe('@dotcom-reliability-kit/log-error', () => {
 					request: 'mock-serialized-request',
 					app: {
 						commit: 'mock-commit-hash',
-						name: null,
+						name: 'mock-system-code',
 						nodeVersion: process.versions.node,
 						region: 'mock-region',
 						releaseDate: 'mock-release-date',
 						processType: 'mock-process-type'
 					}
-				});
+				}
+			]);
+		});
+
+		describe('when a system code is not defined', () => {
+			beforeEach(() => {
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.error.mock.resetCalls();
+				appInfo.systemCode = null;
+				logHandledError({ error, request });
+			});
+
+			it('serializes the error', () => {
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
+			});
+
+			it('serializes the request', () => {
+				assert.strictEqual(serializeRequest.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeRequest.mock.calls[0].arguments, [
+					request,
+					{ includeHeaders: undefined }
+				]);
+			});
+
+			it('logs without an app name', () => {
+				assert.strictEqual(logger.error.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.error.mock.calls[0].arguments, [
+					{
+						event: 'HANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: null,
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
+					}
+				]);
 			});
 		});
 
 		describe('when the includeHeaders option is set', () => {
 			beforeEach(() => {
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.error.mock.resetCalls();
 				logHandledError({
 					error,
 					request,
@@ -134,125 +152,143 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toHaveBeenCalledWith(error);
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 			});
 
 			it('serializes the request with the configured headers', () => {
-				expect(serializeRequest).toHaveBeenCalledWith(request, {
-					includeHeaders: ['header-1', 'header-2']
-				});
+				assert.strictEqual(serializeRequest.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeRequest.mock.calls[0].arguments, [
+					request,
+					{ includeHeaders: ['header-1', 'header-2'] }
+				]);
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.error).toHaveBeenCalledWith({
-					event: 'HANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.error.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.error.mock.calls[0].arguments, [
+					{
+						event: 'HANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the request option is not set', () => {
 			beforeEach(() => {
-				serializeRequest.mockClear();
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.error.mock.resetCalls();
 				logHandledError({ error });
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toHaveBeenCalledWith(error);
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 			});
 
 			it('does not serialize the request', () => {
-				expect(serializeRequest).toHaveBeenCalledTimes(0);
+				assert.strictEqual(serializeRequest.mock.callCount(), 0);
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.error).toHaveBeenCalledWith({
-					event: 'HANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.error.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.error.mock.calls[0].arguments, [
+					{
+						event: 'HANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the serialized error does not have a name', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValueOnce({
-					message: 'mock error'
-				});
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.error.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(() => ({ message: 'mock error' }));
 				logHandledError({ error, request });
-				serializeError.mockClear();
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.error).toHaveBeenCalledWith({
-					event: 'HANDLED_ERROR',
-					message: 'Error: mock error',
-					error: {
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.error.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.error.mock.calls[0].arguments, [
+					{
+						event: 'HANDLED_ERROR',
+						message: 'Error: mock error',
+						error: {
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the serialized error does not have a message', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValueOnce({
-					name: 'MockError'
-				});
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.error.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(() => ({ name: 'MockError' }));
 				logHandledError({ error, request });
-				serializeError.mockClear();
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.error).toHaveBeenCalledWith({
-					event: 'HANDLED_ERROR',
-					message: 'MockError',
-					error: {
-						name: 'MockError'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.error.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.error.mock.calls[0].arguments, [
+					{
+						event: 'HANDLED_ERROR',
+						message: 'MockError',
+						error: {
+							name: 'MockError'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
@@ -261,9 +297,9 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			beforeEach(() => {
 				customLogger = {
-					error: jest.fn(),
-					fatal: jest.fn(),
-					warn: jest.fn()
+					error: mock.fn(),
+					fatal: mock.fn(),
+					warn: mock.fn()
 				};
 				logHandledError({
 					error,
@@ -272,38 +308,42 @@ describe('@dotcom-reliability-kit/log-error', () => {
 				});
 			});
 
-			it('logs the serialized error, request, and app details with the custom logger', () => {
-				expect(customLogger.error).toHaveBeenCalledWith({
-					event: 'HANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+			it('logs the serialized error, request, and app details', () => {
+				assert.strictEqual(customLogger.error.mock.callCount(), 1);
+				assert.deepStrictEqual(customLogger.error.mock.calls[0].arguments, [
+					{
+						event: 'HANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the logUserErrorsAsWarnings option is set to true', () => {
 			describe('and the serialized error has a status code in the 4xx range', () => {
 				beforeEach(() => {
-					serializeError.mockClear();
-					serializeError.mockReturnValueOnce({
+					serializeError.mock.resetCalls();
+					serializeRequest.mock.resetCalls();
+					logger.error.mock.resetCalls();
+					logger.warn.mock.resetCalls();
+					serializeError.mock.mockImplementationOnce(() => ({
 						name: 'MockError',
 						message: 'mock error',
 						statusCode: 456
-					});
-					logger.error.mockReset();
-					logger.warn.mockReset();
+					}));
 					logHandledError({
 						error,
 						request,
@@ -312,29 +352,31 @@ describe('@dotcom-reliability-kit/log-error', () => {
 				});
 
 				it('logs with a level of "warn" rather than "error"', () => {
-					expect(logger.error).toHaveBeenCalledTimes(0);
-					expect(logger.warn).toHaveBeenCalledWith(
-						expect.objectContaining({
+					assert.strictEqual(logger.error.mock.callCount(), 0);
+					assert.strictEqual(logger.warn.mock.callCount(), 1);
+					assert.partialDeepStrictEqual(logger.warn.mock.calls[0].arguments, [
+						{
 							error: {
 								name: 'MockError',
 								message: 'mock error',
 								statusCode: 456
 							}
-						})
-					);
+						}
+					]);
 				});
 			});
 
 			describe('and the serialized error has a status code in the 5xx range', () => {
 				beforeEach(() => {
-					serializeError.mockClear();
-					serializeError.mockReturnValueOnce({
+					serializeError.mock.resetCalls();
+					serializeRequest.mock.resetCalls();
+					logger.error.mock.resetCalls();
+					logger.warn.mock.resetCalls();
+					serializeError.mock.mockImplementationOnce(() => ({
 						name: 'MockError',
 						message: 'mock error',
 						statusCode: 500
-					});
-					logger.error.mockReset();
-					logger.warn.mockReset();
+					}));
 					logHandledError({
 						error,
 						request,
@@ -343,28 +385,30 @@ describe('@dotcom-reliability-kit/log-error', () => {
 				});
 
 				it('still logs with a level of "error"', () => {
-					expect(logger.warn).toHaveBeenCalledTimes(0);
-					expect(logger.error).toHaveBeenCalledWith(
-						expect.objectContaining({
+					assert.strictEqual(logger.warn.mock.callCount(), 0);
+					assert.strictEqual(logger.error.mock.callCount(), 1);
+					assert.partialDeepStrictEqual(logger.error.mock.calls[0].arguments, [
+						{
 							error: {
 								name: 'MockError',
 								message: 'mock error',
 								statusCode: 500
 							}
-						})
-					);
+						}
+					]);
 				});
 			});
 
 			describe('and the serialized error does not have a status code', () => {
 				beforeEach(() => {
-					serializeError.mockClear();
-					serializeError.mockReturnValueOnce({
+					serializeError.mock.resetCalls();
+					serializeRequest.mock.resetCalls();
+					logger.error.mock.resetCalls();
+					logger.warn.mock.resetCalls();
+					serializeError.mock.mockImplementationOnce(() => ({
 						name: 'MockError',
 						message: 'mock error'
-					});
-					logger.error.mockReset();
-					logger.warn.mockReset();
+					}));
 					logHandledError({
 						error,
 						request,
@@ -373,15 +417,16 @@ describe('@dotcom-reliability-kit/log-error', () => {
 				});
 
 				it('still logs with a level of "error"', () => {
-					expect(logger.warn).toHaveBeenCalledTimes(0);
-					expect(logger.error).toHaveBeenCalledWith(
-						expect.objectContaining({
+					assert.strictEqual(logger.warn.mock.callCount(), 0);
+					assert.strictEqual(logger.error.mock.callCount(), 1);
+					assert.partialDeepStrictEqual(logger.error.mock.calls[0].arguments, [
+						{
 							error: {
 								name: 'MockError',
 								message: 'mock error'
 							}
-						})
-					);
+						}
+					]);
 				});
 			});
 		});
@@ -391,17 +436,16 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			beforeEach(() => {
 				loggingError = new Error('mock logging error');
-				jest.spyOn(console, 'log').mockImplementation(() => {});
-				serializeError.mockClear();
-				serializeError.mockReturnValueOnce({
-					name: 'MockError',
-					message: 'mock error'
-				});
-				serializeError.mockReturnValueOnce({
-					name: 'MockLoggingError',
-					message: 'mock logging error'
-				});
-				logger.error.mockImplementation(() => {
+				mock.method(console, 'log', () => {});
+				serializeError.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(
+					() => ({
+						name: 'MockLoggingError',
+						message: 'mock logging error'
+					}),
+					1
+				);
+				logger.error.mock.mockImplementationOnce(() => {
 					throw loggingError;
 				});
 				logHandledError({
@@ -410,9 +454,28 @@ describe('@dotcom-reliability-kit/log-error', () => {
 				});
 			});
 
-			it('logs the serialized error, request, and app details with `console.log`', () => {
+			afterEach(() => {
 				// biome-ignore lint/suspicious/noConsole: used in the code
-				expect(console.log).toHaveBeenCalledWith(
+				console.log.mock.restore();
+			});
+
+			it('logs the serialized error, request, and app details with `console.log` as well as that an error occurred', () => {
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.strictEqual(console.log.mock.callCount(), 2);
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.deepStrictEqual(console.log.mock.calls[0].arguments, [
+					JSON.stringify({
+						level: 'error',
+						event: 'LOG_METHOD_FAILURE',
+						message: "Failed to log at level 'error'",
+						error: {
+							name: 'MockLoggingError',
+							message: 'mock logging error'
+						}
+					})
+				]);
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.deepStrictEqual(console.log.mock.calls[1].arguments, [
 					JSON.stringify({
 						event: 'HANDLED_ERROR',
 						message: 'MockError: mock error',
@@ -430,22 +493,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						},
 						request: 'mock-serialized-request'
 					})
-				);
-			});
-
-			it('logs that an error occurred with the logger using `console.log`', () => {
-				// biome-ignore lint/suspicious/noConsole: used in the code
-				expect(console.log).toHaveBeenCalledWith(
-					JSON.stringify({
-						level: 'error',
-						event: 'LOG_METHOD_FAILURE',
-						message: "Failed to log at level 'error'",
-						error: {
-							name: 'MockLoggingError',
-							message: 'mock logging error'
-						}
-					})
-				);
+				]);
 			});
 		});
 	});
@@ -462,37 +510,46 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toHaveBeenCalledWith(error);
+			assert.strictEqual(serializeError.mock.callCount(), 1);
+			assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 		});
 
 		it('serializes the request', () => {
-			expect(serializeRequest).toHaveBeenCalledWith(request, {
-				includeHeaders: undefined
-			});
+			assert.strictEqual(serializeRequest.mock.callCount(), 1);
+			assert.deepStrictEqual(serializeRequest.mock.calls[0].arguments, [
+				request,
+				{ includeHeaders: undefined }
+			]);
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.warn).toHaveBeenCalledWith({
-				event: 'RECOVERABLE_ERROR',
-				message: 'MockError: mock error',
-				error: {
-					name: 'MockError',
-					message: 'mock error'
-				},
-				request: 'mock-serialized-request',
-				app: {
-					commit: 'mock-commit-hash',
-					name: 'mock-system-code',
-					nodeVersion: process.versions.node,
-					region: 'mock-region',
-					releaseDate: 'mock-release-date',
-					processType: 'mock-process-type'
+			assert.strictEqual(logger.warn.mock.callCount(), 1);
+			assert.deepStrictEqual(logger.warn.mock.calls[0].arguments, [
+				{
+					event: 'RECOVERABLE_ERROR',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						commit: 'mock-commit-hash',
+						name: 'mock-system-code',
+						nodeVersion: process.versions.node,
+						region: 'mock-region',
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
+					}
 				}
-			});
+			]);
 		});
 
 		describe('when the includeHeaders option is set', () => {
 			beforeEach(() => {
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.warn.mock.resetCalls();
 				logRecoverableError({
 					error,
 					request,
@@ -501,125 +558,143 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toHaveBeenCalledWith(error);
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 			});
 
 			it('serializes the request with the configured headers', () => {
-				expect(serializeRequest).toHaveBeenCalledWith(request, {
-					includeHeaders: ['header-1', 'header-2']
-				});
+				assert.strictEqual(serializeRequest.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeRequest.mock.calls[0].arguments, [
+					request,
+					{ includeHeaders: ['header-1', 'header-2'] }
+				]);
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments, [
+					{
+						event: 'RECOVERABLE_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the request option is not set', () => {
 			beforeEach(() => {
-				serializeRequest.mockClear();
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.warn.mock.resetCalls();
 				logRecoverableError({ error });
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toHaveBeenCalledWith(error);
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 			});
 
 			it('does not serialize the request', () => {
-				expect(serializeRequest).toHaveBeenCalledTimes(0);
+				assert.strictEqual(serializeRequest.mock.callCount(), 0);
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments, [
+					{
+						event: 'RECOVERABLE_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the serialized error does not have a name', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValueOnce({
-					message: 'mock error'
-				});
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.warn.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(() => ({ message: 'mock error' }));
 				logRecoverableError({ error, request });
-				serializeError.mockClear();
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
-					event: 'RECOVERABLE_ERROR',
-					message: 'Error: mock error',
-					error: {
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments, [
+					{
+						event: 'RECOVERABLE_ERROR',
+						message: 'Error: mock error',
+						error: {
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the serialized error does not have a message', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValueOnce({
-					name: 'MockError'
-				});
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.warn.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(() => ({ name: 'MockError' }));
 				logRecoverableError({ error, request });
-				serializeError.mockClear();
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError',
-					error: {
-						name: 'MockError'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments, [
+					{
+						event: 'RECOVERABLE_ERROR',
+						message: 'MockError',
+						error: {
+							name: 'MockError'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
@@ -628,9 +703,9 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			beforeEach(() => {
 				customLogger = {
-					error: jest.fn(),
-					fatal: jest.fn(),
-					warn: jest.fn()
+					error: mock.fn(),
+					fatal: mock.fn(),
+					warn: mock.fn()
 				};
 				logRecoverableError({
 					error,
@@ -640,23 +715,26 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger', () => {
-				expect(customLogger.warn).toHaveBeenCalledWith({
-					event: 'RECOVERABLE_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(customLogger.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(customLogger.warn.mock.calls[0].arguments, [
+					{
+						event: 'RECOVERABLE_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
@@ -665,17 +743,16 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			beforeEach(() => {
 				loggingError = new Error('mock logging error');
-				jest.spyOn(console, 'log').mockImplementation(() => {});
-				serializeError.mockClear();
-				serializeError.mockReturnValueOnce({
-					name: 'MockError',
-					message: 'mock error'
-				});
-				serializeError.mockReturnValueOnce({
-					name: 'MockLoggingError',
-					message: 'mock logging error'
-				});
-				logger.warn.mockImplementation(() => {
+				mock.method(console, 'log', () => {});
+				serializeError.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(
+					() => ({
+						name: 'MockLoggingError',
+						message: 'mock logging error'
+					}),
+					1
+				);
+				logger.warn.mock.mockImplementationOnce(() => {
 					throw loggingError;
 				});
 				logRecoverableError({
@@ -684,9 +761,28 @@ describe('@dotcom-reliability-kit/log-error', () => {
 				});
 			});
 
-			it('logs the serialized error, request, and app details with `console.log`', () => {
+			afterEach(() => {
 				// biome-ignore lint/suspicious/noConsole: used in the code
-				expect(console.log).toHaveBeenCalledWith(
+				console.log.mock.restore();
+			});
+
+			it('logs the serialized error, request, and app details with `console.log` as well as that an error occurred', () => {
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.strictEqual(console.log.mock.callCount(), 2);
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.deepStrictEqual(console.log.mock.calls[0].arguments, [
+					JSON.stringify({
+						level: 'error',
+						event: 'LOG_METHOD_FAILURE',
+						message: "Failed to log at level 'warn'",
+						error: {
+							name: 'MockLoggingError',
+							message: 'mock logging error'
+						}
+					})
+				]);
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.deepStrictEqual(console.log.mock.calls[1].arguments, [
 					JSON.stringify({
 						event: 'RECOVERABLE_ERROR',
 						message: 'MockError: mock error',
@@ -704,22 +800,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						},
 						request: 'mock-serialized-request'
 					})
-				);
-			});
-
-			it('logs that an error occurred with the logger using `console.log`', () => {
-				// biome-ignore lint/suspicious/noConsole: used in the code
-				expect(console.log).toHaveBeenCalledWith(
-					JSON.stringify({
-						level: 'error',
-						event: 'LOG_METHOD_FAILURE',
-						message: "Failed to log at level 'warn'",
-						error: {
-							name: 'MockLoggingError',
-							message: 'mock logging error'
-						}
-					})
-				);
+				]);
 			});
 		});
 	});
@@ -736,37 +817,46 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toHaveBeenCalledWith(error);
+			assert.strictEqual(serializeError.mock.callCount(), 1);
+			assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 		});
 
 		it('serializes the request', () => {
-			expect(serializeRequest).toHaveBeenCalledWith(request, {
-				includeHeaders: undefined
-			});
+			assert.strictEqual(serializeRequest.mock.callCount(), 1);
+			assert.deepStrictEqual(serializeRequest.mock.calls[0].arguments, [
+				request,
+				{ includeHeaders: undefined }
+			]);
 		});
 
 		it('logs the serialized error, request, and app details', () => {
-			expect(logger.fatal).toHaveBeenCalledWith({
-				event: 'UNHANDLED_ERROR',
-				message: 'MockError: mock error',
-				error: {
-					name: 'MockError',
-					message: 'mock error'
-				},
-				request: 'mock-serialized-request',
-				app: {
-					commit: 'mock-commit-hash',
-					name: 'mock-system-code',
-					nodeVersion: process.versions.node,
-					region: 'mock-region',
-					releaseDate: 'mock-release-date',
-					processType: 'mock-process-type'
+			assert.strictEqual(logger.fatal.mock.callCount(), 1);
+			assert.deepStrictEqual(logger.fatal.mock.calls[0].arguments, [
+				{
+					event: 'UNHANDLED_ERROR',
+					message: 'MockError: mock error',
+					error: {
+						name: 'MockError',
+						message: 'mock error'
+					},
+					request: 'mock-serialized-request',
+					app: {
+						commit: 'mock-commit-hash',
+						name: 'mock-system-code',
+						nodeVersion: process.versions.node,
+						region: 'mock-region',
+						releaseDate: 'mock-release-date',
+						processType: 'mock-process-type'
+					}
 				}
-			});
+			]);
 		});
 
 		describe('when the includeHeaders option is set', () => {
 			beforeEach(() => {
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.fatal.mock.resetCalls();
 				logUnhandledError({
 					error,
 					request,
@@ -775,125 +865,143 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toHaveBeenCalledWith(error);
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 			});
 
 			it('serializes the request with the configured headers', () => {
-				expect(serializeRequest).toHaveBeenCalledWith(request, {
-					includeHeaders: ['header-1', 'header-2']
-				});
+				assert.strictEqual(serializeRequest.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeRequest.mock.calls[0].arguments, [
+					request,
+					{ includeHeaders: ['header-1', 'header-2'] }
+				]);
 			});
 
 			it('logs the serialized error, request, and app details', () => {
-				expect(logger.fatal).toHaveBeenCalledWith({
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.fatal.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.fatal.mock.calls[0].arguments, [
+					{
+						event: 'UNHANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the request option is not set', () => {
 			beforeEach(() => {
-				serializeRequest.mockClear();
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.fatal.mock.resetCalls();
 				logUnhandledError({ error });
 			});
 
 			it('serializes the error', () => {
-				expect(serializeError).toHaveBeenCalledWith(error);
+				assert.strictEqual(serializeError.mock.callCount(), 1);
+				assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 			});
 
 			it('does not serialize the request', () => {
-				expect(serializeRequest).toHaveBeenCalledTimes(0);
+				assert.strictEqual(serializeRequest.mock.callCount(), 0);
 			});
 
 			it('logs the serialized error and app details', () => {
-				expect(logger.fatal).toHaveBeenCalledWith({
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.fatal.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.fatal.mock.calls[0].arguments, [
+					{
+						event: 'UNHANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the serialized error does not have a name', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValueOnce({
-					message: 'mock error'
-				});
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.fatal.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(() => ({ message: 'mock error' }));
 				logUnhandledError({ error, request });
-				serializeError.mockClear();
 			});
 
 			it('defaults the message to use "Error"', () => {
-				expect(logger.fatal).toHaveBeenCalledWith({
-					event: 'UNHANDLED_ERROR',
-					message: 'Error: mock error',
-					error: {
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.fatal.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.fatal.mock.calls[0].arguments, [
+					{
+						event: 'UNHANDLED_ERROR',
+						message: 'Error: mock error',
+						error: {
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when the serialized error does not have a message', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValueOnce({
-					name: 'MockError'
-				});
+				serializeError.mock.resetCalls();
+				serializeRequest.mock.resetCalls();
+				logger.fatal.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(() => ({ name: 'MockError' }));
 				logUnhandledError({ error, request });
-				serializeError.mockClear();
 			});
 
 			it('defaults the message to only use the name', () => {
-				expect(logger.fatal).toHaveBeenCalledWith({
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError',
-					error: {
-						name: 'MockError'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(logger.fatal.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.fatal.mock.calls[0].arguments, [
+					{
+						event: 'UNHANDLED_ERROR',
+						message: 'MockError',
+						error: {
+							name: 'MockError'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
@@ -902,9 +1010,9 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			beforeEach(() => {
 				customLogger = {
-					error: jest.fn(),
-					fatal: jest.fn(),
-					warn: jest.fn()
+					error: mock.fn(),
+					fatal: mock.fn(),
+					warn: mock.fn()
 				};
 				logUnhandledError({
 					error,
@@ -914,23 +1022,26 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger', () => {
-				expect(customLogger.fatal).toHaveBeenCalledWith({
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(customLogger.fatal.mock.callCount(), 1);
+				assert.deepStrictEqual(customLogger.fatal.mock.calls[0].arguments, [
+					{
+						event: 'UNHANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
@@ -939,8 +1050,8 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			beforeEach(() => {
 				customLogger = {
-					error: jest.fn(),
-					warn: jest.fn()
+					error: mock.fn(),
+					warn: mock.fn()
 				};
 				logUnhandledError({
 					error,
@@ -950,23 +1061,26 @@ describe('@dotcom-reliability-kit/log-error', () => {
 			});
 
 			it('logs the serialized error, request, and app details with the custom logger error method', () => {
-				expect(customLogger.error).toHaveBeenCalledWith({
-					event: 'UNHANDLED_ERROR',
-					message: 'MockError: mock error',
-					error: {
-						name: 'MockError',
-						message: 'mock error'
-					},
-					request: 'mock-serialized-request',
-					app: {
-						commit: 'mock-commit-hash',
-						name: 'mock-system-code',
-						nodeVersion: process.versions.node,
-						region: 'mock-region',
-						releaseDate: 'mock-release-date',
-						processType: 'mock-process-type'
+				assert.strictEqual(customLogger.error.mock.callCount(), 1);
+				assert.deepStrictEqual(customLogger.error.mock.calls[0].arguments, [
+					{
+						event: 'UNHANDLED_ERROR',
+						message: 'MockError: mock error',
+						error: {
+							name: 'MockError',
+							message: 'mock error'
+						},
+						request: 'mock-serialized-request',
+						app: {
+							commit: 'mock-commit-hash',
+							name: 'mock-system-code',
+							nodeVersion: process.versions.node,
+							region: 'mock-region',
+							releaseDate: 'mock-release-date',
+							processType: 'mock-process-type'
+						}
 					}
-				});
+				]);
 			});
 		});
 
@@ -975,17 +1089,16 @@ describe('@dotcom-reliability-kit/log-error', () => {
 
 			beforeEach(() => {
 				loggingError = new Error('mock logging error');
-				jest.spyOn(console, 'log').mockImplementation(() => {});
-				serializeError.mockClear();
-				serializeError.mockReturnValueOnce({
-					name: 'MockError',
-					message: 'mock error'
-				});
-				serializeError.mockReturnValueOnce({
-					name: 'MockLoggingError',
-					message: 'mock logging error'
-				});
-				logger.fatal.mockImplementation(() => {
+				mock.method(console, 'log', () => {});
+				serializeError.mock.resetCalls();
+				serializeError.mock.mockImplementationOnce(
+					() => ({
+						name: 'MockLoggingError',
+						message: 'mock logging error'
+					}),
+					1
+				);
+				logger.fatal.mock.mockImplementationOnce(() => {
 					throw loggingError;
 				});
 				logUnhandledError({
@@ -994,9 +1107,28 @@ describe('@dotcom-reliability-kit/log-error', () => {
 				});
 			});
 
-			it('logs the serialized error, request, and app details with `console.log`', () => {
+			afterEach(() => {
 				// biome-ignore lint/suspicious/noConsole: used in the code
-				expect(console.log).toHaveBeenCalledWith(
+				console.log.mock.restore();
+			});
+
+			it('logs the serialized error, request, and app details with `console.log` as well as that an error occurred', () => {
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.strictEqual(console.log.mock.callCount(), 2);
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.deepStrictEqual(console.log.mock.calls[0].arguments, [
+					JSON.stringify({
+						level: 'error',
+						event: 'LOG_METHOD_FAILURE',
+						message: "Failed to log at level 'fatal'",
+						error: {
+							name: 'MockLoggingError',
+							message: 'mock logging error'
+						}
+					})
+				]);
+				// biome-ignore lint/suspicious/noConsole: used in the code
+				assert.deepStrictEqual(console.log.mock.calls[1].arguments, [
 					JSON.stringify({
 						event: 'UNHANDLED_ERROR',
 						message: 'MockError: mock error',
@@ -1014,22 +1146,7 @@ describe('@dotcom-reliability-kit/log-error', () => {
 						},
 						request: 'mock-serialized-request'
 					})
-				);
-			});
-
-			it('logs that an error occurred with the logger using `console.log`', () => {
-				// biome-ignore lint/suspicious/noConsole: used in the code
-				expect(console.log).toHaveBeenCalledWith(
-					JSON.stringify({
-						level: 'error',
-						event: 'LOG_METHOD_FAILURE',
-						message: "Failed to log at level 'fatal'",
-						error: {
-							name: 'MockLoggingError',
-							message: 'mock logging error'
-						}
-					})
-				);
+				]);
 			});
 		});
 	});
