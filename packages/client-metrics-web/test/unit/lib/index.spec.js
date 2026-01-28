@@ -1,35 +1,44 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-jest.mock('aws-rum-web');
 
-const { AwsRum } = require('aws-rum-web');
+const { afterEach, beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
+
+const AwsRum = mock.fn(
+	class AwsRum {
+		enable = mock.fn();
+		disable = mock.fn();
+		recordError = mock.fn();
+		recordEvent = mock.fn();
+	}
+);
+mock.module('aws-rum-web', { namedExports: { AwsRum } });
+
 const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 
 describe('@dotcom-reliability-kit/client-metrics-web', () => {
 	beforeEach(() => {
 		global.window = {
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn(),
+			addEventListener: mock.fn(),
+			removeEventListener: mock.fn(),
 			location: {
 				hostname: 'mock-hostname'
 			}
 		};
-		jest.replaceProperty(global, 'console', {
+		mock.property(global, 'console', {
 			log: console.log,
-			warn: jest.fn()
+			warn: mock.fn()
 		});
 	});
 
 	afterEach(() => {
 		delete global.window;
-		jest.resetAllMocks();
-		jest.restoreAllMocks();
+		mock.restoreAll();
+		AwsRum.mock.resetCalls();
 	});
 
 	it('exports a MetricsClient class', () => {
-		expect(MetricsClient).toBeInstanceOf(Function);
-		expect(() => {
-			MetricsClient();
-		}).toThrow(/class constructor/i);
+		assert.ok(MetricsClient instanceof Function);
+		assert.throws(() => MetricsClient(), /class constructor/i);
 	});
 
 	describe('new MetricsClient(options)', () => {
@@ -50,8 +59,9 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		});
 
 		it('creates an AWS RUM client with the given options', () => {
-			expect(AwsRum).toHaveBeenCalledTimes(1);
-			expect(AwsRum).toHaveBeenCalledWith(
+			assert.strictEqual(AwsRum.mock.callCount(), 1);
+			assert.strictEqual(typeof AwsRum.mock.calls[0].target, 'function');
+			assert.deepStrictEqual(AwsRum.mock.calls[0].arguments, [
 				'mock-app-monitor-id',
 				'mock-version',
 				'mock-app-monitor-region',
@@ -65,228 +75,247 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					sessionSampleRate: 0.13,
 					telemetries: ['errors']
 				}
-			);
+			]);
 		});
 
 		it('enables the AWS RUM client', () => {
-			expect(AwsRum.mock.instances[0].enable).toHaveBeenCalledTimes(1);
+			assert.strictEqual(AwsRum.mock.calls[0].this.enable.mock.callCount(), 1);
 		});
 
 		it('adds an "ft.clientMetric" event listener to the window', () => {
-			expect(window.addEventListener).toHaveBeenCalledTimes(1);
-			// Jest expect.any(Function) does not work with bound functions so we can't
-			// use `toHaveBeenCalledWith`
-			const args = window.addEventListener.mock.calls[0];
-			expect(args[0]).toStrictEqual('ft.clientMetric');
-			expect(typeof args[1]).toStrictEqual('function');
+			assert.strictEqual(window.addEventListener.mock.callCount(), 1);
+			assert.strictEqual(
+				window.addEventListener.mock.calls[0].arguments[0],
+				'ft.clientMetric'
+			);
+			assert.strictEqual(
+				typeof window.addEventListener.mock.calls[0].arguments[1],
+				'function'
+			);
 		});
 
 		it('does not log any warnings', () => {
-			expect(console.warn).toHaveBeenCalledTimes(0);
+			assert.strictEqual(console.warn.mock.callCount(), 0);
 		});
 
 		describe('.isAvailable', () => {
 			it('is set to true', () => {
-				expect(instance.isAvailable).toStrictEqual(true);
+				assert.strictEqual(instance.isAvailable, true);
 			});
 		});
 
 		describe('.isEnabled', () => {
 			it('is set to true', () => {
-				expect(instance.isEnabled).toStrictEqual(true);
+				assert.strictEqual(instance.isEnabled, true);
 			});
 		});
 
 		describe('.disable()', () => {
+			let awsRumInstance;
+
 			beforeEach(() => {
+				awsRumInstance = AwsRum.mock.calls[0].this;
 				instance.disable();
 			});
 
 			it('disables the AWS RUM client', () => {
-				expect(AwsRum.mock.instances[0].disable).toHaveBeenCalledTimes(1);
+				assert.strictEqual(awsRumInstance.disable.mock.callCount(), 1);
 			});
 
 			it('removes the "ft.clientMetric" event listener from the window', () => {
-				expect(window.removeEventListener).toHaveBeenCalledTimes(1);
-				// Jest expect.any(Function) does not work with bound functions so we can't
-				// use `toHaveBeenCalledWith`
-				const args = window.removeEventListener.mock.calls[0];
-				expect(args[0]).toStrictEqual('ft.clientMetric');
-				expect(typeof args[1]).toStrictEqual('function');
+				assert.strictEqual(window.removeEventListener.mock.callCount(), 1);
+				assert.strictEqual(
+					window.removeEventListener.mock.calls[0].arguments[0],
+					'ft.clientMetric'
+				);
+				assert.strictEqual(
+					typeof window.removeEventListener.mock.calls[0].arguments[1],
+					'function'
+				);
 			});
 
 			it('sets the isEnabled property to false', () => {
-				expect(instance.isEnabled).toStrictEqual(false);
+				assert.strictEqual(instance.isEnabled, false);
 			});
 
 			describe('when the client is already disabled', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].disable.mockClear();
-					window.removeEventListener.mockClear();
+					awsRumInstance.disable.mock.resetCalls();
+					window.removeEventListener.mock.resetCalls();
 					instance.disable();
 				});
 
 				it('does nothing', () => {
-					expect(AwsRum.mock.instances[0].disable).toHaveBeenCalledTimes(0);
-					expect(window.removeEventListener).toHaveBeenCalledTimes(0);
+					assert.strictEqual(awsRumInstance.disable.mock.callCount(), 0);
+					assert.strictEqual(window.removeEventListener.mock.callCount(), 0);
 				});
 			});
 		});
 
 		describe('.enable()', () => {
+			let awsRumInstance;
+
 			beforeEach(() => {
-				AwsRum.mock.instances[0].enable.mockClear();
-				window.addEventListener.mockClear();
+				awsRumInstance = AwsRum.mock.calls[0].this;
+				awsRumInstance.enable.mock.resetCalls();
+				window.addEventListener.mock.resetCalls();
 				instance.disable();
 				instance.enable();
 			});
 
 			it('re-enables the AWS RUM client', () => {
-				expect(AwsRum.mock.instances[0].enable).toHaveBeenCalledTimes(1);
+				assert.strictEqual(awsRumInstance.enable.mock.callCount(), 1);
 			});
 
 			it('re-adds the "ft.clientMetric" event listener to the window', () => {
-				expect(window.addEventListener).toHaveBeenCalledTimes(1);
-				// Jest expect.any(Function) does not work with bound functions so we can't
-				// use `toHaveBeenCalledWith`
-				const args = window.addEventListener.mock.calls[0];
-				expect(args[0]).toStrictEqual('ft.clientMetric');
-				expect(typeof args[1]).toStrictEqual('function');
+				assert.strictEqual(window.addEventListener.mock.callCount(), 1);
+				assert.strictEqual(
+					window.addEventListener.mock.calls[0].arguments[0],
+					'ft.clientMetric'
+				);
+				assert.strictEqual(
+					typeof window.addEventListener.mock.calls[0].arguments[1],
+					'function'
+				);
 			});
 
 			it('sets the isEnabled property to true', () => {
-				expect(instance.isEnabled).toStrictEqual(true);
+				assert.strictEqual(instance.isEnabled, true);
 			});
 
 			describe('when the client is already enabled', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].enable.mockClear();
-					window.addEventListener.mockClear();
+					awsRumInstance.enable.mock.resetCalls();
+					window.addEventListener.mock.resetCalls();
 					instance.enable();
 				});
 
 				it('does nothing', () => {
-					expect(AwsRum.mock.instances[0].enable).toHaveBeenCalledTimes(0);
-					expect(window.addEventListener).toHaveBeenCalledTimes(0);
+					assert.strictEqual(awsRumInstance.enable.mock.callCount(), 0);
+					assert.strictEqual(window.addEventListener.mock.callCount(), 0);
 				});
 			});
 		});
 
 		describe('.recordError(error)', () => {
+			let awsRumInstance;
 			let error;
 
 			beforeEach(() => {
+				awsRumInstance = AwsRum.mock.calls[0].this;
 				error = new Error('mock error');
 				instance.recordError(error);
 			});
 
 			it('hands the error to the AWS RUM client', () => {
-				expect(AwsRum.mock.instances[0].recordError).toHaveBeenCalledTimes(1);
-				expect(AwsRum.mock.instances[0].recordError).toHaveBeenCalledWith(error);
+				assert.strictEqual(awsRumInstance.recordError.mock.callCount(), 1);
+				assert.deepStrictEqual(awsRumInstance.recordError.mock.calls[0].arguments, [error]);
 			});
 		});
 
 		describe('.recordEvent(namespace, data)', () => {
+			let awsRumInstance;
 			let eventData;
 
 			beforeEach(() => {
+				awsRumInstance = AwsRum.mock.calls[0].this;
 				eventData = { mockEventData: true };
 				instance.recordEvent('mock.event', eventData);
 			});
 
 			it('hands the event to the AWS RUM client with the namespace prefixed', () => {
-				expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(1);
-				expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledWith(
+				assert.strictEqual(awsRumInstance.recordEvent.mock.callCount(), 1);
+				assert.deepStrictEqual(awsRumInstance.recordEvent.mock.calls[0].arguments, [
 					'com.ft.mock.event',
 					eventData
-				);
+				]);
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 
 			describe('when the namespace includes uppercase characters', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
+					awsRumInstance.recordEvent.mock.resetCalls();
 					instance.recordEvent('Mock.UPPER.Event', eventData);
 				});
 
 				it('hands the event to the AWS RUM client with the namespace converted to lower case', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(1);
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledWith(
+					assert.strictEqual(awsRumInstance.recordEvent.mock.callCount(), 1);
+					assert.deepStrictEqual(awsRumInstance.recordEvent.mock.calls[0].arguments, [
 						'com.ft.mock.upper.event',
 						eventData
-					);
+					]);
 				});
 			});
 
 			describe('when the namespace is not a string', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
+					awsRumInstance.recordEvent.mock.resetCalls();
 					instance.recordEvent(123, eventData);
 				});
 
 				it('does not hand the event to the AWS RUM client', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(0);
+					assert.strictEqual(awsRumInstance.recordEvent.mock.callCount(), 0);
 				});
 
 				it('logs a warning about the namespace type', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: namespace (number) must be a string'
-					);
+					]);
 				});
 			});
 
 			describe('when the namespace does not include a period', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
+					awsRumInstance.recordEvent.mock.resetCalls();
 					instance.recordEvent('mock', eventData);
 				});
 
 				it('does not hand the event to the AWS RUM client', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(0);
+					assert.strictEqual(awsRumInstance.recordEvent.mock.callCount(), 0);
 				});
 
 				it('logs a warning about top-level namespaces being reserved', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: namespace ("mock") must include a period, the top level is reserved'
-					);
+					]);
 				});
 			});
 
 			describe('when the namespace includes invalid characters', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
+					awsRumInstance.recordEvent.mock.resetCalls();
 					instance.recordEvent('mock . namespace', eventData);
 				});
 
 				it('does not hand the event to the AWS RUM client', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(0);
+					assert.strictEqual(awsRumInstance.recordEvent.mock.callCount(), 0);
 				});
 
 				it('logs a warning about valid namespace characters', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: namespace ("mock . namespace") must be a combination of alphanumeric characters, underscores, and hyphens, separated by periods'
-					);
+					]);
 				});
 			});
 
 			describe('when event data is not defined', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
+					awsRumInstance.recordEvent.mock.resetCalls();
 					instance.recordEvent('mock.event');
 				});
 
 				it('hands the event to the AWS RUM client with an empty object as event data', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(1);
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledWith(
+					assert.strictEqual(awsRumInstance.recordEvent.mock.callCount(), 1);
+					assert.deepStrictEqual(awsRumInstance.recordEvent.mock.calls[0].arguments, [
 						'com.ft.mock.event',
 						{}
-					);
+					]);
 				});
 			});
 		});
@@ -296,8 +325,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			let eventHandler;
 
 			beforeEach(() => {
-				jest.spyOn(instance, 'recordEvent');
-				eventHandler = window.addEventListener.mock.calls[0][1];
+				mock.method(instance, 'recordEvent');
+				eventHandler = window.addEventListener.mock.calls[0].arguments[1];
 				event = new CustomEvent('ft.clientMetric', {
 					detail: {
 						namespace: 'mock.event',
@@ -308,57 +337,58 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('calls recordEvent with the namespace and event data', () => {
-				expect(instance.recordEvent).toHaveBeenCalledTimes(1);
-				expect(instance.recordEvent).toHaveBeenCalledWith('mock.event', {
-					mockProperty: 'mock-value'
-				});
+				assert.strictEqual(instance.recordEvent.mock.callCount(), 1);
+				assert.deepStrictEqual(instance.recordEvent.mock.calls[0].arguments, [
+					'mock.event',
+					{ mockProperty: 'mock-value' }
+				]);
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 
 			describe('when event.detail.namespace is not a string', () => {
 				beforeEach(() => {
-					instance.recordEvent.mockClear();
+					instance.recordEvent.mock.resetCalls();
 					event.detail.namespace = 123;
 					eventHandler(event);
 				});
 
 				it('does not call recordEvent', () => {
-					expect(instance.recordEvent).toHaveBeenCalledTimes(0);
+					assert.strictEqual(instance.recordEvent.mock.callCount(), 0);
 				});
 
 				it('logs a warning about the namespace type', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: detail.namespace (number) must be a string'
-					);
+					]);
 				});
 			});
 
 			describe('when event.detail is not an object', () => {
 				beforeEach(() => {
-					instance.recordEvent.mockClear();
+					instance.recordEvent.mock.resetCalls();
 					event = new CustomEvent('ft.clientMetric', { detail: 'nope' });
 					eventHandler(event);
 				});
 
 				it('does not call recordEvent', () => {
-					expect(instance.recordEvent).toHaveBeenCalledTimes(0);
+					assert.strictEqual(instance.recordEvent.mock.callCount(), 0);
 				});
 
 				it('logs a warning about the detail type', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: detail must be an object'
-					);
+					]);
 				});
 			});
 
 			describe('when event is not a CustomEvent instance', () => {
 				beforeEach(() => {
-					instance.recordEvent.mockClear();
+					instance.recordEvent.mock.resetCalls();
 					eventHandler({});
 				});
 
@@ -366,184 +396,184 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					// The condition that gets us here is mostly there to satisfy TypeScript
 					// so we don't care about anyhing getting logged - I don't think it's
 					// a case that can actually happen
-					expect(instance.recordEvent).toHaveBeenCalledTimes(0);
-					expect(console.warn).toHaveBeenCalledTimes(0);
+					assert.strictEqual(instance.recordEvent.mock.callCount(), 0);
+					assert.strictEqual(console.warn.mock.callCount(), 0);
 				});
 			});
 		});
 
 		describe('when options.allowedHostnamePattern does not match the window location', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				window.location.hostname = 'mock-non-matching-hostname';
 				instance = new MetricsClient(options);
 			});
 
 			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
+				assert.strictEqual(AwsRum.mock.callCount(), 0);
 			});
 
 			it('logs a warning about hostname support', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: client errors cannot be handled on mock-non-matching-hostname'
-				);
+				]);
 			});
 		});
 
 		describe('when options.allowedHostnamePattern is not set', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				delete options.allowedHostnamePattern;
 				window.location.hostname = 'example.ft.com';
 				instance = new MetricsClient(options);
 			});
 
 			it('defaults to matching *.ft.com', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(1);
+				assert.strictEqual(AwsRum.mock.callCount(), 1);
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 		});
 
 		describe('when options.allowedHostnamePattern is not a regular expression', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				options.allowedHostnamePattern = 'mock-pattern';
 				instance = new MetricsClient(options);
 			});
 
 			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
+				assert.strictEqual(AwsRum.mock.callCount(), 0);
 			});
 
 			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: option allowedHostnamePattern must be a RegExp'
-				);
+				]);
 			});
 		});
 
 		describe('when options.awsAppMonitorId is not a string', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				options.awsAppMonitorId = 123;
 				instance = new MetricsClient(options);
 			});
 
 			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
+				assert.strictEqual(AwsRum.mock.callCount(), 0);
 			});
 
 			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: option awsAppMonitorId must be a string'
-				);
+				]);
 			});
 		});
 
 		describe('when options.awsAppMonitorRegion is not a string', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				options.awsAppMonitorRegion = 123;
 				instance = new MetricsClient(options);
 			});
 
 			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
+				assert.strictEqual(AwsRum.mock.callCount(), 0);
 			});
 
 			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: option awsAppMonitorRegion must be a string'
-				);
+				]);
 			});
 		});
 
 		describe('when options.awsIdentityPoolId is not a string', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				options.awsIdentityPoolId = 123;
 				instance = new MetricsClient(options);
 			});
 
 			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
+				assert.strictEqual(AwsRum.mock.callCount(), 0);
 			});
 
 			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: option awsIdentityPoolId must be a string'
-				);
+				]);
 			});
 		});
 
 		describe('when options.samplePercentage is not set', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				delete options.samplePercentage;
 				instance = new MetricsClient(options);
 			});
 
 			it('creates an AWS RUM client with a default sample rate of 5%', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(1);
-				expect(AwsRum).toHaveBeenCalledWith(
+				assert.strictEqual(AwsRum.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(AwsRum.mock.calls[0].arguments, [
 					'mock-app-monitor-id',
 					'mock-version',
 					'mock-app-monitor-region',
-					expect.objectContaining({ sessionSampleRate: 0.05 })
-				);
+					{ sessionSampleRate: 0.05 }
+				]);
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 		});
 
 		describe('when options.systemCode is not a string', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				options.systemCode = 123;
 				instance = new MetricsClient(options);
 			});
 
 			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
+				assert.strictEqual(AwsRum.mock.callCount(), 0);
 			});
 
 			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: option systemCode must be a string'
-				);
+				]);
 			});
 		});
 
 		describe('when options.systemVersion is not set', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				AwsRum.mock.resetCalls();
 				delete options.systemVersion;
 				instance = new MetricsClient(options);
 			});
 
 			it('creates an AWS RUM client with a default version of 0.0.0', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(1);
-				expect(AwsRum).toHaveBeenCalledWith(
+				assert.strictEqual(AwsRum.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(AwsRum.mock.calls[0].arguments, [
 					'mock-app-monitor-id',
 					'0.0.0',
 					'mock-app-monitor-region',
-					expect.any(Object)
-				);
+					{}
+				]);
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 		});
 	});

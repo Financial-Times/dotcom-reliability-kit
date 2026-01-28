@@ -23,17 +23,7 @@
 			"quoteStyle": "single",
 			"jsxQuoteStyle": "double",
 			"trailingCommas": "none"
-		},
-		"globals": [
-			"afterAll",
-			"afterEach",
-			"beforeAll",
-			"beforeEach",
-			"describe",
-			"expect",
-			"it",
-			"jest"
-		]
+		}
 	},
 	"json": {
 		"formatter": {

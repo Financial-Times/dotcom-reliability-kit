@@ -54,12 +54,15 @@ const prettificationAvailable = (() => {
 	try {
 		// We have to `require` here rather than `require.resolve`
 		// which is less than ideal but otherwise this is actually
-		// impossible to test with Jest. Both technically do the
-		// same file system work though, and it's only done once
-		// when the module first loads. It's also safe to ts-ignore
-		// this one because it's never actually used directly.
-		require('pino-pretty');
-		return true;
+		// impossible to test. Both technically do the same file
+		// system work though, and it's only done once when the
+		// module first loads.
+		const pretty = require.resolve('pino-pretty');
+		return pretty !== undefined;
+		// We have to disable coverage of the next three lines
+		// because it's currently impossible to mock a missing
+		// module with Node.js test module mocks.
+		/* node:coverage ignore next 3 */
 	} catch (_) {
 		return false;
 	}

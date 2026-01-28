@@ -1,15 +1,18 @@
-const registerCrashHandler = require('../../../lib');
+const { afterEach, beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-jest.mock('@dotcom-reliability-kit/log-error', () => ({
-	logHandledError: jest.fn(),
-	logUnhandledError: jest.fn()
-}));
-const { logHandledError, logUnhandledError } = require('@dotcom-reliability-kit/log-error');
+const logHandledError = mock.fn();
+const logUnhandledError = mock.fn();
+mock.module('@dotcom-reliability-kit/log-error', {
+	namedExports: { logHandledError, logUnhandledError }
+});
+
+const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
 
 describe('@dotcom-reliability-kit/crash-handler', () => {
 	describe('.default', () => {
 		it('aliases the module exports', () => {
-			expect(registerCrashHandler.default).toStrictEqual(registerCrashHandler);
+			assert.strictEqual(registerCrashHandler.default, registerCrashHandler);
 		});
 	});
 
@@ -18,9 +21,9 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 
 		beforeEach(() => {
 			mockProcess = {
-				exit: jest.fn(),
-				on: jest.fn(),
-				listeners: jest.fn().mockReturnValue([])
+				exit: mock.fn(),
+				on: mock.fn(),
+				listeners: mock.fn(() => [])
 			};
 
 			registerCrashHandler({
@@ -29,8 +32,9 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		});
 
 		it('binds a handler to the process `uncaughtException` event', () => {
-			expect(mockProcess.on).toHaveBeenCalledTimes(1);
-			expect(mockProcess.on).toHaveBeenCalledWith('uncaughtException', expect.any(Function));
+			assert.strictEqual(mockProcess.on.mock.callCount(), 1);
+			assert.strictEqual(mockProcess.on.mock.calls[0].arguments[0], 'uncaughtException');
+			assert.strictEqual(typeof mockProcess.on.mock.calls[0].arguments[1], 'function');
 		});
 
 		describe('uncaughtExceptionHandler(error)', () => {
@@ -39,38 +43,40 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 
 			beforeEach(() => {
 				error = new Error('mock error');
-				uncaughtExceptionHandler = mockProcess.on.mock.calls[0][1];
+				uncaughtExceptionHandler = mockProcess.on.mock.calls[0].arguments[1];
 				uncaughtExceptionHandler(error);
 			});
 
 			it('logs the error as being unhandled', () => {
-				expect(logUnhandledError).toHaveBeenCalledTimes(1);
-				expect(logUnhandledError).toHaveBeenCalledWith({ error });
+				assert.strictEqual(logUnhandledError.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(logUnhandledError.mock.calls[0].arguments, [
+					{ error }
+				]);
 			});
 
 			it('exits the process with a code of `1`', () => {
-				expect(mockProcess.exit).toHaveBeenCalledTimes(1);
-				expect(mockProcess.exit).toHaveBeenCalledWith(1);
+				assert.strictEqual(mockProcess.exit.mock.callCount(), 1);
+				assert.deepStrictEqual(mockProcess.exit.mock.calls[0].arguments, [1]);
 			});
 
 			describe('when the process has a defined exit code already', () => {
 				beforeEach(() => {
-					mockProcess.exit.mockReset();
+					mockProcess.exit.mock.resetCalls();
 					mockProcess.exitCode = 137;
 					uncaughtExceptionHandler(error);
 				});
 
 				it('exits the process with the given code', () => {
-					expect(mockProcess.exit).toHaveBeenCalledTimes(1);
-					expect(mockProcess.exit).toHaveBeenCalledWith(137);
+					assert.strictEqual(mockProcess.exit.mock.callCount(), 1);
+					assert.deepStrictEqual(mockProcess.exit.mock.calls[0].arguments, [137]);
 				});
 			});
 		});
 
 		describe('when `options.logger` is set', () => {
 			beforeEach(() => {
-				mockProcess.on.mockReset();
-				logUnhandledError.mockReset();
+				mockProcess.on.mock.resetCalls();
+				logUnhandledError.mock.resetCalls();
 				registerCrashHandler({
 					logger: 'mock-logger',
 					process: mockProcess
@@ -83,16 +89,18 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 
 				beforeEach(() => {
 					error = new Error('mock error');
-					uncaughtExceptionHandler = mockProcess.on.mock.calls[0][1];
+					uncaughtExceptionHandler = mockProcess.on.mock.calls[0].arguments[1];
 					uncaughtExceptionHandler(error);
 				});
 
 				it('logs the error as being unhandled with the custom logger', () => {
-					expect(logUnhandledError).toHaveBeenCalledTimes(1);
-					expect(logUnhandledError).toHaveBeenCalledWith({
-						error,
-						logger: 'mock-logger'
-					});
+					assert.strictEqual(logUnhandledError.mock.callCount(), 1);
+					assert.deepStrictEqual(logUnhandledError.mock.calls[0].arguments, [
+						{
+							error,
+							logger: 'mock-logger'
+						}
+					]);
 				});
 			});
 		});
@@ -104,8 +112,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			beforeEach(() => {
 				originalProcess = global.process;
 				global.process = mockGlobalProcess = {
-					on: jest.fn(),
-					listeners: jest.fn().mockReturnValue([])
+					on: mock.fn(),
+					listeners: mock.fn(() => [])
 				};
 
 				registerCrashHandler({});
@@ -116,10 +124,14 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 
 			it('binds a handler to the global process `uncaughtException` event', () => {
-				expect(mockGlobalProcess.on).toHaveBeenCalledTimes(1);
-				expect(mockGlobalProcess.on).toHaveBeenCalledWith(
-					'uncaughtException',
-					expect.any(Function)
+				assert.strictEqual(mockGlobalProcess.on.mock.callCount(), 1);
+				assert.strictEqual(
+					mockGlobalProcess.on.mock.calls[0].arguments[0],
+					'uncaughtException'
+				);
+				assert.strictEqual(
+					typeof mockGlobalProcess.on.mock.calls[0].arguments[1],
+					'function'
 				);
 			});
 		});
@@ -131,8 +143,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			beforeEach(() => {
 				originalProcess = global.process;
 				global.process = mockGlobalProcess = {
-					on: jest.fn(),
-					listeners: jest.fn().mockReturnValue([])
+					on: mock.fn(),
+					listeners: mock.fn(() => [])
 				};
 
 				registerCrashHandler();
@@ -143,19 +155,23 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 
 			it('binds a handler to the global process `uncaughtException` event', () => {
-				expect(mockGlobalProcess.on).toHaveBeenCalledTimes(1);
-				expect(mockGlobalProcess.on).toHaveBeenCalledWith(
-					'uncaughtException',
-					expect.any(Function)
+				assert.strictEqual(mockGlobalProcess.on.mock.callCount(), 1);
+				assert.strictEqual(
+					mockGlobalProcess.on.mock.calls[0].arguments[0],
+					'uncaughtException'
+				);
+				assert.strictEqual(
+					typeof mockGlobalProcess.on.mock.calls[0].arguments[1],
+					'function'
 				);
 			});
 		});
 
 		describe('when the procss already has an uncaughtExceptionHandler', () => {
 			beforeEach(() => {
-				mockProcess.on.mockReset();
-				mockProcess.listeners.mockReturnValue(['mockHandler']);
-				logHandledError.mockReset();
+				mockProcess.on.mock.resetCalls();
+				mockProcess.listeners.mock.mockImplementation(() => ['mockHandler']);
+				logHandledError.mock.resetCalls();
 				registerCrashHandler({
 					process: mockProcess,
 					logger: 'mock-logger'
@@ -163,16 +179,16 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			});
 
 			it('does not bind a handler to the process `uncaughtException` event', () => {
-				expect(mockProcess.on).toHaveBeenCalledTimes(0);
+				assert.strictEqual(mockProcess.on.mock.callCount(), 0);
 			});
 
 			it('logs a warning that the Crash Handler has not been registered', () => {
-				expect(logHandledError).toHaveBeenCalledTimes(1);
-				const call = logHandledError.mock.calls[0][0];
-				expect(call).toBeInstanceOf(Object);
-				expect(call.logger).toStrictEqual('mock-logger');
-				expect(call.error).toBeInstanceOf(Error);
-				expect(call.error.code).toStrictEqual('CRASH_HANDLER_NOT_REGISTERED');
+				assert.strictEqual(logHandledError.mock.callCount(), 1);
+				const call = logHandledError.mock.calls[0].arguments[0];
+				assert.ok(call instanceof Object);
+				assert.strictEqual(call.logger, 'mock-logger');
+				assert.ok(call.error instanceof Error);
+				assert.strictEqual(call.error.code, 'CRASH_HANDLER_NOT_REGISTERED');
 			});
 		});
 	});

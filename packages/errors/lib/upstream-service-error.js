@@ -1,4 +1,4 @@
-const HttpError = require('./http-error');
+const HttpError = require('./http-error.js');
 
 /**
  * @import { UpstreamServiceError as UpstreamServiceErrorType } from '@dotcom-reliability-kit/errors'

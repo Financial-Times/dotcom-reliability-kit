@@ -37,7 +37,7 @@ If we wanted to support ES Modules (which _is_ the future direction I think we'l
 
   2. We write our code in ES Modules and publish them as ES Modules with no cross-compilation. This makes them incompatible with a large number of our apps (many of them use CommonJS exclusively) and would tie adopting Reliability Kit to an unrelated migration step
 
-A note that for now there is a small downside to sticking with CommonJS. It will continue to work [for the forseeable future](https://github.com/nodejs/node/issues/33954) in Node.js itself, but more modules on npm are switching to native ESM which is not very compatible with CommonJS. We may find ourselves forced to reconsider at some point if any of our key dependencies (e.g. Express or Jest) migrate to ESM-only and drop support for their old CommonJS versions.
+A note that for now there is a small downside to sticking with CommonJS. It will continue to work [for the forseeable future](https://github.com/nodejs/node/issues/33954) in Node.js itself, but more modules on npm are switching to native ESM which is not very compatible with CommonJS. We may find ourselves forced to reconsider at some point if any of our key dependencies (e.g. Express) migrates to ESM-only and drop support for their old CommonJS versions.
 
 
 ## Tooling
@@ -52,7 +52,7 @@ When testing a monorepo, running tests and linting can happen in one of two ways
 
   2. Have tooling installed in each package and have commands in the top level package to run these
 
-We have opted to have tooling installed at the top level. This speeds up build times, because Jest has a non-trivial start up time and multiplying this by the number of packages can lead to a lot of overhead. This also means that the tooling is consistent between all of the different packages and upgrading the tooling happens in one place. There is more information on [how to run tests](./contributing.md#testing) in the contributing guide.
+We have opted to have tooling installed at the top level in most cases. This speeds up build times because multiplying startup times by the number of packages can lead to a lot of overhead. The exception is our tests, which are run via `node --test` from within each of the packages. There is more information on [how to run tests](./contributing.md#testing) in the contributing guide.
 
 ### Monorepo management
 
