@@ -1,25 +1,36 @@
-jest.mock('@opentelemetry/exporter-metrics-otlp-proto');
-jest.mock('@opentelemetry/otlp-exporter-base');
-jest.mock('@opentelemetry/sdk-node');
-jest.mock('@dotcom-reliability-kit/logger');
-jest.mock('../../../../lib/config/user-agents', () => ({
-	METRICS_USER_AGENT: 'mock-metrics-user-agent'
-}));
+const { before, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-const logger = require('@dotcom-reliability-kit/logger');
-const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-proto');
-const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-node').metrics;
+const logger = { info: mock.fn() };
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
+
+mock.module('../../../../lib/config/user-agents.js', {
+	namedExports: { METRICS_USER_AGENT: 'mock-metrics-user-agent' }
+});
+
+const OTLPMetricExporter = mock.fn(class OTLPMetricExporter {});
+mock.module('@opentelemetry/exporter-metrics-otlp-proto', { namedExports: { OTLPMetricExporter } });
+
+const PeriodicExportingMetricReader = mock.fn(class PeriodicExportingMetricReader {});
+mock.module('@opentelemetry/sdk-node', {
+	namedExports: { metrics: { PeriodicExportingMetricReader } }
+});
+
+mock.module('@opentelemetry/otlp-exporter-base', {
+	namedExports: { CompressionAlgorithm: { GZIP: 'gzip' } }
+});
+
 const { createMetricsConfig } = require('../../../../lib/config/metrics');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/metrics', () => {
 	it('exports a function', () => {
-		expect(typeof createMetricsConfig).toBe('function');
+		assert.strictEqual(typeof createMetricsConfig, 'function');
 	});
 
 	describe('createMetricsConfig(options)', () => {
 		let config;
 
-		beforeAll(() => {
+		before(() => {
 			config = createMetricsConfig({
 				apiGatewayKey: 'mock-api-gateway-key',
 				endpoint: 'mock-endpoint'
@@ -27,86 +38,100 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/metrics', () => {
 		});
 
 		it('creates a metrics exporter', () => {
-			expect(OTLPMetricExporter).toHaveBeenCalledTimes(1);
-			expect(OTLPMetricExporter).toHaveBeenCalledWith({
-				url: 'mock-endpoint',
-				compression: 'gzip',
-				headers: {
-					'X-OTel-Key': 'mock-api-gateway-key',
-					'user-agent': 'mock-metrics-user-agent'
+			assert.strictEqual(OTLPMetricExporter.mock.callCount(), 1);
+			assert.deepStrictEqual(OTLPMetricExporter.mock.calls[0].arguments, [
+				{
+					url: 'mock-endpoint',
+					compression: 'gzip',
+					headers: {
+						'X-OTel-Key': 'mock-api-gateway-key',
+						'user-agent': 'mock-metrics-user-agent'
+					}
 				}
-			});
+			]);
 		});
 
 		it('creates a metrics reader with the configured exporter', () => {
-			expect(PeriodicExportingMetricReader).toHaveBeenCalledTimes(1);
-			expect(PeriodicExportingMetricReader).toHaveBeenCalledWith({
-				exporter: expect.any(OTLPMetricExporter)
-			});
+			assert.strictEqual(PeriodicExportingMetricReader.mock.callCount(), 1);
+			assert.deepStrictEqual(PeriodicExportingMetricReader.mock.calls[0].arguments, [
+				{
+					exporter: OTLPMetricExporter.mock.calls[0].result
+				}
+			]);
 		});
 
 		it('logs that metrics are enabled', () => {
-			expect(logger.info).toHaveBeenCalledWith({
-				enabled: true,
-				endpoint: 'mock-endpoint',
-				event: 'OTEL_METRICS_STATUS',
-				message: 'OpenTelemetry metrics are enabled and exporting to endpoint mock-endpoint'
-			});
+			assert.strictEqual(logger.info.mock.callCount(), 1);
+			assert.deepStrictEqual(logger.info.mock.calls[0].arguments, [
+				{
+					enabled: true,
+					endpoint: 'mock-endpoint',
+					event: 'OTEL_METRICS_STATUS',
+					message:
+						'OpenTelemetry metrics are enabled and exporting to endpoint mock-endpoint'
+				}
+			]);
 		});
 
 		it('returns the configuration', () => {
-			expect(config).toEqual({
-				metricReaders: [PeriodicExportingMetricReader.mock.instances[0]]
+			assert.deepStrictEqual(config, {
+				metricReaders: [PeriodicExportingMetricReader.mock.calls[0].result]
 			});
 		});
 
 		describe('when options.apiGatewayKey is not defined', () => {
-			beforeAll(() => {
-				OTLPMetricExporter.mockClear();
+			before(() => {
+				OTLPMetricExporter.mock.resetCalls();
 				config = createMetricsConfig({
 					endpoint: 'mock-endpoint'
 				});
 			});
 
 			it('creates a metrics exporter without an X-OTel-Key header', () => {
-				expect(OTLPMetricExporter).toHaveBeenCalledTimes(1);
-				expect(OTLPMetricExporter).toHaveBeenCalledWith({
-					url: 'mock-endpoint',
-					compression: 'gzip',
-					headers: {
-						'user-agent': 'mock-metrics-user-agent'
+				assert.strictEqual(OTLPMetricExporter.mock.callCount(), 1);
+				assert.deepStrictEqual(OTLPMetricExporter.mock.calls[0].arguments, [
+					{
+						url: 'mock-endpoint',
+						compression: 'gzip',
+						headers: {
+							'user-agent': 'mock-metrics-user-agent'
+						}
 					}
-				});
+				]);
 			});
 		});
 
 		describe('when options.endpoint is not defined', () => {
-			beforeAll(() => {
-				OTLPMetricExporter.mockClear();
-				PeriodicExportingMetricReader.mockClear();
+			before(() => {
+				logger.info.mock.resetCalls();
+				OTLPMetricExporter.mock.resetCalls();
+				PeriodicExportingMetricReader.mock.resetCalls();
 				config = createMetricsConfig({});
 			});
 
 			it('does not create a metrics exporter', () => {
-				expect(OTLPMetricExporter).toHaveBeenCalledTimes(0);
+				assert.strictEqual(OTLPMetricExporter.mock.callCount(), 0);
 			});
 
 			it('does not create a metrics reader', () => {
-				expect(PeriodicExportingMetricReader).toHaveBeenCalledTimes(0);
+				assert.strictEqual(PeriodicExportingMetricReader.mock.callCount(), 0);
 			});
 
 			it('logs that metrics are disabled', () => {
-				expect(logger.info).toHaveBeenCalledWith({
-					enabled: false,
-					endpoint: null,
-					event: 'OTEL_METRICS_STATUS',
-					message:
-						'OpenTelemetry metrics are disabled because no metrics endpoint was set'
-				});
+				assert.strictEqual(logger.info.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.info.mock.calls[0].arguments, [
+					{
+						enabled: false,
+						endpoint: null,
+						event: 'OTEL_METRICS_STATUS',
+						message:
+							'OpenTelemetry metrics are disabled because no metrics endpoint was set'
+					}
+				]);
 			});
 
 			it('returns the empty configuration', () => {
-				expect(config).toEqual({});
+				assert.deepStrictEqual(config, {});
 			});
 		});
 	});

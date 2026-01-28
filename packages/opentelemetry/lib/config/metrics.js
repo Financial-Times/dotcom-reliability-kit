@@ -1,6 +1,5 @@
 const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-proto');
 const { CompressionAlgorithm } = require('@opentelemetry/otlp-exporter-base');
-require('@opentelemetry/sdk-node');
 const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-node').metrics;
 const logger = require('@dotcom-reliability-kit/logger');
 const { METRICS_USER_AGENT } = require('./user-agents');
