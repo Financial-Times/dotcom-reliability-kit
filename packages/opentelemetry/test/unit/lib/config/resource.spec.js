@@ -1,4 +1,7 @@
-jest.mock('@dotcom-reliability-kit/app-info', () => ({
+const { beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
+
+const appInfo = {
 	semanticConventions: {
 		service: {
 			name: 'mock-service-name',
@@ -15,26 +18,27 @@ jest.mock('@dotcom-reliability-kit/app-info', () => ({
 			environment: 'mock-deployment-environment'
 		}
 	}
-}));
-jest.mock('@opentelemetry/sdk-node', () => ({
-	resources: {
-		defaultResource: jest.fn().mockReturnValue({
-			merge: jest.fn().mockReturnValue('mock-merged-resource')
-		}),
-		resourceFromAttributes: jest.fn().mockReturnValue('mock-resource')
-	}
-}));
-jest.mock('@opentelemetry/semantic-conventions', () => ({
-	ATTR_SERVICE_NAME: 'mock-semresattrs-service-name',
-	ATTR_SERVICE_VERSION: 'mock-semresattrs-service-version'
-}));
+};
+mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });
 
-const { defaultResource, resourceFromAttributes } = require('@opentelemetry/sdk-node').resources;
-const { createResourceConfig } = require('../../../../lib/config/resource');
+const defaultResource = mock.fn(() => ({ merge: mock.fn(() => 'mock-merged-resource') }));
+const resourceFromAttributes = mock.fn(() => 'mock-resource');
+mock.module('@opentelemetry/sdk-node', {
+	defaultExport: { resources: { defaultResource, resourceFromAttributes } }
+});
+
+mock.module('@opentelemetry/semantic-conventions', {
+	namedExports: {
+		ATTR_SERVICE_NAME: 'mock-semresattrs-service-name',
+		ATTR_SERVICE_VERSION: 'mock-semresattrs-service-version'
+	}
+});
+
+const { createResourceConfig } = require('../../../../lib/config/resource.js');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 	it('exports a function', () => {
-		expect(typeof createResourceConfig).toBe('function');
+		assert.strictEqual(typeof createResourceConfig, 'function');
 	});
 
 	describe('createResourceConfig()', () => {
@@ -45,20 +49,23 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 		});
 
 		it('creates and returns an OpenTelemetry Resource, merging it with defaults', () => {
-			expect(resourceFromAttributes).toHaveBeenCalledTimes(1);
-			expect(resourceFromAttributes).toHaveBeenCalledWith({
-				'cloud.provider': 'mock-cloud-provider',
-				'cloud.region': 'mock-cloud-region',
-				'deployment.environment': 'mock-deployment-environment',
-				'mock-semresattrs-service-name': 'mock-service-name',
-				'mock-semresattrs-service-version': 'mock-service-version',
-				'service.instance.id': 'mock-service-instance-id'
-			});
-			expect(defaultResource).toHaveBeenCalledTimes(1);
-			expect(defaultResource.mock.results[0].value.merge).toHaveBeenCalledWith(
-				'mock-resource'
+			assert.strictEqual(resourceFromAttributes.mock.callCount(), 1);
+			assert.deepStrictEqual(resourceFromAttributes.mock.calls[0].arguments, [
+				{
+					'cloud.provider': 'mock-cloud-provider',
+					'cloud.region': 'mock-cloud-region',
+					'deployment.environment': 'mock-deployment-environment',
+					'mock-semresattrs-service-name': 'mock-service-name',
+					'mock-semresattrs-service-version': 'mock-service-version',
+					'service.instance.id': 'mock-service-instance-id'
+				}
+			]);
+			assert.strictEqual(defaultResource.mock.callCount(), 1);
+			assert.deepStrictEqual(
+				defaultResource.mock.calls[0].result.merge.mock.calls[0].arguments,
+				['mock-resource']
 			);
-			expect(resource).toStrictEqual('mock-merged-resource');
+			assert.strictEqual(resource, 'mock-merged-resource');
 		});
 	});
 });
