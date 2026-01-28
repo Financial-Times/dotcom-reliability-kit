@@ -1,8 +1,7 @@
-const createErrorRenderingMiddleware = require('../../../lib/index');
+const { beforeEach, describe, it, mock, before } = require('node:test');
+const assert = require('node:assert/strict');
 
-jest.mock('@dotcom-reliability-kit/serialize-error', () => jest.fn());
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
-serializeError.mockReturnValue({
+const serializeError = mock.fn(() => ({
 	// We nest multiple causes so that we can test each
 	// kind of error warning which might appear in the
 	// output. E.g. operational error vs non-error thrown
@@ -31,22 +30,30 @@ serializeError.mockReturnValue({
 	fingerprint: 'mock serialized error fingerprint',
 	stack: 'mock serialized error stack <script>oops</script>',
 	statusCode: 456
+}));
+mock.module('@dotcom-reliability-kit/serialize-error', { defaultExport: serializeError });
+
+const serializeRequest = mock.fn(() => 'mock-serialized-request');
+mock.module('@dotcom-reliability-kit/serialize-request', { defaultExport: serializeRequest });
+
+const logRecoverableError = mock.fn();
+mock.module('@dotcom-reliability-kit/log-error', {
+	namedExports: { logRecoverableError }
 });
 
-jest.mock('@dotcom-reliability-kit/log-error', () => ({
-	logRecoverableError: jest.fn()
-}));
-const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
+const appInfo = {};
+mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });
 
-jest.mock('@dotcom-reliability-kit/app-info', () => ({}));
-const appInfo = require('@dotcom-reliability-kit/app-info');
-
-jest.mock('node:http', () => ({
-	STATUS_CODES: {
-		456: 'Mock Error',
-		500: 'Server Error'
+mock.module('node:http', {
+	namedExports: {
+		STATUS_CODES: {
+			456: 'Mock Error',
+			500: 'Server Error'
+		}
 	}
-}));
+});
+
+const createErrorRenderingMiddleware = require('@dotcom-reliability-kit/middleware-render-error-info');
 
 describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 	let middleware;
@@ -59,7 +66,8 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 
 	describe('.default', () => {
 		it('aliases the module exports', () => {
-			expect(createErrorRenderingMiddleware.default).toStrictEqual(
+			assert.strictEqual(
+				createErrorRenderingMiddleware.default,
 				createErrorRenderingMiddleware
 			);
 		});
@@ -71,10 +79,12 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		let request;
 		let response;
 
-		beforeEach(() => {
+		before(() => {
 			// The error page template contains the current year
-			jest.useFakeTimers().setSystemTime(new Date('1888-01-09'));
+			mock.timers.enable({ now: new Date('1888-01-09T00:00:00Z') });
+		});
 
+		beforeEach(() => {
 			error = new Error('mock error');
 			request = {
 				method: 'mock request method',
@@ -89,153 +99,161 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				}
 			};
 			response = {
-				send: jest.fn(),
-				set: jest.fn(),
-				status: jest.fn()
+				send: mock.fn(),
+				set: mock.fn(),
+				status: mock.fn()
 			};
-			next = jest.fn();
+			next = mock.fn();
 
 			middleware(error, request, response, next);
 		});
 
 		it('serializes the error', () => {
-			expect(serializeError).toHaveBeenCalledWith(error);
+			assert.strictEqual(serializeError.mock.callCount(), 1);
+			assert.deepStrictEqual(serializeError.mock.calls[0].arguments, [error]);
 		});
 
 		it('responds with the serialized error status code', () => {
-			expect(response.status).toHaveBeenCalledTimes(1);
-			expect(response.status).toHaveBeenCalledWith(456);
+			assert.strictEqual(response.status.mock.callCount(), 1);
+			assert.deepStrictEqual(response.status.mock.calls[0].arguments, [456]);
 		});
 
 		it('responds with a Content-Type header of "text/html"', () => {
-			expect(response.set).toHaveBeenCalledWith('content-type', 'text/html');
+			assert.strictEqual(response.set.mock.callCount(), 2);
+			assert.deepStrictEqual(response.set.mock.calls[0].arguments, [
+				'content-type',
+				'text/html'
+			]);
 		});
 
 		it('responds with an error-fingerprint header', () => {
-			expect(response.set).toHaveBeenCalledWith(
+			assert.strictEqual(response.set.mock.callCount(), 2);
+			assert.deepStrictEqual(response.set.mock.calls[1].arguments, [
 				'error-fingerprint',
 				'mock serialized error fingerprint'
-			);
+			]);
 		});
 
-		it('responds with an HTML representation of the error', () => {
-			expect(response.send).toHaveBeenCalledTimes(1);
-			const html = response.send.mock.calls[0][0];
-			expect(typeof html).toBe('string');
+		it('responds with an HTML representation of the error', (test) => {
+			assert.strictEqual(response.send.mock.callCount(), 1);
+			const html = response.send.mock.calls[0].arguments[0];
+			assert.strictEqual(typeof html, 'string');
 			// We replace multiple line break characters with a single one, and
 			// remove all tab characters so that formatting whitespace changes
 			// in the markup don't break the tests
-			expect(
+			test.assert.snapshot(
 				html
 					.replace(/[\r\n]+/g, '\n')
 					.replace(/\t+/g, '')
 					.trim()
-			).toMatchSnapshot();
+			);
 		});
 
 		it('does not call `next` with the original error', () => {
-			expect(next).toHaveBeenCalledTimes(0);
+			assert.strictEqual(next.mock.callCount(), 0);
 		});
 
 		describe('when the system code is not set', () => {
 			beforeEach(() => {
 				appInfo.systemCode = null;
 				middleware = createErrorRenderingMiddleware();
-				response.send = jest.fn();
+				response.send = mock.fn();
 				middleware(error, request, response, next);
 			});
 
 			it('uses the default system code in the Origami Build Service URLs', () => {
-				expect(response.send).toHaveBeenCalledTimes(1);
-				const html = response.send.mock.calls[0][0];
-				expect(typeof html).toBe('string');
+				assert.strictEqual(response.send.mock.callCount(), 1);
+				const html = response.send.mock.calls[0].arguments[0];
+				assert.strictEqual(typeof html, 'string');
 
 				// Regular expressions expecting the URL-encoded Origami default system code
-				expect(html).toMatch(
+				assert.match(
+					html,
 					/bundles\/css\?system_code=%24%24%24-no-bizops-system-code-%24%24%24/i
 				);
-				expect(html).toMatch(
+				assert.match(
+					html,
 					/bundles\/js\?system_code=%24%24%24-no-bizops-system-code-%24%24%24/i
 				);
 			});
 
 			it('uses a default "application" string in the page title', () => {
-				expect(response.send).toHaveBeenCalledTimes(1);
-				const html = response.send.mock.calls[0][0];
-				expect(typeof html).toBe('string');
-				expect(html).toMatch(/<title>MockSerializedError in application<\/title>/);
+				assert.strictEqual(response.send.mock.callCount(), 1);
+				const html = response.send.mock.calls[0].arguments[0];
+				assert.strictEqual(typeof html, 'string');
+				assert.match(html, /<title>MockSerializedError in application<\/title>/);
 			});
 		});
 
 		describe('when the serialized error does not have a `fingerprint` property', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValue({
-					fingerprint: 'mockfingerprint',
+				serializeError.mock.mockImplementationOnce(() => ({
 					statusCode: null,
 					data: {}
-				});
-				response.set = jest.fn();
-				response.status = jest.fn();
+				}));
+				response.set = mock.fn();
+				response.status = mock.fn();
 
 				middleware(error, request, response, next);
 			});
 
 			it('does not respond with an error-fingerprint header', () => {
-				expect(response.set).not.toHaveBeenCalledWith(
+				assert.strictEqual(response.set.mock.callCount(), 1);
+				assert.notDeepStrictEqual(response.set.mock.calls[0].arguments, [
 					'error-fingerprint',
 					'mock serialized error fingerprint'
-				);
+				]);
 			});
 		});
 
 		describe('when the serialized error does not have a `statusCode` property', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValue({
+				serializeError.mock.mockImplementationOnce(() => ({
 					statusCode: null,
 					data: {}
-				});
-				response.status = jest.fn();
+				}));
+				response.status = mock.fn();
 
 				middleware(error, request, response, next);
 			});
 
 			it('responds with a 500 status code', () => {
-				expect(response.status).toHaveBeenCalledTimes(1);
-				expect(response.status).toHaveBeenCalledWith(500);
+				assert.strictEqual(response.status.mock.callCount(), 1);
+				assert.deepStrictEqual(response.status.mock.calls[0].arguments, [500]);
 			});
 		});
 
 		describe('when the serialized error has a `statusCode` property lower than 400', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValue({
+				serializeError.mock.mockImplementationOnce(() => ({
 					statusCode: 399,
 					data: {}
-				});
-				response.status = jest.fn();
+				}));
+				response.status = mock.fn();
 
 				middleware(error, request, response, next);
 			});
 
 			it('responds with a 500 status code', () => {
-				expect(response.status).toHaveBeenCalledTimes(1);
-				expect(response.status).toHaveBeenCalledWith(500);
+				assert.strictEqual(response.status.mock.callCount(), 1);
+				assert.deepStrictEqual(response.status.mock.calls[0].arguments, [500]);
 			});
 		});
 
 		describe('when the serialized error has a `statusCode` property greater than 500', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValue({
+				serializeError.mock.mockImplementationOnce(() => ({
 					statusCode: 600,
 					data: {}
-				});
-				response.status = jest.fn();
+				}));
+				response.status = mock.fn();
 
 				middleware(error, request, response, next);
 			});
 
 			it('responds with a 500 status code', () => {
-				expect(response.status).toHaveBeenCalledTimes(1);
-				expect(response.status).toHaveBeenCalledWith(500);
+				assert.strictEqual(response.status.mock.callCount(), 1);
+				assert.deepStrictEqual(response.status.mock.calls[0].arguments, [500]);
 			});
 		});
 
@@ -244,102 +262,109 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				middleware = createErrorRenderingMiddleware();
 				response = {
 					headersSent: true,
-					send: jest.fn(),
-					set: jest.fn(),
-					status: jest.fn()
+					send: mock.fn(),
+					set: mock.fn(),
+					status: mock.fn()
 				};
-				next = jest.fn();
+				next = mock.fn();
 				middleware(error, request, response, next);
 			});
 
 			it('does not render and send an error info page', () => {
-				expect(response.status).toHaveBeenCalledTimes(0);
-				expect(response.set).toHaveBeenCalledTimes(0);
-				expect(response.send).toHaveBeenCalledTimes(0);
+				assert.strictEqual(response.status.mock.callCount(), 0);
+				assert.strictEqual(response.set.mock.callCount(), 0);
+				assert.strictEqual(response.send.mock.callCount(), 0);
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toHaveBeenCalledWith(error);
+				assert.strictEqual(next.mock.callCount(), 1);
+				assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 			});
 		});
 
 		describe('when the environment is set to "production"', () => {
 			beforeEach(() => {
-				serializeError.mockReturnValueOnce({
+				serializeError.mock.mockImplementationOnce(() => ({
 					fingerprint: 'mock serialized error fingerprint',
 					data: {}
-				});
+				}));
 				appInfo.environment = 'production';
 				middleware = createErrorRenderingMiddleware();
 				response = {
-					send: jest.fn(),
-					set: jest.fn(),
-					status: jest.fn()
+					send: mock.fn(),
+					set: mock.fn(),
+					status: mock.fn()
 				};
-				next = jest.fn();
+				next = mock.fn();
 				middleware(error, request, response, next);
 			});
 
 			it('responds with the serialized error status code', () => {
-				expect(response.status).toHaveBeenCalledTimes(1);
-				expect(response.status).toHaveBeenCalledWith(500);
+				assert.strictEqual(response.status.mock.callCount(), 1);
+				assert.deepStrictEqual(response.status.mock.calls[0].arguments, [500]);
 			});
 
 			it('responds with a Content-Type header of "text/html"', () => {
-				expect(response.set).toHaveBeenCalledWith('content-type', 'text/html');
+				assert.strictEqual(response.set.mock.callCount(), 2);
+				assert.deepStrictEqual(response.set.mock.calls[0].arguments, [
+					'content-type',
+					'text/html'
+				]);
 			});
 
 			it('responds with an error-fingerprint header', () => {
-				expect(response.set).toHaveBeenCalledWith(
+				assert.strictEqual(response.set.mock.callCount(), 2);
+				assert.deepStrictEqual(response.set.mock.calls[1].arguments, [
 					'error-fingerprint',
 					'mock serialized error fingerprint'
-				);
+				]);
 			});
 
 			it('responds with a simple status code, message, and fingerprint in the body', () => {
-				expect(response.send).toHaveBeenCalledTimes(1);
-				const html = response.send.mock.calls[0][0];
-				expect(html).toStrictEqual(
+				assert.strictEqual(response.send.mock.callCount(), 1);
+				const html = response.send.mock.calls[0].arguments[0];
+				assert.strictEqual(
+					html,
 					'500 Server Error\n(error code: mock serialized error fingerprint)\n'
 				);
 			});
 
 			it('does not call `next` with the original error', () => {
-				expect(next).toHaveBeenCalledTimes(0);
+				assert.strictEqual(next.mock.callCount(), 0);
 			});
 
 			describe('when the serialized error has a nonexistent `statusCode` property', () => {
 				beforeEach(() => {
-					serializeError.mockReturnValueOnce({
+					serializeError.mock.mockImplementationOnce(() => ({
 						statusCode: 477,
 						data: {}
-					});
-					response.send = jest.fn();
+					}));
+					response.send = mock.fn();
 
 					middleware(error, request, response, next);
 				});
 
 				it('responds with a simple status code and the default server error message in the body', () => {
-					expect(response.send).toHaveBeenCalledTimes(1);
-					const html = response.send.mock.calls[0][0];
-					expect(html).toStrictEqual('477 Server Error\n');
+					assert.strictEqual(response.send.mock.callCount(), 1);
+					const html = response.send.mock.calls[0].arguments[0];
+					assert.strictEqual(html, '477 Server Error\n');
 				});
 			});
 
 			describe('when the serialized error does not have a `fingerprint` property', () => {
 				beforeEach(() => {
-					serializeError.mockReturnValueOnce({
+					serializeError.mock.mockImplementationOnce(() => ({
 						data: {}
-					});
-					response.send = jest.fn();
+					}));
+					response.send = mock.fn();
 
 					middleware(error, request, response, next);
 				});
 
 				it('responds with a simple status code and message in the body', () => {
-					expect(response.send).toHaveBeenCalledTimes(1);
-					const html = response.send.mock.calls[0][0];
-					expect(html).toStrictEqual('500 Server Error\n');
+					assert.strictEqual(response.send.mock.callCount(), 1);
+					const html = response.send.mock.calls[0].arguments[0];
+					assert.strictEqual(html, '500 Server Error\n');
 				});
 			});
 		});
@@ -348,6 +373,10 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 			let renderingError;
 
 			beforeEach(() => {
+				serializeError.mock.mockImplementationOnce(() => ({
+					statusCode: null,
+					data: {}
+				}));
 				renderingError = new Error('rendering failed');
 
 				// We fail getting the request method as this will
@@ -361,45 +390,51 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				});
 
 				response = {
-					send: jest.fn(),
-					set: jest.fn(),
-					status: jest.fn()
+					send: mock.fn(),
+					set: mock.fn(),
+					status: mock.fn()
 				};
-				next = jest.fn();
+				next = mock.fn();
 				middleware(error, request, response, next);
 			});
 
 			it('logs the rendering error as recoverable', () => {
-				expect(logRecoverableError).toHaveBeenCalledTimes(1);
-				expect(logRecoverableError).toHaveBeenCalledWith({
-					error: renderingError,
-					request,
-					logger: undefined
-				});
+				assert.strictEqual(logRecoverableError.mock.callCount(), 1);
+				assert.deepStrictEqual(logRecoverableError.mock.calls[0].arguments, [
+					{
+						error: renderingError,
+						request,
+						logger: undefined
+					}
+				]);
 			});
 
 			it('responds with the serialized error status code', () => {
-				expect(response.status).toHaveBeenCalledTimes(1);
-				expect(response.status).toHaveBeenCalledWith(500);
+				assert.strictEqual(response.status.mock.callCount(), 1);
+				assert.deepStrictEqual(response.status.mock.calls[0].arguments, [500]);
 			});
 
 			it('responds with a Content-Type header of "text/html"', () => {
-				expect(response.set).toHaveBeenCalledTimes(1);
-				expect(response.set).toHaveBeenCalledWith('content-type', 'text/html');
+				assert.strictEqual(response.set.mock.callCount(), 1);
+				assert.deepStrictEqual(response.set.mock.calls[0].arguments, [
+					'content-type',
+					'text/html'
+				]);
 			});
 
 			it('responds with a simple status code and message in the body', () => {
-				expect(response.send).toHaveBeenCalledTimes(1);
-				const html = response.send.mock.calls[0][0];
-				expect(html).toStrictEqual('500 Server Error\n');
+				assert.strictEqual(response.send.mock.callCount(), 1);
+				const html = response.send.mock.calls[0].arguments[0];
+				assert.strictEqual(html, '500 Server Error\n');
 			});
 
 			it('does not call `next` with the original error', () => {
-				expect(next).toHaveBeenCalledTimes(0);
+				assert.strictEqual(next.mock.callCount(), 0);
 			});
 
 			describe('when the logger option is set', () => {
 				beforeEach(() => {
+					logRecoverableError.mock.resetCalls();
 					middleware = createErrorRenderingMiddleware({
 						logger: 'mock-logger'
 					});
@@ -407,11 +442,14 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 				});
 
 				it('passes on the custom logger to the log method', () => {
-					expect(logRecoverableError).toHaveBeenCalledWith({
-						error: renderingError,
-						request,
-						logger: 'mock-logger'
-					});
+					assert.strictEqual(logRecoverableError.mock.callCount(), 1);
+					assert.deepStrictEqual(logRecoverableError.mock.calls[0].arguments, [
+						{
+							error: renderingError,
+							request,
+							logger: 'mock-logger'
+						}
+					]);
 				});
 			});
 		});
