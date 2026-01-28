@@ -183,7 +183,7 @@ As with Biome, we check types in pull requests and errors will block merging, so
 
 ### Unit tests
 
-We run unit tests with either [Jest](https://jestjs.io/) (legacy) or [the Node test runner](https://nodejs.org/api/test.html) across most of our packages and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`). You can run the tests with the following:
+We run unit tests with [the Node test runner](https://nodejs.org/api/test.html) across most of our packages and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`). You can run the tests with the following:
 
 ```
 npm run test
