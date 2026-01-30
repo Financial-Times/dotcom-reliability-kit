@@ -1,7 +1,4 @@
-/**
- * @type {import('@dotcom-reliability-kit/eslint-config')}
- */
-const config = {
+export default {
 	env: {
 		browser: true,
 		es2022: true,
@@ -63,5 +60,3 @@ const config = {
 		radix: 'error'
 	}
 };
-
-module.exports = config;

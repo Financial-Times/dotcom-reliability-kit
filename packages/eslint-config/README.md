@@ -19,8 +19,8 @@ npm install --save-dev @dotcom-reliability-kit/eslint-config
 Reference the shared configuration in your repository's own .eslintrc.js like so:
 
 ```
-module.exports = {
-extends: ['@dotcom-reliability-kit/eslint-config']
+export default {
+    extends: ['@dotcom-reliability-kit/eslint-config']
 }
 ```
 
