@@ -41,12 +41,10 @@ You may not need to change anything for this upgrade, for example, if your app u
 If you can't switch to Reliability Kit logger yet, then you can still use [n-logger](https://github.com/Financial-Times/n-logger) (the previous default logger) by manually passing it as an option when initialising Crash Handler:
 
 ```js
-const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
-const nLogger = require('@financial-times/n-logger').default;
+import registerCrashHandler from '@dotcom-reliability-kit/crash-handler';
+import nLogger from '@financial-times/n-logger';
 
-registerCrashHandler({
-    logger: nLogger
-});
+registerCrashHandler({ logger: nLogger });
 ```
 
 ### Remove Sentry workarounds

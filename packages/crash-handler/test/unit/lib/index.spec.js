@@ -1,5 +1,5 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 
 const logHandledError = mock.fn();
 const logUnhandledError = mock.fn();
@@ -7,15 +7,9 @@ mock.module('@dotcom-reliability-kit/log-error', {
 	namedExports: { logHandledError, logUnhandledError }
 });
 
-const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
+const { default: registerCrashHandler } = await import('@dotcom-reliability-kit/crash-handler');
 
 describe('@dotcom-reliability-kit/crash-handler', () => {
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(registerCrashHandler.default, registerCrashHandler);
-		});
-	});
-
 	describe('registerCrashHandler(options)', () => {
 		let mockProcess;
 

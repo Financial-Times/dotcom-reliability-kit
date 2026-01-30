@@ -9,5 +9,4 @@ declare module '@dotcom-reliability-kit/crash-handler' {
 	declare function registerCrashHandler(options?: CrashHandlerOptions): void;
 
 	export default registerCrashHandler;
-	export = registerCrashHandler;
 }
