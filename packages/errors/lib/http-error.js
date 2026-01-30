@@ -1,4 +1,5 @@
-const OperationalError = require('./operational-error.js');
+import http from 'node:http';
+import OperationalError from './operational-error.js';
 
 /**
  * @import { HttpError as HttpErrorType, HttpErrorData as ErrorData } from '@dotcom-reliability-kit/errors'
@@ -12,12 +13,12 @@ const OperationalError = require('./operational-error.js');
  * @see HttpError.getMessageForStatusCode
  * @type {{[key: string]: any}}
  */
-const STATUS_CODES = require('node:http').STATUS_CODES;
+const { STATUS_CODES } = http;
 
 /**
  * Class representing an HTTP error.
  */
-class HttpError extends OperationalError {
+export default class HttpError extends OperationalError {
 	/**
 	 * @override
 	 * @readonly
@@ -162,7 +163,3 @@ class HttpError extends OperationalError {
 		return STATUS_CODES[500];
 	}
 }
-
-module.exports = HttpError;
-
-module.exports.default = module.exports;

@@ -1,5 +1,7 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import BaseError from '../../../lib/base-error.js';
+import OperationalError from '../../../lib/operational-error.js';
 
 mock.module('node:http', {
 	namedExports: {
@@ -11,9 +13,7 @@ mock.module('node:http', {
 	}
 });
 
-const BaseError = require('../../../lib/base-error');
-const HttpError = require('../../../lib/http-error');
-const OperationalError = require('../../../lib/operational-error');
+const { default: HttpError } = await import('../../../lib/http-error.js');
 
 describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 	afterEach(() => {
@@ -443,12 +443,6 @@ describe('@dotcom-reliability-kit/errors/lib/http-error', () => {
 			it('returns the message for a 500 error', () => {
 				assert.strictEqual(HttpError.getMessageForStatusCode(137), 'mock 500 message');
 			});
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(HttpError.default, HttpError);
 		});
 	});
 });

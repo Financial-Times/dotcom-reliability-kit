@@ -1,8 +1,8 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import OperationalError from '../../../lib/operational-error.js';
 
-const OperationalError = require('../../../lib/operational-error');
-const DataStoreError = require('../../../lib/data-store-error');
+const { default: DataStoreError } = await import('../../../lib/data-store-error.js');
 
 describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 	afterEach(() => {
@@ -141,12 +141,6 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 			it('is set to the data.message property', () => {
 				assert.strictEqual(instance.message, 'mock message');
 			});
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(DataStoreError.default, DataStoreError);
 		});
 	});
 });

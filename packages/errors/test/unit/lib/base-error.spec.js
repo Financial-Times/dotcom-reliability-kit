@@ -1,7 +1,7 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 
-const BaseError = require('../../../lib/base-error');
+const { default: BaseError } = await import('../../../lib/base-error.js');
 class MockOperationalError {
 	isOperational = true;
 }
@@ -201,12 +201,6 @@ describe('@dotcom-reliability-kit/errors/lib/base-error', () => {
 				BaseError.normalizeErrorCode(' ABC-123_foo   bar '),
 				'ABC_123_FOO_BAR'
 			);
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(BaseError.default, BaseError);
 		});
 	});
 });
