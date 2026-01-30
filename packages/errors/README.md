@@ -30,9 +30,7 @@ npm install --save @dotcom-reliability-kit/errors
 Include in your code:
 
 ```js
-import {OperationalError} from '@dotcom-reliability-kit/errors';
-// or
-const {OperationalError} = require('@dotcom-reliability-kit/errors');
+import { OperationalError } from '@dotcom-reliability-kit/errors';
 ```
 
 > [!TIP]
