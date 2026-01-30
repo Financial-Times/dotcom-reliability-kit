@@ -1,6 +1,7 @@
 {
   "name": "@dotcom-reliability-kit/app-info",
   "version": "4.2.1",
+  "type": "module",
   "description": "A utility to get application info in a consistent way.",
   "repository": {
     "type": "git",
@@ -11,7 +12,7 @@
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: app-info\"",
   "license": "MIT",
   "scripts": {
-    "test": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-include=lib/**/* --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 **/*.spec.js"
+    "test": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 **/*.spec.js"
   },
   "engines": {
     "node": "^22.12 || ^24"

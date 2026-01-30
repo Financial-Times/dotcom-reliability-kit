@@ -45,5 +45,4 @@ declare module '@dotcom-reliability-kit/app-info' {
 	};
 
 	export default appInfo;
-	export = appInfo;
 }
