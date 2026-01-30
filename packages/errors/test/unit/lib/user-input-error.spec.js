@@ -1,5 +1,6 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import HttpError from '../../../lib/http-error.js';
 
 mock.module('node:http', {
 	namedExports: {
@@ -11,8 +12,7 @@ mock.module('node:http', {
 	}
 });
 
-const HttpError = require('../../../lib/http-error');
-const UserInputError = require('../../../lib/user-input-error');
+const { default: UserInputError } = await import('../../../lib/user-input-error.js');
 
 describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 	afterEach(() => {
@@ -305,12 +305,6 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 			it('is set to the normalized status code', () => {
 				assert.strictEqual(instance.statusCode, 456);
 			});
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(UserInputError.default, UserInputError);
 		});
 	});
 });

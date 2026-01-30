@@ -45,4 +45,13 @@ declare module '@dotcom-reliability-kit/errors' {
 	export class DataStoreError extends OperationalError {}
 	export class UpstreamServiceError extends HttpError {}
 	export class UserInputError extends HttpError {}
+
+	export default {
+		BaseError,
+		DataStoreError,
+		HttpError,
+		OperationalError,
+		UpstreamServiceError,
+		UserInputError
+	};
 }
