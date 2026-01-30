@@ -1,5 +1,5 @@
-const { describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { describe, it, mock } from 'node:test';
 
 const root = '../../../lib';
 mock.module(`${root}/base-error.js`, { defaultExport: 'mock-base-error' });
@@ -9,12 +9,12 @@ mock.module(`${root}/operational-error.js`, { defaultExport: 'mock-operational-e
 mock.module(`${root}/upstream-service-error.js`, { defaultExport: 'mock-upstream-service-error' });
 mock.module(`${root}/user-input-error.js`, { defaultExport: 'mock-user-input-error' });
 
-const errors = require('@dotcom-reliability-kit/errors');
+const { default: errors, ...namedErrors } = await import('@dotcom-reliability-kit/errors');
 
 describe('@dotcom-reliability-kit/errors', () => {
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(errors.default, errors);
+	describe('default vs named exports', () => {
+		it('has the same set of keys/values', () => {
+			assert.deepStrictEqual(errors, namedErrors);
 		});
 	});
 

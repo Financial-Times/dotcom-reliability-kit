@@ -1,8 +1,8 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import HttpError from '../../../lib/http-error.js';
 
-const HttpError = require('../../../lib/http-error');
-const UpstreamServiceError = require('../../../lib/upstream-service-error');
+const { default: UpstreamServiceError } = await import('../../../lib/upstream-service-error.js');
 
 describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 	afterEach(() => {
@@ -295,12 +295,6 @@ describe('@dotcom-reliability-kit/errors/lib/upstream-service-error', () => {
 			it('is set to the normalized status code', () => {
 				assert.strictEqual(instance.statusCode, 456);
 			});
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(UpstreamServiceError.default, UpstreamServiceError);
 		});
 	});
 });

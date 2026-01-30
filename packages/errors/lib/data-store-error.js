@@ -1,4 +1,4 @@
-const OperationalError = require('./operational-error.js');
+import OperationalError from './operational-error.js';
 
 /**
  * @import { DataStoreError as DataStoreErrorType } from '@dotcom-reliability-kit/errors'
@@ -7,7 +7,7 @@ const OperationalError = require('./operational-error.js');
 /**
  * Class representing an error in an application's data store.
  */
-class DataStoreError extends OperationalError {
+export default class DataStoreError extends OperationalError {
 	/**
 	 * @override
 	 * @readonly
@@ -15,7 +15,3 @@ class DataStoreError extends OperationalError {
 	 */
 	name = 'DataStoreError';
 }
-
-module.exports = DataStoreError;
-
-module.exports.default = module.exports;

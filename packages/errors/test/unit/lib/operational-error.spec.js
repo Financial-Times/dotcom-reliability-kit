@@ -1,8 +1,7 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
-
-const BaseError = require('../../../lib/base-error');
-const OperationalError = require('../../../lib/operational-error');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import BaseError from '../../../lib/base-error.js';
+import OperationalError from '../../../lib/operational-error.js';
 
 describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 	afterEach(() => {
@@ -250,12 +249,6 @@ describe('@dotcom-reliability-kit/errors/lib/operational-error', () => {
 				OperationalError.normalizeErrorCode(' ABC-123_foo   bar '),
 				'ABC_123_FOO_BAR'
 			);
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(OperationalError.default, OperationalError);
 		});
 	});
 });

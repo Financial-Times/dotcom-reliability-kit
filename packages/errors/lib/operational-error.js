@@ -1,4 +1,4 @@
-const BaseError = require('./base-error.js');
+import BaseError from './base-error.js';
 
 /**
  * @import { OperationalError as OperationalErrorType, OperationalErrorData as ErrorData } from '@dotcom-reliability-kit/errors'
@@ -7,7 +7,7 @@ const BaseError = require('./base-error.js');
 /**
  * Class representing an operational error.
  */
-class OperationalError extends BaseError {
+export default class OperationalError extends BaseError {
 	/**
 	 * @override
 	 * @readonly
@@ -98,7 +98,3 @@ class OperationalError extends BaseError {
 	 */
 	static defaultMessage = 'An operational error occurred';
 }
-
-module.exports = OperationalError;
-
-module.exports.default = module.exports;
