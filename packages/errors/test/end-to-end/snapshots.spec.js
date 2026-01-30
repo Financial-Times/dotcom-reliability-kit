@@ -1,6 +1,5 @@
-const { describe, it } = require('node:test');
-
-const errors = require('./errors');
+import { describe, it } from 'node:test';
+import errors from './errors.js';
 
 describe('@dotcom-reliability-kit/errors end-to-end', () => {
 	for (const [name, error] of Object.entries(errors)) {

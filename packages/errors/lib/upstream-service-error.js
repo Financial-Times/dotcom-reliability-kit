@@ -1,4 +1,4 @@
-const HttpError = require('./http-error.js');
+import HttpError from './http-error.js';
 
 /**
  * @import { UpstreamServiceError as UpstreamServiceErrorType } from '@dotcom-reliability-kit/errors'
@@ -7,7 +7,7 @@ const HttpError = require('./http-error.js');
 /**
  * Class representing an error in an upstream service.
  */
-class UpstreamServiceError extends HttpError {
+export default class UpstreamServiceError extends HttpError {
 	/**
 	 * @override
 	 * @readonly
@@ -23,7 +23,3 @@ class UpstreamServiceError extends HttpError {
 	 */
 	static defaultStatusCode = 502;
 }
-
-module.exports = UpstreamServiceError;
-
-module.exports.default = module.exports;
