@@ -67,7 +67,6 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 	// times with different configuration values normally. We need to do this
 	// in the tests though
 	function reloadAllModules() {
-		// TODO remove cache???
 		createInstrumentationConfig =
 			require('../../../lib/config/instrumentations.js').createInstrumentationConfig;
 		createMetricsConfig = require('../../../lib/config/metrics.js').createMetricsConfig;
