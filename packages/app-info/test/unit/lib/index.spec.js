@@ -1,4 +1,4 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
+const { beforeEach, describe, it, mock } = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
 
@@ -29,10 +29,6 @@ describe('@dotcom-reliability-kit/app-info', () => {
 		process.env.HEROKU_APP_ID = 'mock-heroku-app-id';
 		process.env.HEROKU_DYNO_ID = 'mock-heroku-dyno-id';
 		appInfo = require('@dotcom-reliability-kit/app-info');
-	});
-
-	afterEach(() => {
-		process.cwd.mock.mockImplementation(() => `${fixtures}/empty`);
 	});
 
 	describe('.default', () => {
