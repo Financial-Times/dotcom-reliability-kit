@@ -981,7 +981,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					defaultExport: { cloudProvider: null, environment: 'development' }
 				});
 
-				// We have to clear the module cache the checks for pino-pretty are done
+				// We have to clear the module cache because the checks for pino-pretty are done
 				// on module load for performance reasons
 				delete require.cache[require.resolve('../../../lib/logger.js')];
 				Logger = require('../../../lib/logger.js');
@@ -1017,7 +1017,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					defaultExport: { cloudProvider: null, environment: 'test' }
 				});
 
-				// We have to clear the module cache the checks for pino-pretty are done
+				// We have to clear the module cache because the checks for pino-pretty are done
 				// on module load for performance reasons
 				delete require.cache[require.resolve('../../../lib/logger.js')];
 				Logger = require('../../../lib/logger.js');
@@ -1053,7 +1053,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					defaultExport: { cloudProvider: null, environment: 'development' }
 				});
 
-				// We have to clear the module cache the checks for pino-pretty are done
+				// We have to clear the module cache because the checks for pino-pretty are done
 				// on module load for performance reasons
 				delete require.cache[require.resolve('../../../lib/logger.js')];
 				Logger = require('../../../lib/logger.js');
@@ -1082,7 +1082,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 				});
 				process.env.LOG_DISABLE_PRETTIFIER = 'true';
 
-				// We have to clear the module cache the checks for pino-pretty are done
+				// We have to clear the module cache because the checks for pino-pretty are done
 				// on module load for performance reasons
 				delete require.cache[require.resolve('../../../lib/logger.js')];
 				Logger = require('../../../lib/logger.js');
@@ -1117,7 +1117,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 
 					appInfo.environment = environment;
 
-					// We have to clear the module cache the checks for pino-pretty are done
+					// We have to clear the module cache because the checks for pino-pretty are done
 					// on module load for performance reasons
 					delete require.cache[require.resolve('../../../lib/logger.js')];
 					Logger = require('../../../lib/logger.js');
@@ -1147,7 +1147,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					defaultExport: { cloudProvider: 'aws', environment: 'development' }
 				});
 
-				// We have to clear the module cache the checks for pino-pretty are done
+				// We have to clear the module cache because the checks for pino-pretty are done
 				// on module load for performance reasons
 				delete require.cache[require.resolve('../../../lib/logger.js')];
 				Logger = require('../../../lib/logger.js');
@@ -1175,7 +1175,7 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 					defaultExport: { cloudProvider: null, environment: 'development' }
 				});
 
-				// We have to clear the module cache the checks for pino-pretty are done
+				// We have to clear the module cache because the checks for pino-pretty are done
 				// on module load for performance reasons
 				delete require.cache[require.resolve('../../../lib/logger.js')];
 				Logger = require('../../../lib/logger.js');
