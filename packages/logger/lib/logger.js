@@ -52,11 +52,6 @@ const logLevels = Object.keys(logLevelToTransportMethodMap);
  */
 const prettificationAvailable = (() => {
 	try {
-		// We have to `require` here rather than `require.resolve`
-		// which is less than ideal but otherwise this is actually
-		// impossible to test. Both technically do the same file
-		// system work though, and it's only done once when the
-		// module first loads.
 		const pretty = require.resolve('pino-pretty');
 		return pretty !== undefined;
 		// We have to disable coverage of the next three lines
