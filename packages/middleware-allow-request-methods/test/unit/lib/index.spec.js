@@ -1,8 +1,10 @@
 const { afterEach, beforeEach, describe, it, mock } = require('node:test');
 const assert = require('node:assert/strict');
 
+const UserInputError = mock.fn(class UserInputError {});
+mock.module('@dotcom-reliability-kit/errors', { namedExports: { UserInputError } });
+
 const { allowRequestMethods } = require('@dotcom-reliability-kit/middleware-allow-request-methods');
-const { UserInputError } = require('@dotcom-reliability-kit/errors');
 
 // Mock Express request and response objects
 let mockRequest;
@@ -91,7 +93,8 @@ describe('allowRequestMethods', () => {
 			assert.strictEqual(mockNext.mock.callCount(), 1);
 			const error = mockNext.mock.calls[0].arguments[0];
 			assert.ok(error instanceof UserInputError);
-			assert.strictEqual(error.statusCode, 405);
+			assert.strictEqual(UserInputError.mock.callCount(), 1);
+			assert.deepStrictEqual(UserInputError.mock.calls[0].arguments[0], { statusCode: 405 });
 		});
 
 		it('calls next() without error for allowed method', () => {
