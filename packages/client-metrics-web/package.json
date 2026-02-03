@@ -11,7 +11,9 @@
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: client-metrics-web\"",
   "license": "MIT",
   "scripts": {
-    "test": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-include=lib/**/* --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 **/*.spec.js"
+    "test": "npm run test:unit && npm run test:end-to-end",
+    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude=**/*.spec.js --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 test/unit/**/*.spec.js",
+    "test:end-to-end": "node --test test/end-to-end/**/*.spec.js"
   },
   "engines": {
     "node": "^22.12 || ^24"

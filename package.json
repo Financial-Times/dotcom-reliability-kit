@@ -22,6 +22,8 @@
     "lint:biome": "biome check",
     "lint:tsc": "tsc --project ./jsconfig.json",
     "test": "npm run test --workspaces --if-present",
+    "test:unit": "npm run test:unit --workspaces --if-present",
+    "test:end-to-end": "npm run test:end-to-end --workspaces --if-present",
     "prepare": "husky",
     "postinstall": "npm run build:logos"
   },

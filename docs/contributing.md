@@ -195,6 +195,13 @@ To run the tests for a single package, use:
 npm run test -w packages/<name>
 ```
 
+You can also run unit and end-to-end tests specifically. You might want to do this to get a quick sense check on your code, because unit tests generally run a lot faster. To do this, replace the `test` command above with either `test:unit` or `test:end-to-end`, e.g.
+
+```
+npm run test:unit
+npm run test:end-to-end -w packages/<name>
+```
+
 Tests are also run on pull requests and failing tests will block merging, so it's useful to check before opening a PR.
 
 #### Coverage
