@@ -15,7 +15,10 @@ exports[`@dotcom-reliability-kit/errors end-to-end > BaseError with cause > matc
   "code": "UNKNOWN",
   "data": {},
   "message": "An error occurred",
-  "cause": {}
+  "cause": {
+    "message": "mock cause",
+    "name": "Error"
+  }
 }
 `;
 
@@ -80,7 +83,10 @@ exports[`@dotcom-reliability-kit/errors end-to-end > DataStoreError with cause >
   "data": {},
   "relatesToSystems": [],
   "message": "An operational error occurred",
-  "cause": {}
+  "cause": {
+    "message": "mock cause",
+    "name": "Error"
+  }
 }
 `;
 
@@ -166,7 +172,10 @@ exports[`@dotcom-reliability-kit/errors end-to-end > HttpError with cause > matc
   "statusCode": 500,
   "statusMessage": "Internal Server Error",
   "message": "Internal Server Error",
-  "cause": {}
+  "cause": {
+    "message": "mock cause",
+    "name": "Error"
+  }
 }
 `;
 
@@ -284,7 +293,10 @@ exports[`@dotcom-reliability-kit/errors end-to-end > OperationalError with cause
   "data": {},
   "relatesToSystems": [],
   "message": "An operational error occurred",
-  "cause": {}
+  "cause": {
+    "message": "mock cause",
+    "name": "Error"
+  }
 }
 `;
 
@@ -370,7 +382,10 @@ exports[`@dotcom-reliability-kit/errors end-to-end > UpstreamServiceError with c
   "statusCode": 502,
   "statusMessage": "Bad Gateway",
   "message": "Bad Gateway",
-  "cause": {}
+  "cause": {
+    "message": "mock cause",
+    "name": "Error"
+  }
 }
 `;
 
@@ -492,7 +507,10 @@ exports[`@dotcom-reliability-kit/errors end-to-end > UserInputError with cause >
   "statusCode": 400,
   "statusMessage": "Bad Request",
   "message": "Bad Request",
-  "cause": {}
+  "cause": {
+    "message": "mock cause",
+    "name": "Error"
+  }
 }
 `;
 
