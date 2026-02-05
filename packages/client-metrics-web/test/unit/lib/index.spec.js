@@ -39,10 +39,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		beforeEach(() => {
 			options = {
 				allowedHostnamePattern: /^mock-hostname$/,
-				awsAppMonitorId: 'mock-app-monitor-id',
-				awsAppMonitorRegion: 'mock-app-monitor-region',
-				awsIdentityPoolId: 'mock-identity-pool-id',
-				samplePercentage: 13,
 				systemCode: 'mock-system-code',
 				systemVersion: 'mock-version'
 			};
@@ -83,12 +79,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 		it('does not log any warnings', () => {
 			expect(console.warn).toHaveBeenCalledTimes(0);
-		});
-
-		describe('.isAvailable', () => {
-			it('is set to true', () => {
-				expect(instance.isAvailable).toStrictEqual(true);
-			});
 		});
 
 		describe('.isEnabled', () => {
@@ -169,20 +159,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					expect(AwsRum.mock.instances[0].enable).toHaveBeenCalledTimes(0);
 					expect(window.addEventListener).toHaveBeenCalledTimes(0);
 				});
-			});
-		});
-
-		describe('.recordError(error)', () => {
-			let error;
-
-			beforeEach(() => {
-				error = new Error('mock error');
-				instance.recordError(error);
-			});
-
-			it('hands the error to the AWS RUM client', () => {
-				expect(AwsRum.mock.instances[0].recordError).toHaveBeenCalledTimes(1);
-				expect(AwsRum.mock.instances[0].recordError).toHaveBeenCalledWith(error);
 			});
 		});
 
@@ -424,85 +400,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				expect(console.warn).toHaveBeenCalledWith(
 					'Client not initialised: option allowedHostnamePattern must be a RegExp'
 				);
-			});
-		});
-
-		describe('when options.awsAppMonitorId is not a string', () => {
-			beforeEach(() => {
-				AwsRum.mockClear();
-				options.awsAppMonitorId = 123;
-				instance = new MetricsClient(options);
-			});
-
-			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
-			});
-
-			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
-					'Client not initialised: option awsAppMonitorId must be a string'
-				);
-			});
-		});
-
-		describe('when options.awsAppMonitorRegion is not a string', () => {
-			beforeEach(() => {
-				AwsRum.mockClear();
-				options.awsAppMonitorRegion = 123;
-				instance = new MetricsClient(options);
-			});
-
-			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
-			});
-
-			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
-					'Client not initialised: option awsAppMonitorRegion must be a string'
-				);
-			});
-		});
-
-		describe('when options.awsIdentityPoolId is not a string', () => {
-			beforeEach(() => {
-				AwsRum.mockClear();
-				options.awsIdentityPoolId = 123;
-				instance = new MetricsClient(options);
-			});
-
-			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
-			});
-
-			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
-					'Client not initialised: option awsIdentityPoolId must be a string'
-				);
-			});
-		});
-
-		describe('when options.samplePercentage is not set', () => {
-			beforeEach(() => {
-				AwsRum.mockClear();
-				delete options.samplePercentage;
-				instance = new MetricsClient(options);
-			});
-
-			it('creates an AWS RUM client with a default sample rate of 5%', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(1);
-				expect(AwsRum).toHaveBeenCalledWith(
-					'mock-app-monitor-id',
-					'mock-version',
-					'mock-app-monitor-region',
-					expect.objectContaining({ sessionSampleRate: 0.05 })
-				);
-			});
-
-			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
 			});
 		});
 
