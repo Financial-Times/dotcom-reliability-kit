@@ -215,24 +215,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 			});
 
-			describe('when the namespace does not include a period', () => {
-				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
-					instance.recordEvent('mock', eventData);
-				});
-
-				it('does not hand the event to the AWS RUM client', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(0);
-				});
-
-				it('logs a warning about top-level namespaces being reserved', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
-						'Invalid metrics event: namespace ("mock") must include a period, the top level is reserved'
-					);
-				});
-			});
-
 			describe('when the namespace includes invalid characters', () => {
 				beforeEach(() => {
 					AwsRum.mock.instances[0].recordEvent.mockClear();
@@ -246,7 +228,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				it('logs a warning about valid namespace characters', () => {
 					expect(console.warn).toHaveBeenCalledTimes(1);
 					expect(console.warn).toHaveBeenCalledWith(
-						'Invalid metrics event: namespace ("mock . namespace") must be a combination of alphanumeric characters, underscores, and hyphens, separated by periods'
+						'Invalid metrics event: namespace ("mock . namespace") must be a combination of alphanumeric characters, underscores, and hyphens, possibly separated by periods'
 					);
 				});
 			});
