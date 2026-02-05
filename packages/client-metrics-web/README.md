@@ -15,19 +15,13 @@ A client for sending operational metrics events to [AWS CloudWatch RUM](https://
 * [Usage (systems)](#usage-systems)
   * [`MetricsClient`](#metricsclient)
     * [`client.recordEvent()`](#clientrecordevent)
-    * [`client.recordError()`](#clientrecorderror)
     * [`client.enable()`](#clientenable)
     * [`client.disable()`](#clientdisable)
     * [`client.isEnabled`](#clientisenabled)
-    * [`client.isAvailable`](#clientisavailable)
   * [Event-based API](#event-based-api)
   * [Error handling](#error-handling)
   * [Configuration options](#configuration-options)
     * [`options.allowedHostnamePattern`](#optionsallowedhostnamepattern)
-    * [`options.awsAppMonitorId`](#optionsawsappmonitorid)
-    * [`options.awsAppMonitorRegion`](#optionsawsappmonitorregion)
-    * [`options.awsIdentityPoolId`](#optionsawsidentitypoolid)
-    * [`options.samplePercentage`](#optionssamplepercentage)
     * [`options.systemCode`](#optionssystemcode)
     * [`options.systemVersion`](#optionssystemversion)
 * [Usage (shared libraries)](#usage-shared-libraries)
@@ -88,27 +82,6 @@ The event namespace **MUST** include a period (`.`). It must be comprised of alp
 
 Other than the above, the event namespace is free-form for now. A later major version of the client may lock down the top-level namespace further.
 
-#### `client.recordError()`
-
-> [!WARNING]  
-> Errors in AWS CloudWatch RUM are unstructured so they're not as useful as sending appropriately-namespaced events, [please do this if possible](#clientrecordevent). If we see heavy use of errors from your system then we may work with you to move to metrics.
-
-If you need to record an error manually then you can do so with this method. It accepts an error object:
-
-```js
-client.recordError(new Error('oops'));
-```
-
-You'd normally do this in a try/catch block:
-
-```js
-try {
-    // Do something that might throw an error
-} catch (error) {
-    client.recordError(error);
-}
-```
-
 #### `client.enable()`
 
 Enable the client. This is called by default during instantiation but you may need to call this if the client is ever disabled.
@@ -128,10 +101,6 @@ client.disable();
 #### `client.isEnabled`
 
 A boolean indicating whether the client is currently enabled.
-
-#### `client.isAvailable`
-
-A boolean indicating whether the client was correctly configured and set up. If this is `false` then it's not possible for events to be sent to AWS CloudWatch RUM.
 
 ### Event-based API
 
@@ -205,44 +174,6 @@ This is to avoid sending metrics from local or test environments. It should matc
 ```js
 // Allows the metrics client to work only on mydomain.com and subdomains
 new MetricsClient({ allowedHostnamePattern: /\.mydomain\.com$/ });
-```
-
-#### `options.awsAppMonitorId`
-
-**Required** `String`. The ID of the [App Monitor](https://docs.aws.amazon.com/cloudwatchrum/latest/APIReference/API_AppMonitor.html) you want to send metrics to (see [infrastructure for information on where to get this value](#usage-infrastructure)).
-
-> [!TIP]
-> This is not a secret, it's safe to be visible in client-side code.
-
-```js
-new MetricsClient({ awsAppMonitorId: '0990f36b-1af0-47d1-a155-873e6e566b0c' });
-```
-
-#### `options.awsAppMonitorRegion`
-
-**Required** `String`. The AWS region the [App Monitor](https://docs.aws.amazon.com/cloudwatchrum/latest/APIReference/API_AppMonitor.html) you want to send metrics to runs in (see [infrastructure for information on where to get this value](#usage-infrastructure)).
-
-```js
-new MetricsClient({ awsAppMonitorRegion: 'eu-west-1' });
-```
-
-#### `options.awsIdentityPoolId`
-
-**Required** `String`. The ID of the [Identity Pool](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-identity.html) your metrics client uses for authentication (see [infrastructure for information on where to get this value](#usage-infrastructure)).
-
-> [!TIP]
-> This is not a secret, it's safe to be visible in client-side code.
-
-```js
-new MetricsClient({ awsIdentityPoolId: 'eu-west-1:3b48b1c1-b286-4459-a755-f7074f4c8356' });
-```
-
-#### `options.samplePercentage`
-
-**Optional** `Number`. The percentage of requests to send metrics for. Sampling is important to keep our costs down - never set this to `100` for systems dealing with any amount of production traffic. Defaults to `5`.
-
-```js
-new MetricsClient({ samplePercentage: 25 });
 ```
 
 #### `options.systemCode`

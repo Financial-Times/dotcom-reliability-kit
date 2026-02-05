@@ -1,19 +1,10 @@
-// biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-const { AwsRum } = require('aws-rum-web');
-
 /**
- * @import { AwsRumConfig } from 'aws-rum-web'
  * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)+$/i;
 
 exports.MetricsClient = class MetricsClient {
-	/** @type {null | AwsRum} */
-	#rum = null;
-
-	/** @type {boolean} */
-	#isAvailable = false;
 
 	/** @type {boolean} */
 	#isEnabled = false;
@@ -24,49 +15,26 @@ exports.MetricsClient = class MetricsClient {
 	constructor(options) {
 		try {
 			const {
-				awsAppMonitorId,
-				awsAppMonitorRegion,
-				awsIdentityPoolId,
-				samplePercentage,
 				systemCode,
 				systemVersion
 			} = MetricsClient.#defaultOptions(options);
 
-			// Convert percentage-based sample rate to a decimal
-			const sessionSampleRate =
-				Math.round(Math.min(Math.max(samplePercentage, 0), 100)) / 100;
-
-			/** @type {AwsRumConfig} */
+			/** @type {TODO} */
 			const awsRumConfig = {
 				allowCookies: false,
 				disableAutoPageView: true,
 				enableXRay: false,
-				endpoint: `https://dataplane.rum.${awsAppMonitorRegion}.amazonaws.com`,
-				identityPoolId: awsIdentityPoolId,
+				endpoint: TODO,
 				sessionAttributes: { systemCode },
-				sessionSampleRate,
 				telemetries: ['errors']
 			};
 
-			this.#rum = new AwsRum(
-				awsAppMonitorId,
-				systemVersion,
-				awsAppMonitorRegion,
-				awsRumConfig
-			);
-			this.#isAvailable = true;
 		} catch (/** @type {any} */ error) {
-			this.#isAvailable = false;
 			console.warn(`Client not initialised: ${error.message}`);
 		}
 
 		this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);
 		this.enable();
-	}
-
-	/** @type {MetricsClientType['isAvailable']} */
-	get isAvailable() {
-		return this.#isAvailable;
 	}
 
 	/** @type {MetricsClientType['isEnabled']} */
@@ -76,8 +44,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['enable']} */
 	enable() {
-		if (this.#isAvailable && !this.#isEnabled) {
-			this.#rum?.enable();
+		if (!this.#isEnabled) {
 			window.addEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = true;
 		}
@@ -85,23 +52,17 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['disable']} */
 	disable() {
-		if (this.#isAvailable && this.#isEnabled) {
-			this.#rum?.disable();
+		if (this.#isEnabled) {
 			window.removeEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = false;
 		}
-	}
-
-	/** @type {MetricsClientType['recordError']} */
-	recordError(error) {
-		this.#rum?.recordError(error);
 	}
 
 	/** @type {MetricsClientType['recordEvent']} */
 	recordEvent(namespace, eventData = {}) {
 		try {
 			namespace = MetricsClient.#resolveNamespace(namespace);
-			this.#rum?.recordEvent(namespace, eventData);
+			// TODO: add the new way of recording events here
 		} catch (/** @type {any} */ error) {
 			console.warn(`Invalid metrics event: ${error.message}`);
 		}
@@ -130,7 +91,6 @@ exports.MetricsClient = class MetricsClient {
 		const defaultedOptions = Object.assign(
 			{
 				allowedHostnamePattern: /\.ft\.com$/,
-				samplePercentage: 5,
 				systemVersion: '0.0.0'
 			},
 			options
@@ -145,22 +105,10 @@ exports.MetricsClient = class MetricsClient {
 	 */
 	static #assertValidOptions({
 		allowedHostnamePattern,
-		awsAppMonitorId,
-		awsAppMonitorRegion,
-		awsIdentityPoolId,
 		systemCode
 	}) {
 		if (!(allowedHostnamePattern instanceof RegExp)) {
 			throw new TypeError('option allowedHostnamePattern must be a RegExp');
-		}
-		if (typeof awsAppMonitorId !== 'string') {
-			throw new TypeError('option awsAppMonitorId must be a string');
-		}
-		if (typeof awsAppMonitorRegion !== 'string') {
-			throw new TypeError('option awsAppMonitorRegion must be a string');
-		}
-		if (typeof awsIdentityPoolId !== 'string') {
-			throw new TypeError('option awsIdentityPoolId must be a string');
 		}
 		if (typeof systemCode !== 'string') {
 			throw new TypeError('option systemCode must be a string');
