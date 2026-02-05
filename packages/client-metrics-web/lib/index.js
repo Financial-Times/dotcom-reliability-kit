@@ -2,7 +2,7 @@
  * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
-const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)+$/i;
+const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
 
 exports.MetricsClient = class MetricsClient {
 
@@ -129,14 +129,9 @@ exports.MetricsClient = class MetricsClient {
 		if (typeof namespace !== 'string') {
 			throw new TypeError(`namespace (${typeof namespace}) must be a string`);
 		}
-		if (!namespace.includes('.')) {
-			throw new TypeError(
-				`namespace ("${namespace}") must include a period, the top level is reserved`
-			);
-		}
 		if (!namespacePattern.test(namespace)) {
 			throw new TypeError(
-				`namespace ("${namespace}") must be a combination of alphanumeric characters, underscores, and hyphens, separated by periods`
+				`namespace ("${namespace}") must be a combination of alphanumeric characters, underscores, and hyphens, possibly separated by periods`
 			);
 		}
 		return `com.ft.${namespace.toLowerCase()}`;

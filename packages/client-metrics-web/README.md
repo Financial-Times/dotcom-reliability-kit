@@ -78,7 +78,7 @@ client.recordEvent('namespace.event', {
 });
 ```
 
-The event namespace **MUST** include a period (`.`). It must be comprised of alphanumeric characters, underscores, and hyphens, separated by periods. When we record the event in AWS CloudWatch RUM we automatically prefix with `com.ft.`.
+The event namespace must be comprised of alphanumeric characters, underscores, and hyphens, possibly separated by periods. When we record the event in AWS CloudWatch RUM we automatically prefix with `com.ft.`.
 
 Other than the above, the event namespace is free-form for now. A later major version of the client may lock down the top-level namespace further.
 
