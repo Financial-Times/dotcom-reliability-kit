@@ -1,6 +1,6 @@
 {
   "name": "@dotcom-reliability-kit/errors",
-  "version": "4.2.0",
+  "version": "5.0.0-beta.1",
   "type": "module",
   "description": "A suite of error classes which help you throw the most appropriate error in any situation",
   "repository": {
