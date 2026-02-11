@@ -1,6 +1,5 @@
 declare module '@dotcom-reliability-kit/client-metrics-web' {
 	export type MetricsClientOptions = {
-		allowedHostnamePattern?: RegExp;
 		systemCode: string;
 		systemVersion?: string;
 	};

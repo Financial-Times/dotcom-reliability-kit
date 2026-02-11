@@ -1,8 +1,10 @@
+const { randomUUID } = require('node:crypto');
 /**
  * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
+const allowedHostnamePattern = /\.ft\.com$/
 
 exports.MetricsClient = class MetricsClient {
 
@@ -12,26 +14,27 @@ exports.MetricsClient = class MetricsClient {
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
-	constructor(options) {
-		try {
-			const {
-				systemCode,
-				systemVersion
-			} = MetricsClient.#defaultOptions(options);
-
-			/** @type {TODO} */
-			const awsRumConfig = {
-				allowCookies: false,
-				disableAutoPageView: true,
-				enableXRay: false,
-				endpoint: TODO,
-				sessionAttributes: { systemCode },
-				telemetries: ['errors']
-			};
-
-		} catch (/** @type {any} */ error) {
-			console.warn(`Client not initialised: ${error.message}`);
+	constructor(options) {	
+		let { systemCode, systemVersion } = options;
+		
+		if (typeof systemCode !== 'string') {
+			console.warn('Client not initialised: option systemCode must be a string');
+			return;
 		}
+
+		if(systemVersion === undefined || typeof systemVersion !== 'string'){
+			systemVersion = '0.0.0'
+		}
+
+		const hostname = window.location.hostname;
+		const baseUrl = allowedHostnamePattern.test(hostname)
+			? 'https://client-metrics.ft.com/'
+			: 'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/';
+
+		this.endpoint = new URL('/api/v1/ingest', baseUrl).toString();
+
+		this.systemCode = systemCode;
+		this.systemVersion = systemVersion;
 
 		this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);
 		this.enable();
@@ -60,9 +63,34 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['recordEvent']} */
 	recordEvent(namespace, eventData = {}) {
+		if(this.endpoint === undefined){
+			console.warn('Client not initialised properly, cannot record an event');
+			return;
+		}
 		try {
 			namespace = MetricsClient.#resolveNamespace(namespace);
-			// TODO: add the new way of recording events here
+
+			const eventTimestamp = Date.now();
+			const requestId = randomUUID();
+			const body = {
+				namespace,
+				systemCode: this.systemCode,
+				systemVersion: this.systemVersion,
+				eventTimestamp,
+				data: eventData
+			};
+		
+			fetch(this.endpoint, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'User-Agent': `FTSystem/cp-client-metrics/${this.systemVersion}`,
+					'x-request-id': requestId,
+				},
+				body: JSON.stringify(body)
+			}).catch(error => { 
+				console.warn('Error happened during fetch: ', error)
+			});
 		} catch (/** @type {any} */ error) {
 			console.warn(`Invalid metrics event: ${error.message}`);
 		}
@@ -83,45 +111,6 @@ exports.MetricsClient = class MetricsClient {
 	};
 
 	/**
-	 * @param {MetricsClientOptions} options
-	 * @returns {Required<MetricsClientOptions>}
-	 */
-	static #defaultOptions(options) {
-		/** @type {Required<MetricsClientOptions>} */
-		const defaultedOptions = Object.assign(
-			{
-				allowedHostnamePattern: /\.ft\.com$/,
-				systemVersion: '0.0.0'
-			},
-			options
-		);
-		MetricsClient.#assertValidOptions(defaultedOptions);
-		return defaultedOptions;
-	}
-
-	/**
-	 * @param {Required<MetricsClientOptions>} options
-	 * @returns {void}
-	 */
-	static #assertValidOptions({
-		allowedHostnamePattern,
-		systemCode
-	}) {
-		if (!(allowedHostnamePattern instanceof RegExp)) {
-			throw new TypeError('option allowedHostnamePattern must be a RegExp');
-		}
-		if (typeof systemCode !== 'string') {
-			throw new TypeError('option systemCode must be a string');
-		}
-
-		// No point trying to send RUM events when we're not running on an allowed domain
-		const hostname = window.location.hostname;
-		if (!allowedHostnamePattern.test(hostname)) {
-			throw new Error(`client errors cannot be handled on ${hostname}`);
-		}
-	}
-
-	/**
 	 * @param {string} namespace
 	 * @returns {string}
 	 */
@@ -134,7 +123,7 @@ exports.MetricsClient = class MetricsClient {
 				`namespace ("${namespace}") must be a combination of alphanumeric characters, underscores, and hyphens, possibly separated by periods`
 			);
 		}
-		return `com.ft.${namespace.toLowerCase()}`;
+		return namespace.toLowerCase();
 	}
 
 	/**
