@@ -1,7 +1,5 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-jest.mock('aws-rum-web');
-
-const { AwsRum } = require('aws-rum-web');
+jest.mock('node:crypto');
 const { MetricsClient } = require('../../..');
 
 describe('@dotcom-reliability-kit/client-metrics-web', () => {
@@ -17,6 +15,11 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			log: console.log,
 			warn: jest.fn()
 		});
+		jest.useFakeTimers().setSystemTime(new Date('1990-11-11'));
+
+		global.fetch = jest.fn(() =>
+			Promise.resolve({ status: 202, ok: true })
+		);
 	});
 
 	afterEach(() => {
@@ -35,37 +38,39 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 	describe('new MetricsClient(options)', () => {
 		let instance;
 		let options;
+		let randomUUID;
 
 		beforeEach(() => {
+			randomUUID = require('node:crypto').randomUUID;
+			randomUUID.mockReturnValue('mock-generated-uuid');
 			options = {
-				allowedHostnamePattern: /^mock-hostname$/,
 				systemCode: 'mock-system-code',
-				systemVersion: 'mock-version'
+				systemVersion: 'mock-version',
 			};
 			instance = new MetricsClient(options);
 		});
 
-		it('creates an AWS RUM client with the given options', () => {
-			expect(AwsRum).toHaveBeenCalledTimes(1);
-			expect(AwsRum).toHaveBeenCalledWith(
-				'mock-app-monitor-id',
-				'mock-version',
-				'mock-app-monitor-region',
-				{
-					allowCookies: false,
-					disableAutoPageView: true,
-					enableXRay: false,
-					endpoint: `https://dataplane.rum.mock-app-monitor-region.amazonaws.com`,
-					identityPoolId: 'mock-identity-pool-id',
-					sessionAttributes: { systemCode: 'mock-system-code' },
-					sessionSampleRate: 0.13,
-					telemetries: ['errors']
-				}
-			);
-		});
-
-		it('enables the AWS RUM client', () => {
-			expect(AwsRum.mock.instances[0].enable).toHaveBeenCalledTimes(1);
+		it('creates an client with the given options', () => {
+			instance.recordEvent('mock.event', { mockEventData: true });
+			expect(global.fetch).toHaveBeenCalledTimes(1);
+			expect(global.fetch).toHaveBeenCalledWith(
+				'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest',
+    			expect.objectContaining({
+      				method: 'POST',
+      				headers: expect.objectContaining({
+				        'Content-Type': 'application/json',
+        				'User-Agent': 'FTSystem/cp-client-metrics/mock-version',
+        				'x-request-id': 'mock-generated-uuid',
+      				}),
+      				body: JSON.stringify({
+       		 			namespace: 'mock.event',
+        				systemCode: 'mock-system-code',
+        				systemVersion: 'mock-version',
+        				eventTimestamp: 658281600000,
+        				data: { mockEventData: true },
+      				}),
+				})
+			)
 		});
 
 		it('adds an "ft.clientMetric" event listener to the window', () => {
@@ -92,10 +97,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				instance.disable();
 			});
 
-			it('disables the AWS RUM client', () => {
-				expect(AwsRum.mock.instances[0].disable).toHaveBeenCalledTimes(1);
-			});
-
 			it('removes the "ft.clientMetric" event listener from the window', () => {
 				expect(window.removeEventListener).toHaveBeenCalledTimes(1);
 				// Jest expect.any(Function) does not work with bound functions so we can't
@@ -111,13 +112,11 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when the client is already disabled', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].disable.mockClear();
 					window.removeEventListener.mockClear();
 					instance.disable();
 				});
 
 				it('does nothing', () => {
-					expect(AwsRum.mock.instances[0].disable).toHaveBeenCalledTimes(0);
 					expect(window.removeEventListener).toHaveBeenCalledTimes(0);
 				});
 			});
@@ -125,14 +124,9 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 		describe('.enable()', () => {
 			beforeEach(() => {
-				AwsRum.mock.instances[0].enable.mockClear();
 				window.addEventListener.mockClear();
 				instance.disable();
 				instance.enable();
-			});
-
-			it('re-enables the AWS RUM client', () => {
-				expect(AwsRum.mock.instances[0].enable).toHaveBeenCalledTimes(1);
 			});
 
 			it('re-adds the "ft.clientMetric" event listener to the window', () => {
@@ -150,32 +144,29 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when the client is already enabled', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].enable.mockClear();
 					window.addEventListener.mockClear();
 					instance.enable();
 				});
 
 				it('does nothing', () => {
-					expect(AwsRum.mock.instances[0].enable).toHaveBeenCalledTimes(0);
 					expect(window.addEventListener).toHaveBeenCalledTimes(0);
 				});
 			});
 		});
 
 		describe('.recordEvent(namespace, data)', () => {
-			let eventData;
+			let mockData;
 
 			beforeEach(() => {
-				eventData = { mockEventData: true };
-				instance.recordEvent('mock.event', eventData);
+				mockData = { mockEventData: true };
+				instance.recordEvent('mock.event', mockData);
 			});
 
-			it('hands the event to the AWS RUM client with the namespace prefixed', () => {
-				expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(1);
-				expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledWith(
-					'com.ft.mock.event',
-					eventData
-				);
+			it('posts the event with the namespace', () => {
+				expect(global.fetch).toHaveBeenCalledTimes(1);
+				const body = JSON.parse(global.fetch.mock.calls[0][1].body);
+				expect(body.namespace).toBe('mock.event');
+				expect(body.data).toStrictEqual(mockData);
 			});
 
 			it('does not log any warnings', () => {
@@ -184,27 +175,25 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when the namespace includes uppercase characters', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
-					instance.recordEvent('Mock.UPPER.Event', eventData);
+					global.fetch.mockClear();
+					instance.recordEvent('Mock.UPPER.Event', mockData);
 				});
 
-				it('hands the event to the AWS RUM client with the namespace converted to lower case', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(1);
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledWith(
-						'com.ft.mock.upper.event',
-						eventData
-					);
+				it('hands the event to the client with the namespace converted to lower case', () => {
+					expect(global.fetch).toHaveBeenCalledTimes(1);
+					const body = JSON.parse(global.fetch.mock.calls[0][1].body);
+					expect(body.namespace).toBe('mock.upper.event');
 				});
 			});
 
 			describe('when the namespace is not a string', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
-					instance.recordEvent(123, eventData);
+					global.fetch.mockClear();
+					instance.recordEvent(123, mockData);
 				});
 
-				it('does not hand the event to the AWS RUM client', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(0);
+				it('does not post the event', () => {
+					expect(global.fetch).toHaveBeenCalledTimes(0);
 				});
 
 				it('logs a warning about the namespace type', () => {
@@ -217,12 +206,12 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when the namespace includes invalid characters', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
-					instance.recordEvent('mock . namespace', eventData);
+					global.fetch.mockClear();
+					instance.recordEvent('mock . namespace', mockData);
 				});
 
-				it('does not hand the event to the AWS RUM client', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(0);
+				it('does not post the event', () => {
+					expect(global.fetch).toHaveBeenCalledTimes(0);
 				});
 
 				it('logs a warning about valid namespace characters', () => {
@@ -235,16 +224,15 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event data is not defined', () => {
 				beforeEach(() => {
-					AwsRum.mock.instances[0].recordEvent.mockClear();
-					instance.recordEvent('mock.event');
+					global.fetch.mockClear();
+					instance.recordEvent('mock.event.empty.data');
 				});
 
-				it('hands the event to the AWS RUM client with an empty object as event data', () => {
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledTimes(1);
-					expect(AwsRum.mock.instances[0].recordEvent).toHaveBeenCalledWith(
-						'com.ft.mock.event',
-						{}
-					);
+				it('hands the event to the client with an empty object as event data', () => {
+					expect(global.fetch).toHaveBeenCalledTimes(1);
+					const body = JSON.parse(global.fetch.mock.calls[0][1].body);
+					expect(body.namespace).toStrictEqual('mock.event.empty.data');
+					expect(body.data).toStrictEqual({})
 				});
 			});
 		});
@@ -330,70 +318,41 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 		});
 
-		describe('when options.allowedHostnamePattern does not match the window location', () => {
+		describe('when the window location is not part of allowedHostnamePattern', () => { 
 			beforeEach(() => {
-				AwsRum.mockClear();
+				global.fetch.mockClear();
 				window.location.hostname = 'mock-non-matching-hostname';
 				instance = new MetricsClient(options);
 			});
 
-			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
-			});
-
-			it('logs a warning about hostname support', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
-					'Client not initialised: client errors cannot be handled on mock-non-matching-hostname'
-				);
+			it('enables the client and uses the test server', () => {
+				expect(instance.isEnabled).toBe(true);
+				expect(instance.endpoint).toBe('https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest');
 			});
 		});
 
-		describe('when options.allowedHostnamePattern is not set', () => {
+		describe('when the hostname is on ft.com', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
-				delete options.allowedHostnamePattern;
+				global.fetch.mockClear();
 				window.location.hostname = 'example.ft.com';
 				instance = new MetricsClient(options);
 			});
 
-			it('defaults to matching *.ft.com', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(1);
-			});
-
-			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
-			});
-		});
-
-		describe('when options.allowedHostnamePattern is not a regular expression', () => {
-			beforeEach(() => {
-				AwsRum.mockClear();
-				options.allowedHostnamePattern = 'mock-pattern';
-				instance = new MetricsClient(options);
-			});
-
-			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
-			});
-
-			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
-					'Client not initialised: option allowedHostnamePattern must be a RegExp'
-				);
+			it('enables the client and uses the production server', () => {
+				expect(instance.isEnabled).toBe(true);
+				expect(instance.endpoint).toBe('https://client-metrics.ft.com/api/v1/ingest')
 			});
 		});
 
 		describe('when options.systemCode is not a string', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				global.fetch.mockClear();
 				options.systemCode = 123;
 				instance = new MetricsClient(options);
 			});
 
-			it('does not create an AWS RUM client', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(0);
+			it('does not enabled the client', () => {
+				expect(instance.isEnabled).toBe(false);
 			});
 
 			it('logs a warning about the invalid type', () => {
@@ -402,27 +361,45 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					'Client not initialised: option systemCode must be a string'
 				);
 			});
+
+			it('logs a warning if trying to record an event', () => {
+				instance.recordEvent('mock.event', { mockEventData: true });
+				expect(console.warn).toHaveBeenCalledWith(
+					'Client not initialised properly, cannot record an event'
+				);
+			});
 		});
 
 		describe('when options.systemVersion is not set', () => {
 			beforeEach(() => {
-				AwsRum.mockClear();
+				global.fetch.mockClear();
 				delete options.systemVersion;
 				instance = new MetricsClient(options);
 			});
 
-			it('creates an AWS RUM client with a default version of 0.0.0', () => {
-				expect(AwsRum).toHaveBeenCalledTimes(1);
-				expect(AwsRum).toHaveBeenCalledWith(
-					'mock-app-monitor-id',
-					'0.0.0',
-					'mock-app-monitor-region',
-					expect.any(Object)
-				);
+			it('creates a client with a default version of 0.0.0', () => {
+				expect(instance.systemVersion).toStrictEqual('0.0.0');
 			});
 
 			it('does not log any warnings', () => {
 				expect(console.warn).toHaveBeenCalledTimes(0);
+			});
+		});
+
+		describe('when fetch rejects', () => {
+			beforeEach(async () => {
+				global.fetch.mockClear();
+				global.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
+				instance = new MetricsClient(options);
+				instance.recordEvent('mock.event', { mockEventData: true });
+			});
+
+			it('logs a warning from the fetch catch handler', () => {
+				expect(console.warn).toHaveBeenCalledWith(
+					'Error happened during fetch: ',
+					expect.any(Error)
+				);
+				expect(console.warn.mock.calls[0][1].message).toBe('Network down');
 			});
 		});
 	});
