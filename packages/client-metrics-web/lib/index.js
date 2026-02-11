@@ -1,29 +1,29 @@
+// biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
 const { randomUUID } = require('node:crypto');
 /**
  * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
-const allowedHostnamePattern = /\.ft\.com$/
+const allowedHostnamePattern = /\.ft\.com$/;
 
 exports.MetricsClient = class MetricsClient {
-
 	/** @type {boolean} */
 	#isEnabled = false;
 
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
-	constructor(options) {	
+	constructor(options) {
 		let { systemCode, systemVersion } = options;
-		
+
 		if (typeof systemCode !== 'string') {
 			console.warn('Client not initialised: option systemCode must be a string');
 			return;
 		}
 
-		if(systemVersion === undefined || typeof systemVersion !== 'string'){
-			systemVersion = '0.0.0'
+		if (systemVersion === undefined || typeof systemVersion !== 'string') {
+			systemVersion = '0.0.0';
 		}
 
 		const hostname = window.location.hostname;
@@ -63,7 +63,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['recordEvent']} */
 	recordEvent(namespace, eventData = {}) {
-		if(this.endpoint === undefined){
+		if (this.endpoint === undefined) {
 			console.warn('Client not initialised properly, cannot record an event');
 			return;
 		}
@@ -79,17 +79,17 @@ exports.MetricsClient = class MetricsClient {
 				eventTimestamp,
 				data: eventData
 			};
-		
+
 			fetch(this.endpoint, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 					'User-Agent': `FTSystem/cp-client-metrics/${this.systemVersion}`,
-					'x-request-id': requestId,
+					'x-request-id': requestId
 				},
 				body: JSON.stringify(body)
-			}).catch(error => { 
-				console.warn('Error happened during fetch: ', error)
+			}).catch((error) => {
+				console.warn('Error happened during fetch: ', error);
 			});
 		} catch (/** @type {any} */ error) {
 			console.warn(`Invalid metrics event: ${error.message}`);
