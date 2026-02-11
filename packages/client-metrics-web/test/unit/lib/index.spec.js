@@ -17,9 +17,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		});
 		jest.useFakeTimers().setSystemTime(new Date('1990-11-11'));
 
-		global.fetch = jest.fn(() =>
-			Promise.resolve({ status: 202, ok: true })
-		);
+		global.fetch = jest.fn(() => Promise.resolve({ status: 202, ok: true }));
 	});
 
 	afterEach(() => {
@@ -45,7 +43,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			randomUUID.mockReturnValue('mock-generated-uuid');
 			options = {
 				systemCode: 'mock-system-code',
-				systemVersion: 'mock-version',
+				systemVersion: 'mock-version'
 			};
 			instance = new MetricsClient(options);
 		});
@@ -55,22 +53,22 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			expect(global.fetch).toHaveBeenCalledTimes(1);
 			expect(global.fetch).toHaveBeenCalledWith(
 				'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest',
-    			expect.objectContaining({
-      				method: 'POST',
-      				headers: expect.objectContaining({
-				        'Content-Type': 'application/json',
-        				'User-Agent': 'FTSystem/cp-client-metrics/mock-version',
-        				'x-request-id': 'mock-generated-uuid',
-      				}),
-      				body: JSON.stringify({
-       		 			namespace: 'mock.event',
-        				systemCode: 'mock-system-code',
-        				systemVersion: 'mock-version',
-        				eventTimestamp: 658281600000,
-        				data: { mockEventData: true },
-      				}),
+				expect.objectContaining({
+					method: 'POST',
+					headers: expect.objectContaining({
+						'Content-Type': 'application/json',
+						'User-Agent': 'FTSystem/cp-client-metrics/mock-version',
+						'x-request-id': 'mock-generated-uuid'
+					}),
+					body: JSON.stringify({
+						namespace: 'mock.event',
+						systemCode: 'mock-system-code',
+						systemVersion: 'mock-version',
+						eventTimestamp: 658281600000,
+						data: { mockEventData: true }
+					})
 				})
-			)
+			);
 		});
 
 		it('adds an "ft.clientMetric" event listener to the window', () => {
@@ -232,7 +230,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					expect(global.fetch).toHaveBeenCalledTimes(1);
 					const body = JSON.parse(global.fetch.mock.calls[0][1].body);
 					expect(body.namespace).toStrictEqual('mock.event.empty.data');
-					expect(body.data).toStrictEqual({})
+					expect(body.data).toStrictEqual({});
 				});
 			});
 		});
@@ -318,7 +316,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 		});
 
-		describe('when the window location is not part of allowedHostnamePattern', () => { 
+		describe('when the window location is not part of allowedHostnamePattern', () => {
 			beforeEach(() => {
 				global.fetch.mockClear();
 				window.location.hostname = 'mock-non-matching-hostname';
@@ -327,7 +325,9 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('enables the client and uses the test server', () => {
 				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe('https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest');
+				expect(instance.endpoint).toBe(
+					'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest'
+				);
 			});
 		});
 
@@ -340,7 +340,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('enables the client and uses the production server', () => {
 				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe('https://client-metrics.ft.com/api/v1/ingest')
+				expect(instance.endpoint).toBe('https://client-metrics.ft.com/api/v1/ingest');
 			});
 		});
 
