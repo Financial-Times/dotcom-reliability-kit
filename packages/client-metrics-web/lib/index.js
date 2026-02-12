@@ -5,7 +5,7 @@ const { randomUUID } = require('node:crypto');
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
-const allowedHostnamePattern = /\.ft\.com$/;
+const allowedHostnamePattern = /^(?!local\.ft\.com$).*\.ft\.com$/;
 
 exports.MetricsClient = class MetricsClient {
 	/** @type {boolean} */

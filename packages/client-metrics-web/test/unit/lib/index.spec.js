@@ -344,6 +344,21 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 		});
 
+		describe("when the hostname is on ft.com but it's local", () => {
+			beforeEach(() => {
+				global.fetch.mockClear();
+				window.location.hostname = 'local.ft.com';
+				instance = new MetricsClient(options);
+			});
+
+			it('enables the client and uses the production server', () => {
+				expect(instance.isEnabled).toBe(true);
+				expect(instance.endpoint).toBe(
+					'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest'
+				);
+			});
+		});
+
 		describe('when options.systemCode is not a string', () => {
 			beforeEach(() => {
 				global.fetch.mockClear();
