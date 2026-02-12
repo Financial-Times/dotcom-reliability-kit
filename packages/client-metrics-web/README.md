@@ -170,6 +170,11 @@ new MetricsClient({
 new MetricsClient({ systemCode: 'my-system' });
 ```
 
+The system code has to be a combinaison of alphanumerical characters, possibly separated by hyphens.
+
+> [!IMPORTANT]
+>  If the systemCode is not set properly, the client will fail to be constructed and it will not be possible to send any events. Attempting to use `recordEvent` will fail and log a warning `Client not initialised properly, cannot record an event.`
+
 #### `options.systemVersion`
 
 **Optional** `String`. The version number of the currently running system, which helps us to spot issues in new versions. This could be a version number or a git commit hash. Defaults to `0.0.0`.

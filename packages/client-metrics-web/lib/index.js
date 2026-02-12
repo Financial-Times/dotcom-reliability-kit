@@ -6,6 +6,7 @@ const { randomUUID } = require('node:crypto');
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
 const allowedHostnamePattern = /^(?!local\.ft\.com$).*\.ft\.com$/;
+const systemCodePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 exports.MetricsClient = class MetricsClient {
 	/** @type {boolean} */
@@ -17,8 +18,10 @@ exports.MetricsClient = class MetricsClient {
 	constructor(options) {
 		let { systemCode, systemVersion } = options;
 
-		if (typeof systemCode !== 'string') {
-			console.warn('Client not initialised: option systemCode must be a string');
+		if (typeof systemCode !== 'string' || !systemCodePattern.test(systemCode)) {
+			console.warn(
+				'Client not initialised: systemCode must be be a combination of alphanumeric characters possibly separated by hyphens'
+			);
 			return;
 		}
 

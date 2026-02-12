@@ -373,7 +373,33 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			it('logs a warning about the invalid type', () => {
 				expect(console.warn).toHaveBeenCalledTimes(1);
 				expect(console.warn).toHaveBeenCalledWith(
-					'Client not initialised: option systemCode must be a string'
+					'Client not initialised: systemCode must be be a combination of alphanumeric characters possibly separated by hyphens'
+				);
+			});
+
+			it('logs a warning if trying to record an event', () => {
+				instance.recordEvent('mock.event', { mockEventData: true });
+				expect(console.warn).toHaveBeenCalledWith(
+					'Client not initialised properly, cannot record an event'
+				);
+			});
+		});
+
+		describe('when options.systemCode includes invalid characters', () => {
+			beforeEach(() => {
+				global.fetch.mockClear();
+				options.systemCode = '123.456';
+				instance = new MetricsClient(options);
+			});
+
+			it('does not enabled the client', () => {
+				expect(instance.isEnabled).toBe(false);
+			});
+
+			it('logs a warning about the invalid type', () => {
+				expect(console.warn).toHaveBeenCalledTimes(1);
+				expect(console.warn).toHaveBeenCalledWith(
+					'Client not initialised: systemCode must be be a combination of alphanumeric characters possibly separated by hyphens'
 				);
 			});
 
