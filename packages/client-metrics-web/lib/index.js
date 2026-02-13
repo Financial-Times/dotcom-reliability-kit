@@ -32,7 +32,7 @@ exports.MetricsClient = class MetricsClient {
 		const hostname = window.location.hostname;
 		const baseUrl = allowedHostnamePattern.test(hostname)
 			? 'https://client-metrics.ft.com/'
-			: 'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/';
+			: 'https://client-metrics-test.ft.com/';
 
 		this.endpoint = new URL('/api/v1/ingest', baseUrl).toString();
 

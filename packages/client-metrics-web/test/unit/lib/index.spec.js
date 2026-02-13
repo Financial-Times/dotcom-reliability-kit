@@ -52,7 +52,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			instance.recordEvent('mock.event', { mockEventData: true });
 			expect(global.fetch).toHaveBeenCalledTimes(1);
 			expect(global.fetch).toHaveBeenCalledWith(
-				'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest',
+				'https://client-metrics-test.ft.com/api/v1/ingest',
 				expect.objectContaining({
 					method: 'POST',
 					headers: expect.objectContaining({
@@ -325,9 +325,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('enables the client and uses the test server', () => {
 				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe(
-					'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest'
-				);
+				expect(instance.endpoint).toBe('https://client-metrics-test.ft.com/api/v1/ingest');
 			});
 		});
 
@@ -353,9 +351,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('enables the client and uses the production server', () => {
 				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe(
-					'https://cp-client-metrics-server.eu-west-1.cp-internal-test.ftweb.tech/api/v1/ingest'
-				);
+				expect(instance.endpoint).toBe('https://client-metrics-test.ft.com/api/v1/ingest');
 			});
 		});
 
