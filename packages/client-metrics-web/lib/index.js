@@ -29,7 +29,7 @@ exports.MetricsClient = class MetricsClient {
 			}
 
 			if (systemVersion === undefined || typeof systemVersion !== 'string') {
-				systemVersion = version;
+				systemVersion = '0.0.0';
 			}
 
 			const hostname = window.location.hostname;
@@ -100,7 +100,7 @@ exports.MetricsClient = class MetricsClient {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'User-Agent': `FTSystem/cp-client-metrics/${this.systemVersion}`
+					'User-Agent': `FTSystem/cp-client-metrics/${version}`
 				},
 				body: JSON.stringify(body)
 			}).catch((error) => {

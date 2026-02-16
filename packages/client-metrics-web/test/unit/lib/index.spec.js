@@ -1,6 +1,6 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
 jest.mock('../../../package.json', () => ({
-  version: '0.0.0-test',
+	version: '0.0.0-test'
 }));
 
 const { MetricsClient } = require('../../..');
@@ -57,7 +57,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					method: 'POST',
 					headers: expect.objectContaining({
 						'Content-Type': 'application/json',
-						'User-Agent': 'FTSystem/cp-client-metrics/mock-version',
+						'User-Agent': 'FTSystem/cp-client-metrics/0.0.0-test'
 					}),
 					body: JSON.stringify({
 						namespace: 'mock.event',
@@ -419,8 +419,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				instance = new MetricsClient(options);
 			});
 
-			it('creates a client with a default version of 0.0.0-test', () => {
-				expect(instance.systemVersion).toStrictEqual('0.0.0-test');
+			it('creates a client with a default version of 0.0.0', () => {
+				expect(instance.systemVersion).toStrictEqual('0.0.0');
 			});
 
 			it('does not log any warnings', () => {
