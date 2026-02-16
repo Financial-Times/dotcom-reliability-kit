@@ -6,6 +6,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 
 	export class MetricsClient {
 		constructor(options: MetricsClientOptions);
+		get isAvailable(): boolean;
 		get isEnabled(): boolean;
 		enable(): void;
 		disable(): void;

@@ -1,5 +1,8 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-jest.mock('node:crypto');
+jest.mock('../../../package.json', () => ({
+  version: '0.0.0-test',
+}));
+
 const { MetricsClient } = require('../../..');
 
 describe('@dotcom-reliability-kit/client-metrics-web', () => {
@@ -36,11 +39,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 	describe('new MetricsClient(options)', () => {
 		let instance;
 		let options;
-		let randomUUID;
 
 		beforeEach(() => {
-			randomUUID = require('node:crypto').randomUUID;
-			randomUUID.mockReturnValue('mock-generated-uuid');
 			options = {
 				systemCode: 'mock-system-code',
 				systemVersion: 'mock-version'
@@ -58,7 +58,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					headers: expect.objectContaining({
 						'Content-Type': 'application/json',
 						'User-Agent': 'FTSystem/cp-client-metrics/mock-version',
-						'x-request-id': 'mock-generated-uuid'
 					}),
 					body: JSON.stringify({
 						namespace: 'mock.event',
@@ -82,6 +81,12 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 		it('does not log any warnings', () => {
 			expect(console.warn).toHaveBeenCalledTimes(0);
+		});
+
+		describe('.isAvailable', () => {
+			it('is set to true', () => {
+				expect(instance.isAvailable).toStrictEqual(true);
+			});
 		});
 
 		describe('.isEnabled', () => {
@@ -414,8 +419,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				instance = new MetricsClient(options);
 			});
 
-			it('creates a client with a default version of 0.0.0', () => {
-				expect(instance.systemVersion).toStrictEqual('0.0.0');
+			it('creates a client with a default version of 0.0.0-test', () => {
+				expect(instance.systemVersion).toStrictEqual('0.0.0-test');
 			});
 
 			it('does not log any warnings', () => {

@@ -1,5 +1,5 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-const { randomUUID } = require('node:crypto');
+const { version } = require('../package.json');
 /**
  * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
@@ -10,37 +10,51 @@ const systemCodePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 exports.MetricsClient = class MetricsClient {
 	/** @type {boolean} */
+	#isAvailable = false;
+
+	/** @type {boolean} */
 	#isEnabled = false;
 
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
 	constructor(options) {
-		let { systemCode, systemVersion } = options;
+		try {
+			let { systemCode, systemVersion } = options;
 
-		if (typeof systemCode !== 'string' || !systemCodePattern.test(systemCode)) {
-			console.warn(
-				'Client not initialised: systemCode must be be a combination of alphanumeric characters possibly separated by hyphens'
-			);
+			if (typeof systemCode !== 'string' || !systemCodePattern.test(systemCode)) {
+				throw new Error(
+					'systemCode must be be a combination of alphanumeric characters possibly separated by hyphens'
+				);
+			}
+
+			if (systemVersion === undefined || typeof systemVersion !== 'string') {
+				systemVersion = version;
+			}
+
+			const hostname = window.location.hostname;
+			const baseUrl = allowedHostnamePattern.test(hostname)
+				? 'https://client-metrics.ft.com/'
+				: 'https://client-metrics-test.ft.com/';
+
+			this.endpoint = new URL('/api/v1/ingest', baseUrl).toString();
+
+			this.systemCode = systemCode;
+			this.systemVersion = systemVersion;
+
+			this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);
+			this.#isAvailable = true;
+			this.enable();
+		} catch (/** @type {any} */ error) {
+			this.#isAvailable = false;
+			console.warn(`Client not initialised: ${error.message}`);
 			return;
 		}
+	}
 
-		if (systemVersion === undefined || typeof systemVersion !== 'string') {
-			systemVersion = '0.0.0';
-		}
-
-		const hostname = window.location.hostname;
-		const baseUrl = allowedHostnamePattern.test(hostname)
-			? 'https://client-metrics.ft.com/'
-			: 'https://client-metrics-test.ft.com/';
-
-		this.endpoint = new URL('/api/v1/ingest', baseUrl).toString();
-
-		this.systemCode = systemCode;
-		this.systemVersion = systemVersion;
-
-		this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);
-		this.enable();
+	/** @type {MetricsClientType['isAvailable']} */
+	get isAvailable() {
+		return this.#isAvailable;
 	}
 
 	/** @type {MetricsClientType['isEnabled']} */
@@ -50,7 +64,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['enable']} */
 	enable() {
-		if (!this.#isEnabled) {
+		if (this.#isAvailable && !this.#isEnabled) {
 			window.addEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = true;
 		}
@@ -58,7 +72,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['disable']} */
 	disable() {
-		if (this.#isEnabled) {
+		if (this.#isAvailable && this.#isEnabled) {
 			window.removeEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = false;
 		}
@@ -66,7 +80,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['recordEvent']} */
 	recordEvent(namespace, eventData = {}) {
-		if (this.endpoint === undefined) {
+		if (!this.isAvailable || !this.endpoint) {
 			console.warn('Client not initialised properly, cannot record an event');
 			return;
 		}
@@ -74,7 +88,6 @@ exports.MetricsClient = class MetricsClient {
 			namespace = MetricsClient.#resolveNamespace(namespace);
 
 			const eventTimestamp = Date.now();
-			const requestId = randomUUID();
 			const body = {
 				namespace,
 				systemCode: this.systemCode,
@@ -87,8 +100,7 @@ exports.MetricsClient = class MetricsClient {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
-					'User-Agent': `FTSystem/cp-client-metrics/${this.systemVersion}`,
-					'x-request-id': requestId
+					'User-Agent': `FTSystem/cp-client-metrics/${this.systemVersion}`
 				},
 				body: JSON.stringify(body)
 			}).catch((error) => {
