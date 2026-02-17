@@ -29,21 +29,18 @@ declare module '@dotcom-reliability-kit/app-info' {
 		};
 	};
 
-	type appInfo = {
-		systemCode: typeof systemCode;
-		processType: typeof processType;
-		commitHash: typeof commitHash;
-		environment: typeof environment;
-		region: typeof region;
-		releaseDate: typeof releaseDate;
-		releaseVersion: typeof releaseVersion;
-		cloudProvider: typeof cloudProvider;
-		herokuAppId: typeof herokuAppId;
-		herokuDynoId: typeof herokuDynoId;
-		instanceId: typeof instanceId;
-		semanticConventions: SemanticConventions;
+	export default {
+		systemCode: typeof systemCode,
+		processType: typeof processType,
+		commitHash: typeof commitHash,
+		environment: typeof environment,
+		region: typeof region,
+		releaseDate: typeof releaseDate,
+		releaseVersion: typeof releaseVersion,
+		cloudProvider: typeof cloudProvider,
+		herokuAppId: typeof herokuAppId,
+		herokuDynoId: typeof herokuDynoId,
+		instanceId: typeof instanceId,
+		semanticConventions: typeof semanticConventions
 	};
-
-	export default appInfo;
-	export = appInfo;
 }
