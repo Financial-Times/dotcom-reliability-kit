@@ -7,24 +7,55 @@ import { randomUUID } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-/**
- * @import appInfo from '@dotcom-reliability-kit/app-info'
- */
+interface SemanticConventions {
+	cloud: {
+		provider?: string;
+		region?: string;
+	};
+	deployment: {
+		environment: string;
+	};
+	service: {
+		name?: string;
+		version?: string;
+		instance: {
+			id: string;
+		};
+	};
+}
 
-/**
- * Gather up app info from a file system and process.
- *
- * @param {{env: typeof process.env, rootPath: string}} options
- * @returns {Readonly<appInfo>}
- */
-export default function gatherAppInfo({ env, rootPath }) {
-	/** @type {null | { name: unknown, version: unknown }} */
-	let manifest = null;
+interface Options {
+	env: typeof process.env;
+	rootPath: string;
+}
+
+interface PackageManifest {
+	name: unknown;
+	version: unknown;
+}
+
+export interface AppInfo {
+	systemCode: string | null;
+	processType: string | null;
+	commitHash: string | null;
+	environment: string;
+	region: string | null;
+	releaseDate: string | null;
+	releaseVersion: string | null;
+	cloudProvider: string | null;
+	herokuAppId: string | null;
+	herokuDynoId: string | null;
+	instanceId: string;
+	semanticConventions: SemanticConventions;
+}
+
+/** Gather up app info from a file system and process */
+export default function gatherAppInfo({ env, rootPath }: Options): Readonly<AppInfo> {
+	let manifest: null | PackageManifest = null;
 	try {
 		manifest = JSON.parse(readFileSync(path.join(rootPath, 'package.json'), 'utf-8'));
 	} catch (_) {}
 
-	/** @type {string | null} */
 	const manifestName =
 		typeof manifest?.name === 'string'
 			? // Remove a prefix of "ft-", this is a hangover and we have plenty of
@@ -37,14 +68,12 @@ export default function gatherAppInfo({ env, rootPath }) {
 				manifest.name.replace(/^ft-/, '')
 			: null;
 
-	/** @type {string | null} */
 	const manifestVersion = typeof manifest?.version === 'string' ? manifest.version : null;
 
 	// The dyno process type
 	const processType = env.AWS_LAMBDA_FUNCTION_NAME || env.DYNO?.split('.')[0] || null;
 
-	/** @type {string | null} */
-	let cloudProviderName = null;
+	let cloudProviderName: null | string = null;
 	if (env.AWS_LAMBDA_FUNCTION_NAME || env.HAKO_SERVICE_URL) {
 		cloudProviderName = 'aws';
 	}

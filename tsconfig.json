@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"allowImportingTsExtensions": true,
 		"alwaysStrict": true,
 		"checkJs": true,
 		"esModuleInterop": true,
@@ -22,11 +23,13 @@
 		"**/coverage",
 		"node_modules",
 		"**/*.spec.js",
+		"**/*.spec.ts",
 		"test/**/*",
+		"**/dist/**/*",
 		"**/test/**/*"
 	],
 	"include": [
 		"**/*.js",
-		"**/*.d.ts"
+		"**/*.ts"
 	]
 }

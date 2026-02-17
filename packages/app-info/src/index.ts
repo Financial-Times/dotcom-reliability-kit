@@ -1,4 +1,4 @@
-import gatherAppInfo from './gather-app-info.js';
+import gatherAppInfo from './gather-app-info.ts';
 
 const appInfo = gatherAppInfo({ env: process.env, rootPath: process.cwd() });
 

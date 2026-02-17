@@ -13,16 +13,16 @@
   "license": "MIT",
   "scripts": {
     "test": "npm run test:unit && npm run test:end-to-end",
-    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude=**/*.spec.js --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 test/unit/**/*.spec.js",
-    "test:end-to-end": "node --test test/end-to-end/**/*.spec.js"
+    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude=**/*.spec.ts --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 test/unit/**/*.spec.ts",
+    "test:end-to-end": "node --test test/end-to-end/**/*.spec.ts"
   },
   "engines": {
     "node": "^22.12 || ^24"
   },
   "exports": {
     ".": {
-      "types": "./types/index.d.ts",
-      "default": "./lib/index.js"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   }
 }

@@ -1,6 +1,8 @@
+// @ts-nocheck
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import { beforeEach, describe, it, mock } from 'node:test';
+import type { AppInfo } from '../../../src/gather-app-info.js';
 
 const crypto = { randomUUID: mock.fn(() => 'mock-generated-uuid') };
 mock.module('node:crypto', { defaultExport: crypto, namedExports: crypto });
@@ -26,15 +28,15 @@ const defaultEnv = {
 	HEROKU_DYNO_ID: 'mock-heroku-dyno-id'
 };
 
-const { default: gatherAppInfo } = await import('../../../lib/gather-app-info.js');
+const { default: gatherAppInfo } = await import('../../../src/gather-app-info.ts');
 
-describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
+describe('@dotcom-reliability-kit/app-info/src/gather-app-info', () => {
 	it('exports a function', () => {
 		assert.strictEqual(typeof gatherAppInfo, 'function');
 	});
 
 	describe('gatherAppInfo(options)', () => {
-		let appInfo;
+		let appInfo: AppInfo;
 
 		beforeEach(() => {
 			const env = { ...defaultEnv };
@@ -213,7 +215,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 			});
 
 			describe('when neither environment variable is defined but a package.json exists', () => {
-				let env;
+				let env: typeof process.env;
 
 				beforeEach(async () => {
 					env = { ...defaultEnv };
@@ -270,7 +272,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 			});
 
 			describe('when `env.SYSTEM_CODE` is not defined but a package.json exists', () => {
-				let env;
+				let env: typeof process.env;
 
 				beforeEach(async () => {
 					env = { ...defaultEnv };
@@ -358,7 +360,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 		});
 
 		describe('.cloudProvider', () => {
-			let env;
+			let env: typeof process.env;
 
 			beforeEach(async () => {
 				env = { ...defaultEnv };
@@ -432,7 +434,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 		});
 
 		describe('.instanceId', () => {
-			let appInfo;
+			let appInfo: AppInfo;
 
 			beforeEach(async () => {
 				crypto.randomUUID.mock.resetCalls();
