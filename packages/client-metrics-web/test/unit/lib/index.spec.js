@@ -36,6 +36,104 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		}).toThrow(/class constructor/i);
 	});
 
+	it('test', () => {
+		expect(true).toBe(true);
+	});
+
+	describe('Setup which MetricClient server to use based on environment variable or hostname', () => {
+		describe("if the user pass a 'test' environment variable", () => {
+			let instance;
+
+			beforeEach(() => {
+				const options = {
+					systemCode: 'mock-system-code',
+					systemVersion: 'mock-version',
+					environment: 'test'
+				};
+				instance = new MetricsClient(options);
+			});
+
+			it('should set up the endpoint to the test server', () => {
+				expect(instance.endpoint).toStrictEqual(
+					'https://client-metrics-test.ft.com/api/v1/ingest'
+				);
+			});
+		});
+
+		describe("if the user pass a 'prod' environment variable", () => {
+			let instance;
+
+			beforeEach(() => {
+				const options = {
+					systemCode: 'mock-system-code',
+					systemVersion: 'mock-version',
+					environment: 'prod'
+				};
+				instance = new MetricsClient(options);
+			});
+
+			it('should set up the endpoint to the prod server', () => {
+				expect(instance.endpoint).toStrictEqual(
+					'https://client-metrics.ft.com/api/v1/ingest'
+				);
+			});
+		});
+
+		describe('when no environment is passed, it uses the hostname to define the server to send metrics to', () => {
+			const testEnvironmentHostnames = [
+				'localhost:3000',
+				'local.ft.com',
+				'dotcom-pages-staging.ft.com',
+				'homepage-staging.ft.com',
+				'spark-test.ft.com',
+				'falcon-test.ft.com'
+			];
+			const prodEnvironmentHostnames = ['www.ft.com', 'www.thebanker.com'];
+
+			testEnvironmentHostnames.forEach((testEnvironmentHostname) => {
+				describe(`for hostname ${testEnvironmentHostname}`, () => {
+					let instance;
+
+					beforeEach(() => {
+						const options = {
+							systemCode: 'mock-system-code',
+							systemVersion: 'mock-version'
+						};
+						window.location.hostname = testEnvironmentHostname;
+						instance = new MetricsClient(options);
+					});
+
+					it(`should set up the test server`, () => {
+						expect(instance.endpoint).toStrictEqual(
+							'https://client-metrics-test.ft.com/api/v1/ingest'
+						);
+					});
+				});
+			});
+
+			prodEnvironmentHostnames.forEach((prodEnvironmentHostname) => {
+				describe(`for ${prodEnvironmentHostname}`, () => {
+					let instance;
+
+					beforeEach(() => {
+						const options = {
+							systemCode: 'mock-system-code',
+							systemVersion: 'mock-version'
+						};
+						window.location.hostname = prodEnvironmentHostname;
+						instance = new MetricsClient(options);
+					});
+
+					it(`should set up the prod server for hostname ${prodEnvironmentHostname}`, () => {
+						expect(instance.endpoint).toStrictEqual(
+							'https://client-metrics.ft.com/api/v1/ingest'
+						);
+					});
+				});
+			});
+		});
+	});
+
 	describe('new MetricsClient(options)', () => {
 		let instance;
 		let options;
@@ -48,11 +146,11 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			instance = new MetricsClient(options);
 		});
 
-		it('creates an client with the given options', () => {
+		it('creates a client with the given options', () => {
 			instance.recordEvent('mock.event', { mockEventData: true });
 			expect(global.fetch).toHaveBeenCalledTimes(1);
 			expect(global.fetch).toHaveBeenCalledWith(
-				'https://client-metrics-test.ft.com/api/v1/ingest',
+				'https://client-metrics.ft.com/api/v1/ingest',
 				expect.objectContaining({
 					method: 'POST',
 					headers: expect.objectContaining({
@@ -328,9 +426,9 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				instance = new MetricsClient(options);
 			});
 
-			it('enables the client and uses the test server', () => {
+			it('enables the client and uses the prod server', () => {
 				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe('https://client-metrics-test.ft.com/api/v1/ingest');
+				expect(instance.endpoint).toBe('https://client-metrics.ft.com/api/v1/ingest');
 			});
 		});
 
