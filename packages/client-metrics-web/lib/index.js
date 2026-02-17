@@ -5,7 +5,7 @@ const { version } = require('../package.json');
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
-const allowedHostnamePattern = /^(?!local\.ft\.com$).*\.ft\.com$/;
+const testHostnamePattern = /(local|test|staging)/i;
 const systemCodePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 exports.MetricsClient = class MetricsClient {
@@ -20,7 +20,7 @@ exports.MetricsClient = class MetricsClient {
 	 */
 	constructor(options) {
 		try {
-			let { systemCode, systemVersion } = options;
+			let { systemCode, systemVersion, environment } = options;
 
 			if (typeof systemCode !== 'string' || !systemCodePattern.test(systemCode)) {
 				throw new Error(
@@ -32,10 +32,18 @@ exports.MetricsClient = class MetricsClient {
 				systemVersion = '0.0.0';
 			}
 
-			const hostname = window.location.hostname;
-			const baseUrl = allowedHostnamePattern.test(hostname)
-				? 'https://client-metrics.ft.com/'
-				: 'https://client-metrics-test.ft.com/';
+			let baseUrl;
+			if (environment !== undefined) {
+				baseUrl =
+					environment === 'prod'
+						? 'https://client-metrics.ft.com/'
+						: 'https://client-metrics-test.ft.com/';
+			} else {
+				const hostname = window.location.hostname;
+				baseUrl = testHostnamePattern.test(hostname)
+					? 'https://client-metrics-test.ft.com/'
+					: 'https://client-metrics.ft.com/';
+			}
 
 			this.endpoint = new URL('/api/v1/ingest', baseUrl).toString();
 

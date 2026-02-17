@@ -23,6 +23,7 @@ A lightweight client for sending operational metrics events from the browser to 
   * [Configuration options](#configuration-options)
     * [`options.systemCode`](#optionssystemcode)
     * [`options.systemVersion`](#optionssystemversion)
+    * [`options.environment`](#optionsenvironment)
 * [Usage (shared libraries)](#usage-shared-libraries)
 * [Usage (infrastructure)](#usage-infrastructure)
 * [Contributing](#contributing)
@@ -52,7 +53,7 @@ const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 The MetricsClient sends events to the Client Metrics Server, using POST to the following endpoint `/api/v1/ingest`.
 
 The correct environment (production vs test) is automatically selected based on the browser hostname.
-If your hostname follows the pattern `*.ft.com`, the events will be sent to our production server. Else, it will go to our test server. `local.ft.com` will also go to our test server.
+If your hostname has `test`, `staging` or `local`, the events will be sent to our test server. Else, it will send the metrics to the production server.
 
 The class should only ever be constructed once or you'll end up sending duplicate metrics.
 You should construct the metrics client as early as possible in the loading of the page. For the required options, see [configuration options](#configuration-options).
@@ -181,6 +182,14 @@ The system code has to be a combinaison of alphanumerical characters, possibly s
 
 ```js
 new MetricsClient({ systemVersion: '1.2.3' });
+```
+
+#### `options.environment`
+
+**Optional** `Enum`. Can be `prod` or `dev`. This is used to defined what server to send the metrics to. If not set, the client will use the hostname to best guess where to send the metrics. If your hostname has `test`, `staging` or `local`, the test server will be used. Else, we will send the metrics to production. If this does not work for your use case, use the `environment` option to override that behaviour.
+
+```js
+new MetricsClient({ environment: 'prod' });
 ```
 
 

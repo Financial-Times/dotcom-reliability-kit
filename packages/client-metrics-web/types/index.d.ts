@@ -2,6 +2,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 	export type MetricsClientOptions = {
 		systemCode: string;
 		systemVersion?: string;
+		environment?: 'prod' | 'test';
 	};
 
 	export class MetricsClient {
