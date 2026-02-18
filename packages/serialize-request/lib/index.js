@@ -8,7 +8,7 @@
  * } from '@dotcom-reliability-kit/serialize-request'
  */
 
-const DEFAULT_INCLUDED_HEADERS = [
+export const DEFAULT_INCLUDED_HEADERS = Object.freeze([
 	'accept',
 	'accept-encoding',
 	'accept-language',
@@ -16,7 +16,7 @@ const DEFAULT_INCLUDED_HEADERS = [
 	'host',
 	'referer',
 	'user-agent'
-];
+]);
 
 /**
  * The maximum length of a URL, any longer than this will be truncated.
@@ -30,7 +30,7 @@ const URL_TRUNCATION_LENGTH = 200;
  * @param {SerializeRequestOptions} options
  * @returns {SerializedRequest}
  */
-function serializeRequest(request, options = {}) {
+export default function serializeRequest(request, options = {}) {
 	// If the request is not an object, assume it's the request
 	// URL and return early
 	if (typeof request !== 'object' || Array.isArray(request) || request === null) {
@@ -40,7 +40,7 @@ function serializeRequest(request, options = {}) {
 	}
 
 	// Default and validate the included headers
-	let includeHeaders = options?.includeHeaders || DEFAULT_INCLUDED_HEADERS;
+	let includeHeaders = options?.includeHeaders || [...DEFAULT_INCLUDED_HEADERS];
 	if (
 		!Array.isArray(includeHeaders) ||
 		!includeHeaders.every((header) => typeof header === 'string')
@@ -144,13 +144,3 @@ function createSerializedRequest(properties) {
 function isIterableHeadersObject(value) {
 	return value && typeof value?.[Symbol.iterator] === 'function';
 }
-
-module.exports = serializeRequest;
-module.exports.default = module.exports;
-
-// We freeze this object so that we avoid any side-effects
-// introduced by the way Node.js caches modules. If this
-// array is edited within a dependent app, then any changes
-// will apply to _all_ uses of `serializeRequest`. This
-// could cause some weird issues so we lock it down.
-module.exports.DEFAULT_INCLUDED_HEADERS = Object.freeze([...DEFAULT_INCLUDED_HEADERS]);

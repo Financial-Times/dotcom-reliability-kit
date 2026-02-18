@@ -19,7 +19,11 @@ mock.module('@dotcom-reliability-kit/serialize-error', {
 });
 
 const serializeRequest = mock.fn(() => 'mock-serialized-request');
-mock.module('@dotcom-reliability-kit/serialize-request', { defaultExport: serializeRequest });
+mock.module('@dotcom-reliability-kit/serialize-request', {
+	// NOTE: this is temporary while we're importing ESM into CommonJS.
+	//       Should be switched back when we migrate log-error to ESM.
+	namedExports: { default: serializeRequest }
+});
 
 const appInfo = {};
 mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });

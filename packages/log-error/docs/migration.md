@@ -21,6 +21,7 @@ Emoji           | Label             | Meaning
   * [Node.js 20 is no longer supported](#nodejs-20-is-no-longer-supported)
   * [Node.js 22.11 is no longer supported](#nodejs-2211-is-no-longer-supported)
   * [Stricter TypeScript requirements](#stricter-typescript-requirements)
+  * [No exported types](#no-exported-types)
 
 
 ## Migrating from v1 to v2
@@ -90,3 +91,15 @@ logHandledError({
     "moduleResolution": "nodenext"
 }
 ```
+
+### No exported types
+
+**:orange_circle: Possibly Breaking:** this module is no longer exporting any types. We were over-exporting things that aren't used by anyone and we want to take the opportunity to clean up the public API of this package. We may reintroduce some of these later if they're needed by anyone (let us know). The types that are no longer exported are:
+
+  * `SerializeRequestOptions`
+  * `RequestHeaders`
+  * `Request`
+  * `SerializedRequest`
+  * `SerializedRequestHeaders`
+  * `SerializedRequestRouteParams`
+  * `SerializedRequestRoute`
