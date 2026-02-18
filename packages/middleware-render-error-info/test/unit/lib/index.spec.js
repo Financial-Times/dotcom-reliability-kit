@@ -31,7 +31,11 @@ const serializeError = mock.fn(() => ({
 	stack: 'mock serialized error stack <script>oops</script>',
 	statusCode: 456
 }));
-mock.module('@dotcom-reliability-kit/serialize-error', { defaultExport: serializeError });
+mock.module('@dotcom-reliability-kit/serialize-error', {
+	// NOTE: this is temporary while we're importing ESM into CommonJS.
+	//       Should be switched back when we migrate log-error to ESM.
+	namedExports: { default: serializeError }
+});
 
 const serializeRequest = mock.fn(() => 'mock-serialized-request');
 mock.module('@dotcom-reliability-kit/serialize-request', { defaultExport: serializeRequest });

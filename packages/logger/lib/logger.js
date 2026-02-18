@@ -1,5 +1,5 @@
 const pino = require('pino');
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
+const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
 const clone = require('lodash.clonedeep');
 const appInfo = require('@dotcom-reliability-kit/app-info');
 
