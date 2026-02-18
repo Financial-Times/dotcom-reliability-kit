@@ -26,11 +26,15 @@ mock.module('@dotcom-reliability-kit/app-info', {
 });
 
 mock.module('@dotcom-reliability-kit/serialize-error', {
-	defaultExport: mock.fn(() => ({
-		isMockSerializedError: true
-	}))
+	// NOTE: this is temporary while we're importing ESM into CommonJS.
+	//       Should be switched back when we migrate log-error to ESM.
+	namedExports: {
+		default: mock.fn(() => ({
+			isMockSerializedError: true
+		}))
+	}
 });
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
+const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
 
 // Set environment variables explicitly before importing the logger
 delete process.env.LOG_LEVEL;

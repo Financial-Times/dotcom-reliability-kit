@@ -18,6 +18,4 @@ declare module '@dotcom-reliability-kit/serialize-error' {
 	};
 
 	export default function serializeError(error: ErrorLike): SerializedError;
-
-	export = serializeError;
 }

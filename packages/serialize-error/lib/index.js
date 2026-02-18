@@ -1,4 +1,4 @@
-const crypto = require('node:crypto');
+import crypto from 'node:crypto';
 
 /**
  * @import { ErrorLike, SerializedError } from '@dotcom-reliability-kit/serialize-error'
@@ -10,7 +10,7 @@ const crypto = require('node:crypto');
  * @param {unknown} error
  * @returns {SerializedError}
  */
-function serializeError(error) {
+export default function serializeError(error) {
 	if (typeof error !== 'object' || Array.isArray(error) || error === null) {
 		return createSerializedError({
 			message: `${error}`
@@ -117,6 +117,3 @@ function createSerializedError(properties) {
 		properties
 	);
 }
-
-module.exports = serializeError;
-module.exports.default = module.exports;

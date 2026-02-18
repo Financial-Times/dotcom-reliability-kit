@@ -1,14 +1,8 @@
-const { beforeEach, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const serializeError = require('../../../lib/index');
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import serializeError from '../../../lib/index.js';
 
 describe('@dotcom-reliability-kit/serialize-error', () => {
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(serializeError.default, serializeError);
-		});
-	});
-
 	describe('when called with an error object', () => {
 		let error;
 

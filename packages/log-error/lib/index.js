@@ -1,6 +1,6 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const reliabilityKitLogger = require('@dotcom-reliability-kit/logger');
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
+const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
 const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 
 /**
@@ -56,7 +56,7 @@ function logError({ error, event, includeHeaders, level, logger = reliabilityKit
  * Get a human readable error message from a serialized error object.
  *
  * @private
- * @param {serializeError.SerializedError} serializedError
+ * @param {SerializedError} serializedError
  *     The serialized error to get a message for.
  * @returns {string}
  *     Returns the human readable error message.

@@ -1,7 +1,7 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
 const renderErrorPage = require('./render-error-page');
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
+const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
 const { STATUS_CODES } = require('node:http');
 
 /**

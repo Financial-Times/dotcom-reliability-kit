@@ -34,8 +34,6 @@ Include in your code:
 
 ```js
 import serializeError from '@dotcom-reliability-kit/serialize-error';
-// or
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
 ```
 
 > [!TIP]
