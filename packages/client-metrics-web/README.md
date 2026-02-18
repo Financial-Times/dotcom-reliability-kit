@@ -18,6 +18,7 @@ A lightweight client for sending operational metrics events from the browser to 
     * [`client.enable()`](#clientenable)
     * [`client.disable()`](#clientdisable)
     * [`client.isEnabled`](#clientisenabled)
+    * [`client.isAvailable`](#clientisavailable)
   * [Event-based API](#event-based-api)
   * [Error handling](#error-handling)
   * [Configuration options](#configuration-options)
@@ -101,6 +102,10 @@ client.disable();
 
 A boolean indicating whether the client is currently enabled.
 
+#### `client.isAvailable`
+
+A boolean indicating whether the client was correctly configured and set up. If this is `false` then it's not possible for events to be sent to AWS CloudWatch RUM.
+
 ### Event-based API
 
 Passing around a single client instance may not be easy or preferable in your system, depending on complexity. For this we also bind a listener on `window` for the `ft.clientMetric` event.
@@ -171,7 +176,7 @@ new MetricsClient({
 new MetricsClient({ systemCode: 'my-system' });
 ```
 
-The system code has to be a combinaison of alphanumerical characters, possibly separated by hyphens.
+The system code has to be a combination of alphanumerical characters, possibly separated by hyphens.
 
 > [!IMPORTANT]
 >  If the systemCode is not set properly, the client will fail to be constructed and it will not be possible to send any events. Attempting to use `recordEvent` will fail and log a warning `Client not initialised properly, cannot record an event.`
@@ -186,10 +191,10 @@ new MetricsClient({ systemVersion: '1.2.3' });
 
 #### `options.environment`
 
-**Optional** `Enum`. Can be `prod` or `dev`. This is used to defined what server to send the metrics to. If not set, the client will use the hostname to best guess where to send the metrics. If your hostname has `test`, `staging` or `local`, the test server will be used. Else, we will send the metrics to production. If this does not work for your use case, use the `environment` option to override that behaviour.
+**Optional** `Enum`. Can be `production` or `test`. This is used to defined what server to send the metrics to. If not set, the client will use the hostname to best guess where to send the metrics. If your hostname has `test`, `staging` or `local`, the test server will be used. Else, we will send the metrics to production. If this does not work for your use case, use the `environment` option to override that behaviour.
 
 ```js
-new MetricsClient({ environment: 'prod' });
+new MetricsClient({ environment: 'production' });
 ```
 
 
