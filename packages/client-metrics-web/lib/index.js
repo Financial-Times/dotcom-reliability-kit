@@ -15,6 +15,15 @@ exports.MetricsClient = class MetricsClient {
 	/** @type {boolean} */
 	#isEnabled = false;
 
+	/** @type {string} */
+	#endpoint = '';
+
+	/** @type {string} */
+	#systemVersion = '0.0.0';
+
+	/** @type {string} */
+	#systemCode = '';
+
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
@@ -45,10 +54,10 @@ exports.MetricsClient = class MetricsClient {
 					: 'https://client-metrics.ft.com/';
 			}
 
-			this.endpoint = new URL('/api/v1/ingest', baseUrl).toString();
+			this.#endpoint = new URL('/api/v1/ingest', baseUrl).toString();
 
-			this.systemCode = systemCode;
-			this.systemVersion = systemVersion;
+			this.#systemCode = systemCode;
+			this.#systemVersion = systemVersion;
 
 			this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);
 			this.#isAvailable = true;
@@ -70,6 +79,16 @@ exports.MetricsClient = class MetricsClient {
 		return this.#isEnabled;
 	}
 
+	/** @type {MetricsClientType['endpoint']} */
+	get endpoint() {
+		return this.#endpoint;
+	}
+
+	/** @type {MetricsClientType['systemVersion']} */
+	get systemVersion() {
+		return this.#systemVersion;
+	}
+
 	/** @type {MetricsClientType['enable']} */
 	enable() {
 		if (this.#isAvailable && !this.#isEnabled) {
@@ -88,7 +107,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['recordEvent']} */
 	recordEvent(namespace, eventData = {}) {
-		if (!this.isAvailable || !this.endpoint) {
+		if (!this.isAvailable || !this.#endpoint) {
 			console.warn('Client not initialised properly, cannot record an event');
 			return;
 		}
@@ -98,13 +117,13 @@ exports.MetricsClient = class MetricsClient {
 			const eventTimestamp = Date.now();
 			const body = {
 				namespace,
-				systemCode: this.systemCode,
-				systemVersion: this.systemVersion,
+				systemCode: this.#systemCode,
+				systemVersion: this.#systemVersion,
 				eventTimestamp,
 				data: eventData
 			};
 
-			fetch(this.endpoint, {
+			fetch(this.#endpoint, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
