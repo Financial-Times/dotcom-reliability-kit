@@ -1,17 +1,11 @@
-const { beforeEach, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const serializeRequest = require('../../../lib/index');
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import serializeRequest, { DEFAULT_INCLUDED_HEADERS } from '../../../lib/index.js';
 
 describe('@dotcom-reliability-kit/serialize-request', () => {
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(serializeRequest.default, serializeRequest);
-		});
-	});
-
 	describe('.DEFAULT_INCLUDED_HEADERS', () => {
 		it('is an array of included headers', () => {
-			assert.deepEqual(serializeRequest.DEFAULT_INCLUDED_HEADERS, [
+			assert.deepEqual(DEFAULT_INCLUDED_HEADERS, [
 				'accept',
 				'accept-encoding',
 				'accept-language',
@@ -24,11 +18,11 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		it('is readonly', () => {
 			assert.throws(() => {
-				serializeRequest.DEFAULT_INCLUDED_HEADERS.push('nope');
+				DEFAULT_INCLUDED_HEADERS.push('nope');
 			}, TypeError);
-
-			serializeRequest.DEFAULT_INCLUDED_HEADERS[0] = 'nope';
-			assert.notStrictEqual(serializeRequest.DEFAULT_INCLUDED_HEADERS[0], 'nope');
+			assert.throws(() => {
+				DEFAULT_INCLUDED_HEADERS[0] = 'nope';
+			}, TypeError);
 		});
 	});
 
