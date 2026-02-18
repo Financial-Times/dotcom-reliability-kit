@@ -60,19 +60,19 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 		});
 
-		describe("if the user pass a 'prod' environment variable", () => {
+		describe("if the user pass a 'production' environment variable", () => {
 			let instance;
 
 			beforeEach(() => {
 				const options = {
 					systemCode: 'mock-system-code',
 					systemVersion: 'mock-version',
-					environment: 'prod'
+					environment: 'production'
 				};
 				instance = new MetricsClient(options);
 			});
 
-			it('should set up the endpoint to the prod server', () => {
+			it('should set up the endpoint to the production server', () => {
 				expect(instance.endpoint).toStrictEqual(
 					'https://client-metrics.ft.com/api/v1/ingest'
 				);

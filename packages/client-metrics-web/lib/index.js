@@ -44,7 +44,7 @@ exports.MetricsClient = class MetricsClient {
 			let baseUrl;
 			if (environment !== undefined) {
 				baseUrl =
-					environment === 'prod'
+					environment === 'production'
 						? 'https://client-metrics.ft.com/'
 						: 'https://client-metrics-test.ft.com/';
 			} else {
@@ -65,7 +65,6 @@ exports.MetricsClient = class MetricsClient {
 		} catch (/** @type {any} */ error) {
 			this.#isAvailable = false;
 			console.warn(`Client not initialised: ${error.message}`);
-			return;
 		}
 	}
 
