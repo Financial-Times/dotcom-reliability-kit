@@ -116,6 +116,14 @@ exports.MetricsClient = class MetricsClient {
 		return this.#systemVersion;
 	}
 
+	get queue() {
+		return this.#queue;
+	}
+
+	clearQueue() {
+		this.#queue = [];
+	}
+
 	/** @type {MetricsClientType['enable']} */
 	enable() {
 		if (this.#isAvailable && !this.#isEnabled) {

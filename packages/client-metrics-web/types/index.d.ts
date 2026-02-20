@@ -13,6 +13,8 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get isEnabled(): boolean;
 		get endpoint(): string;
 		get systemVersion(): string;
+		get queue(): BatchedEvent[];
+		clearQueue(): void;
 		enable(): void;
 		disable(): void;
 		recordEvent(namespace: string, eventData?: Record<string, any>): void;

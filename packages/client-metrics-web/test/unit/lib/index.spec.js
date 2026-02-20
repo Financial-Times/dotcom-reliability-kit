@@ -5,6 +5,20 @@ jest.mock('../../../package.json', () => ({
 
 const { MetricsClient } = require('../../..');
 
+const DEFAULT_BATCH_SIZE = 20;
+
+const recordBatchOfEvents = ({
+	instance,
+	numberOfEvents = DEFAULT_BATCH_SIZE,
+	namespace,
+	data
+}) => {
+	const events = new Array(numberOfEvents).fill({ namespace, data });
+	events.forEach((event) => {
+		instance.recordEvent(event.namespace, event.data);
+	});
+};
+
 describe('@dotcom-reliability-kit/client-metrics-web', () => {
 	beforeEach(() => {
 		global.window = {
@@ -146,28 +160,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			instance = new MetricsClient(options);
 		});
 
-		it('creates a client with the given options', () => {
-			instance.recordEvent('mock.event', { mockEventData: true });
-			expect(global.fetch).toHaveBeenCalledTimes(1);
-			expect(global.fetch).toHaveBeenCalledWith(
-				'https://client-metrics.ft.com/api/v1/ingest',
-				expect.objectContaining({
-					method: 'POST',
-					headers: expect.objectContaining({
-						'Content-Type': 'application/json',
-						'User-Agent': 'FTSystem/cp-client-metrics/0.0.0-test'
-					}),
-					body: JSON.stringify({
-						namespace: 'mock.event',
-						systemCode: 'mock-system-code',
-						systemVersion: 'mock-version',
-						eventTimestamp: 658281600000,
-						data: { mockEventData: true }
-					})
-				})
-			);
-		});
-
 		it('adds an "ft.clientMetric" event listener to the window', () => {
 			expect(window.addEventListener).toHaveBeenCalledTimes(1);
 			// Jest expect.any(Function) does not work with bound functions so we can't
@@ -179,6 +171,39 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 		it('does not log any warnings', () => {
 			expect(console.warn).toHaveBeenCalledTimes(0);
+		});
+
+		it('sends a batch of events once it has recorded enough events', () => {
+			recordBatchOfEvents({
+				instance,
+				namespace: 'mock.event.create.client.metrics',
+				data: { mockEventData: true }
+			});
+
+			expect(global.fetch).toHaveBeenCalledTimes(1);
+
+			const requestBody = JSON.parse(global.fetch.mock.calls[0][1].body);
+
+			expect(global.fetch.mock.calls[0][0]).toStrictEqual(
+				'https://client-metrics.ft.com/api/v1/ingest'
+			);
+			expect(global.fetch.mock.calls[0][1]).toStrictEqual(
+				expect.objectContaining({
+					method: 'POST',
+					headers: expect.objectContaining({
+						'Content-Type': 'application/json',
+						'User-Agent': 'FTSystem/cp-client-metrics/0.0.0-test'
+					})
+				})
+			);
+			expect(requestBody.length).toBe(DEFAULT_BATCH_SIZE);
+			expect(requestBody[0]).toEqual({
+				namespace: 'mock.event.create.client.metrics',
+				systemCode: 'mock-system-code',
+				systemVersion: 'mock-version',
+				eventTimestamp: 658281600000,
+				data: { mockEventData: true }
+			});
 		});
 
 		describe('.isAvailable', () => {
@@ -259,15 +284,20 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			let mockData;
 
 			beforeEach(() => {
+				instance.clearQueue();
 				mockData = { mockEventData: true };
-				instance.recordEvent('mock.event', mockData);
+				recordBatchOfEvents({
+					instance,
+					namespace: 'mock.event.record.event',
+					data: mockData
+				});
 			});
 
 			it('posts the event with the namespace', () => {
 				expect(global.fetch).toHaveBeenCalledTimes(1);
 				const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-				expect(body.namespace).toBe('mock.event');
-				expect(body.data).toStrictEqual(mockData);
+				expect(body[0].namespace).toBe('mock.event.record.event');
+				expect(body[0].data).toStrictEqual(mockData);
 			});
 
 			it('does not log any warnings', () => {
@@ -280,10 +310,12 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					instance.recordEvent('Mock.UPPER.Event', mockData);
 				});
 
+				afterAll(() => {
+					instance.clearQueue();
+				});
+
 				it('hands the event to the client with the namespace converted to lower case', () => {
-					expect(global.fetch).toHaveBeenCalledTimes(1);
-					const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-					expect(body.namespace).toBe('mock.upper.event');
+					expect(instance.queue[0].namespace).toBe('mock.upper.event');
 				});
 			});
 
@@ -293,8 +325,12 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					instance.recordEvent(123, mockData);
 				});
 
-				it('does not post the event', () => {
-					expect(global.fetch).toHaveBeenCalledTimes(0);
+				afterAll(() => {
+					instance.clearQueue();
+				});
+
+				it('does not record the event', () => {
+					expect(instance.queue.length).toBe(0);
 				});
 
 				it('logs a warning about the namespace type', () => {
@@ -311,8 +347,12 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					instance.recordEvent('mock . namespace', mockData);
 				});
 
+				afterAll(() => {
+					instance.clearQueue();
+				});
+
 				it('does not post the event', () => {
-					expect(global.fetch).toHaveBeenCalledTimes(0);
+					expect(instance.queue.length).toBe(0);
 				});
 
 				it('logs a warning about valid namespace characters', () => {
@@ -325,15 +365,21 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event data is not defined', () => {
 				beforeEach(() => {
+					instance.clearQueue();
 					global.fetch.mockClear();
-					instance.recordEvent('mock.event.empty.data');
+					recordBatchOfEvents({
+						instance,
+						namespace: 'mock.event.empty.data',
+						data: {}
+					});
 				});
 
 				it('hands the event to the client with an empty object as event data', () => {
 					expect(global.fetch).toHaveBeenCalledTimes(1);
 					const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-					expect(body.namespace).toStrictEqual('mock.event.empty.data');
-					expect(body.data).toStrictEqual({});
+					console.log({ body });
+					expect(body[0].namespace).toStrictEqual('mock.event.empty.data');
+					expect(body[0].data).toStrictEqual({});
 				});
 			});
 		});
@@ -343,20 +389,20 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			let eventHandler;
 
 			beforeEach(() => {
-				jest.spyOn(instance, 'recordEvent');
 				eventHandler = window.addEventListener.mock.calls[0][1];
 				event = new CustomEvent('ft.clientMetric', {
 					detail: {
-						namespace: 'mock.event',
+						namespace: 'mock.event.check.event.handler',
 						mockProperty: 'mock-value'
 					}
 				});
 				eventHandler(event);
 			});
 
-			it('calls recordEvent with the namespace and event data', () => {
-				expect(instance.recordEvent).toHaveBeenCalledTimes(1);
-				expect(instance.recordEvent).toHaveBeenCalledWith('mock.event', {
+			it('adds the event namespace and data to the queue of events to be sent', () => {
+				expect(instance.queue.length).toBe(1);
+				expect(instance.queue[0].namespace).toBe('mock.event.check.event.handler');
+				expect(instance.queue[0].data).toStrictEqual({
 					mockProperty: 'mock-value'
 				});
 			});
@@ -367,13 +413,13 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event.detail.namespace is not a string', () => {
 				beforeEach(() => {
-					instance.recordEvent.mockClear();
+					instance.clearQueue();
 					event.detail.namespace = 123;
 					eventHandler(event);
 				});
 
-				it('does not call recordEvent', () => {
-					expect(instance.recordEvent).toHaveBeenCalledTimes(0);
+				it('does not add the event to the queue of events to be sent', () => {
+					expect(instance.queue.length).toBe(0);
 				});
 
 				it('logs a warning about the namespace type', () => {
@@ -386,13 +432,13 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event.detail is not an object', () => {
 				beforeEach(() => {
-					instance.recordEvent.mockClear();
+					instance.clearQueue();
 					event = new CustomEvent('ft.clientMetric', { detail: 'nope' });
 					eventHandler(event);
 				});
 
-				it('does not call recordEvent', () => {
-					expect(instance.recordEvent).toHaveBeenCalledTimes(0);
+				it('does not add the event to the queue of events to be sent', () => {
+					expect(instance.queue.length).toBe(0);
 				});
 
 				it('logs a warning about the detail type', () => {
@@ -405,7 +451,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event is not a CustomEvent instance', () => {
 				beforeEach(() => {
-					instance.recordEvent.mockClear();
+					instance.clearQueue();
 					eventHandler({});
 				});
 
@@ -413,7 +459,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					// The condition that gets us here is mostly there to satisfy TypeScript
 					// so we don't care about anyhing getting logged - I don't think it's
 					// a case that can actually happen
-					expect(instance.recordEvent).toHaveBeenCalledTimes(0);
+					expect(instance.queue.length).toBe(0);
 					expect(console.warn).toHaveBeenCalledTimes(0);
 				});
 			});
@@ -531,7 +577,12 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				global.fetch.mockClear();
 				global.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
 				instance = new MetricsClient(options);
-				instance.recordEvent('mock.event', { mockEventData: true });
+
+				recordBatchOfEvents({
+					instance,
+					namespace: 'data.event.fetch.reject',
+					data: { mockEventData: true }
+				});
 			});
 
 			it('logs a warning from the fetch catch handler', () => {
