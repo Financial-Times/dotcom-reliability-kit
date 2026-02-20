@@ -3,6 +3,8 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		systemCode: string;
 		systemVersion?: string;
 		environment?: 'production' | 'test';
+		batchSize?: number;
+		retentionPeriod?: number;
 	};
 
 	export class MetricsClient {
@@ -19,5 +21,11 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 	export type MetricsEvent = {
 		namespace: string;
 		[key: string]: any;
+	};
+
+	export type BatchedEvent = {
+		namespace: string;
+		timestamp: number;
+		data: { [key: string]: any };
 	};
 }

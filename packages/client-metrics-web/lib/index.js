@@ -1,7 +1,7 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
 const { version } = require('../package.json');
 /**
- * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
+ * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent, BatchedEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
@@ -24,12 +24,32 @@ exports.MetricsClient = class MetricsClient {
 	/** @type {string} */
 	#systemCode = '';
 
+	/** @type {BatchedEvent[]}*/
+	#queue = [];
+
+	/** @type {number} */
+	#batchSize = 20;
+
+	/** @type {number} */
+	#queueCapacity = this.#batchSize * 10;
+	// TODO: maybe it should be a size in memory.
+	// Can look at an ccc object event size, and figure out how much max mb we want
+
+	/** @type {NodeJS.Timeout | undefined} */
+	#timer;
+
+	/** @type {number} */
+	#elapsedSeconds = 0;
+
+	/** @type {number} */
+	#retentionPeriod = 10;
+
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
 	constructor(options) {
 		try {
-			let { systemCode, systemVersion, environment } = options;
+			let { systemCode, systemVersion, environment, batchSize, retentionPeriod } = options;
 
 			if (typeof systemCode !== 'string' || !systemCodePattern.test(systemCode)) {
 				throw new Error(
@@ -58,6 +78,14 @@ exports.MetricsClient = class MetricsClient {
 
 			this.#systemCode = systemCode;
 			this.#systemVersion = systemVersion;
+
+			if (batchSize) {
+				this.#batchSize = Math.max(batchSize, this.#batchSize);
+			}
+
+			if (retentionPeriod) {
+				this.#retentionPeriod = Math.max(retentionPeriod, this.#retentionPeriod);
+			}
 
 			this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);
 			this.#isAvailable = true;
@@ -93,6 +121,7 @@ exports.MetricsClient = class MetricsClient {
 		if (this.#isAvailable && !this.#isEnabled) {
 			window.addEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = true;
+			this.#startTimer();
 		}
 	}
 
@@ -101,40 +130,97 @@ exports.MetricsClient = class MetricsClient {
 		if (this.#isAvailable && this.#isEnabled) {
 			window.removeEventListener('ft.clientMetric', this.#handleMetricsEvent);
 			this.#isEnabled = false;
+			this.#stopTimer();
 		}
 	}
 
 	/** @type {MetricsClientType['recordEvent']} */
-	recordEvent(namespace, eventData = {}) {
+	recordEvent(namespace, data = {}) {
 		if (!this.isAvailable || !this.#endpoint) {
 			console.warn('Client not initialised properly, cannot record an event');
 			return;
 		}
+
+		if (this.#queue.length >= this.#queueCapacity) {
+			console.warn(
+				'There are too many events in the batch, we will send events before addding more events to the queue. If you see that warning too often, you might want to increase the size of your batch'
+			);
+			this.#sendEvents();
+			return;
+		}
+
 		try {
 			namespace = MetricsClient.#resolveNamespace(namespace);
+			const timestamp = Date.now();
 
-			const eventTimestamp = Date.now();
-			const body = {
+			const batchedEvent = {
 				namespace,
-				systemCode: this.#systemCode,
-				systemVersion: this.#systemVersion,
-				eventTimestamp,
-				data: eventData
+				timestamp,
+				data
 			};
 
-			fetch(this.#endpoint, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'User-Agent': `FTSystem/cp-client-metrics/${version}`
-				},
-				body: JSON.stringify(body)
-			}).catch((error) => {
-				console.warn('Error happened during fetch: ', error);
-			});
+			this.#queue.push(batchedEvent);
+
+			if (this.#queue.length >= this.#batchSize) {
+				this.#sendEvents();
+			}
 		} catch (/** @type {any} */ error) {
 			console.warn(`Invalid metrics event: ${error.message}`);
 		}
+	}
+
+	#startTimer() {
+		this.#timer = setInterval(() => {
+			this.#elapsedSeconds += 1;
+			if (this.#elapsedSeconds === this.#retentionPeriod) {
+				this.#sendEvents();
+				this.#elapsedSeconds = 0;
+			}
+		}, 1000);
+	}
+
+	#stopTimer() {
+		clearInterval(this.#timer);
+		this.#timer = undefined;
+	}
+
+	#resetTimer() {
+		this.#elapsedSeconds = 0;
+	}
+
+	#sendEvents() {
+		if (!this.#queue.length || !this.#isEnabled) {
+			return;
+		}
+
+		this.#resetTimer();
+
+		const events = this.#queue.splice(0, this.#batchSize).map((batchedEvent) => {
+			return {
+				namespace: batchedEvent.namespace,
+				systemCode: this.#systemCode,
+				systemVersion: this.#systemVersion,
+				eventTimestamp: batchedEvent.timestamp,
+				data: batchedEvent.data
+			};
+		});
+
+		fetch(this.#endpoint, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'User-Agent': `FTSystem/cp-client-metrics/${version}`
+			},
+			body: JSON.stringify(events)
+		}).catch((error) => {
+			console.warn('Error happened during fetch: ', error);
+		});
+
+		if (this.#queue.length) {
+			this.#sendEvents();
+		}
+		// TODO: add the possibility to retry a batch that fails, with a limited amount of retries.
+		// See offline work.
 	}
 
 	/**
