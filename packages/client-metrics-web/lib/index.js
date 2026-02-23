@@ -111,10 +111,12 @@ exports.MetricsClient = class MetricsClient {
 		return this.#endpoint;
 	}
 
+	/** @type {MetricsClientType['batchSize']} */
 	get batchSize() {
 		return this.#batchSize;
 	}
 
+	/** @type {MetricsClientType['retentionPeriod']} */
 	get retentionPeriod() {
 		return this.#retentionPeriod;
 	}
@@ -124,10 +126,12 @@ exports.MetricsClient = class MetricsClient {
 		return this.#systemVersion;
 	}
 
+	/** @type {MetricsClientType['queue']} */
 	get queue() {
 		return this.#queue;
 	}
 
+	/** @type {MetricsClientType['clearQueue']} */
 	clearQueue() {
 		this.#queue = [];
 	}
