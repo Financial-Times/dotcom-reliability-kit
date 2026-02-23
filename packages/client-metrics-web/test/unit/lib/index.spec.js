@@ -15,7 +15,11 @@ const recordBatchOfEvents = ({
 }) => {
 	const events = new Array(numberOfEvents).fill({ namespace, data });
 	events.forEach((event) => {
-		instance.recordEvent(event.namespace, event.data);
+		if (event.data) {
+			instance.recordEvent(event.namespace, event.data);
+		} else {
+			instance.recordEvent(event.namespace);
+		}
 	});
 };
 
@@ -48,10 +52,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		expect(() => {
 			MetricsClient();
 		}).toThrow(/class constructor/i);
-	});
-
-	it('test', () => {
-		expect(true).toBe(true);
 	});
 
 	describe('Setup which MetricClient server to use based on environment variable or hostname', () => {
@@ -173,7 +173,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			expect(console.warn).toHaveBeenCalledTimes(0);
 		});
 
-		it('sends a batch of events once it has recorded enough events', () => {
+		it('sends a batch of events', () => {
 			recordBatchOfEvents({
 				instance,
 				namespace: 'mock.event.create.client.metrics',
@@ -369,15 +369,13 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					global.fetch.mockClear();
 					recordBatchOfEvents({
 						instance,
-						namespace: 'mock.event.empty.data',
-						data: {}
+						namespace: 'mock.event.empty.data'
 					});
 				});
 
 				it('hands the event to the client with an empty object as event data', () => {
 					expect(global.fetch).toHaveBeenCalledTimes(1);
 					const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-					console.log({ body });
 					expect(body[0].namespace).toStrictEqual('mock.event.empty.data');
 					expect(body[0].data).toStrictEqual({});
 				});
@@ -591,6 +589,174 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					expect.any(Error)
 				);
 				expect(console.warn.mock.calls[0][1].message).toBe('Network down');
+			});
+		});
+	});
+
+	describe('ClientMetrics batching logic', () => {
+		let instance;
+		let options;
+
+		beforeEach(() => {
+			options = {
+				systemCode: 'mock-system-code',
+				systemVersion: 'mock-version'
+			};
+			instance = new MetricsClient(options);
+		});
+
+		describe('batchSize', () => {
+			const defaultBatchSize = 20;
+
+			afterAll(() => {
+				options.batchSize = undefined;
+			});
+
+			it('uses the default batchSize if none is passed when creating the client', () => {
+				const instance = new MetricsClient(options);
+				expect(instance.batchSize).toBe(defaultBatchSize);
+			});
+
+			it('uses the default batchSize if a user try to set it to a smaller number than the default', () => {
+				options.batchSize = defaultBatchSize - 1;
+				const instance = new MetricsClient(options);
+				expect(instance.batchSize).toBe(defaultBatchSize);
+			});
+
+			it('uses the batchSize option if its bigger than the default', () => {
+				options.batchSize = defaultBatchSize + 1;
+				const instance = new MetricsClient(options);
+				expect(instance.batchSize).toBe(defaultBatchSize + 1);
+			});
+		});
+
+		describe('retentionPeriod', () => {
+			const defaultRetentionPeriod = 10;
+
+			afterAll(() => {
+				options.retentionPeriod = undefined;
+			});
+
+			it('uses the default retentionPeriod if none is passed when creating the client', () => {
+				const instance = new MetricsClient(options);
+				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod);
+			});
+
+			it('uses the default retentionPeriod if a user try to set it to a smaller number than the default', () => {
+				options.retentionPeriod = defaultRetentionPeriod - 1;
+				const instance = new MetricsClient(options);
+				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod);
+			});
+
+			it('uses the batchSize option if its bigger than the default', () => {
+				options.retentionPeriod = defaultRetentionPeriod + 1;
+				const instance = new MetricsClient(options);
+				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod + 1);
+			});
+		});
+
+		describe('#sendEvents behaviour (batching, timer, capacity & guards)', () => {
+			afterEach(() => {
+				instance.clearQueue();
+				instance.enable();
+			});
+
+			it('sends the events once the retentionPeriod is finished (even if the batch is not full)', () => {
+				instance.recordEvent('mock.event.timer', { data: 'ok' });
+				expect(global.fetch).toHaveBeenCalledTimes(0);
+
+				// We check that we are sending event only after the elapsedTime
+				jest.advanceTimersByTime(10000);
+				expect(global.fetch).toHaveBeenCalledTimes(1);
+
+				const body = JSON.parse(global.fetch.mock.calls[0][1].body);
+				expect(body[0].namespace).toBe('mock.event.timer');
+				expect(instance.queue.length).toBe(0);
+			});
+
+			it('does not call fetch when retentionPeriod is finished but the queue is empty', () => {
+				jest.advanceTimersByTime(10000);
+				expect(global.fetch).toHaveBeenCalledTimes(0);
+			});
+
+			it('does not call fetch when batchSize is reached but the client is disabled', () => {
+				instance.disable();
+				recordBatchOfEvents({
+					instance,
+					namespace: 'mock.event.disabled.client',
+					data: { ok: true }
+				});
+
+				expect(global.fetch).toHaveBeenCalledTimes(0);
+				expect(instance.queue.length).toBe(instance.batchSize);
+			});
+
+			it('recursively sends multiple batches until the queue is empty', () => {
+				// We are disabling the client so we can grow the queue
+				instance.disable();
+				recordBatchOfEvents({
+					instance,
+					numberOfEvents: DEFAULT_BATCH_SIZE * 3,
+					namespace: 'mock.event.recursive',
+					data: { ok: true }
+				});
+
+				instance.enable();
+				jest.advanceTimersByTime(10000);
+				expect(global.fetch).toHaveBeenCalledTimes(3);
+			});
+
+			it('logs a warning and stop events to be added if it hits the max capacity of the queue', () => {
+				// We are disabling the client so we can grow the queue
+				instance.disable();
+
+				// We record the max number of events in the queue
+				recordBatchOfEvents({
+					instance,
+					numberOfEvents: DEFAULT_BATCH_SIZE * 10,
+					namespace: 'mock.event.max.capacity',
+					data: { ok: true }
+				});
+
+				// We try to add one more
+				instance.recordEvent('mock.event.max.capacity.overflow', { ok: false });
+
+				// It should logs the warning
+				expect(console.warn).toHaveBeenCalledTimes(1);
+				expect(console.warn).toHaveBeenCalledWith(
+					'There are too many events in the batch, we will send events before addding more events to the queue. If you see that warning too often, you might want to increase the size of your batch'
+				);
+
+				// The last event should not be found in the queue
+				expect(
+					instance.queue.filter(
+						(event) => event.namespace === 'mock.event.max.capacity.overflow'
+					).length
+				).toBe(0);
+			});
+
+			it('clear the queue and sends events and re-enable adding events to the queue once the queue is cleared', () => {
+				// We are disabling the client so we can grow the queue
+				instance.disable();
+
+				// We record the max number of events in the queue
+				recordBatchOfEvents({
+					instance,
+					numberOfEvents: DEFAULT_BATCH_SIZE * 10,
+					namespace: 'mock.event.max.capacity',
+					data: { ok: true }
+				});
+
+				// Once reenabled, it sends the events
+				instance.enable();
+				jest.advanceTimersByTime(10000);
+				expect(global.fetch).toHaveBeenCalledTimes(10);
+
+				// And its now possible to re add elements to the queue
+				instance.recordEvent('mock.event.max.capacity.cleared', { ok: false });
+				expect(instance.queue.length).toBe(1);
+				expect(console.warn).toHaveBeenCalledTimes(0);
+				expect(instance.queue[0].namespace).toBe('mock.event.max.capacity.cleared');
 			});
 		});
 	});

@@ -12,6 +12,8 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get isAvailable(): boolean;
 		get isEnabled(): boolean;
 		get endpoint(): string;
+		get batchSize(): number;
+		get retentionPeriod(): number;
 		get systemVersion(): string;
 		get queue(): BatchedEvent[];
 		clearQueue(): void;

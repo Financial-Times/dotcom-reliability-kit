@@ -79,11 +79,11 @@ exports.MetricsClient = class MetricsClient {
 			this.#systemCode = systemCode;
 			this.#systemVersion = systemVersion;
 
-			if (batchSize) {
+			if (batchSize && typeof batchSize === 'number') {
 				this.#batchSize = Math.max(batchSize, this.#batchSize);
 			}
 
-			if (retentionPeriod) {
+			if (retentionPeriod && typeof retentionPeriod === 'number') {
 				this.#retentionPeriod = Math.max(retentionPeriod, this.#retentionPeriod);
 			}
 
@@ -109,6 +109,14 @@ exports.MetricsClient = class MetricsClient {
 	/** @type {MetricsClientType['endpoint']} */
 	get endpoint() {
 		return this.#endpoint;
+	}
+
+	get batchSize() {
+		return this.#batchSize;
+	}
+
+	get retentionPeriod() {
+		return this.#retentionPeriod;
 	}
 
 	/** @type {MetricsClientType['systemVersion']} */
