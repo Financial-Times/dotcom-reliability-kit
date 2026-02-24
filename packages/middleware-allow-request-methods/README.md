@@ -26,6 +26,17 @@ import { allowRequestMethods } from '@dotcom-reliability-kit/middleware-allow-re
 const { allowRequestMethods } = require('@dotcom-reliability-kit/middleware-allow-request-methods');
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 We recommend always using this middleware globally with app.use as a first middleware in your app. This is because, if a bad actor is making requests to your app to find attack vectors, you throw their request out as early as possible.
 
 Route-specific blocking of methods is an additional layer of protection you can explore. It may be that your app does support POST requests for a form but the main view is GET only. You can filter out further junk requests on a per-route basis by using the app.route('...').all() method or use with a path.
@@ -81,9 +92,16 @@ An array of HTTP methods that are allowed for the route. This must be an `Array`
 
 This option defaults to `[]`.
 
+
+## Migrating
+
+Consult the [Migration Guide](./docs/migration.md) if you're trying to migrate to a later major version of this package.
+
+
 ## Contributing
 
 See the [central contributing guide for Reliability Kit](https://github.com/Financial-Times/dotcom-reliability-kit/blob/main/docs/contributing.md).
+
 
 ## License
 

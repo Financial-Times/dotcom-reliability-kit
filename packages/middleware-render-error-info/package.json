@@ -11,13 +11,19 @@
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: middleware-render-error-info\"",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "npm run test:unit && npm run test:end-to-end",
+    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude=**/*.spec.js --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 test/unit/**/*.spec.js",
+    "test:end-to-end": "node --test test/end-to-end/**/*.spec.js"
   },
   "engines": {
-    "node": "20.x || 22.x || 24.x"
+    "node": "^22.12 || ^24"
   },
-  "main": "lib/index.js",
-  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
   "dependencies": {
     "@dotcom-reliability-kit/app-info": "^4.2.1",
     "@dotcom-reliability-kit/log-error": "^5.1.7",

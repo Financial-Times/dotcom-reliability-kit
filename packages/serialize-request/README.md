@@ -30,9 +30,18 @@ Include in your code:
 
 ```js
 import serializeRequest from '@dotcom-reliability-kit/serialize-request';
-// or
-const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
 ```
+
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
 
 ### `serializeRequest`
 
@@ -104,12 +113,14 @@ serializeRequest(request, {
 });
 ```
 
-The default set of headers is also available to use, so that you don't need to repeat them if you want to add new included headers. It can be accessed as `serializeRequest.DEFAULT_INCLUDED_HEADERS`:
+The default set of headers is also available to use, so that you don't need to repeat them if you want to add new included headers. It can be accessed as `DEFAULT_INCLUDED_HEADERS`:
 
 ```js
+import serializeRequest, { DEFAULT_INCLUDED_HEADERS } from '@dotcom-reliability-kit/serialize-request';
+
 serializeRequest(request, {
     includeHeaders: [
-        ...serializeRequest.DEFAULT_INCLUDED_HEADERS,
+        ...DEFAULT_INCLUDED_HEADERS,
         'my-custom-header'
     ]
 });

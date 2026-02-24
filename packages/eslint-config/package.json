@@ -10,14 +10,15 @@
   "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/eslint-config#readme",
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: eslint-config\"",
   "license": "MIT",
-  "scripts": {
-    "test": "jest"
-  },
   "engines": {
-    "node": "20.x || 22.x || 24.x"
+    "node": "^22.12 || ^24"
   },
-  "main": "lib/index.js",
-  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
   "peerDependencies": {
     "eslint": ">=8.27.0"
   },

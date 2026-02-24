@@ -1,18 +1,22 @@
-jest.mock('@opentelemetry/auto-instrumentations-node', () => ({
-	getNodeAutoInstrumentations: jest.fn().mockReturnValue('mock-auto-instrumentations')
-}));
-jest.mock('@dotcom-reliability-kit/log-error');
-jest.mock('@dotcom-reliability-kit/errors');
+const { before, beforeEach, describe, it, mock } = require('node:test');
+const assert = require('node:assert/strict');
 
-const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
-const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
-const { UserInputError } = require('@dotcom-reliability-kit/errors');
+const getNodeAutoInstrumentations = mock.fn(() => 'mock-auto-instrumentations');
+mock.module('@opentelemetry/auto-instrumentations-node', {
+	namedExports: { getNodeAutoInstrumentations }
+});
 
-const { createInstrumentationConfig } = require('../../../../lib/config/instrumentations');
+const logRecoverableError = mock.fn();
+mock.module('@dotcom-reliability-kit/log-error', { namedExports: { logRecoverableError } });
+
+const UserInputError = mock.fn(class UserInputError {});
+mock.module('@dotcom-reliability-kit/errors', { namedExports: { UserInputError } });
+
+const { createInstrumentationConfig } = require('../../../../lib/config/instrumentations.js');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () => {
 	it('exports a function', () => {
-		expect(typeof createInstrumentationConfig).toBe('function');
+		assert.strictEqual(typeof createInstrumentationConfig, 'function');
 	});
 
 	describe('createInstrumentationConfig()', () => {
@@ -23,23 +27,24 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 		});
 
 		it('creates Node.js auto-instrumentations with some configurations', () => {
-			expect(getNodeAutoInstrumentations).toHaveBeenCalledTimes(1);
-			expect(getNodeAutoInstrumentations).toHaveBeenCalledWith({
-				'@opentelemetry/instrumentation-http': {
-					ignoreIncomingRequestHook: expect.any(Function)
-				},
-				'@opentelemetry/instrumentation-pino': {
-					enabled: false
-				}
+			assert.strictEqual(getNodeAutoInstrumentations.mock.callCount(), 1);
+			const config = getNodeAutoInstrumentations.mock.calls[0].arguments[0];
+			assert.strictEqual(typeof config, 'object');
+			assert.strictEqual(
+				typeof config['@opentelemetry/instrumentation-http']?.ignoreIncomingRequestHook,
+				'function'
+			);
+			assert.deepStrictEqual(config['@opentelemetry/instrumentation-pino'], {
+				enabled: false
 			});
 		});
 
 		describe('ignore incoming request hook function', () => {
 			let ignoreIncomingRequestHook;
 
-			beforeAll(() => {
+			before(() => {
 				ignoreIncomingRequestHook =
-					getNodeAutoInstrumentations.mock.calls[0][0][
+					getNodeAutoInstrumentations.mock.calls[0].arguments[0][
 						'@opentelemetry/instrumentation-http'
 					].ignoreIncomingRequestHook;
 			});
@@ -49,7 +54,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					url: '/__gtg?a=b',
 					headers: { host: 'mock-host' }
 				};
-				expect(ignoreIncomingRequestHook(mockRequest)).toBe(true);
+				assert.strictEqual(ignoreIncomingRequestHook(mockRequest), true);
 			});
 
 			it('returns `true` with a request to `/__health`', () => {
@@ -57,7 +62,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					url: '/__health?a=b',
 					headers: { host: 'mock-host' }
 				};
-				expect(ignoreIncomingRequestHook(mockRequest)).toBe(true);
+				assert.strictEqual(ignoreIncomingRequestHook(mockRequest), true);
 			});
 
 			it('returns `true` with a request to `/favicon.ico`', () => {
@@ -65,7 +70,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					url: '/favicon.ico?a=b',
 					headers: { host: 'mock-host' }
 				};
-				expect(ignoreIncomingRequestHook(mockRequest)).toBe(true);
+				assert.strictEqual(ignoreIncomingRequestHook(mockRequest), true);
 			});
 
 			it('returns `false` with a request to anything else', () => {
@@ -73,7 +78,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					url: '/mock-endpoint',
 					headers: { host: 'mock-host' }
 				};
-				expect(ignoreIncomingRequestHook(mockRequest)).toBe(false);
+				assert.strictEqual(ignoreIncomingRequestHook(mockRequest), false);
 			});
 
 			it('returns `false` when a request URL is not present', () => {
@@ -81,7 +86,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					url: undefined,
 					headers: { host: 'mock-host' }
 				};
-				expect(ignoreIncomingRequestHook(mockRequest)).toBe(false);
+				assert.strictEqual(ignoreIncomingRequestHook(mockRequest), false);
 			});
 
 			it("doesn't throw when the host header isn't set", () => {
@@ -89,7 +94,7 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					url: '/mock-endpoint',
 					headers: {}
 				};
-				expect(() => ignoreIncomingRequestHook(mockRequest)).not.toThrow();
+				assert.doesNotThrow(() => ignoreIncomingRequestHook(mockRequest));
 			});
 
 			it('logs a warning and returns `false` when a request URL cannot be parsed', () => {
@@ -97,25 +102,25 @@ describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () 
 					url: '/mock-endpont',
 					headers: { host: '' }
 				};
-				expect(ignoreIncomingRequestHook(mockRequest)).toBe(false);
-				expect(UserInputError).toHaveBeenCalledTimes(1);
-				expect(UserInputError).toHaveBeenCalledWith(
-					expect.objectContaining({
+				assert.strictEqual(ignoreIncomingRequestHook(mockRequest), false);
+				assert.strictEqual(UserInputError.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(UserInputError.mock.calls[0].arguments, [
+					{
 						code: 'OTEL_REQUEST_FILTER_FAILURE'
-					})
-				);
-				expect(logRecoverableError).toHaveBeenCalledTimes(1);
-				expect(logRecoverableError).toHaveBeenCalledWith(
-					expect.objectContaining({
-						error: expect.any(UserInputError),
+					}
+				]);
+				assert.strictEqual(logRecoverableError.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(logRecoverableError.mock.calls[0].arguments, [
+					{
+						error: new UserInputError(),
 						request: mockRequest
-					})
-				);
+					}
+				]);
 			});
 		});
 
 		it('returns the auto-instrumentations', () => {
-			expect(instrumentations).toEqual('mock-auto-instrumentations');
+			assert.strictEqual(instrumentations, 'mock-auto-instrumentations');
 		});
 	});
 });

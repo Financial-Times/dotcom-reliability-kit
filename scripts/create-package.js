@@ -32,6 +32,12 @@ const releasePleaseManifest = require('../.release-please-manifest.json');
 		homepage: `https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/${name}#readme`,
 		bugs: `https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:"package: ${name}"`,
 		license: rootManifest.license,
+		scripts: {
+			test: 'npm run test:unit && npm run test:end-to-end',
+			'test:unit':
+				'node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude=**/*.spec.js --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 test/unit/**/*.spec.js',
+			'test:end-to-end': 'node --test test/end-to-end/**/*.spec.js'
+		},
 		engines: rootManifest.engines,
 		main: 'lib/index.js',
 		types: 'types/index.d.ts'
@@ -80,9 +86,12 @@ This module is part of [FT.com Reliability Kit](https://github.com/Financial-Tim
 	await fs.mkdir(testPath, { recursive: true });
 	await fs.writeFile(
 		path.join(testPath, 'index.spec.js'),
-		`describe('@dotcom-reliability-kit/${name}', () => {
+		`const { describe, it } = require('node:test');
+const assert = require('node:assert/strict');
+
+describe('@dotcom-reliability-kit/${name}', () => {
 	it('has some tests', () => {
-		throw new Error('Please write some tests');
+		assert.strictEqual(true, false);
 	});
 });
 `

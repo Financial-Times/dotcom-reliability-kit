@@ -1,9 +1,9 @@
 declare module '@dotcom-reliability-kit/serialize-request' {
-	export type SerializeRequestOptions = {
+	type SerializeRequestOptions = {
 		includeHeaders?: string[];
 	};
 
-	export type RequestHeaders =
+	type RequestHeaders =
 		| Headers
 		| { [key: string]: string }
 		| Iterable<[string, string]>
@@ -17,21 +17,21 @@ declare module '@dotcom-reliability-kit/serialize-request' {
 	type ExpressRequest = import('express').Request;
 	type NodeHttpRequest = import('http').IncomingMessage;
 
-	export type Request =
+	type Request =
 		| (BasicRequest & { [key: string]: any })
 		| ExpressRequest
 		| (NodeHttpRequest & { [key: string]: any });
 
-	export type SerializedRequest = {
+	type SerializedRequest = {
 		id: string | null;
 		method: string;
 		url: string;
 		headers: SerializedRequestHeaders;
 		route?: SerializedRequestRoute;
 	};
-	export type SerializedRequestHeaders = { [key: string]: string };
-	export type SerializedRequestRouteParams = { [key: string]: string };
-	export type SerializedRequestRoute = {
+	type SerializedRequestHeaders = { [key: string]: string };
+	type SerializedRequestRouteParams = { [key: string]: string };
+	type SerializedRequestRoute = {
 		path: string;
 		params: SerializedRequestRouteParams;
 	};
@@ -42,6 +42,4 @@ declare module '@dotcom-reliability-kit/serialize-request' {
 	): SerializedRequest;
 
 	export const DEFAULT_INCLUDED_HEADERS: readonly string[];
-
-	export = serializeRequest;
 }

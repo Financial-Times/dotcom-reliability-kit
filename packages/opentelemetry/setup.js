@@ -1,6 +1,10 @@
-const opentelemetry = require('.');
+const opentelemetry = require('./lib/index.js');
 
-/** @type {opentelemetry.TracingOptions | undefined} */
+/**
+ * @import { MetricsOptions, TracingOptions, ViewOptions } from '@dotcom-reliability-kit/opentelemetry'
+ */
+
+/** @type {TracingOptions | undefined} */
 let tracing;
 if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 	tracing = {
@@ -12,7 +16,7 @@ if (process.env.OPENTELEMETRY_TRACING_ENDPOINT) {
 	};
 }
 
-/** @type {opentelemetry.MetricsOptions | undefined} */
+/** @type {MetricsOptions | undefined} */
 let metrics;
 if (process.env.OPENTELEMETRY_METRICS_ENDPOINT) {
 	metrics = {
@@ -29,7 +33,7 @@ function parseListOfNumbers(input) {
 	return input.split(',').map((item) => Number(item.trim()));
 }
 
-/** @type {opentelemetry.ViewOptions} */
+/** @type {ViewOptions} */
 const views = {};
 if (process.env.OPENTELEMETRY_VIEWS_HTTP_SERVER_DURATION_BUCKETS) {
 	views.httpServerDurationBuckets = parseListOfNumbers(
