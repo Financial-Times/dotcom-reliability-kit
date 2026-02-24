@@ -31,9 +31,7 @@ exports.MetricsClient = class MetricsClient {
 	#batchSize = 20;
 
 	/** @type {number} */
-	#queueCapacity = this.#batchSize * 10;
-	// TODO: maybe it should be a size in memory.
-	// Can look at an ccc object event size, and figure out how much max mb we want
+	#queueCapacity = 10000;
 
 	/** @type {NodeJS.Timeout | undefined} */
 	#timer;

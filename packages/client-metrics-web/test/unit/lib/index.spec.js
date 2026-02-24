@@ -713,7 +713,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				// We record the max number of events in the queue
 				recordBatchOfEvents({
 					instance,
-					numberOfEvents: DEFAULT_BATCH_SIZE * 10,
+					numberOfEvents: DEFAULT_BATCH_SIZE * 500,
 					namespace: 'mock.event.max.capacity',
 					data: { ok: true }
 				});
