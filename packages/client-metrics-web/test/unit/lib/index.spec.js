@@ -6,6 +6,7 @@ jest.mock('../../../package.json', () => ({
 const { MetricsClient } = require('../../..');
 
 const DEFAULT_BATCH_SIZE = 20;
+const QUEUE_CAPACITY = 10000;
 
 const recordBatchOfEvents = ({
 	instance,
@@ -706,57 +707,38 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				expect(global.fetch).toHaveBeenCalledTimes(3);
 			});
 
-			it('logs a warning and stop events to be added if it hits the max capacity of the queue', () => {
+			it('logs a warning and drop the oldest eventsif it hits the max capacity of the queue', () => {
 				// We are disabling the client so we can grow the queue
 				instance.disable();
 
-				// We record the max number of events in the queue
+				// First we record an old event with a recognizable namespace
+				instance.recordEvent('mock.event.old.event', { ok: true });
+
+				// Then we record the max number of events
 				recordBatchOfEvents({
 					instance,
-					numberOfEvents: DEFAULT_BATCH_SIZE * 500,
+					numberOfEvents: QUEUE_CAPACITY,
 					namespace: 'mock.event.max.capacity',
 					data: { ok: true }
 				});
-
-				// We try to add one more
-				instance.recordEvent('mock.event.max.capacity.overflow', { ok: false });
 
 				// It should logs the warning
 				expect(console.warn).toHaveBeenCalledTimes(1);
 				expect(console.warn).toHaveBeenCalledWith(
-					'There are too many events in the batch, we will send events before addding more events to the queue. If you see that warning too often, you might want to increase the size of your batch'
+					'There are too many events in the batch, we will drop the oldest event to clear the queue. If you see that warning too often, you might want to increase the size of your batch'
 				);
 
-				// The last event should not be found in the queue
+				// The first event should not be found in the queue
 				expect(
-					instance.queue.filter(
-						(event) => event.namespace === 'mock.event.max.capacity.overflow'
-					).length
+					instance.queue.filter((event) => event.namespace === 'mock.event.old.event')
+						.length
 				).toBe(0);
-			});
 
-			it('clear the queue and sends events and re-enable adding events to the queue once the queue is cleared', () => {
-				// We are disabling the client so we can grow the queue
-				instance.disable();
-
-				// We record the max number of events in the queue
-				recordBatchOfEvents({
-					instance,
-					numberOfEvents: DEFAULT_BATCH_SIZE * 10,
-					namespace: 'mock.event.max.capacity',
-					data: { ok: true }
-				});
-
-				// Once reenabled, it sends the events
-				instance.enable();
-				jest.advanceTimersByTime(10000);
-				expect(global.fetch).toHaveBeenCalledTimes(10);
-
-				// And its now possible to re add elements to the queue
-				instance.recordEvent('mock.event.max.capacity.cleared', { ok: false });
-				expect(instance.queue.length).toBe(1);
-				expect(console.warn).toHaveBeenCalledTimes(0);
-				expect(instance.queue[0].namespace).toBe('mock.event.max.capacity.cleared');
+				// The more recents events that were in the queue should still be in
+				expect(
+					instance.queue.filter((event) => event.namespace === 'mock.event.max.capacity')
+						.length
+				).toBe(10000);
 			});
 		});
 	});
