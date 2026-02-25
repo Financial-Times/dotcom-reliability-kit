@@ -15,7 +15,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get batchSize(): number;
 		get retentionPeriod(): number;
 		get systemVersion(): string;
-		get queue(): BatchedEvent[];
+		get queue(): readonly BatchedEvent[];
 		clearQueue(): void;
 		enable(): void;
 		disable(): void;

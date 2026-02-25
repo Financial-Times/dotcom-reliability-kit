@@ -126,7 +126,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['queue']} */
 	get queue() {
-		return this.#queue;
+		return Object.freeze(this.#queue);
 	}
 
 	/** @type {MetricsClientType['clearQueue']} */
