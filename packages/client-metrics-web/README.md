@@ -54,7 +54,7 @@ const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 
 The MetricsClient sends events to the Client Metrics Server, using POST to the following endpoint `/api/v1/ingest`.
 
-The events are added to a batch. When the batch reaches its max capacity, which is 20, the client send the events to the server. If it does not reach that max capacity, the client sends the events every 10 seconds. This `retentionPeriod` is a configurable option (see [`options.retentionPeriod`](#optionsretentionPeriod)). If there are no events added to the batch, nothing is sent.
+The events are added to a batch. When the batch reaches its max capacity, which defaults to 20, the client sends the events to the server. If it does not reach that max capacity, the client sends the events every 10 seconds. This `retentionPeriod` is a configurable option (see [`options.retentionPeriod`](#optionsretentionPeriod)). If there are no events added to the batch, nothing is sent.
 
 The correct environment (production vs test) is automatically selected based on the browser hostname.
 If your hostname has `test`, `staging` or `local`, the events will be sent to our test server. Else, it will send the metrics to the production server.
@@ -200,7 +200,7 @@ new MetricsClient({ systemVersion: '1.2.3' });
 new MetricsClient({ environment: 'production' });
 ```
 
-#### `options.batchSize`
+#### `options.batchSize`
 
 **Optional** `number`. This is how many events can be accumulated in the queue before the client send them to the server. The minimum size is 20 events, and if you try to set `batchSize` to a lower number, it will be ignore and the options will be set to be 20 events.
 
