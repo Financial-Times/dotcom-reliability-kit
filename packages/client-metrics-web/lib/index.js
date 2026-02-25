@@ -161,10 +161,9 @@ exports.MetricsClient = class MetricsClient {
 
 		if (this.#queue.length >= this.#queueCapacity) {
 			console.warn(
-				'There are too many events in the batch, we will send events before addding more events to the queue. If you see that warning too often, you might want to increase the size of your batch'
+				'There are too many events in the batch, we will drop the oldest event to clear the queue. If you see that warning too often, you might want to increase the size of your batch'
 			);
-			this.#sendEvents();
-			return;
+			this.#queue.shift();
 		}
 
 		try {
