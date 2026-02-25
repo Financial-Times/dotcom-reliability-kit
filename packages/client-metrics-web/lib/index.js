@@ -190,7 +190,7 @@ exports.MetricsClient = class MetricsClient {
 	#startTimer() {
 		this.#timer = setInterval(() => {
 			this.#elapsedSeconds += 1;
-			if (this.#elapsedSeconds === this.#retentionPeriod) {
+			if (this.#elapsedSeconds >= this.#retentionPeriod) {
 				this.#sendEvents();
 				this.#elapsedSeconds = 0;
 			}
