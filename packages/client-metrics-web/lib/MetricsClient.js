@@ -216,7 +216,10 @@ exports.MetricsClient = class MetricsClient {
 
 		this.#resetTimer();
 
-		const events = this.#queue.pull(this.#batchSize).map((batchedEvent) => {
+		const numberOfEvents =
+			this.#queue.size >= this.#batchSize ? this.#batchSize : this.#queue.size;
+
+		const events = this.#queue.pull(numberOfEvents).map((batchedEvent) => {
 			return {
 				namespace: batchedEvent.namespace,
 				systemCode: this.#systemCode,

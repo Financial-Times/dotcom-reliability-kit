@@ -4,6 +4,7 @@ jest.mock('../../../package.json', () => ({
 }));
 
 const { MetricsClient } = require('../../..');
+const { InMemoryQueue } = require('../../../lib/queue/InMemoryQueue');
 
 const DEFAULT_BATCH_SIZE = 20;
 const QUEUE_CAPACITY = 10000;
@@ -285,7 +286,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			let mockData;
 
 			beforeEach(() => {
-				instance.clearQueue();
 				mockData = { mockEventData: true };
 				recordBatchOfEvents({
 					instance,
@@ -311,12 +311,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					instance.recordEvent('Mock.UPPER.Event', mockData);
 				});
 
-				afterAll(() => {
-					instance.clearQueue();
-				});
-
 				it('hands the event to the client with the namespace converted to lower case', () => {
-					expect(instance.queue[0].namespace).toBe('mock.upper.event');
+					expect(instance.queue.getItems(1)[0].namespace).toBe('mock.upper.event');
 				});
 			});
 
@@ -326,12 +322,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					instance.recordEvent(123, mockData);
 				});
 
-				afterAll(() => {
-					instance.clearQueue();
-				});
-
 				it('does not record the event', () => {
-					expect(instance.queue.length).toBe(0);
+					expect(instance.queue.size).toBe(0);
 				});
 
 				it('logs a warning about the namespace type', () => {
@@ -348,12 +340,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					instance.recordEvent('mock . namespace', mockData);
 				});
 
-				afterAll(() => {
-					instance.clearQueue();
-				});
-
 				it('does not post the event', () => {
-					expect(instance.queue.length).toBe(0);
+					expect(instance.queue.size).toBe(0);
 				});
 
 				it('logs a warning about valid namespace characters', () => {
@@ -366,7 +354,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event data is not defined', () => {
 				beforeEach(() => {
-					instance.clearQueue();
 					global.fetch.mockClear();
 					recordBatchOfEvents({
 						instance,
@@ -399,9 +386,10 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('adds the event namespace and data to the queue of events to be sent', () => {
-				expect(instance.queue.length).toBe(1);
-				expect(instance.queue[0].namespace).toBe('mock.event.check.event.handler');
-				expect(instance.queue[0].data).toStrictEqual({
+				expect(instance.queue.size).toBe(1);
+				const firstEl = instance.queue.getItems(1)[0];
+				expect(firstEl.namespace).toBe('mock.event.check.event.handler');
+				expect(firstEl.data).toStrictEqual({
 					mockProperty: 'mock-value'
 				});
 			});
@@ -412,13 +400,13 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event.detail.namespace is not a string', () => {
 				beforeEach(() => {
-					instance.clearQueue();
 					event.detail.namespace = 123;
 					eventHandler(event);
 				});
 
 				it('does not add the event to the queue of events to be sent', () => {
-					expect(instance.queue.length).toBe(0);
+					const queueItems = instance.queue.getItems(instance.queue.size);
+					expect(queueItems.filter((event) => event.namespace === 123).length).toBe(0);
 				});
 
 				it('logs a warning about the namespace type', () => {
@@ -431,13 +419,16 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event.detail is not an object', () => {
 				beforeEach(() => {
-					instance.clearQueue();
-					event = new CustomEvent('ft.clientMetric', { detail: 'nope' });
+					event = new CustomEvent('event.detail.not.object', { detail: 'nope' });
 					eventHandler(event);
 				});
 
 				it('does not add the event to the queue of events to be sent', () => {
-					expect(instance.queue.length).toBe(0);
+					const queueItems = instance.queue.getItems(instance.queue.size);
+					expect(
+						queueItems.filter((event) => event.namespace === 'event.detail.not.object')
+							.length
+					).toBe(0);
 				});
 
 				it('logs a warning about the detail type', () => {
@@ -450,7 +441,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			describe('when event is not a CustomEvent instance', () => {
 				beforeEach(() => {
-					instance.clearQueue();
 					eventHandler({});
 				});
 
@@ -458,7 +448,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					// The condition that gets us here is mostly there to satisfy TypeScript
 					// so we don't care about anyhing getting logged - I don't think it's
 					// a case that can actually happen
-					expect(instance.queue.length).toBe(0);
 					expect(console.warn).toHaveBeenCalledTimes(0);
 				});
 			});
@@ -658,7 +647,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 		describe('#sendEvents behaviour (batching, timer, capacity & guards)', () => {
 			afterEach(() => {
-				instance.clearQueue();
 				instance.enable();
 			});
 
@@ -672,7 +660,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 				const body = JSON.parse(global.fetch.mock.calls[0][1].body);
 				expect(body[0].namespace).toBe('mock.event.timer');
-				expect(instance.queue.length).toBe(0);
+				expect(instance.queue.size).toBe(0);
 			});
 
 			it('does not call fetch when retentionPeriod is finished but the queue is empty', () => {
@@ -689,7 +677,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 
 				expect(global.fetch).toHaveBeenCalledTimes(0);
-				expect(instance.queue.length).toBe(instance.batchSize);
+				expect(instance.queue.size).toBe(instance.batchSize);
 			});
 
 			it('recursively sends multiple batches until the queue is empty', () => {
@@ -728,18 +716,26 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					'There are too many events in the batch, we will drop the oldest event to clear the queue. If you see that warning too often, you might want to increase the size of your batch'
 				);
 
+				const queueItems = instance.queue.getItems(instance.queue.size);
+
 				// The first event should not be found in the queue
 				expect(
-					instance.queue.filter((event) => event.namespace === 'mock.event.old.event')
-						.length
+					queueItems.filter((event) => event.namespace === 'mock.event.old.event').length
 				).toBe(0);
 
 				// The more recents events that were in the queue should still be in
 				expect(
-					instance.queue.filter((event) => event.namespace === 'mock.event.max.capacity')
+					queueItems.filter((event) => event.namespace === 'mock.event.max.capacity')
 						.length
 				).toBe(10000);
 			});
+		});
+
+		describe.only('Can create a client with a custom queue', () => {
+			const customQueue = new InMemoryQueue({ capacity: 11 });
+			const instance = new MetricsClient({ systemCode: 'test-queue', queue: customQueue });
+
+			expect(instance.queue.capacity).toBe(11);
 		});
 	});
 });
