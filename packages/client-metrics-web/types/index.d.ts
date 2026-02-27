@@ -5,6 +5,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		environment?: 'production' | 'test';
 		batchSize?: number;
 		retentionPeriod?: number;
+		queue?: Queue;
 	};
 
 	export class MetricsClient {
@@ -15,7 +16,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get batchSize(): number;
 		get retentionPeriod(): number;
 		get systemVersion(): string;
-		get queue(): readonly BatchedEvent[];
+		get queue(): readonly Queue;
 		clearQueue(): void;
 		enable(): void;
 		disable(): void;
@@ -27,9 +28,13 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		[key: string]: any;
 	};
 
-	export type BatchedEvent = {
+	export type Metric = {
 		namespace: string;
 		timestamp: number;
 		data: { [key: string]: any };
+	};
+
+	export type QueueOptions = {
+		capacity: number;
 	};
 }
