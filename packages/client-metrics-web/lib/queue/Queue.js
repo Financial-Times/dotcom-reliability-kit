@@ -42,4 +42,4 @@ exports.Queue = class Queue {
 	get size() {
 		return 0;
 	}
-}
+};
