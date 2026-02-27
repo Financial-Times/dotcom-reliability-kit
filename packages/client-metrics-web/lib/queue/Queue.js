@@ -1,5 +1,5 @@
 /**
- * @import { QueueOptions, Queue as QueueType } from '@dotcom-reliability-kit/client-metrics-web'
+ * @import { Metric, QueueOptions } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 exports.Queue = class Queue {
@@ -13,33 +13,62 @@ exports.Queue = class Queue {
 		this.#capacity = options.capacity;
 	}
 
-	/** @type { QueueType['add'] } */
+	/**
+	 * @param {Metric} _item
+	 * @returns {void}
+	 * @abstract
+	 */
 	add(_item) {
-		throw new Error('Not implemented');
+		throw new Error('Must be implemented by subclass');
 	}
 
-	/** @type { QueueType['clear'] } */
+	/**
+	 * @returns {void}
+	 * @abstract
+	 */
 	clear() {
-		throw new Error('Not implemented');
+		throw new Error('Must be implemented by subclass');
 	}
 
-	/** @type { QueueType['drop'] } */
+	/**
+	 * @param {number} _count
+	 * @returns {void}
+	 * @abstract
+	 */
 	drop(_count = 1) {
-		throw new Error('Not implemented');
+		throw new Error('Must be implemented by subclass');
 	}
 
-	/** @type { QueueType['pull'] } */
+	/**
+	 * @param {number} _count
+	 * @returns {Metric[]}
+	 * @abstract
+	 */
+	getItems(_count) {
+		throw new Error('Must be implemented by subclass');
+	}
+
+	/**
+	 * @param {number} _count
+	 * @returns {Metric[]}
+	 * @abstract
+	 */
 	pull(_count) {
-		return [];
+		throw new Error('Must be implemented by subclass');
 	}
 
-	/** @type { QueueType['capacity'] } */
+	/**
+	 * @returns {number}
+	 */
 	get capacity() {
 		return this.#capacity;
 	}
 
-	/** @type { QueueType['size'] } */
+	/**
+	 * @returns {number}
+	 * @abstract
+	 */
 	get size() {
-		return 0;
+		throw new Error('Must be implemented by subclass');
 	}
 };

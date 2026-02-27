@@ -37,14 +37,4 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 	export type QueueOptions = {
 		capacity: number;
 	};
-
-	export class Queue {
-		add(item: Metric): void;
-		clear(): void;
-		drop(count?: number): void;
-		getItems(count: number): Metric[];
-		pull(count: number): Metric[];
-		get capacity(): number;
-		get size(): number;
-	}
 }

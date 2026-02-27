@@ -2,7 +2,7 @@
 const { version } = require('../package.json');
 const { InMemoryQueue } = require('./queue/InMemoryQueue');
 /**
- * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent, Queue} from '@dotcom-reliability-kit/client-metrics-web'
+ * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
@@ -28,7 +28,7 @@ exports.MetricsClient = class MetricsClient {
 	/** @type {number} */
 	#capacity = 10000;
 
-	/** @type {Queue}*/
+	/** @type {InMemoryQueue}*/
 	#queue;
 
 	/** @type {number} */

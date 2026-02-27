@@ -1,7 +1,7 @@
 const { Queue } = require('./Queue');
 
 /**
- * @import { QueueOptions, Queue as QueueType, Metric } from '@dotcom-reliability-kit/client-metrics-web'
+ * @import { QueueOptions, Metric } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 exports.InMemoryQueue = class InMemoryQueue extends Queue {
@@ -17,7 +17,6 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	}
 
 	/**
-	 * @type {QueueType['add']}
 	 * @override
 	 */
 	add(item) {
@@ -29,7 +28,6 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	}
 
 	/**
-	 * @type {QueueType['clear']}
 	 * @override
 	 */
 	clear() {
@@ -37,7 +35,6 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	}
 
 	/**
-	 * @type {QueueType['drop']}
 	 * @override
 	 */
 	drop(count = 1) {
@@ -46,7 +43,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	}
 
 	/**
-	 * @type {QueueType['getItems']}
+	 * @override
 	 */
 	getItems(count) {
 		if (count > this.size) {
@@ -57,7 +54,6 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	}
 
 	/**
-	 * @type {QueueType['pull']}
 	 * @override
 	 */
 	pull(count) {
@@ -68,7 +64,6 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	}
 
 	/**
-	 * @type {QueueType['size']}
 	 * @override
 	 */
 	get size() {
