@@ -29,6 +29,7 @@ We're glad you want to contribute to Reliability Kit!
     * [Hard-coding the release version](#hard-coding-the-release-version)
     * [Correcting releases](#correcting-releases)
   * [Issue management](#issue-management)
+  * [AI Tools](#ai-tools)
 
 
 ## Requirements
@@ -311,3 +312,8 @@ If you're managing issues, we have a [suite of labels](https://github.com/Financ
 | ----- | ----- |
 | `package: <NAME>` | Used to help us filter bugs and issues by package. Add these labels to an issue so we can see if a particular package is causing us more problems over time |
 | `requested` | Used to indicate that a team outside of the maintainers of Reliability Kit have requested this feature, which helps us prioritise it against other work |
+
+
+## AI Tools
+
+Because this project is open source, we cannot use AI tools to generate code due to the FT's guidance. For this reason we require that you confirm you have _not_ used AI tools when you open a pull request.
