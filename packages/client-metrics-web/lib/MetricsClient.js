@@ -1,8 +1,10 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
 const { version } = require('../package.json');
 const { InMemoryQueue } = require('./queue/InMemoryQueue');
+const { Queue } = require('./queue/Queue');
+
 /**
- * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent, Queue} from '@dotcom-reliability-kit/client-metrics-web'
+ * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
@@ -24,9 +26,6 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {string} */
 	#systemCode = '';
-
-	/** @type {number} */
-	#capacity = 10000;
 
 	/** @type {Queue}*/
 	#queue;
@@ -50,11 +49,12 @@ exports.MetricsClient = class MetricsClient {
 		let { systemCode, systemVersion, environment, batchSize, retentionPeriod, queue } = options;
 
 		if (queue) {
+			if (!(queue instanceof Queue)) {
+				throw new TypeError('The queue is not an instance of the base class Queue');
+			}
 			this.#queue = queue;
 		} else {
-			this.#queue = new InMemoryQueue({
-				capacity: this.#capacity
-			});
+			this.#queue = new InMemoryQueue();
 		}
 
 		try {
@@ -135,7 +135,7 @@ exports.MetricsClient = class MetricsClient {
 
 	/** @type {MetricsClientType['queue']} */
 	get queue() {
-		return Object.freeze(this.#queue);
+		return this.#queue;
 	}
 
 	/** @type {MetricsClientType['enable']} */
@@ -161,13 +161,6 @@ exports.MetricsClient = class MetricsClient {
 		if (!this.isAvailable || !this.#endpoint) {
 			console.warn('Client not initialised properly, cannot record an event');
 			return;
-		}
-
-		if (this.#queue.size >= this.#queue.capacity) {
-			console.warn(
-				'There are too many events in the batch, we will drop the oldest event to clear the queue. If you see that warning too often, you might want to increase the size of your batch'
-			);
-			this.#queue.drop();
 		}
 
 		try {

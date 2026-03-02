@@ -4,10 +4,29 @@ jest.mock('../../../package.json', () => ({
 }));
 
 const { MetricsClient } = require('../../..');
-const { InMemoryQueue } = require('../../../lib/queue/InMemoryQueue');
+const { Queue } = require('../../../lib/queue/Queue');
+
+class MockQueue extends Queue {
+	mockItems = [];
+
+	add(item) {
+		this.mockItems.push(item);
+	}
+
+	drop(count) {
+		this.mockItems = this.mockItems.slice(0, count);
+	}
+
+	pull(count) {
+		return this.mockItems.splice(0, count);
+	}
+
+	get size() {
+		return this.mockItems.length;
+	}
+}
 
 const DEFAULT_BATCH_SIZE = 20;
-const QUEUE_CAPACITY = 10000;
 
 const recordBatchOfEvents = ({
 	instance,
@@ -56,6 +75,21 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		}).toThrow(/class constructor/i);
 	});
 
+	it('can create a client with a custom queue', () => {
+		const customQueue = new MockQueue({ capacity: 11 });
+		const instance = new MetricsClient({ systemCode: 'test-queue', queue: customQueue });
+
+		expect(instance.queue.capacity).toBe(11);
+	});
+
+	it('will throw when trying to create a MetricsClient with a queue that does not extends the base Queue', () => {
+		const wrongQueue = {};
+
+		expect(() => {
+			new MetricsClient({ queue: wrongQueue });
+		}).toThrow('The queue is not an instance of the base class Queue');
+	});
+
 	describe('Setup which MetricClient server to use based on environment variable or hostname', () => {
 		describe("if the user pass a 'test' environment variable", () => {
 			let instance;
@@ -64,7 +98,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				const options = {
 					systemCode: 'mock-system-code',
 					systemVersion: 'mock-version',
-					environment: 'test'
+					environment: 'test',
+					queue: new MockQueue()
 				};
 				instance = new MetricsClient(options);
 			});
@@ -157,7 +192,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		beforeEach(() => {
 			options = {
 				systemCode: 'mock-system-code',
-				systemVersion: 'mock-version'
+				systemVersion: 'mock-version',
+				queue: new MockQueue()
 			};
 			instance = new MetricsClient(options);
 		});
@@ -312,7 +348,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 
 				it('hands the event to the client with the namespace converted to lower case', () => {
-					expect(instance.queue.getItems(1)[0].namespace).toBe('mock.upper.event');
+					expect(instance.queue.mockItems[0].namespace).toBe('mock.upper.event');
 				});
 			});
 
@@ -387,7 +423,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('adds the event namespace and data to the queue of events to be sent', () => {
 				expect(instance.queue.size).toBe(1);
-				const firstEl = instance.queue.getItems(1)[0];
+				const firstEl = instance.queue.mockItems[0];
 				expect(firstEl.namespace).toBe('mock.event.check.event.handler');
 				expect(firstEl.data).toStrictEqual({
 					mockProperty: 'mock-value'
@@ -405,7 +441,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 
 				it('does not add the event to the queue of events to be sent', () => {
-					const queueItems = instance.queue.getItems(instance.queue.size);
+					const queueItems = instance.queue.mockItems;
 					expect(queueItems.filter((event) => event.namespace === 123).length).toBe(0);
 				});
 
@@ -424,7 +460,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 
 				it('does not add the event to the queue of events to be sent', () => {
-					const queueItems = instance.queue.getItems(instance.queue.size);
+					const queueItems = instance.queue.mockItems;
 					expect(
 						queueItems.filter((event) => event.namespace === 'event.detail.not.object')
 							.length
@@ -590,7 +626,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		beforeEach(() => {
 			options = {
 				systemCode: 'mock-system-code',
-				systemVersion: 'mock-version'
+				systemVersion: 'mock-version',
+				queue: new MockQueue()
 			};
 			instance = new MetricsClient(options);
 		});
@@ -694,48 +731,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				jest.advanceTimersByTime(10000);
 				expect(global.fetch).toHaveBeenCalledTimes(3);
 			});
-
-			it('logs a warning and drop the oldest eventsif it hits the max capacity of the queue', () => {
-				// We are disabling the client so we can grow the queue
-				instance.disable();
-
-				// First we record an old event with a recognizable namespace
-				instance.recordEvent('mock.event.old.event', { ok: true });
-
-				// Then we record the max number of events
-				recordBatchOfEvents({
-					instance,
-					numberOfEvents: QUEUE_CAPACITY,
-					namespace: 'mock.event.max.capacity',
-					data: { ok: true }
-				});
-
-				// It should logs the warning
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
-					'There are too many events in the batch, we will drop the oldest event to clear the queue. If you see that warning too often, you might want to increase the size of your batch'
-				);
-
-				const queueItems = instance.queue.getItems(instance.queue.size);
-
-				// The first event should not be found in the queue
-				expect(
-					queueItems.filter((event) => event.namespace === 'mock.event.old.event').length
-				).toBe(0);
-
-				// The more recents events that were in the queue should still be in
-				expect(
-					queueItems.filter((event) => event.namespace === 'mock.event.max.capacity')
-						.length
-				).toBe(10000);
-			});
-		});
-
-		describe.only('Can create a client with a custom queue', () => {
-			const customQueue = new InMemoryQueue({ capacity: 11 });
-			const instance = new MetricsClient({ systemCode: 'test-queue', queue: customQueue });
-
-			expect(instance.queue.capacity).toBe(11);
 		});
 	});
 });

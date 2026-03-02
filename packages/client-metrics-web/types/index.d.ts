@@ -17,7 +17,6 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get retentionPeriod(): number;
 		get systemVersion(): string;
 		get queue(): readonly Queue;
-		clearQueue(): void;
 		enable(): void;
 		disable(): void;
 		recordEvent(namespace: string, eventData?: Record<string, any>): void;
@@ -35,16 +34,17 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 	};
 
 	export type QueueOptions = {
-		capacity: number;
+		capacity?: number;
 	};
 
 	export class Queue {
+		constructor(options: QueueOptions);
 		add(item: Metric): void;
-		clear(): void;
 		drop(count?: number): void;
-		getItems(count: number): Metric[];
 		pull(count: number): Metric[];
 		get capacity(): number;
 		get size(): number;
 	}
+
+	export class InMemoryQueue extends Queue {}
 }
