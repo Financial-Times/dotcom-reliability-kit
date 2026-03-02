@@ -1,3 +1,5 @@
+import type appInfo from '@dotcom-reliability-kit/app-info';
+
 export type LogLevel = 'silly' | 'data' | 'debug' | 'verbose' | 'info' | 'warn' | 'error' | 'fatal';
 
 export type LogLevelInfo = {
@@ -26,6 +28,7 @@ export type LogTransport = {
 };
 
 export type LoggerOptions = {
+	appInfo?: typeof appInfo;
 	baseLogData?: object;
 	logLevel?: LogLevel;
 	transforms?: LogTransform[];
@@ -37,7 +40,7 @@ export type PrivateLoggerOptions = {
 	_transport?: LogTransport;
 };
 
-export class Logger {
+export default class Logger {
 	constructor(options?: LoggerOptions);
 	public get baseLogData(): any;
 	public get logLevel(): LogLevel;

@@ -1,5 +1,5 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
-const reliabilityKitLogger = require('@dotcom-reliability-kit/logger');
+const { default: reliabilityKitLogger } = require('@dotcom-reliability-kit/logger');
 const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
 const { default: serializeRequest } = require('@dotcom-reliability-kit/serialize-request');
 

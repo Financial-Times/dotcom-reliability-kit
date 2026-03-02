@@ -1,20 +1,10 @@
-import { Logger } from './logger';
-import { createLegacyMaskTransform } from './transforms/legacy-mask';
+import Logger from './logger.d.ts';
+import createLegacyMaskTransform from './transforms/legacy-mask.d.ts';
 
 declare module '@dotcom-reliability-kit/logger' {
-	export type Transforms = {
-		legacyMask: createLegacyMaskTransform;
-	};
-
-	export type DefaultLogger = {
-		Logger: typeof Logger;
-		transforms: Transforms;
-	};
-
-	export const transforms: Transforms;
+	export const transforms = { legacyMask: createLegacyMaskTransform };
 	export { Logger };
 
-	const _exports: Logger & DefaultLogger;
-	export = _exports;
-	export default _exports;
+	const logger = new Logger();
+	export default logger;
 }

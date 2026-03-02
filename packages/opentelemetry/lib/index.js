@@ -5,7 +5,7 @@ const { createTracingConfig } = require('./config/tracing.js');
 const { createViewConfig } = require('./config/views.js');
 const { HostMetrics } = require('@opentelemetry/host-metrics');
 const opentelemetry = require('@opentelemetry/sdk-node');
-const logger = require('@dotcom-reliability-kit/logger');
+const { default: logger } = require('@dotcom-reliability-kit/logger');
 
 /**
  * @import { Instances, Options } from '@dotcom-reliability-kit/opentelemetry'

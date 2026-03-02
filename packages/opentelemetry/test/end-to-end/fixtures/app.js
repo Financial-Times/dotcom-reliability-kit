@@ -1,5 +1,5 @@
 const express = require('express');
-const logger = require('@dotcom-reliability-kit/logger');
+const { default: logger } = require('@dotcom-reliability-kit/logger');
 
 // We set up OpenTelemetry via `--require` but this allows us to grab the same instances
 const { setup } = require('@dotcom-reliability-kit/opentelemetry');

@@ -1,6 +1,6 @@
 /**
- * @import { InternalMaskSettings } from '../../types/transforms/legacy-mask'
- * @import { createLegacyMaskTransform as CreateLegacyMaskTransform } from '../../types/transforms/legacy-mask'
+ * @import { InternalMaskSettings } from '../../types/transforms/legacy-mask.d.ts'
+ * @import CreateLegacyMaskTransform from '../../types/transforms/legacy-mask.d.ts'
  */
 
 /**
@@ -145,7 +145,7 @@ function maskObject(object, settings) {
  *
  * @type {CreateLegacyMaskTransform}
  */
-module.exports = function createLegacyMaskTransform({
+export default function createLegacyMaskTransform({
 	denyList = [],
 	allowList = [],
 	maskString = '*****'
@@ -170,4 +170,4 @@ module.exports = function createLegacyMaskTransform({
 			references: new WeakSet()
 		});
 	};
-};
+}

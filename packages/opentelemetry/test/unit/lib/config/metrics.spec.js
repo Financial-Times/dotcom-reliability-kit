@@ -2,7 +2,11 @@ const { before, describe, it, mock } = require('node:test');
 const assert = require('node:assert/strict');
 
 const logger = { info: mock.fn() };
-mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
+mock.module('@dotcom-reliability-kit/logger', {
+	// NOTE: this is temporary while we're importing ESM into CommonJS.
+	//       Should be switched back when we migrate opentelemetry to ESM.
+	namedExports: { default: logger }
+});
 
 mock.module('../../../../lib/config/user-agents.js', {
 	namedExports: { METRICS_USER_AGENT: 'mock-metrics-user-agent' }

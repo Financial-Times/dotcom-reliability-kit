@@ -1,5 +1,5 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 
 const pino = mock.fn();
 pino.stdTimeFunctions = { isoTime: 'mockIsoTime' };
@@ -15,9 +15,6 @@ pino.createMockPinoLogger = () => ({
 });
 mock.module('pino', { defaultExport: pino });
 
-// An undefined export is used to simulate pino-pretty not being installed
-mock.module('pino-pretty', { defaultExport: undefined });
-
 mock.module('@dotcom-reliability-kit/app-info', {
 	defaultExport: {
 		cloudProvider: null,
@@ -25,22 +22,14 @@ mock.module('@dotcom-reliability-kit/app-info', {
 	}
 });
 
-mock.module('@dotcom-reliability-kit/serialize-error', {
-	// NOTE: this is temporary while we're importing ESM into CommonJS.
-	//       Should be switched back when we migrate log-error to ESM.
-	namedExports: {
-		default: mock.fn(() => ({
-			isMockSerializedError: true
-		}))
-	}
-});
-const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
+const serializeError = mock.fn(() => ({ isMockSerializedError: true }));
+mock.module('@dotcom-reliability-kit/serialize-error', { defaultExport: serializeError });
 
 // Set environment variables explicitly before importing the logger
 delete process.env.LOG_LEVEL;
 delete process.env.SPLUNK_LOG_LEVEL;
 
-const Logger = require('../../../lib/logger.js');
+const { default: Logger } = await import('../../../lib/logger.js');
 
 describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 	let mockPinoLogger;
@@ -972,26 +961,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the environment is not "production" - e.g. "development', () => {
-			let Logger;
-
-			beforeEach((test) => {
-				test.mock.module('@dotcom-reliability-kit/serialize-error', {
-					defaultExport: serializeError
-				});
-				test.mock.module('pino', { defaultExport: pino });
-				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
-				test.mock.module('@dotcom-reliability-kit/app-info', {
-					defaultExport: { cloudProvider: null, environment: 'development' }
-				});
-
-				// We have to clear the module cache because the checks for pino-pretty are done
-				// on module load for performance reasons
-				delete require.cache[require.resolve('../../../lib/logger.js')];
-				Logger = require('../../../lib/logger.js');
-
+		describe('when the environment is not "production" - e.g. "development', () => {
+			beforeEach(() => {
 				pino.mock.resetCalls();
-				logger = new Logger();
+				logger = new Logger({ appInfo: { environment: 'development' } });
 			});
 
 			it('configures the created Pino logger with prettification', () => {
@@ -1008,26 +981,10 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the environment is not "production" - e.g. "test', () => {
-			let Logger;
-
-			beforeEach((test) => {
-				test.mock.module('@dotcom-reliability-kit/serialize-error', {
-					defaultExport: serializeError
-				});
-				test.mock.module('pino', { defaultExport: pino });
-				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
-				test.mock.module('@dotcom-reliability-kit/app-info', {
-					defaultExport: { cloudProvider: null, environment: 'test' }
-				});
-
-				// We have to clear the module cache because the checks for pino-pretty are done
-				// on module load for performance reasons
-				delete require.cache[require.resolve('../../../lib/logger.js')];
-				Logger = require('../../../lib/logger.js');
-
+		describe('when the environment is not "production" - e.g. "test', () => {
+			beforeEach(() => {
 				pino.mock.resetCalls();
-				logger = new Logger();
+				logger = new Logger({ appInfo: { environment: 'test' } });
 			});
 
 			it('configures the created Pino logger with prettification', () => {
@@ -1044,24 +1001,8 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the `withPrettifier` option is set to `false`', () => {
-			let Logger;
-
-			beforeEach((test) => {
-				test.mock.module('@dotcom-reliability-kit/serialize-error', {
-					defaultExport: serializeError
-				});
-				test.mock.module('pino', { defaultExport: pino });
-				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
-				test.mock.module('@dotcom-reliability-kit/app-info', {
-					defaultExport: { cloudProvider: null, environment: 'development' }
-				});
-
-				// We have to clear the module cache because the checks for pino-pretty are done
-				// on module load for performance reasons
-				delete require.cache[require.resolve('../../../lib/logger.js')];
-				Logger = require('../../../lib/logger.js');
-
+		describe('when the `withPrettifier` option is set to `false`', () => {
+			beforeEach(() => {
 				pino.mock.resetCalls();
 				logger = new Logger({ withPrettifier: false });
 			});
@@ -1072,24 +1013,9 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the `LOG_DISABLE_PRETTIFIER` environment variable is set', () => {
-			let Logger;
-
-			beforeEach((test) => {
-				test.mock.module('@dotcom-reliability-kit/serialize-error', {
-					defaultExport: serializeError
-				});
-				test.mock.module('pino', { defaultExport: pino });
-				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
-				test.mock.module('@dotcom-reliability-kit/app-info', {
-					defaultExport: { cloudProvider: null, environment: 'development' }
-				});
+		describe('when the `LOG_DISABLE_PRETTIFIER` environment variable is set', () => {
+			beforeEach(() => {
 				process.env.LOG_DISABLE_PRETTIFIER = 'true';
-
-				// We have to clear the module cache because the checks for pino-pretty are done
-				// on module load for performance reasons
-				delete require.cache[require.resolve('../../../lib/logger.js')];
-				Logger = require('../../../lib/logger.js');
 
 				pino.mock.resetCalls();
 				logger = new Logger();
@@ -1101,32 +1027,11 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and the environment is "production", "prod", or "p"', () => {
-			beforeEach((test) => {
-				test.mock.module('@dotcom-reliability-kit/serialize-error', {
-					defaultExport: serializeError
-				});
-				test.mock.module('pino', { defaultExport: pino });
-				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
-
-				const appInfo = { cloudProvider: null, environment: 'nope' };
-				test.mock.module('@dotcom-reliability-kit/app-info', {
-					cache: true,
-					defaultExport: appInfo
-				});
-
+		describe('when the environment is "production", "prod", or "p"', () => {
+			beforeEach(() => {
 				pino.mock.resetCalls();
 				for (const environment of ['production', 'prod', 'p']) {
-					let Logger;
-
-					appInfo.environment = environment;
-
-					// We have to clear the module cache because the checks for pino-pretty are done
-					// on module load for performance reasons
-					delete require.cache[require.resolve('../../../lib/logger.js')];
-					Logger = require('../../../lib/logger.js');
-
-					logger = new Logger();
+					logger = new Logger({ appInfo: { environment } });
 				}
 			});
 
@@ -1138,57 +1043,15 @@ describe('@dotcom-reliability-kit/logger/lib/logger', () => {
 			});
 		});
 
-		describe('when pino-pretty is installed and AWS is detected as a cloud provider', () => {
-			let Logger;
-
-			beforeEach((test) => {
-				test.mock.module('@dotcom-reliability-kit/serialize-error', {
-					defaultExport: serializeError
-				});
-				test.mock.module('pino', { defaultExport: pino });
-				test.mock.module('pino-pretty', { defaultExport: mock.fn() });
-				test.mock.module('@dotcom-reliability-kit/app-info', {
-					defaultExport: { cloudProvider: 'aws', environment: 'development' }
-				});
-
-				// We have to clear the module cache because the checks for pino-pretty are done
-				// on module load for performance reasons
-				delete require.cache[require.resolve('../../../lib/logger.js')];
-				Logger = require('../../../lib/logger.js');
-
+		describe('when AWS is detected as a cloud provider', () => {
+			beforeEach(() => {
 				pino.mock.resetCalls();
-				logger = new Logger();
+				logger = new Logger({
+					appInfo: { cloudProvider: 'aws', environment: 'development' }
+				});
 			});
 
 			it('does not configure the created Pino logger with prettification', () => {
-				const pinoOptions = pino.mock.calls[0].arguments[0];
-				assert.strictEqual(pinoOptions.transport, undefined);
-			});
-		});
-
-		describe('when pino-pretty is not installed and the environment is "development"', () => {
-			let Logger;
-
-			beforeEach((test) => {
-				test.mock.module('@dotcom-reliability-kit/serialize-error', {
-					defaultExport: serializeError
-				});
-				test.mock.module('pino', { defaultExport: pino });
-				test.mock.module('pino-pretty', { defaultExport: undefined });
-				test.mock.module('@dotcom-reliability-kit/app-info', {
-					defaultExport: { cloudProvider: null, environment: 'development' }
-				});
-
-				// We have to clear the module cache because the checks for pino-pretty are done
-				// on module load for performance reasons
-				delete require.cache[require.resolve('../../../lib/logger.js')];
-				Logger = require('../../../lib/logger.js');
-
-				pino.mock.resetCalls();
-				logger = new Logger();
-			});
-
-			it('configures the created Pino logger without prettification', () => {
 				const pinoOptions = pino.mock.calls[0].arguments[0];
 				assert.strictEqual(pinoOptions.transport, undefined);
 			});
