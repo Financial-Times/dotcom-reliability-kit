@@ -25,7 +25,12 @@ A lightweight client for sending operational metrics events from the browser to 
     * [`options.systemCode`](#optionssystemcode)
     * [`options.systemVersion`](#optionssystemversion)
     * [`options.environment`](#optionsenvironment)
+    * [`options.batchSize`](#optionsbatchsize)
     * [`options.retentionPeriod`](#optionsretentionperiod)
+    * [`options.queue`](#optionsqueue)
+      * [Queue interface](#queue-interface)
+        * [Options](#options)
+        * [Required methods](#required-methods)
 * [Usage (shared libraries)](#usage-shared-libraries)
 * [Usage (infrastructure)](#usage-infrastructure)
 * [Contributing](#contributing)
@@ -214,6 +219,41 @@ new MetricsClient({ retentionPeriod: 15 });
 
 > [!NOTE]
 > If the batch of event reaches its maximum size, the events are sent before reaching the end of the retentionPeriod.
+
+#### `options.queue`
+
+**Optional** `Queue`. Events are batched into a queue before being sent. By default, the client will use an InMemoryQueue. You can provide your own queue implementation (as long as it extends the base `Queue` class).
+
+```js
+const myQueue = new InMemoryQueue({ capacity: 11 });
+new MetricsClient({ queue: myQueue });
+```
+
+##### Queue interface
+
+The Queue class defines the contract that all queue implementations must follow.
+
+```js
+new Queue({ capacity: 11 })
+```
+
+###### Options
+
+**capacity** (number, optional): Maximum number of items the queue can hold. The default is 10 000.
+
+> [!NOTE]
+> The choice of 10000 events is calculated from the following:
+> We want the batch of events to be 10MB at max. A heavy event is about 750 bytes.
+
+###### Required methods
+
+Subclasses must implement the following methods:
+
+**add(item)**: Add an item to the queue.
+**drop(count)**: Drop the oldest item(s) from the queue. The default is 1.
+**pull(count)**: Remove and return the first count items.
+**size (getter)**: Current number of items in the queue.
+**capacity (getter)**: Maximum queue capacity (implemented in base class).
 
 
 ## Usage (shared libraries)
