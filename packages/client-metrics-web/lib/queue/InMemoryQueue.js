@@ -34,7 +34,6 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	 */
 	drop(count = 1) {
 		this.#queue = this.#queue.slice(count);
-		// TODO: document its from the oldest
 	}
 
 	/**
