@@ -40,6 +40,7 @@ Emoji           | Label             | Meaning
   * [Node.js 20 is no longer supported](#nodejs-20-is-no-longer-supported)
   * [Node.js 22.11 is no longer supported](#nodejs-2211-is-no-longer-supported)
   * [Stricter TypeScript requirements](#stricter-typescript-requirements)
+  * [Prettifier Included](#prettifier-included)
 
 
 ## Migrating from n-logger
@@ -329,3 +330,7 @@ If neither of the above is true, this should be a safe update with no code chang
     "moduleResolution": "nodenext"
 }
 ```
+
+### Prettifier Included
+
+**:orange_circle: Possibly Breaking:** this version explicitly installs [pino-pretty](https://github.com/pinojs/pino-pretty#readme) rather than adding it as a peer dependency. This is to get around a lot of issues we've seen with log prettification. Your logs should generally remain the same but there may be dependency conflicts with a manually-installed version of pino-pretty. We recommend uninstalling your own copy.

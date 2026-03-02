@@ -1,13 +1,13 @@
-const { before, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const cleanLogForTesting = require('./helpers/clean-log-for-testing');
-const { exec } = require('node:child_process');
-const findLogWithPropertyValue = require('./helpers/find-log-with-property-value');
-const testCases = require('./compatibility-test-cases');
-const splitAndParseJsonLogs = require('./helpers/split-and-parse-json-logs');
+import assert from 'node:assert/strict';
+import { exec } from 'node:child_process';
+import { before, describe, it } from 'node:test';
+import testCases from './compatibility-test-cases.js';
+import cleanLogForTesting from './helpers/clean-log-for-testing.js';
+import findLogWithPropertyValue from './helpers/find-log-with-property-value.js';
+import splitAndParseJsonLogs from './helpers/split-and-parse-json-logs.js';
 
 describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
-	const loggingScript = `${__dirname}/scripts/run-loggers-with-test-case.js`;
+	const loggingScript = `${import.meta.dirname}/scripts/run-loggers-with-test-case.js`;
 
 	for (const { id, description, expectedOutput } of testCases) {
 		describe(description, () => {
@@ -16,17 +16,28 @@ describe('@dotcom-reliability-kit/logger vs @financial-times/n-logger', () => {
 			before((_, done) => {
 				// Execute a child process which performs logging with both
 				// n-logger and Reliability Kit
-				exec(`node ${loggingScript} ${id}`, (execError, stdout, stderr) => {
-					if (execError) {
-						return done(execError);
+				exec(
+					`node ${loggingScript} ${id}`,
+					{
+						env: {
+							...process.env,
+							MIGRATE_TO_HEROKU_LOG_DRAINS: 'true',
+							SPLUNK_LOG_LEVEL: 'silly',
+							LOG_DISABLE_PRETTIFIER: 'true'
+						}
+					},
+					(execError, stdout, stderr) => {
+						if (execError) {
+							return done(execError);
+						}
+						try {
+							logs = splitAndParseJsonLogs(`${stdout}\n${stderr}`);
+							done();
+						} catch (error) {
+							done(error);
+						}
 					}
-					try {
-						logs = splitAndParseJsonLogs(`${stdout}\n${stderr}`);
-						done();
-					} catch (error) {
-						done(error);
-					}
-				});
+				);
 			});
 
 			if (expectedOutput.nextLogger) {

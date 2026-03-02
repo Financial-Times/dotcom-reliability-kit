@@ -48,8 +48,6 @@ Include in your code:
 
 ```js
 import logger from '@dotcom-reliability-kit/logger';
-// or
-const logger = require('@dotcom-reliability-kit/logger');
 ```
 
 > [!TIP]
@@ -105,8 +103,6 @@ The default export of `@dotcom-reliability-kit/logger` is an instance of the `Lo
 
 ```js
 import { Logger } from '@dotcom-reliability-kit/logger';
-// or
-const { Logger } = require('@dotcom-reliability-kit/logger');
 
 const myLogger = new Logger({
     // options go here
@@ -260,7 +256,7 @@ You can also use [built-in transforms](#built-in-transforms) to do things like m
 
 ####  `options.withPrettifier`
 
-Whether to send prettified logs if available. This option has no effect if you have the `NODE_ENV` environment variable set to `production` (`prod` or `p` also work) or if you have not installed [pino-pretty](https://github.com/pinojs/pino-pretty#readme). See [local development usage](#local-development-usage) for more information.
+Whether to send prettified logs if available. This option has no effect if you have the `NODE_ENV` environment variable set to `production` (`prod` or `p` also work). See [local development usage](#local-development-usage) for more information.
 
 Must be a `Boolean` and defaults to `true`.
 
@@ -419,7 +415,7 @@ logger.info('Example');
 As well as writing your own [log transforms](#optionstransforms), you can use the ones provided as part of this package. All built-in transforms are provided as properties of the `transforms` object:
 
 ```js
-const { transforms } = require('@dotcom-reliability-kit/logger');
+import { transforms } from '@dotcom-reliability-kit/logger';
 ```
 
 #### `legacyMask` transform
@@ -427,7 +423,7 @@ const { transforms } = require('@dotcom-reliability-kit/logger');
 The legacy mask transform applies the same masking behaviour to the logger as [n-mask-logger](https://github.com/Financial-Times/n-mask-logger), replicating the behaviour exactly. It masks a list of fields you specify so that we don't accidentally log sensitive information in our apps. You can use it like this:
 
 ```js
-const { Logger, transforms } = require('@dotcom-reliability-kit/logger');
+import { Logger, transforms } from '@dotcom-reliability-kit/logger';
 
 const logger = new Logger({
     transforms: [
@@ -604,13 +600,7 @@ To get formatted and colourised logs locally, you need to meet two conditions:
 
   1. Have the `NODE_ENV` environment variable set to either `development` or don't have it set at all.
 
-  2. Install [pino-pretty](https://github.com/pinojs/pino-pretty#readme) as a **development dependency** in your project. It's very important that this is a development dependency rather than a production one, otherwise you risk prettifying logs in production which makes them appear incorrectly in Splunk:
-
-      ```sh
-      npm install -D pino-pretty
-      ```
-
-  3. Ensure you don't disable prettification via the [`withPrettifier` option](#optionswithprettifier).
+  2. Ensure you don't disable prettification via the [`withPrettifier` option](#optionswithprettifier).
 
 ### Production usage
 

@@ -1,5 +1,5 @@
 const { AggregationType, InstrumentType } = require('@opentelemetry/sdk-node').metrics;
-const logger = require('@dotcom-reliability-kit/logger');
+const { default: logger } = require('@dotcom-reliability-kit/logger');
 
 /**
  * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
