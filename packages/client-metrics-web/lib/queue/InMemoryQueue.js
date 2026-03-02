@@ -1,7 +1,7 @@
 const { Queue } = require('./Queue');
 
 /**
- * @import { QueueOptions, Metric } from '@dotcom-reliability-kit/client-metrics-web'
+ * @import { QueueOptions, Queue as QueueType, Metric } from '@dotcom-reliability-kit/client-metrics-web'
  */
 
 exports.InMemoryQueue = class InMemoryQueue extends Queue {
@@ -9,15 +9,16 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	#queue;
 
 	/**
-	 * @param {QueueOptions} options
+	 * @param {QueueOptions} [options]
 	 */
 	constructor(options) {
-		super({ capacity: options.capacity });
+		super(options);
 		this.#queue = [];
 	}
 
 	/**
 	 * @override
+	 * @type {QueueType['add']}
 	 */
 	add(item) {
 		if (this.#queue.length >= this.capacity) {
@@ -29,6 +30,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 
 	/**
 	 * @override
+	 * @type {QueueType['clear']}
 	 */
 	clear() {
 		this.#queue = [];
@@ -36,6 +38,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 
 	/**
 	 * @override
+	 * @type {QueueType['drop']}
 	 */
 	drop(count = 1) {
 		this.#queue = this.#queue.slice(count);
@@ -44,19 +47,9 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 
 	/**
 	 * @override
+	 * @type {QueueType['pull']}
 	 */
-	getItems(count) {
-		if (count > this.size) {
-			throw new Error(`Queue.size is ${this.size} so it can't get ${count} items.`);
-		}
-
-		return this.#queue.slice(0, count);
-	}
-
-	/**
-	 * @override
-	 */
-	pull(count) {
+	pull(count = 0) {
 		if (count > this.size) {
 			throw new Error(`Queue.size is ${this.size} so it can't pull ${count} items.`);
 		}
@@ -65,6 +58,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 
 	/**
 	 * @override
+	 * @type {QueueType['size']}
 	 */
 	get size() {
 		return this.#queue.length;
