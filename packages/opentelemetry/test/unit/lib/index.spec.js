@@ -2,7 +2,9 @@ const { before, beforeEach, describe, it, mock } = require('node:test');
 const assert = require('node:assert/strict');
 
 mock.module('@dotcom-reliability-kit/logger', {
-	defaultExport: { createChildLogger: mock.fn(), warn: mock.fn() }
+	// NOTE: this is temporary while we're importing ESM into CommonJS.
+	//       Should be switched back when we migrate opentelemetry to ESM.
+	namedExports: { default: { createChildLogger: mock.fn(), warn: mock.fn() } }
 });
 
 mock.module('@opentelemetry/sdk-node', {
@@ -76,7 +78,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		api = require('@opentelemetry/sdk-node').api;
 		HostMetrics = require('@opentelemetry/host-metrics').HostMetrics;
 		NodeSDK = require('@opentelemetry/sdk-node').NodeSDK;
-		logger = require('@dotcom-reliability-kit/logger');
+		logger = require('@dotcom-reliability-kit/logger').default;
 
 		mockChildLogger = {
 			debug: mock.fn(),

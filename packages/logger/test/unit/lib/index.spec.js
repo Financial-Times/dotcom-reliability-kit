@@ -1,13 +1,13 @@
-const { describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { describe, it, mock } from 'node:test';
 
-mock.module('../../../lib/logger.js', { defaultExport: mock.fn() });
-const MockLogger = require('../../../lib/logger');
+const MockLogger = mock.fn(class Logger {});
+mock.module('../../../lib/logger.js', { defaultExport: MockLogger });
 
-mock.module('../../../lib/transforms/legacy-mask.js', { defaultExport: mock.fn() });
-const createLegacyMaskTransform = require('../../../lib/transforms/legacy-mask');
+const createLegacyMaskTransform = mock.fn();
+mock.module('../../../lib/transforms/legacy-mask.js', { defaultExport: createLegacyMaskTransform });
 
-const logger = require('@dotcom-reliability-kit/logger');
+const { default: logger, Logger, transforms } = await import('@dotcom-reliability-kit/logger');
 
 describe('@dotcom-reliability-kit/logger', () => {
 	it('exports the logger instance', () => {
@@ -16,21 +16,15 @@ describe('@dotcom-reliability-kit/logger', () => {
 
 	describe('.Logger', () => {
 		it('aliases lib/logger', () => {
-			assert.strictEqual(logger.Logger, MockLogger);
+			assert.strictEqual(Logger, MockLogger);
 		});
 	});
 
 	describe('.transforms', () => {
 		describe('.legacyMask', () => {
 			it('aliases lib/transforms/legacy-mask', () => {
-				assert.strictEqual(logger.transforms.legacyMask, createLegacyMaskTransform);
+				assert.strictEqual(transforms.legacyMask, createLegacyMaskTransform);
 			});
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(logger.default, logger);
 		});
 	});
 });

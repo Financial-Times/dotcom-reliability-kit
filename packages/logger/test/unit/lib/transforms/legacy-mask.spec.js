@@ -1,6 +1,6 @@
-const { beforeEach, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const createLegacyMaskTransform = require('../../../../lib/transforms/legacy-mask.js');
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import createLegacyMaskTransform from '../../../../lib/transforms/legacy-mask.js';
 
 describe('@dotcom-reliability-kit/logger', () => {
 	it('exports a function', () => {

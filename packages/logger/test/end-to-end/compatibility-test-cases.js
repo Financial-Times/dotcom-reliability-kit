@@ -27,7 +27,7 @@
 /**
  * @type {CompatibilityTestCase[]}
  */
-module.exports = [
+const testCases = [
 	// Test cases based on the n-logger documentation
 	// https://github.com/Financial-Times/n-logger#usage
 	{
@@ -893,3 +893,5 @@ module.exports = [
 		}
 	}
 ];
+
+export default testCases;

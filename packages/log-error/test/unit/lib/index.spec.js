@@ -6,7 +6,11 @@ const logger = {
 	fatal: mock.fn(),
 	warn: mock.fn()
 };
-mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
+mock.module('@dotcom-reliability-kit/logger', {
+	// NOTE: this is temporary while we're importing ESM into CommonJS.
+	//       Should be switched back when we migrate log-error to ESM.
+	namedExports: { default: logger }
+});
 
 const serializeError = mock.fn(() => ({
 	name: 'MockError',

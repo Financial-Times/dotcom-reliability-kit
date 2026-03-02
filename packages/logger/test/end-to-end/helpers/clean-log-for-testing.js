@@ -7,7 +7,7 @@
  * @returns {{[key: string]: any}}
  *     Returns the cleaned log.
  */
-function cleanLogFortesting(log) {
+export default function cleanLogFortesting(log) {
 	// The `_logger` property is used to temporarily indicate which
 	// logger output a specific log. It's not required during testing.
 	delete log._logger;
@@ -26,5 +26,3 @@ function cleanLogFortesting(log) {
 
 	return log;
 }
-
-module.exports = cleanLogFortesting;
