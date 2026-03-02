@@ -6,24 +6,30 @@ describe('Queue (base class)', () => {
 		expect(queue.capacity).toBe(11);
 	});
 
-	it('has base methods that returns dummy data', () => {
-		const queue = new Queue({ capacity: 11 });
-		expect(queue.size).toBe(0);
-		expect(queue.pull()).toStrictEqual([]);
+	it('uses the default capacity if no capacity is set', () => {
+		const queue = new Queue();
+		expect(queue.capacity).toBe(10000);
 	});
 
-	it('throws if adding to the base class', () => {
-		const queue = new Queue({ capacity: 11 });
-		expect(() => queue.add({ data: 'test' })).toThrow('Not implemented');
-	});
+	describe('Abstract methods will throw if called', () => {
+		it('add (item)', () => {
+			const queue = new Queue({ capacity: 11 });
+			expect(() => queue.add({ data: 'test' })).toThrow('Must be implemented by subclass');
+		});
 
-	it('throws if clear from the base class', () => {
-		const queue = new Queue({ capacity: 11 });
-		expect(() => queue.clear()).toThrow('Not implemented');
-	});
+		it('drop', () => {
+			const queue = new Queue({ capacity: 11 });
+			expect(() => queue.drop()).toThrow('Must be implemented by subclass');
+		});
 
-	it('throws if using drop() from the base class', () => {
-		const queue = new Queue({ capacity: 11 });
-		expect(() => queue.drop()).toThrow('Not implemented');
+		it('pull', () => {
+			const queue = new Queue({ capacity: 11 });
+			expect(() => queue.pull()).toThrow('Must be implemented by subclass');
+		});
+
+		it('size getter', () => {
+			const queue = new Queue({ capacity: 11 });
+			expect(() => queue.size()).toThrow('Must be implemented by subclass');
+		});
 	});
 });

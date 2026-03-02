@@ -36,27 +36,9 @@ describe('InMemoryQueue (extends Queue)', () => {
 		});
 	});
 
-	it('clears the queue with the clear method', () => {
+	it('returns at least one item when pulling from the queue without specifying the count', () => {
 		const queue = new InMemoryQueue({ capacity: 1 });
 		queue.add(testMetric);
-		expect(queue.size).toBe(1);
-		queue.clear();
-		expect(queue.size).toBe(0);
-	});
-
-	it('throw an error if trying to pull more items that there are in the queue', () => {
-		const queue = new InMemoryQueue({ capacity: 11 });
-		queue.add(testMetric);
-		expect(queue.size).toBe(1);
-
-		expect(() => queue.pull(2)).toThrow("Queue.size is 1 so it can't pull 2 items.");
-	});
-
-	it('throws an error if trying to get more items that there are in the queue', () => {
-		const queue = new InMemoryQueue({ capacity: 11 });
-		queue.add(testMetric);
-		expect(queue.size).toBe(1);
-
-		expect(() => queue.getItems(2)).toThrow("Queue.size is 1 so it can't get 2 items.");
+		expect(queue.pull().length).toBe(1);
 	});
 });
