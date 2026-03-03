@@ -1,0 +1,17 @@
+{
+	"extends": "@tsconfig/node22/tsconfig.json",
+	"compilerOptions": {
+		"declaration": true,
+		"erasableSyntaxOnly": true,
+		"moduleResolution": "nodenext",
+		"noImplicitOverride": true,
+		"noImplicitThis": true,
+		"rewriteRelativeImportExtensions": true,
+		"strictBindCallApply": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"useUnknownInCatchVariables": true,
+		"verbatimModuleSyntax": true
+	}
+}
