@@ -1,4 +1,4 @@
-const { InMemoryQueue } = require('../../../../lib/queue/InMemoryQueue');
+const { InMemoryQueue } = require('../../../../lib/queue/in-memory-queue');
 
 describe('InMemoryQueue (extends Queue)', () => {
 	const testMetric = {

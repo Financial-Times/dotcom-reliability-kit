@@ -1,4 +1,4 @@
-const { Queue } = require('../../../../lib/queue/Queue');
+const { Queue } = require('../../../../lib/queue/queue');
 
 describe('Queue (base class)', () => {
 	it('has a constructor that sets the capacity', () => {
