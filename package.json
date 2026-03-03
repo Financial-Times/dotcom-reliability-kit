@@ -16,7 +16,8 @@
     "test/modules/*"
   ],
   "scripts": {
-    "build:logos": "npm run build -w resources/logos",
+    "build": "npm run build --workspaces --if-present",
+    "build:logos": "npm run build:logos -w resources/logos",
     "create-package": "./scripts/create-package.js",
     "lint": "npm run lint:biome && npm run lint:tsc",
     "lint:biome": "biome check",
@@ -31,6 +32,7 @@
     "@biomejs/biome": "^2.3.11",
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
+    "@tsconfig/node22": "^22.0.5",
     "@types/node": "^24.10.2",
     "husky": "^9.1.7",
     "release-please": "^17.1.3",

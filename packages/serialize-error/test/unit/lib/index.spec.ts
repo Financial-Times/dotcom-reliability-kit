@@ -1,10 +1,11 @@
+// @ts-nocheck
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it } from 'node:test';
-import serializeError from '../../../lib/index.js';
+import serializeError from '../../../lib/index.ts';
 
 describe('@dotcom-reliability-kit/serialize-error', () => {
 	describe('when called with an error object', () => {
-		let error;
+		let error: unknown;
 
 		beforeEach(() => {
 			error = new Error('mock message');
@@ -191,7 +192,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 	});
 
 	describe('when called with an error-like object', () => {
-		let error;
+		let error: unknown;
 
 		beforeEach(() => {
 			error = {};
