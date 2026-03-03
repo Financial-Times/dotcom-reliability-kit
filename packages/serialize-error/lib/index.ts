@@ -1,23 +1,32 @@
 import crypto from 'node:crypto';
 
-/**
- * @import { ErrorLike, SerializedError } from '@dotcom-reliability-kit/serialize-error'
- */
+export type ErrorLike = string | (Error & Record<string, any>);
+
+export interface SerializedError {
+	fingerprint: string | null;
+	name: string;
+	code: string;
+	message: string;
+	isOperational: boolean;
+	relatesToSystems: string[];
+	cause?: unknown;
+	errors?: SerializedError[];
+	stack: string | null;
+	statusCode: number | null;
+	data: { [key: string]: unknown };
+}
 
 /**
  * Serialize an error object so that it can be consistently logged or output as JSON.
- *
- * @param {unknown} error
- * @returns {SerializedError}
  */
-export default function serializeError(error) {
+export default function serializeError(error: ErrorLike): SerializedError {
 	if (typeof error !== 'object' || Array.isArray(error) || error === null) {
 		return createSerializedError({
 			message: `${error}`
 		});
 	}
 
-	const errorProperties = {};
+	const errorProperties: Partial<SerializedError> = {};
 
 	// If set, error name is cast to a string
 	if ('name' in error) {
@@ -45,7 +54,7 @@ export default function serializeError(error) {
 	}
 
 	// If set, error cause (which in turn is an error instance) is serialized
-	if ('cause' in error) {
+	if ('cause' in error && error.cause instanceof Error) {
 		errorProperties.cause = serializeError(error.cause);
 	}
 
@@ -95,11 +104,8 @@ export default function serializeError(error) {
 
 /**
  * Create a new serialized error object.
- *
- * @param {Record<string, any>} properties
- * @returns {SerializedError}
  */
-function createSerializedError(properties) {
+function createSerializedError(properties: Record<string, unknown>): SerializedError {
 	return Object.assign(
 		{},
 		{

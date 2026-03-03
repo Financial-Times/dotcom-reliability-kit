@@ -15,7 +15,7 @@
     "node": "^22.12 || ^24"
   },
   "scripts": {
-    "build": "./scripts/build.js"
+    "build:logos": "./scripts/build.js"
   },
   "dependencies": {
     "sharp": "^0.34.4",
