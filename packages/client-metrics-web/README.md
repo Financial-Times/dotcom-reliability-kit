@@ -225,6 +225,8 @@ new MetricsClient({ retentionPeriod: 15 });
 **Optional** `Queue`. Events are batched into a queue before being sent. By default, the client will use an InMemoryQueue. You can provide your own queue implementation (as long as it extends the base `Queue` class).
 
 ```js
+import { InMemoryQueue, MetricsClient } from '@dotcom-reliability-kit/client-metrics-web';
+
 const myQueue = new InMemoryQueue({ capacity: 11 });
 new MetricsClient({ queue: myQueue });
 ```
@@ -234,6 +236,8 @@ new MetricsClient({ queue: myQueue });
 The Queue class defines the contract that all queue implementations must follow.
 
 ```js
+import { Queue } from '@dotcom-reliability-kit/client-metrics-web';
+
 new Queue({ capacity: 11 })
 ```
 
