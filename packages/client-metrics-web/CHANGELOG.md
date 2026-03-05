@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.2.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.4...client-metrics-web-v0.2.0) (2026-03-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* use new cp-client-metrics-server
+
+### Features
+
+* add queue class ([55da00f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/55da00f6ee336aa00825508632e6aaedb191f532))
+* adds batching ([81d3dc1](https://github.com/Financial-Times/dotcom-reliability-kit/commit/81d3dc15ee99dcc482428bf649d8d11fb52f6282))
+* use new cp-client-metrics-server ([ca05b08](https://github.com/Financial-Times/dotcom-reliability-kit/commit/ca05b083347e0019705071440d40a5ae5a7a8ae2))
+
+
+### Bug Fixes
+
+* add case for local.ft.com ([a322a22](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a322a22a7f8d5ecd5eeb8d54a68264861465a0e8))
+* adds types to all functions of the Metrics Client ([c9045d5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/c9045d55988f7d65d903495b061241e58f1eb141))
+* biome ([87d7f45](https://github.com/Financial-Times/dotcom-reliability-kit/commit/87d7f45aa7c520e106d511fa3f5674f62017538b))
+* clarify README ([2f0b0fe](https://github.com/Financial-Times/dotcom-reliability-kit/commit/2f0b0fe5b2f5115d7d1433d9a8b57d45a0262161))
+* elapsed seconds check ([b86143d](https://github.com/Financial-Times/dotcom-reliability-kit/commit/b86143d346ed7610f06ce9e524c600e096d86c35))
+* linting ([d64bbbc](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d64bbbca06fe6a1923bec9edbd09352fcffa32e5))
+* make endpoint systemCode and systemVersion private ([f87a7f8](https://github.com/Financial-Times/dotcom-reliability-kit/commit/f87a7f8d2e6ee895f0253e7903756eef6f3e040d))
+* more biome ([0efc93c](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0efc93c44c7146bfc4672d3f5440af63cd4cc4a0))
+* nitpicks from pr review ([a2d33b5](https://github.com/Financial-Times/dotcom-reliability-kit/commit/a2d33b53dac7b0b714ac5c305bc2d51c8d181856))
+* unit test ([0e4479b](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0e4479bdaddedaaab321bae045423e657c31d0ee))
+
+
+### Documentation Changes
+
+* add more details about imports in README ([0925db8](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0925db800dd98a9100113f4c3b35737f3baa5bf8))
+* add new info for batching in readme ([8fc9924](https://github.com/Financial-Times/dotcom-reliability-kit/commit/8fc9924adee010023b9ebc4d665dbe26a6364563))
+* add queue in readme ([49250a6](https://github.com/Financial-Times/dotcom-reliability-kit/commit/49250a663623c4151c14a54b1652156b162276cf))
+* update package.json with accurate description ([e200be3](https://github.com/Financial-Times/dotcom-reliability-kit/commit/e200be37f5542cb08d1df94b92fcd9a40ff6e66c))
+* update README ([0682234](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0682234b56dfe083312225812d78896b6c2eb0b5))
+
 ## [0.1.4](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.3...client-metrics-web-v0.1.4) (2025-08-12)
 
 
