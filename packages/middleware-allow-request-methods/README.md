@@ -22,8 +22,6 @@ Include in your code:
 
 ```js
 import { allowRequestMethods } from '@dotcom-reliability-kit/middleware-allow-request-methods';
-// or
-const { allowRequestMethods } = require('@dotcom-reliability-kit/middleware-allow-request-methods');
 ```
 
 > [!TIP]
@@ -44,8 +42,8 @@ Route-specific blocking of methods is an additional layer of protection you can 
 Example usage:
 
 ```js
-const express = require('express');
-const { allowRequestMethods } = require('@dotcom-reliability-kit/middleware-allow-request-methods');
+import express from 'express';
+import { allowRequestMethods } from '@dotcom-reliability-kit/middleware-allow-request-methods';
 
 const app = express();
 

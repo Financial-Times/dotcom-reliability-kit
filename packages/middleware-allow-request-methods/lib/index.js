@@ -1,4 +1,4 @@
-const { UserInputError } = require('@dotcom-reliability-kit/errors');
+import { UserInputError } from '@dotcom-reliability-kit/errors';
 
 /**
  * @import { RequestMethodOptions } from '@dotcom-reliability-kit/middleware-allow-request-methods'
@@ -14,7 +14,7 @@ const { UserInputError } = require('@dotcom-reliability-kit/errors');
  * @param {RequestMethodOptions} options
  * @returns {RequestHandler} - Returns an Express middleware function.
  */
-function allowRequestMethods(options = { allowedMethods: [] }) {
+export function allowRequestMethods(options = { allowedMethods: [] }) {
 	// Check if allowed methods have been specified and are valid
 	const allowedMethodsSpecified = options?.allowedMethods;
 	if (
@@ -52,5 +52,3 @@ function allowRequestMethods(options = { allowedMethods: [] }) {
 function normaliseAllowedRequestMethods(methods) {
 	return methods.map((method) => method.toUpperCase());
 }
-
-exports.allowRequestMethods = allowRequestMethods;
