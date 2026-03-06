@@ -1,6 +1,7 @@
 {
   "name": "@dotcom-reliability-kit/log-error",
   "version": "5.1.7",
+  "type": "module",
   "description": "A method to consistently log error object with optional request information",
   "repository": {
     "type": "git",
