@@ -1,7 +1,7 @@
-const appInfo = require('@dotcom-reliability-kit/app-info');
-const { default: reliabilityKitLogger } = require('@dotcom-reliability-kit/logger');
-const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
-const { default: serializeRequest } = require('@dotcom-reliability-kit/serialize-request');
+import appInfo from '@dotcom-reliability-kit/app-info';
+import reliabilityKitLogger from '@dotcom-reliability-kit/logger';
+import serializeError from '@dotcom-reliability-kit/serialize-error';
+import serializeRequest from '@dotcom-reliability-kit/serialize-request';
 
 /**
  * @import { ErrorLoggingOptions } from '@dotcom-reliability-kit/log-error'
@@ -72,7 +72,7 @@ function extractErrorMessage(serializedError) {
  *
  * @type {typeof import('@dotcom-reliability-kit/log-error').logHandledError}
  */
-function logHandledError({
+export function logHandledError({
 	error,
 	includeHeaders,
 	logger,
@@ -95,7 +95,7 @@ function logHandledError({
  *
  * @type {typeof import('@dotcom-reliability-kit/log-error').logHandledError}
  */
-function logRecoverableError({ error, includeHeaders, logger, request }) {
+export function logRecoverableError({ error, includeHeaders, logger, request }) {
 	const serializedError = serializeError(error);
 	logError({
 		error: serializedError,
@@ -112,7 +112,7 @@ function logRecoverableError({ error, includeHeaders, logger, request }) {
  *
  * @type {typeof import('@dotcom-reliability-kit/log-error').logHandledError}
  */
-function logUnhandledError({ error, includeHeaders, logger, request }) {
+export function logUnhandledError({ error, includeHeaders, logger, request }) {
 	const serializedError = serializeError(error);
 	logError({
 		error: serializedError,
@@ -131,9 +131,3 @@ function logUnhandledError({ error, includeHeaders, logger, request }) {
 function isUserError(error) {
 	return error.statusCode !== null && error.statusCode >= 400 && error.statusCode < 500;
 }
-
-exports.logHandledError = logHandledError;
-exports.logRecoverableError = logRecoverableError;
-exports.logUnhandledError = logUnhandledError;
-
-exports.default = exports;

@@ -1,39 +1,28 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 
 const logger = {
 	error: mock.fn(),
 	fatal: mock.fn(),
 	warn: mock.fn()
 };
-mock.module('@dotcom-reliability-kit/logger', {
-	// NOTE: this is temporary while we're importing ESM into CommonJS.
-	//       Should be switched back when we migrate log-error to ESM.
-	namedExports: { default: logger }
-});
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
 
 const serializeError = mock.fn(() => ({
 	name: 'MockError',
 	message: 'mock error'
 }));
-mock.module('@dotcom-reliability-kit/serialize-error', {
-	// NOTE: this is temporary while we're importing ESM into CommonJS.
-	//       Should be switched back when we migrate log-error to ESM.
-	namedExports: { default: serializeError }
-});
+mock.module('@dotcom-reliability-kit/serialize-error', { defaultExport: serializeError });
 
 const serializeRequest = mock.fn(() => 'mock-serialized-request');
-mock.module('@dotcom-reliability-kit/serialize-request', {
-	// NOTE: this is temporary while we're importing ESM into CommonJS.
-	//       Should be switched back when we migrate log-error to ESM.
-	namedExports: { default: serializeRequest }
-});
+mock.module('@dotcom-reliability-kit/serialize-request', { defaultExport: serializeRequest });
 
 const appInfo = {};
 mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });
 
-const logError = require('@dotcom-reliability-kit/log-error');
-const { logHandledError, logRecoverableError, logUnhandledError } = logError;
+const { logHandledError, logRecoverableError, logUnhandledError } = await import(
+	'@dotcom-reliability-kit/log-error'
+);
 
 describe('@dotcom-reliability-kit/log-error', () => {
 	beforeEach(() => {
@@ -50,12 +39,6 @@ describe('@dotcom-reliability-kit/log-error', () => {
 		logger.error.mock.resetCalls();
 		logger.fatal.mock.resetCalls();
 		logger.warn.mock.resetCalls();
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(logError.default, logError);
-		});
 	});
 
 	describe('logHandledError(options)', () => {
