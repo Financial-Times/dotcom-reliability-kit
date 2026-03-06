@@ -1,10 +1,12 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 
 const UserInputError = mock.fn(class UserInputError {});
 mock.module('@dotcom-reliability-kit/errors', { namedExports: { UserInputError } });
 
-const { allowRequestMethods } = require('@dotcom-reliability-kit/middleware-allow-request-methods');
+const { allowRequestMethods } = await import(
+	'@dotcom-reliability-kit/middleware-allow-request-methods'
+);
 
 // Mock Express request and response objects
 let mockRequest;
