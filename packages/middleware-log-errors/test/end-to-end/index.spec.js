@@ -1,8 +1,7 @@
-const { after, before, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-
-const { fork } = require('node:child_process');
-const { setTimeout } = require('node:timers/promises');
+import assert from 'node:assert/strict';
+import { fork } from 'node:child_process';
+import { after, before, describe, it } from 'node:test';
+import { setTimeout } from 'node:timers/promises';
 
 describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	let child;
@@ -10,7 +9,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors end-to-end', () => {
 	let baseUrl;
 
 	before((_, done) => {
-		child = fork(`${__dirname}/fixtures/app.js`, {
+		child = fork(`${import.meta.dirname}/fixtures/app.js`, {
 			stdio: 'pipe',
 			env: {
 				...process.env,

@@ -7,7 +7,7 @@ const { default: serializeError } = require('@dotcom-reliability-kit/serialize-e
 const { default: serializeRequest } = require('@dotcom-reliability-kit/serialize-request');
 const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
 const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
-const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
+const { default: createErrorLogger } = require('@dotcom-reliability-kit/middleware-log-errors');
 
 type TypeTests = {
 	// @ts-ignore TODO this isn't working correctly and we'll need
