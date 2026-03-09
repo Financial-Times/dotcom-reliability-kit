@@ -1,5 +1,5 @@
-const { afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 
 const logHandledError = mock.fn();
 const logRecoverableError = mock.fn();
@@ -7,19 +7,15 @@ mock.module('@dotcom-reliability-kit/log-error', {
 	namedExports: { logHandledError, logRecoverableError }
 });
 
-const createErrorLoggingMiddleware = require('@dotcom-reliability-kit/middleware-log-errors');
+const { default: createErrorLoggingMiddleware } = await import(
+	'@dotcom-reliability-kit/middleware-log-errors'
+);
 
 describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 	let middleware;
 
 	beforeEach(() => {
 		middleware = createErrorLoggingMiddleware();
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(createErrorLoggingMiddleware.default, createErrorLoggingMiddleware);
-		});
 	});
 
 	describe('middleware(error, request, response, next)', () => {
