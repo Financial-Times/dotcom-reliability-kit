@@ -1,5 +1,5 @@
-import { Logger } from '@dotcom-reliability-kit/logger';
-import { ErrorRequestHandler, Request } from 'express';
+import type { Logger } from '@dotcom-reliability-kit/logger';
+import type { ErrorRequestHandler, Request } from 'express';
 
 declare module '@dotcom-reliability-kit/middleware-log-errors' {
 	export type ErrorLoggingFilter = (error: any, request: Request) => boolean | undefined;
@@ -11,10 +11,7 @@ declare module '@dotcom-reliability-kit/middleware-log-errors' {
 		logUserErrorsAsWarnings?: boolean;
 	};
 
-	declare function createErrorLoggingMiddleware(
+	export default function createErrorLoggingMiddleware(
 		options?: ErrorLoggingOptions
 	): ErrorRequestHandler;
-
-	export default createErrorLoggingMiddleware;
-	export = createErrorLoggingMiddleware;
 }
