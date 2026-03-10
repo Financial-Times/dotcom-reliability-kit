@@ -22,8 +22,6 @@ Include in your code:
 
 ```js
 import renderErrorInfoPage from '@dotcom-reliability-kit/middleware-render-error-info';
-// or
-const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
 ```
 
 > [!TIP]

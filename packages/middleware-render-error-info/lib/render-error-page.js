@@ -1,6 +1,6 @@
-const appInfo = require('@dotcom-reliability-kit/app-info');
-const entities = require('entities');
-const renderLayout = require('./render-layout');
+import appInfo from '@dotcom-reliability-kit/app-info';
+import { escapeUTF8 } from 'entities';
+import renderLayout from './render-layout.js';
 
 /**
  * @import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
@@ -37,7 +37,7 @@ const CONCEALED_VALUE_MESSAGE =
  * @returns {string}
  *     Returns the rendered error page.
  */
-function renderErrorPage({ request, response, serializedError }) {
+export default function renderErrorPage({ request, response, serializedError }) {
 	const appName = appInfo.systemCode || 'application';
 	return renderLayout({
 		body: `
@@ -451,7 +451,5 @@ function renderAsJson(value) {
  *     Returns the HTML-escaped value.
  */
 function escapeHTML(value) {
-	return entities.escapeUTF8(`${value}`);
+	return escapeUTF8(`${value}`);
 }
-
-module.exports = renderErrorPage;
