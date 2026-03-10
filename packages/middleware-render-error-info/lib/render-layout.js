@@ -1,5 +1,5 @@
-const appInfo = require('@dotcom-reliability-kit/app-info');
-const fs = require('node:fs');
+import fs from 'node:fs';
+import appInfo from '@dotcom-reliability-kit/app-info';
 
 /**
  * @import { Request as ExpressRequest } from 'express'
@@ -19,7 +19,7 @@ const buildServiceComponents = [
 
 // Load CSS syncronously, this is only run once during startup so won't
 // negatively impact the app performance while running
-const styles = fs.readFileSync(`${__dirname}/render-error-page.css`, 'utf-8');
+const styles = fs.readFileSync(`${import.meta.dirname}/render-error-page.css`, 'utf-8');
 
 /**
  * @typedef {object} LayoutRenderingOptions
@@ -40,7 +40,7 @@ const styles = fs.readFileSync(`${__dirname}/render-error-page.css`, 'utf-8');
  * @returns {string}
  *     Returns the rendered error page.
  */
-function renderLayout({ body, request, title }) {
+export default function renderLayout({ body, request, title }) {
 	return `
 		<!DOCTYPE html>
 		<html lang="en">
@@ -133,5 +133,3 @@ function getBuildServiceUrl(type) {
 	});
 	return `${buildServiceBaseUrl}/bundles/${type}?${buildServiceParams}`;
 }
-
-module.exports = renderLayout;
