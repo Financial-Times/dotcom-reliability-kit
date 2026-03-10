@@ -27,8 +27,6 @@ Include in your code:
 
 ```js
 import registerCrashHandler from '@dotcom-reliability-kit/crash-handler';
-// or
-const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
 ```
 
 > [!TIP]
