@@ -6,7 +6,7 @@ const { Logger, transforms } = require('@dotcom-reliability-kit/logger');
 const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
 const { default: serializeRequest } = require('@dotcom-reliability-kit/serialize-request');
 const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
-const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
+const { default: renderErrorInfoPage } = require('@dotcom-reliability-kit/middleware-render-error-info');
 const { default: createErrorLogger } = require('@dotcom-reliability-kit/middleware-log-errors');
 
 type TypeTests = {

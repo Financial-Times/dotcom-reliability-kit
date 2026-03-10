@@ -1,5 +1,5 @@
-const { beforeEach, describe, it, mock, before } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { before, beforeEach, describe, it, mock } from 'node:test';
 
 const serializeError = mock.fn(() => ({
 	// We nest multiple causes so that we can test each
@@ -31,19 +31,13 @@ const serializeError = mock.fn(() => ({
 	stack: 'mock serialized error stack <script>oops</script>',
 	statusCode: 456
 }));
-mock.module('@dotcom-reliability-kit/serialize-error', {
-	// NOTE: this is temporary while we're importing ESM into CommonJS.
-	//       Should be switched back when we migrate log-error to ESM.
-	namedExports: { default: serializeError }
-});
+mock.module('@dotcom-reliability-kit/serialize-error', { defaultExport: serializeError });
 
 const serializeRequest = mock.fn(() => 'mock-serialized-request');
 mock.module('@dotcom-reliability-kit/serialize-request', { defaultExport: serializeRequest });
 
 const logRecoverableError = mock.fn();
-mock.module('@dotcom-reliability-kit/log-error', {
-	namedExports: { logRecoverableError }
-});
+mock.module('@dotcom-reliability-kit/log-error', { namedExports: { logRecoverableError } });
 
 const appInfo = {};
 mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });
@@ -57,7 +51,9 @@ mock.module('node:http', {
 	}
 });
 
-const createErrorRenderingMiddleware = require('@dotcom-reliability-kit/middleware-render-error-info');
+const { default: createErrorRenderingMiddleware } = await import(
+	'@dotcom-reliability-kit/middleware-render-error-info'
+);
 
 describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 	let middleware;
@@ -66,15 +62,6 @@ describe('@dotcom-reliability-kit/middleware-render-error-info', () => {
 		appInfo.environment = 'development';
 		appInfo.systemCode = 'mock-system-code';
 		middleware = createErrorRenderingMiddleware();
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			assert.strictEqual(
-				createErrorRenderingMiddleware.default,
-				createErrorRenderingMiddleware
-			);
-		});
 	});
 
 	describe('middleware(error, request, response, next)', () => {
