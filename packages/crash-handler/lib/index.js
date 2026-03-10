@@ -1,4 +1,4 @@
-const { logHandledError, logUnhandledError } = require('@dotcom-reliability-kit/log-error');
+import { logHandledError, logUnhandledError } from '@dotcom-reliability-kit/log-error';
 
 /**
  * @import { CrashHandlerOptions } from '@dotcom-reliability-kit/crash-handler'
@@ -9,7 +9,7 @@ const { logHandledError, logUnhandledError } = require('@dotcom-reliability-kit/
  *
  * @param {CrashHandlerOptions} [options]
  */
-function registerCrashHandler(options = {}) {
+export default function registerCrashHandler(options = {}) {
 	const process = options.process || global.process;
 	const logger = options.logger;
 
@@ -38,7 +38,3 @@ function registerCrashHandler(options = {}) {
 		process.exit(process.exitCode || 1);
 	});
 }
-
-module.exports = registerCrashHandler;
-
-module.exports.default = module.exports;
