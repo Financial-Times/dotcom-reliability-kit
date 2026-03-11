@@ -1,24 +1,26 @@
-const { after, before, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { fork } from 'node:child_process';
+import { after, before, describe, it } from 'node:test';
+import { handleFetchErrors } from '@dotcom-reliability-kit/fetch-error-handler';
 
 const fetchImplementations = [
 	{
 		name: 'node-fetch-1',
-		fetch: require('node-fetch-1'),
+		fetch: (await import('node-fetch-1')).default,
 		supportsAbortSignal: false,
 		supportsNonStandardTimeoutOption: true,
 		supportsDecodingError: false
 	},
 	{
 		name: 'node-fetch-2',
-		fetch: require('node-fetch-2'),
+		fetch: (await import('node-fetch-2')).default,
 		supportsAbortSignal: true,
 		supportsNonStandardTimeoutOption: true,
 		supportsDecodingError: false
 	},
 	{
 		name: 'undici',
-		fetch: require('undici').fetch,
+		fetch: (await import('undici')).fetch,
 		supportsAbortSignal: true,
 		supportsNonStandardTimeoutOption: false,
 		supportsDecodingError: true
@@ -31,8 +33,6 @@ const fetchImplementations = [
 		supportsDecodingError: true
 	}
 ];
-const { fork } = require('node:child_process');
-const { handleFetchErrors } = require('@dotcom-reliability-kit/fetch-error-handler');
 
 describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 	let child;
@@ -40,7 +40,7 @@ describe('@dotcom-reliability-kit/fetch-error-handler end-to-end', () => {
 
 	// Set up the test app
 	before((_, done) => {
-		child = fork(`${__dirname}/fixtures/app.js`, { stdio: 'pipe' });
+		child = fork(`${import.meta.dirname}/fixtures/app.js`, { stdio: 'pipe' });
 		child.on('message', (message) => {
 			if (message?.ready) {
 				baseUrl = `http://localhost:${message.port}`;
