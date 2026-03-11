@@ -1,15 +1,12 @@
-const { describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { describe, it, mock } from 'node:test';
 
 const createHandler = mock.fn(() => 'mock-handler');
-mock.module('../../../lib/create-handler.js', {
-	defaultExport: createHandler
-});
+mock.module('../../../lib/create-handler.js', { defaultExport: createHandler });
 
-const {
-	createFetchErrorHandler,
-	handleFetchErrors
-} = require('@dotcom-reliability-kit/fetch-error-handler');
+const { createFetchErrorHandler, handleFetchErrors } = await import(
+	'@dotcom-reliability-kit/fetch-error-handler'
+);
 
 describe('@dotcom-reliability-kit/fetch-error-handler', () => {
 	it('creates a fetch error handler', () => {

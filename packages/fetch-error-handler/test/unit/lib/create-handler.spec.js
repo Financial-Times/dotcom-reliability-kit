@@ -1,10 +1,10 @@
-const { beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it, mock } from 'node:test';
 
 const Writable = mock.fn(class Writable {});
 mock.module('node:stream', { namedExports: { Writable } });
 
-const createFetchErrorHandler = require('../../../lib/create-handler.js');
+const { default: createFetchErrorHandler } = await import('../../../lib/create-handler.js');
 
 describe('@dotcom-reliability-kit/fetch-error-handler/lib/create-handler', () => {
 	let fetchErrorHandler;
