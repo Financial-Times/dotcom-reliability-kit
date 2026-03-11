@@ -1,20 +1,16 @@
-const { before, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { before, describe, it, mock } from 'node:test';
 
 const logger = { warn: mock.fn() };
-mock.module('@dotcom-reliability-kit/logger', {
-	// NOTE: this is temporary while we're importing ESM into CommonJS.
-	//       Should be switched back when we migrate opentelemetry to ESM.
-	namedExports: { default: logger }
-});
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
 
 const metrics = {
 	AggregationType: { EXPLICIT_BUCKET_HISTOGRAM: 'mock-explicit-bucket' },
 	InstrumentType: { HISTOGRAM: 'mock-histogram' }
 };
-mock.module('@opentelemetry/sdk-node', { defaultExport: { metrics } });
+mock.module('@opentelemetry/sdk-node', { namedExports: { metrics } });
 
-const { createViewConfig } = require('../../../../lib/config/views');
+const { createViewConfig } = await import('../../../../lib/config/views.js');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/views', () => {
 	it('exports a function', () => {

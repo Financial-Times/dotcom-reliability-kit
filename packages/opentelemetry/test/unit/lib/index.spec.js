@@ -1,101 +1,60 @@
-const { before, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { before, beforeEach, describe, it, mock } from 'node:test';
 
-mock.module('@dotcom-reliability-kit/logger', {
-	// NOTE: this is temporary while we're importing ESM into CommonJS.
-	//       Should be switched back when we migrate opentelemetry to ESM.
-	namedExports: { default: { createChildLogger: mock.fn(), warn: mock.fn() } }
-});
+const mockChildLogger = {
+	debug: mock.fn(),
+	error: mock.fn(),
+	info: mock.fn(),
+	verbose: mock.fn(),
+	warn: mock.fn()
+};
+const logger = { createChildLogger: mock.fn(() => mockChildLogger), warn: mock.fn() };
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
 
-mock.module('@opentelemetry/sdk-node', {
-	defaultExport: {
-		api: {
-			diag: { disable: mock.fn(), setLogger: mock.fn() },
-			DiagLogLevel: {},
-			metrics: {
-				getMeter: mock.fn(() => 'mock-meter'),
-				getMeterProvider: mock.fn(() => 'mock-meter-provider')
-			}
-		},
-		NodeSDK: mock.fn(
-			class NodeSDK {
-				start = mock.fn();
-			}
-		)
+const api = {
+	diag: { disable: mock.fn(), setLogger: mock.fn() },
+	DiagLogLevel: {
+		INFO: 'mock info log level'
+	},
+	metrics: {
+		getMeter: mock.fn(() => 'mock-meter'),
+		getMeterProvider: mock.fn(() => 'mock-meter-provider')
 	}
-});
-
-mock.module('@opentelemetry/host-metrics', {
-	namedExports: {
-		HostMetrics: mock.fn(
-			class HostMetrics {
-				start = mock.fn();
-			}
-		)
+};
+const NodeSDK = mock.fn(
+	class NodeSDK {
+		start = mock.fn();
 	}
-});
+);
+mock.module('@opentelemetry/sdk-node', { defaultExport: { api, NodeSDK } });
 
+const HostMetrics = mock.fn(
+	class HostMetrics {
+		start = mock.fn();
+	}
+);
+mock.module('@opentelemetry/host-metrics', { namedExports: { HostMetrics } });
+
+const createInstrumentationConfig = mock.fn(() => 'mock-instrumentations');
 mock.module('../../../lib/config/instrumentations.js', {
-	namedExports: { createInstrumentationConfig: mock.fn(() => 'mock-instrumentations') }
+	namedExports: { createInstrumentationConfig }
 });
-mock.module('../../../lib/config/metrics.js', {
-	namedExports: { createMetricsConfig: mock.fn(() => ({ metrics: 'mock-metrics' })) }
-});
-mock.module('../../../lib/config/resource.js', {
-	namedExports: { createResourceConfig: mock.fn(() => 'mock-resource') }
-});
-mock.module('../../../lib/config/tracing.js', {
-	namedExports: { createTracingConfig: mock.fn(() => ({ tracing: 'mock-tracing' })) }
-});
-mock.module('../../../lib/config/views.js', {
-	namedExports: { createViewConfig: mock.fn(() => ({ views: 'mock-views' })) }
-});
+
+const createMetricsConfig = mock.fn(() => ({ metrics: 'mock-metrics' }));
+mock.module('../../../lib/config/metrics.js', { namedExports: { createMetricsConfig } });
+
+const createResourceConfig = mock.fn(() => 'mock-resource');
+mock.module('../../../lib/config/resource.js', { namedExports: { createResourceConfig } });
+
+const createTracingConfig = mock.fn(() => ({ tracing: 'mock-tracing' }));
+mock.module('../../../lib/config/tracing.js', { namedExports: { createTracingConfig } });
+
+const createViewConfig = mock.fn(() => ({ views: 'mock-views' }));
+mock.module('../../../lib/config/views.js', { namedExports: { createViewConfig } });
+
+const opentelemetry = await import('../../../lib/index.js');
 
 describe('@dotcom-reliability-kit/opentelemetry', () => {
-	let api;
-	let createInstrumentationConfig;
-	let createMetricsConfig;
-	let createResourceConfig;
-	let createTracingConfig;
-	let createViewConfig;
-	let HostMetrics;
-	let logger;
-	let mockChildLogger;
-	let NodeSDK;
-	let opentelemetry;
-
-	// Helper function to reload all modules. We need this because the setup
-	// method stores a global singleton so it's impossible to call it multiple
-	// times with different configuration values normally. We need to do this
-	// in the tests though
-	function reloadAllModules() {
-		createInstrumentationConfig =
-			require('../../../lib/config/instrumentations.js').createInstrumentationConfig;
-		createMetricsConfig = require('../../../lib/config/metrics.js').createMetricsConfig;
-		createResourceConfig = require('../../../lib/config/resource.js').createResourceConfig;
-		createTracingConfig = require('../../../lib/config/tracing.js').createTracingConfig;
-		createViewConfig = require('../../../lib/config/views.js').createViewConfig;
-		api = require('@opentelemetry/sdk-node').api;
-		HostMetrics = require('@opentelemetry/host-metrics').HostMetrics;
-		NodeSDK = require('@opentelemetry/sdk-node').NodeSDK;
-		logger = require('@dotcom-reliability-kit/logger').default;
-
-		mockChildLogger = {
-			debug: mock.fn(),
-			error: mock.fn(),
-			info: mock.fn(),
-			verbose: mock.fn(),
-			warn: mock.fn()
-		};
-		logger.createChildLogger.mock.mockImplementation(() => mockChildLogger);
-		api.DiagLogLevel.INFO = 'mock info log level';
-
-		delete require.cache[require.resolve('../../../lib/index.js')];
-		opentelemetry = require('../../../lib/index.js');
-	}
-
-	before(reloadAllModules);
-
 	describe('.setup(options)', () => {
 		let instances;
 
@@ -195,7 +154,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 				api.diag.disable.mock.resetCalls();
 				logger.createChildLogger.mock.resetCalls();
 				NodeSDK.mock.resetCalls();
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				instances = opentelemetry.setup({
 					logInternals: true,
 					tracing: {
@@ -293,7 +252,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when no metrics endpoint is set', () => {
 			beforeEach(() => {
 				HostMetrics.mock.resetCalls();
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				instances = opentelemetry.setup({
 					tracing: {
 						endpoint: 'mock-tracing-endpoint',
@@ -314,7 +273,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when no options are set', () => {
 			beforeEach(() => {
 				NodeSDK.mock.resetCalls();
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				opentelemetry.setup();
 			});
 
@@ -335,7 +294,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when an authorization header is passed into the root options (deprecated)', () => {
 			beforeEach(() => {
 				createTracingConfig.mock.resetCalls();
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
@@ -358,7 +317,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when an authorization header is passed into the tracing options', () => {
 			beforeEach(() => {
 				createTracingConfig.mock.resetCalls();
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				opentelemetry.setup({
 					tracing: {
 						authorizationHeader: 'mock-authorization-header-tracing',
@@ -381,7 +340,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when an authorization header is passed into both the root options (deprecated) and tracing options', () => {
 			beforeEach(() => {
 				createTracingConfig.mock.resetCalls();
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
@@ -405,7 +364,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		describe('when OTEL_ environment variables are defined', () => {
 			beforeEach(() => {
 				process.env.OTEL_MOCK = 'mock';
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				opentelemetry.setup();
 			});
 
@@ -426,7 +385,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 			beforeEach(() => {
 				NodeSDK.mock.resetCalls();
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				returnValue1 = opentelemetry.setup({
 					tracing: {
 						endpoint: 'mock-tracing-endpoint',
@@ -463,7 +422,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		let meter;
 
 		beforeEach(() => {
-			reloadAllModules();
+			opentelemetry.clearInstances();
 			opentelemetry.setup();
 			meter = opentelemetry.getMeter('mock-name', 'mock-version', 'mock-options');
 		});
@@ -480,7 +439,7 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 		describe('when OpenTelemetry has not been set up via Reliability Kit', () => {
 			beforeEach(() => {
-				reloadAllModules();
+				opentelemetry.clearInstances();
 			});
 
 			it('throws an error', () => {

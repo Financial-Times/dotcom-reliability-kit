@@ -1,5 +1,5 @@
-const express = require('express');
-const { default: logger } = require('@dotcom-reliability-kit/logger');
+import logger from '@dotcom-reliability-kit/logger';
+import express from 'express';
 
 const app = express();
 

@@ -1,10 +1,9 @@
-const appInfo = require('@dotcom-reliability-kit/app-info').semanticConventions;
-const { defaultResource, resourceFromAttributes } = require('@opentelemetry/sdk-node').resources;
-const { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } = require('@opentelemetry/semantic-conventions');
+import { semanticConventions as appInfo } from '@dotcom-reliability-kit/app-info';
 
-/**
- * @import { resources } from '@opentelemetry/sdk-node'
- */
+import { resources } from '@opentelemetry/sdk-node';
+import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
+
+const { defaultResource, resourceFromAttributes } = resources;
 
 // These are hard-coded because they're unstable and OpenTelemetry advices we do this:
 // https://github.com/open-telemetry/opentelemetry-js/blob/main/semantic-conventions/README.md#unstable-semconv
@@ -18,7 +17,7 @@ const ATTR_SERVICE_INSTANCE_ID = 'service.instance.id';
  *
  * @returns {resources.Resource}
  */
-exports.createResourceConfig = function createResourceConfig() {
+export function createResourceConfig() {
 	// We set OpenTelemetry resource attributes based on app data
 	return defaultResource().merge(
 		resourceFromAttributes({
@@ -30,4 +29,4 @@ exports.createResourceConfig = function createResourceConfig() {
 			[ATTR_DEPLOYMENT_ENVIRONMENT]: appInfo.deployment.environment
 		})
 	);
-};
+}

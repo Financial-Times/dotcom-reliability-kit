@@ -1,5 +1,7 @@
-const { AggregationType, InstrumentType } = require('@opentelemetry/sdk-node').metrics;
-const { default: logger } = require('@dotcom-reliability-kit/logger');
+import logger from '@dotcom-reliability-kit/logger';
+import { metrics } from '@opentelemetry/sdk-node';
+
+const { AggregationType, InstrumentType } = metrics;
 
 /**
  * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
@@ -13,10 +15,7 @@ const { default: logger } = require('@dotcom-reliability-kit/logger');
  * @param {ViewOptions} options
  * @returns {Partial<NodeSDKConfiguration>}
  */
-exports.createViewConfig = function createViewConfig({
-	httpClientDurationBuckets,
-	httpServerDurationBuckets
-}) {
+export function createViewConfig({ httpClientDurationBuckets, httpServerDurationBuckets }) {
 	const views = [
 		...buildHistogramView({
 			instrumentName: 'http.client.duration',
@@ -30,7 +29,7 @@ exports.createViewConfig = function createViewConfig({
 		})
 	];
 	return views.length ? { views } : {};
-};
+}
 
 /**
  * @param {object} options

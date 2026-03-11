@@ -1,5 +1,5 @@
-const { beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it, mock } from 'node:test';
 
 const appInfo = {
 	semanticConventions: {
@@ -19,12 +19,12 @@ const appInfo = {
 		}
 	}
 };
-mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });
+mock.module('@dotcom-reliability-kit/app-info', { namedExports: appInfo });
 
 const defaultResource = mock.fn(() => ({ merge: mock.fn(() => 'mock-merged-resource') }));
 const resourceFromAttributes = mock.fn(() => 'mock-resource');
 mock.module('@opentelemetry/sdk-node', {
-	defaultExport: { resources: { defaultResource, resourceFromAttributes } }
+	namedExports: { resources: { defaultResource, resourceFromAttributes } }
 });
 
 mock.module('@opentelemetry/semantic-conventions', {
@@ -34,7 +34,7 @@ mock.module('@opentelemetry/semantic-conventions', {
 	}
 });
 
-const { createResourceConfig } = require('../../../../lib/config/resource.js');
+const { createResourceConfig } = await import('../../../../lib/config/resource.js');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 	it('exports a function', () => {
