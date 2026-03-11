@@ -1,5 +1,5 @@
-const { before, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { before, beforeEach, describe, it, mock } from 'node:test';
 
 const getNodeAutoInstrumentations = mock.fn(() => 'mock-auto-instrumentations');
 mock.module('@opentelemetry/auto-instrumentations-node', {
@@ -12,7 +12,7 @@ mock.module('@dotcom-reliability-kit/log-error', { namedExports: { logRecoverabl
 const UserInputError = mock.fn(class UserInputError {});
 mock.module('@dotcom-reliability-kit/errors', { namedExports: { UserInputError } });
 
-const { createInstrumentationConfig } = require('../../../../lib/config/instrumentations.js');
+const { createInstrumentationConfig } = await import('../../../../lib/config/instrumentations.js');
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/instrumentation', () => {
 	it('exports a function', () => {

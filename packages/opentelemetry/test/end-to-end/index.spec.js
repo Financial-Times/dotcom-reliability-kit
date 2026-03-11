@@ -1,7 +1,7 @@
-const { after, before, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { fork } = require('node:child_process');
-const { setTimeout } = require('node:timers/promises');
+import assert from 'node:assert/strict';
+import { fork } from 'node:child_process';
+import { after, before, describe, it } from 'node:test';
+import { setTimeout } from 'node:timers/promises';
 
 function waitForBaseUrl(childProcess) {
 	return new Promise((resolve) => {
@@ -35,7 +35,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 
 	before(async () => {
 		// Set up a mock collector
-		collector = fork(`${__dirname}/fixtures/collector.js`, {
+		collector = fork(`${import.meta.dirname}/fixtures/collector.js`, {
 			env: {
 				...process.env,
 				NODE_ENV: 'production',
@@ -52,7 +52,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 		collectorBaseUrl = await waitForBaseUrl(collector);
 
 		// Set up a Node.js app that sends Opentelemetry metrics and traces
-		exporter = fork(`${__dirname}/fixtures/app.js`, {
+		exporter = fork(`${import.meta.dirname}/fixtures/app.js`, {
 			env: {
 				...process.env,
 				NODE_ENV: 'production',
@@ -61,7 +61,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 				OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE: '100',
 				SYSTEM_CODE: 'mock-system'
 			},
-			execArgv: ['--require', '@dotcom-reliability-kit/opentelemetry/setup'],
+			execArgv: ['--import', '@dotcom-reliability-kit/opentelemetry/setup'],
 			stdio: 'pipe'
 		});
 		exporter.stdout.on('data', (chunk) => {

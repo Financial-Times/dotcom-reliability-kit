@@ -1,8 +1,10 @@
-const { OTLPMetricExporter } = require('@opentelemetry/exporter-metrics-otlp-proto');
-const { CompressionAlgorithm } = require('@opentelemetry/otlp-exporter-base');
-const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-node').metrics;
-const { default: logger } = require('@dotcom-reliability-kit/logger');
-const { METRICS_USER_AGENT } = require('./user-agents');
+import logger from '@dotcom-reliability-kit/logger';
+import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-proto';
+import { CompressionAlgorithm } from '@opentelemetry/otlp-exporter-base';
+import { metrics } from '@opentelemetry/sdk-node';
+import { METRICS_USER_AGENT } from './user-agents.js';
+
+const { PeriodicExportingMetricReader } = metrics;
 
 /**
  * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
@@ -15,7 +17,7 @@ const { METRICS_USER_AGENT } = require('./user-agents');
  * @param {MetricsOptions} options
  * @returns {Partial<NodeSDKConfiguration>}
  */
-exports.createMetricsConfig = function createMetricsConfig(options) {
+export function createMetricsConfig(options) {
 	/** @type {Partial<NodeSDKConfiguration>} */
 	const config = {};
 
@@ -53,4 +55,4 @@ exports.createMetricsConfig = function createMetricsConfig(options) {
 	}
 
 	return config;
-};
+}

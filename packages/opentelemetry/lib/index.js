@@ -1,11 +1,11 @@
-const { createInstrumentationConfig } = require('./config/instrumentations.js');
-const { createMetricsConfig } = require('./config/metrics.js');
-const { createResourceConfig } = require('./config/resource.js');
-const { createTracingConfig } = require('./config/tracing.js');
-const { createViewConfig } = require('./config/views.js');
-const { HostMetrics } = require('@opentelemetry/host-metrics');
-const opentelemetry = require('@opentelemetry/sdk-node');
-const { default: logger } = require('@dotcom-reliability-kit/logger');
+import logger from '@dotcom-reliability-kit/logger';
+import { HostMetrics } from '@opentelemetry/host-metrics';
+import opentelemetry from '@opentelemetry/sdk-node';
+import { createInstrumentationConfig } from './config/instrumentations.js';
+import { createMetricsConfig } from './config/metrics.js';
+import { createResourceConfig } from './config/resource.js';
+import { createTracingConfig } from './config/tracing.js';
+import { createViewConfig } from './config/views.js';
 
 /**
  * @import { Instances, Options } from '@dotcom-reliability-kit/opentelemetry'
@@ -25,7 +25,7 @@ let instances;
  * @param {Options} [options]
  * @returns {Instances}
  */
-function setupOpenTelemetry({
+export function setup({
 	authorizationHeader,
 	logInternals,
 	metrics: metricsOptions,
@@ -92,7 +92,12 @@ function setupOpenTelemetry({
 	// This is a known issue, the workaround is to import 'https' to ensure
 	// that the instrumented version is used by node-fetch. See:
 	// https://github.com/open-telemetry/opentelemetry-js-contrib/issues/2440
-	require('node:https');
+	import('node:https').catch(
+		// We need a catch here to ensure we don't exit the process if this fails
+		// for some reason, however we don't care about it in the test coverage
+		/* node:coverage ignore next */
+		() => {}
+	);
 
 	// Set up host metrics if we have a metrics endpoint
 	if (metricsOptions?.endpoint) {
@@ -114,7 +119,7 @@ function setupOpenTelemetry({
  * @param {opentelemetry.api.MeterOptions} [options]
  * @returns {opentelemetry.api.Meter}
  */
-function getMeter(name, version, options) {
+export function getMeter(name, version, options) {
 	if (!instances) {
 		throw Object.assign(
 			new Error(
@@ -128,5 +133,11 @@ function getMeter(name, version, options) {
 	return opentelemetry.api.metrics.getMeter(name, version, options);
 }
 
-exports.setup = setupOpenTelemetry;
-exports.getMeter = getMeter;
+/**
+ * Helper method for us to clear instances during testing.
+ *
+ * @private
+ */
+export function clearInstances() {
+	instances = undefined;
+}

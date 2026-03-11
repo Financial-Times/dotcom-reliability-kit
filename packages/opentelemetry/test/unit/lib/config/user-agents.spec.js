@@ -1,5 +1,5 @@
-const { describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { describe, it, mock } from 'node:test';
 
 const appInfo = { systemCode: 'mock-system-code' };
 mock.module('@dotcom-reliability-kit/app-info', { defaultExport: appInfo });
@@ -24,7 +24,9 @@ mock.module('@opentelemetry/exporter-trace-otlp-proto/package.json', {
 	}
 });
 
-const { METRICS_USER_AGENT, TRACING_USER_AGENT } = require('../../../../lib/config/user-agents.js');
+const { METRICS_USER_AGENT, TRACING_USER_AGENT } = await import(
+	'../../../../lib/config/user-agents.js'
+);
 
 describe('@dotcom-reliability-kit/opentelemetry/lib/config/resource', () => {
 	describe('.METRICS_USER_AGENT', () => {
