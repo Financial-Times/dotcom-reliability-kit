@@ -1,8 +1,8 @@
-const { MetricsClient } = require('./metrics-client.js');
-const { InMemoryQueue } = require('./queue/in-memory-queue.js');
-const { Queue } = require('./queue/queue.js');
+import { MetricsClient } from './metrics-client.js';
+import { InMemoryQueue } from './queue/in-memory-queue.js';
+import { Queue } from './queue/queue.js';
 
-module.exports = {
+export {
 	MetricsClient,
 	InMemoryQueue,
 	Queue

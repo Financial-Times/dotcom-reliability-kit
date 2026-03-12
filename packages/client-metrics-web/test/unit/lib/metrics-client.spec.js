@@ -1,13 +1,9 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-const { after, afterEach, beforeEach, describe, it, mock } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { after, afterEach, beforeEach, describe, it, mock } from 'node:test';
 
-mock.module('../../../package.json', {
-	defaultExport: { version: '0.0.0-test' }
-});
-
-const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
-const { Queue } = require('../../../lib/queue/queue.js');
+import { MetricsClient } from '@dotcom-reliability-kit/client-metrics-web';
+import { Queue } from '../../../lib/queue/queue.js';
 
 class MockQueue extends Queue {
 	mockItems = [];
