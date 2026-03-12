@@ -1,6 +1,7 @@
 {
   "name": "@dotcom-reliability-kit/splunk-dashboards",
   "version": "0.0.0",
+  "type": "module",
   "private": true,
   "description": "The Reliability Kit Splunk dashboard JSON",
   "repository": {
