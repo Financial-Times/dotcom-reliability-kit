@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "sharp": "^0.34.4",
-    "svgo": "^4.0.0"
+    "svgo": "^4.0.1"
   },
   "devDependencies": {
     "@types/sharp": "^0.32.0",
