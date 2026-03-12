@@ -4,7 +4,7 @@
 
 const DEFAULT_QUEUE_CAPACITY = 10_000;
 
-exports.Queue = class Queue {
+export class Queue {
 	/** @type { number } */
 	#capacity;
 
@@ -49,4 +49,4 @@ exports.Queue = class Queue {
 	get size() {
 		throw new Error('Must be implemented by subclass');
 	}
-};
+}

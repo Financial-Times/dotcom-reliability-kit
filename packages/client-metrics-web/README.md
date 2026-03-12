@@ -49,8 +49,6 @@ Include in your client-side code:
 
 ```js
 import { MetricsClient } from '@dotcom-reliability-kit/client-metrics-web';
-// or
-const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 ```
 
 > [!TIP]
