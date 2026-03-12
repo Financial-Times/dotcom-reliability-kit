@@ -17,7 +17,8 @@
     "test/modules/*"
   ],
   "scripts": {
-    "build:logos": "npm run build -w resources/logos",
+    "build": "npm run build --workspaces --if-present",
+    "build:logos": "npm run build:logos -w resources/logos",
     "create-package": "./scripts/create-package.js",
     "lint": "npm run lint:biome && npm run lint:tsc",
     "lint:biome": "biome check",
