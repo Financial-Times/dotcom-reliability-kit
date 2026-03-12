@@ -9,9 +9,6 @@ A lightweight client for sending operational metrics events from the browser to 
 > [!IMPORTANT]
 >  Remember that this library is intended for sending _operational_ metrics - metrics that help us understand whether your system is operating as expected. For analytics data you should still be using Spoor (or another solution common to your team).
 
-> [!CAUTION]
-> This Reliability Kit module is considered experimental, we're rolling out to systems in a controlled manner and may introduce breaking changes. Please speak to the Reliability team if you have a use-case.
-
 * [Usage (systems)](#usage-systems)
   * [`MetricsClient`](#metricsclient)
     * [`client.recordEvent()`](#clientrecordevent)
@@ -253,11 +250,11 @@ new Queue({ capacity: 11 })
 
 Subclasses must implement the following methods:
 
-**add(item)**: Add an item to the queue.
-**drop(count)**: Drop the oldest item(s) from the queue. The default is 1.
-**pull(count)**: Remove and return the first count items.
-**size (getter)**: Current number of items in the queue.
-**capacity (getter)**: Maximum queue capacity (implemented in base class).
+- **add(item)**: Add an item to the queue.
+- **drop(count)**: Drop the oldest item(s) from the queue. The default is 1.
+- **pull(count)**: Remove and return the first count items.
+- **size (getter)**: Current number of items in the queue.
+- **capacity (getter)**: Maximum queue capacity (implemented in base class).
 
 
 ## Usage (shared libraries)
