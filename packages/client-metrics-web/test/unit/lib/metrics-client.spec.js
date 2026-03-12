@@ -232,8 +232,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				expect.objectContaining({
 					method: 'POST',
 					headers: expect.objectContaining({
-						'Content-Type': 'application/json',
-						'User-Agent': 'FTSystem/cp-client-metrics/0.0.0-test'
+						'Content-Type': 'application/json'
 					})
 				})
 			);

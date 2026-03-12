@@ -1,5 +1,4 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-const { version } = require('../package.json');
 const { InMemoryQueue } = require('./queue/in-memory-queue');
 const { Queue } = require('./queue/queue');
 
@@ -225,8 +224,7 @@ exports.MetricsClient = class MetricsClient {
 		fetch(this.#endpoint, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'User-Agent': `FTSystem/cp-client-metrics/${version}`
+				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(events)
 		}).catch((error) => {
