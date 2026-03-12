@@ -19,6 +19,9 @@ We maintain documentation in this repo:
     * **[@dotcom-reliability-kit/biome-config](./packages/biome-config/#readme):**<br/>
       A Biome configuration focused on resolving code quality and reliability issues without making any code style decisions.
 
+    * **[@dotcom-reliability-kit/client-metrics-web](./packages/client-metrics-web/README.md):**<br/>
+      A lightweight client for sending operational metrics events from the browser to the Customer Products Client Metrics Server.
+
     * **[@dotcom-reliability-kit/crash-handler](./packages/crash-handler/#readme):**<br/>
       A method to bind an uncaught exception handler to ensure that fatal application errors are logged. It is a replacement for Sentry fatal error logging.
 
