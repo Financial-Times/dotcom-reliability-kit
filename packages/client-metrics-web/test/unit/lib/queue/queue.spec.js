@@ -1,6 +1,7 @@
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { Queue } = require('../../../../lib/queue/queue');
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+
+import { Queue } from '../../../../lib/queue/queue.js';
 
 describe('Queue (base class)', () => {
 	it('has a constructor that sets the capacity', () => {

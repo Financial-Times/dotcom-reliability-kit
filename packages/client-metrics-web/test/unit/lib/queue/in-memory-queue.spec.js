@@ -1,7 +1,7 @@
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 
-const { InMemoryQueue } = require('../../../../lib/queue/in-memory-queue');
+import { InMemoryQueue } from '../../../../lib/queue/in-memory-queue.js';
 
 describe('InMemoryQueue (extends Queue)', () => {
 	const testMetric = {
