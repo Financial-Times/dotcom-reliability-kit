@@ -8,8 +8,8 @@ An [OpenTelemetry](https://opentelemetry.io/docs/what-is-opentelemetry/) client 
 
 * [Usage](#usage)
   * [Setup](#setup)
-    * [Automated setup with `--require`](#automated-setup-with---require)
-    * [Automated setup with `require()`](#automated-setup-with-require)
+    * [Automated setup with `--import`](#automated-setup-with---import)
+    * [Automated setup with `import`](#automated-setup-with-import)
     * [Manual setup](#manual-setup)
   * [Sending custom metrics](#sending-custom-metrics)
   * [Running in production](#running-in-production)
@@ -44,21 +44,32 @@ Install `@dotcom-reliability-kit/opentelemetry` as a dependency:
 npm install --save @dotcom-reliability-kit/opentelemetry
 ```
 
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
+
 ### Setup
 
 You can set up OpenTelemetry in a number of ways, each has pros and cons which we'll outline in the sections below.
 
-#### Automated setup with `--require`
+#### Automated setup with `--import`
 
-You can completely avoid code changes by setting up OpenTelemetry using the Node.js [`--require` command-line option](https://nodejs.org/api/cli.html#-r---require-module):
+You can completely avoid code changes by setting up OpenTelemetry using the Node.js [`--import` command-line option](https://nodejs.org/api/cli.html#importmodule):
 
 ```sh
-node --require @dotcom-reliability-kit/opentelemetry/setup ./my-app.js
+node --import @dotcom-reliability-kit/opentelemetry/setup ./my-app.js
 ```
 
 This will import our setup script _before_ any of your code. OpenTelemetry will be [configured](#configuration-options) with environment variables.
 
-For environments where you can't modify the `node` command directly (e.g. AWS Lambda) you'll need to specify this using the `NODE_OPTIONS` environment variable set to `--require @dotcom-reliability-kit/opentelemetry/setup`.
+For environments where you can't modify the `node` command directly (e.g. AWS Lambda) you'll need to specify this using the `NODE_OPTIONS` environment variable set to `--import @dotcom-reliability-kit/opentelemetry/setup`.
 
 <table>
     <tr>
@@ -75,20 +86,18 @@ For environments where you can't modify the `node` command directly (e.g. AWS La
         </td>
         <td>
             <ul>
-                <li>It may be easy to accidentally remove the `--require`</li>
+                <li>It may be easy to accidentally remove the `--import`</li>
             </ul>
         </td>
     </tr>
 </table>
 
-#### Automated setup with `require()`
+#### Automated setup with `import`
 
-If you can't use `--require`, e.g. because your tooling won't allow it, then you can include the setup script directly in your code:
+If you can't use `--import`, e.g. because your tooling won't allow it, then you can include the setup script directly in your code:
 
 ```js
 import '@dotcom-reliability-kit/opentelemetry/setup';
-// or
-require('@dotcom-reliability-kit/opentelemetry/setup');
 ```
 
 OpenTelemetry will be [configured](#configuration-options) with environment variables.
@@ -123,8 +132,6 @@ If you'd like to customise the OpenTelemetry config more and have control over w
 
 ```js
 import * as opentelemetry from '@dotcom-reliability-kit/opentelemetry';
-// or
-const opentelemetry = require('@dotcom-reliability-kit/opentelemetry');
 ```
 
 Call the function, passing in [configuration options](#configuration-options):
@@ -167,8 +174,6 @@ In your code, load in the `getMeter` function:
 
 ```js
 import { getMeter } from '@dotcom-reliability-kit/opentelemetry';
-// or
-const { getMeter } = require('@dotcom-reliability-kit/opentelemetry');
 ```
 
 You can now use it in the same way as the built-in OpenTelemetry equivalent. For more information, see the [OpenTelemetry Meter documentation](https://opentelemetry.io/docs/specs/otel/metrics/api/#meter).
@@ -238,7 +243,7 @@ Some details about how we're implementing OpenTelemetry. This is to help avoid a
 
 Depending on the way you set up OpenTelemetry, you can either configure it via environment variables or options passed into an object.
 
-For automated setups ([here](#automated-setup-with---require) and [here](#automated-setup-with-require)) you'll need to use environment variables, e.g.
+For automated setups ([here](#automated-setup-with---import) and [here](#automated-setup-with-import)) you'll need to use environment variables, e.g.
 
 ```sh
 EXAMPLE=true npm start

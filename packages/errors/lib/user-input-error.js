@@ -1,4 +1,4 @@
-const HttpError = require('./http-error');
+import HttpError from './http-error.js';
 
 /**
  * @import { UserInputError as UserInputErrorType } from '@dotcom-reliability-kit/errors'
@@ -7,7 +7,7 @@ const HttpError = require('./http-error');
 /**
  * Class representing an error caused by invalid user input.
  */
-class UserInputError extends HttpError {
+export default class UserInputError extends HttpError {
 	/**
 	 * @override
 	 * @readonly
@@ -23,7 +23,3 @@ class UserInputError extends HttpError {
 	 */
 	static defaultStatusCode = 400;
 }
-
-module.exports = UserInputError;
-
-module.exports.default = module.exports;

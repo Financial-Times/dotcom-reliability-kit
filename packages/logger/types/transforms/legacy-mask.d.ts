@@ -1,4 +1,4 @@
-import { LogTransform } from '../logger';
+import type { LogTransform } from '../logger.d.ts';
 
 export type LegacyMaskTransformOptions = {
 	denyList?: string[];
@@ -13,4 +13,6 @@ export type InternalMaskSettings = {
 	references: WeakSet<{ [key: string]: any }>;
 };
 
-export type createLegacyMaskTransform = (options?: LegacyMaskTransformOptions) => LogTransform;
+export default function createLegacyMaskTransform(
+	options?: LegacyMaskTransformOptions
+): LogTransform;

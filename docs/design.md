@@ -5,7 +5,7 @@ This document outlines the design decisions made in this project.
 
   * [Languages](#languages)
     * [JavaScript](#javascript)
-    * [CommonJS](#commonjs)
+    * [Native ES Modules](#native-es-modules)
   * [Tooling](#tooling)
     * [Testing](#testing)
     * [Monorepo management](#monorepo-management)
@@ -15,11 +15,11 @@ This document outlines the design decisions made in this project.
 
 ## Languages
 
-We made two language decisions when starting this project:
+We make two language decisions in this project:
 
-  1. We decided to use JavaScript rather than TypeScript
+  1. We use JavaScript rather than TypeScript
 
-  2. We decided to use CommonJS modules rather than ES Modules
+  2. We use Native ES Modules (as of 2026, we previously published CommonJS modules)
 
 The combination of the above allows us to work on and publish the packages in this monorepo without needing a build step. This means that the code we write is exactly the same as the code run inside our applications.
 
@@ -29,15 +29,11 @@ In terms of TypeScript, the key benefits are having type safety and type hinting
 
 In order to be useful for TypeScript projects, we do still need to publish our modules with TypeScript type declaration files (`.d.ts`).
 
-### CommonJS
+### Native ES Modules
 
-If we wanted to support ES Modules (which _is_ the future direction I think we'll all go in) then we'd need to choose between one of the following, neither of which seems preferable to just sticking with CommonJS for now.
+We write and publish modules as native ESM, which is well-supported in the latest versions of Node.js 22 and 24. We do not cross-compile to CommonJS as part of a build step.
 
-  1. We write our code in ES Modules but we cross-compile to CommonJS before publishing. This isn't ideal because it introduces a build step and steps away from "what you see is what's running in your app"
-
-  2. We write our code in ES Modules and publish them as ES Modules with no cross-compilation. This makes them incompatible with a large number of our apps (many of them use CommonJS exclusively) and would tie adopting Reliability Kit to an unrelated migration step
-
-A note that for now there is a small downside to sticking with CommonJS. It will continue to work [for the forseeable future](https://github.com/nodejs/node/issues/33954) in Node.js itself, but more modules on npm are switching to native ESM which is not very compatible with CommonJS. We may find ourselves forced to reconsider at some point if any of our key dependencies (e.g. Express or Jest) migrate to ESM-only and drop support for their old CommonJS versions.
+The one thing we _don't_ do (due to limitations with importing ESM into CommonJS files) is use [top-level `await`](https://v8.dev/features/top-level-await) in our published modules. It's OK to use this in scripts and tools that only run as part of the development or build process.
 
 
 ## Tooling
@@ -52,7 +48,7 @@ When testing a monorepo, running tests and linting can happen in one of two ways
 
   2. Have tooling installed in each package and have commands in the top level package to run these
 
-We have opted to have tooling installed at the top level. This speeds up build times, because Jest has a non-trivial start up time and multiplying this by the number of packages can lead to a lot of overhead. This also means that the tooling is consistent between all of the different packages and upgrading the tooling happens in one place. There is more information on [how to run tests](./contributing.md#testing) in the contributing guide.
+We have opted to have tooling installed at the top level in most cases. This speeds up build times because multiplying startup times by the number of packages can lead to a lot of overhead. The exception is our tests, which are run via `node --test` from within each of the packages. There is more information on [how to run tests](./contributing.md#testing) in the contributing guide.
 
 ### Monorepo management
 

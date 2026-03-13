@@ -1,5 +1,5 @@
-const express = require('express');
-const { STATUS_CODES } = require('node:http');
+import { STATUS_CODES } from 'node:http';
+import express from 'express';
 
 const app = express();
 

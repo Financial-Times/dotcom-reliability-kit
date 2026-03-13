@@ -22,9 +22,18 @@ Include in your code:
 
 ```js
 import renderErrorInfoPage from '@dotcom-reliability-kit/middleware-render-error-info';
-// or
-const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
 ```
+
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
 
 ### `renderErrorInfoPage`
 

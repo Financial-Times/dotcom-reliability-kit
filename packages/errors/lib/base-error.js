@@ -5,7 +5,7 @@
 /**
  * Class representing an error.
  */
-class BaseError extends Error {
+export default class BaseError extends Error {
 	/**
 	 * @override
 	 * @readonly
@@ -134,7 +134,3 @@ class BaseError extends Error {
 			.replace(/[^a-z0-9_]+/gi, '_');
 	}
 }
-
-module.exports = BaseError;
-
-module.exports.default = module.exports;

@@ -30,9 +30,18 @@ Include in your code:
 
 ```js
 import {logRecoverableError} from '@dotcom-reliability-kit/log-error';
-// or
-const {logRecoverableError} = require('@dotcom-reliability-kit/log-error');
 ```
+
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
 
 ### `logHandledError`
 
@@ -188,7 +197,7 @@ logRecoverableError({
 The default set of headers is also available to use, so that you don't need to repeat them if you want to add new included headers. You'll need to import `@dotcom-reliability-kit/serialize-request`, then these headers are available:
 
 ```js
-const { DEFAULT_INCLUDED_HEADERS } = require('@dotcom-reliability-kit/serialize-request');
+import { DEFAULT_INCLUDED_HEADERS } from '@dotcom-reliability-kit/serialize-request';
 
 logRecoverableError({
     // ...other required options

@@ -1,78 +1,81 @@
-const HttpError = require('../../../lib/http-error');
-const UserInputError = require('../../../lib/user-input-error');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import HttpError from '../../../lib/http-error.js';
 
-jest.mock('http', () => ({
-	STATUS_CODES: {
-		400: 'mock 400 message',
-		456: 'mock 456 message',
-		500: 'mock 500 message'
+mock.module('node:http', {
+	namedExports: {
+		STATUS_CODES: {
+			400: 'mock 400 message',
+			456: 'mock 456 message',
+			500: 'mock 500 message'
+		}
 	}
-}));
+});
+
+const { default: UserInputError } = await import('../../../lib/user-input-error.js');
 
 describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 	afterEach(() => {
-		jest.restoreAllMocks();
+		mock.restoreAll();
 	});
 
 	it('exports a class', () => {
-		expect(UserInputError).toBeInstanceOf(Function);
-		expect(() => {
-			UserInputError();
-		}).toThrow(/class constructor/i);
+		assert.ok(UserInputError instanceof Function);
+		assert.throws(() => UserInputError(), /class constructor/i);
 	});
 
 	it('extends the HttpError class', () => {
-		expect(UserInputError.prototype).toBeInstanceOf(HttpError);
+		assert.ok(UserInputError.prototype instanceof HttpError);
 	});
 
 	describe('new UserInputError()', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
+			mock.method(HttpError, 'getMessageForStatusCode', () => 'mock status message');
 			instance = new UserInputError();
 		});
 
 		describe('.code', () => {
 			it('is set to "HTTP_400"', () => {
-				expect(instance.code).toStrictEqual('HTTP_400');
+				assert.strictEqual(instance.code, 'HTTP_400');
 			});
 		});
 
 		describe('.data', () => {
 			it('is set to an empty object', () => {
-				expect(instance.data).toEqual({});
+				assert.deepStrictEqual(instance.data, {});
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to the status message for the default 400 code', () => {
-				expect(instance.message).toStrictEqual('mock status message');
+				assert.strictEqual(instance.message, 'mock status message');
 			});
 		});
 
 		describe('.name', () => {
 			it('is set to "UserInputError"', () => {
-				expect(instance.name).toStrictEqual('UserInputError');
+				assert.strictEqual(instance.name, 'UserInputError');
 			});
 		});
 
 		describe('.statusCode', () => {
 			it('is set to 400', () => {
-				expect(instance.statusCode).toStrictEqual(400);
+				assert.strictEqual(instance.statusCode, 400);
 			});
 		});
 
 		describe('.status', () => {
 			it('aliases the `statusCode` property', () => {
 				instance.statusCode = 'mock status';
-				expect(instance.status).toStrictEqual('mock status');
+				assert.strictEqual(instance.status, 'mock status');
 			});
 		});
 
 		describe('.statusMessage', () => {
 			it('is set to the status message for the default 400 code', () => {
-				expect(instance.statusMessage).toStrictEqual('mock status message');
+				assert.strictEqual(instance.statusMessage, 'mock status message');
 			});
 		});
 	});
@@ -81,50 +84,50 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
+			mock.method(HttpError, 'getMessageForStatusCode', () => 'mock status message');
 			instance = new UserInputError('mock message');
 		});
 
 		describe('.code', () => {
 			it('is set to "HTTP_400"', () => {
-				expect(instance.code).toStrictEqual('HTTP_400');
+				assert.strictEqual(instance.code, 'HTTP_400');
 			});
 		});
 
 		describe('.data', () => {
 			it('is set to an empty object', () => {
-				expect(instance.data).toEqual({});
+				assert.deepStrictEqual(instance.data, {});
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to the passed in message parameter', () => {
-				expect(instance.message).toStrictEqual('mock message');
+				assert.strictEqual(instance.message, 'mock message');
 			});
 		});
 
 		describe('.name', () => {
 			it('is set to "UserInputError"', () => {
-				expect(instance.name).toStrictEqual('UserInputError');
+				assert.strictEqual(instance.name, 'UserInputError');
 			});
 		});
 
 		describe('.statusCode', () => {
 			it('is set to 400', () => {
-				expect(instance.statusCode).toStrictEqual(400);
+				assert.strictEqual(instance.statusCode, 400);
 			});
 		});
 
 		describe('.status', () => {
 			it('aliases the `statusCode` property', () => {
 				instance.statusCode = 'mock status';
-				expect(instance.status).toStrictEqual('mock status');
+				assert.strictEqual(instance.status, 'mock status');
 			});
 		});
 
 		describe('.statusMessage', () => {
 			it('is set to the status message for the default 400 code', () => {
-				expect(instance.statusMessage).toStrictEqual('mock status message');
+				assert.strictEqual(instance.statusMessage, 'mock status message');
 			});
 		});
 	});
@@ -133,51 +136,51 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
-			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
+			mock.method(HttpError, 'normalizeErrorStatusCode', () => 456);
+			mock.method(HttpError, 'getMessageForStatusCode', () => 'mock status message');
 			instance = new UserInputError(456);
 		});
 
 		describe('.code', () => {
 			it('is set to a code representing the normalized status code', () => {
-				expect(instance.code).toStrictEqual('HTTP_456');
+				assert.strictEqual(instance.code, 'HTTP_456');
 			});
 		});
 
 		describe('.data', () => {
 			it('is set to an empty object', () => {
-				expect(instance.data).toEqual({});
+				assert.deepStrictEqual(instance.data, {});
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to the status message for the normalized status code', () => {
-				expect(instance.message).toStrictEqual('mock status message');
+				assert.strictEqual(instance.message, 'mock status message');
 			});
 		});
 
 		describe('.name', () => {
 			it('is set to "UserInputError"', () => {
-				expect(instance.name).toStrictEqual('UserInputError');
+				assert.strictEqual(instance.name, 'UserInputError');
 			});
 		});
 
 		describe('.statusCode', () => {
 			it('is set to the normalized status code', () => {
-				expect(instance.statusCode).toStrictEqual(456);
+				assert.strictEqual(instance.statusCode, 456);
 			});
 		});
 
 		describe('.status', () => {
 			it('aliases the `statusCode` property', () => {
 				instance.statusCode = 'mock status';
-				expect(instance.status).toStrictEqual('mock status');
+				assert.strictEqual(instance.status, 'mock status');
 			});
 		});
 
 		describe('.statusMessage', () => {
 			it('is set to the status message for the normalized status code', () => {
-				expect(instance.statusMessage).toStrictEqual('mock status message');
+				assert.strictEqual(instance.statusMessage, 'mock status message');
 			});
 		});
 	});
@@ -186,9 +189,9 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(HttpError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
-			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
-			jest.spyOn(HttpError, 'getMessageForStatusCode').mockReturnValue('mock status message');
+			mock.method(HttpError, 'normalizeErrorCode', () => 'MOCK_CODE');
+			mock.method(HttpError, 'normalizeErrorStatusCode', () => 456);
+			mock.method(HttpError, 'getMessageForStatusCode', () => 'mock status message');
 			instance = new UserInputError({
 				message: 'mock message',
 				code: 'mock_code',
@@ -199,13 +202,13 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 
 		describe('.code', () => {
 			it('is set to the normalized error code', () => {
-				expect(instance.code).toStrictEqual('MOCK_CODE');
+				assert.strictEqual(instance.code, 'MOCK_CODE');
 			});
 		});
 
 		describe('.data', () => {
 			it('is set to an object containing the extra keys in `data`', () => {
-				expect(instance.data).toEqual({
+				assert.deepStrictEqual(instance.data, {
 					extra: 'mock extra data'
 				});
 			});
@@ -213,32 +216,32 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 
 		describe('.message', () => {
 			it('is set to the data.message property', () => {
-				expect(instance.message).toStrictEqual('mock message');
+				assert.strictEqual(instance.message, 'mock message');
 			});
 		});
 
 		describe('.name', () => {
 			it('is set to "UserInputError"', () => {
-				expect(instance.name).toStrictEqual('UserInputError');
+				assert.strictEqual(instance.name, 'UserInputError');
 			});
 		});
 
 		describe('.statusCode', () => {
 			it('is set to the normalized status code', () => {
-				expect(instance.statusCode).toStrictEqual(456);
+				assert.strictEqual(instance.statusCode, 456);
 			});
 		});
 
 		describe('.status', () => {
 			it('aliases the `statusCode` property', () => {
 				instance.statusCode = 'mock status';
-				expect(instance.status).toStrictEqual('mock status');
+				assert.strictEqual(instance.status, 'mock status');
 			});
 		});
 
 		describe('.statusMessage', () => {
 			it('is set to the status message for the passed in status code', () => {
-				expect(instance.statusMessage).toStrictEqual('mock status message');
+				assert.strictEqual(instance.statusMessage, 'mock status message');
 			});
 		});
 	});
@@ -247,8 +250,8 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(HttpError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
-			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
+			mock.method(HttpError, 'normalizeErrorCode', () => 'MOCK_CODE');
+			mock.method(HttpError, 'normalizeErrorStatusCode', () => 456);
 			instance = new UserInputError('mock message', {
 				code: 'mock_code',
 				statusCode: 567
@@ -257,19 +260,19 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 
 		describe('.code', () => {
 			it('is set to the normalized error code', () => {
-				expect(instance.code).toStrictEqual('MOCK_CODE');
+				assert.strictEqual(instance.code, 'MOCK_CODE');
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to the data.message property', () => {
-				expect(instance.message).toStrictEqual('mock message');
+				assert.strictEqual(instance.message, 'mock message');
 			});
 		});
 
 		describe('.statusCode', () => {
 			it('is set to the normalized status code', () => {
-				expect(instance.statusCode).toStrictEqual(456);
+				assert.strictEqual(instance.statusCode, 456);
 			});
 		});
 	});
@@ -278,8 +281,8 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(HttpError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
-			jest.spyOn(HttpError, 'normalizeErrorStatusCode').mockReturnValue(456);
+			mock.method(HttpError, 'normalizeErrorCode', () => 'MOCK_CODE');
+			mock.method(HttpError, 'normalizeErrorStatusCode', () => 456);
 			instance = new UserInputError(567, {
 				message: 'mock message',
 				code: 'mock_code'
@@ -288,26 +291,20 @@ describe('@dotcom-reliability-kit/errors/lib/user-input-error', () => {
 
 		describe('.code', () => {
 			it('is set to the normalized error code', () => {
-				expect(instance.code).toStrictEqual('MOCK_CODE');
+				assert.strictEqual(instance.code, 'MOCK_CODE');
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to the data.message property', () => {
-				expect(instance.message).toStrictEqual('mock message');
+				assert.strictEqual(instance.message, 'mock message');
 			});
 		});
 
 		describe('.statusCode', () => {
 			it('is set to the normalized status code', () => {
-				expect(instance.statusCode).toStrictEqual(456);
+				assert.strictEqual(instance.statusCode, 456);
 			});
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			expect(UserInputError.default).toStrictEqual(UserInputError);
 		});
 	});
 });

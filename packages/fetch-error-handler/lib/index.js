@@ -1,4 +1,5 @@
-const createFetchErrorHandler = require('./create-handler');
+import createFetchErrorHandler from './create-handler.js';
 
-exports.createFetchErrorHandler = createFetchErrorHandler;
-exports.handleFetchErrors = createFetchErrorHandler();
+const handleFetchErrors = createFetchErrorHandler();
+
+export { createFetchErrorHandler, handleFetchErrors };

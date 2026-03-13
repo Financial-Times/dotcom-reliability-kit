@@ -1,8 +1,8 @@
-const appInfo = require('@dotcom-reliability-kit/app-info');
-const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
-const renderErrorPage = require('./render-error-page');
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
-const { STATUS_CODES } = require('node:http');
+import { STATUS_CODES } from 'node:http';
+import appInfo from '@dotcom-reliability-kit/app-info';
+import { logRecoverableError } from '@dotcom-reliability-kit/log-error';
+import serializeError from '@dotcom-reliability-kit/serialize-error';
+import renderErrorPage from './render-error-page.js';
 
 /**
  * @import { ErrorRenderingOptions } from '@dotcom-reliability-kit/middleware-render-error-info'
@@ -15,7 +15,7 @@ const { STATUS_CODES } = require('node:http');
  * @param {ErrorRenderingOptions} [options]
  * @returns {ExpressErrorHandler}
  */
-function createErrorRenderingMiddleware(options = {}) {
+export default function createErrorRenderingMiddleware(options = {}) {
 	return function errorRenderingMiddleware(error, request, response, next) {
 		// If headers have been sent already then we need to hand off to
 		// the final Express error handler as documented here:
@@ -88,7 +88,3 @@ function createErrorRenderingMiddleware(options = {}) {
 		response.send(output);
 	};
 }
-
-module.exports = createErrorRenderingMiddleware;
-
-module.exports.default = module.exports;

@@ -6,7 +6,7 @@
  * @returns {{[key: string]: any}[]}
  *     Returns the parsed JSON logs as an array of log objects.
  */
-function splitAndParseJsonLogs(logString) {
+export default function splitAndParseJsonLogs(logString) {
 	return (
 		logString
 			.trim()
@@ -18,5 +18,3 @@ function splitAndParseJsonLogs(logString) {
 			.map((log) => JSON.parse(log))
 	);
 }
-
-module.exports = splitAndParseJsonLogs;

@@ -36,6 +36,12 @@ Emoji           | Label             | Meaning
   * [Log times are now ISO 8601 timestamps](#log-times-are-now-iso-8601-timestamps)
 * [Migrating from v3 to v4](#migrating-from-v3-to-v4)
   * [Node.js 18 is no longer supported](#nodejs-18-is-no-longer-supported)
+* [Migrating from v4 to v5](#migrating-from-v4-to-v5)
+  * [Node.js 20 is no longer supported](#nodejs-20-is-no-longer-supported)
+  * [Node.js 22.11 is no longer supported](#nodejs-2211-is-no-longer-supported)
+  * [Native ESM](#native-esm)
+  * [Stricter TypeScript requirements](#stricter-typescript-requirements)
+  * [Prettifier Included](#prettifier-included)
 
 
 ## Migrating from n-logger
@@ -302,3 +308,40 @@ If neither of the above is true, this should be a safe update with no code chang
 ### Node.js 18 is no longer supported
 
 **:red_circle: Breaking:** this version drops support for Node.js v18. If your app is already using Node.js v20 or above then you can migrate with no code changes.
+
+
+## Migrating from v4 to v5
+
+### Node.js 20 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v20. If your app is already using Node.js v22 then you may be able to migrate without code changes.
+
+### Node.js 22.11 is no longer supported
+
+**:red_circle: Breaking:** this version drops support for Node.js v22.11 or lower. If your app is already using Node.js v22.12 then you may be able to migrate without code changes. This is so that we can publish native ESM modules without requiring complex changes in our consuming applications. [See #1479 for more information](https://github.com/Financial-Times/dotcom-reliability-kit/issues/1479).
+
+### Native ESM
+
+**:orange_circle: Possibly Breaking:** this version publishes code as [native ECMAScript modules](https://nodejs.org/api/esm.html). If you are already using ESM yourself then this shouldn't cause issues, however systems written in CommonJS may need their imports updating if they use the default exports from this package:
+
+```js
+const logger = require('@dotcom-reliability-kit/logger');
+// becomes
+const { default: logger } = require('@dotcom-reliability-kit/logger');
+```
+
+### Stricter TypeScript requirements
+
+**:orange_circle: Possibly Breaking:** this version outlines some requirements for use with TypeScript. Previously we made no recommendations about your TypeScript config and this package did not work in some scenarios. We are now explicitly documenting how we support TypeScript-based projects and we require the following settings to guarantee that this package will be free of type errors:
+
+```json
+{
+    "esModuleInterop": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext"
+}
+```
+
+### Prettifier Included
+
+**:orange_circle: Possibly Breaking:** this version explicitly installs [pino-pretty](https://github.com/pinojs/pino-pretty#readme) rather than adding it as a peer dependency. This is to get around a lot of issues we've seen with log prettification. Your logs should generally remain the same but there may be dependency conflicts with a manually-installed version of pino-pretty. We recommend uninstalling your own copy.

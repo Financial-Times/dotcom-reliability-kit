@@ -1,24 +1,21 @@
-const createErrorLoggingMiddleware = require('../../../lib/index');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
 
-jest.mock('@dotcom-reliability-kit/log-error', () => ({
-	logHandledError: jest.fn(),
-	logRecoverableError: jest.fn()
-}));
-const { logHandledError, logRecoverableError } = require('@dotcom-reliability-kit/log-error');
+const logHandledError = mock.fn();
+const logRecoverableError = mock.fn();
+mock.module('@dotcom-reliability-kit/log-error', {
+	namedExports: { logHandledError, logRecoverableError }
+});
+
+const { default: createErrorLoggingMiddleware } = await import(
+	'@dotcom-reliability-kit/middleware-log-errors'
+);
 
 describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 	let middleware;
 
 	beforeEach(() => {
 		middleware = createErrorLoggingMiddleware();
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			expect(createErrorLoggingMiddleware.default).toStrictEqual(
-				createErrorLoggingMiddleware
-			);
-		});
 	});
 
 	describe('middleware(error, request, response, next)', () => {
@@ -31,75 +28,78 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			error = new Error('mock error');
 			request = { isMockRequest: true };
 			response = { locals: {} };
-			next = jest.fn();
+			next = mock.fn();
 
 			middleware(error, request, response, next);
 		});
 
+		afterEach(() => {
+			mock.restoreAll();
+		});
+
 		it('logs the error and request', () => {
-			expect(logHandledError).toHaveBeenCalledWith({
-				error,
-				request,
-				includeHeaders: undefined
-			});
+			assert.strictEqual(logHandledError.mock.callCount(), 1);
+			assert.partialDeepStrictEqual(logHandledError.mock.calls[0].arguments, [
+				{ error, request, includeHeaders: undefined }
+			]);
 		});
 
 		it('calls `next` with the original error', () => {
-			expect(next).toHaveBeenCalledWith(error);
+			assert.strictEqual(next.mock.callCount(), 1);
+			assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 		});
 
 		describe('when the filter option is set', () => {
 			let filter;
 
 			beforeEach(() => {
-				logHandledError.mockReset();
-				next.mockReset();
+				logRecoverableError.mock.resetCalls();
+				logHandledError.mock.resetCalls();
+				next.mock.resetCalls();
 			});
 
 			describe('when the filter returns `true`', () => {
 				beforeEach(() => {
-					filter = jest.fn().mockReturnValue(true);
-					middleware = createErrorLoggingMiddleware({
-						filter
-					});
+					filter = mock.fn(() => true);
+					middleware = createErrorLoggingMiddleware({ filter });
 					middleware(error, request, response, next);
 				});
 
 				it('logs the error and request', () => {
-					expect(logHandledError).toHaveBeenCalledWith({
-						error,
-						request
-					});
+					assert.strictEqual(logHandledError.mock.callCount(), 1);
+					assert.partialDeepStrictEqual(logHandledError.mock.calls[0].arguments, [
+						{ error, request }
+					]);
 				});
 
 				it('does not log a recoverable error', () => {
-					expect(logRecoverableError).toHaveBeenCalledTimes(0);
+					assert.strictEqual(logRecoverableError.mock.callCount(), 0);
 				});
 
 				it('calls `next` with the original error', () => {
-					expect(next).toHaveBeenCalledWith(error);
+					assert.strictEqual(next.mock.callCount(), 1);
+					assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 				});
 			});
 
 			describe('when the filter returns `false`', () => {
 				beforeEach(() => {
-					filter = jest.fn().mockReturnValue(false);
-					middleware = createErrorLoggingMiddleware({
-						filter
-					});
+					filter = mock.fn(() => false);
+					middleware = createErrorLoggingMiddleware({ filter });
 					middleware(error, request, response, next);
 				});
 
 				it('does not log the error and request', () => {
-					expect(logHandledError).toHaveBeenCalledTimes(0);
+					assert.strictEqual(logHandledError.mock.callCount(), 0);
 				});
 
 				it('does not log a recoverable error', () => {
-					expect(logRecoverableError).toHaveBeenCalledTimes(0);
+					assert.strictEqual(logRecoverableError.mock.callCount(), 0);
 				});
 
 				it('calls `next` with the original error', () => {
-					expect(next).toHaveBeenCalledWith(error);
+					assert.strictEqual(next.mock.callCount(), 1);
+					assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 				});
 			});
 
@@ -108,7 +108,7 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 
 				beforeEach(() => {
 					filterError = new Error('Bad Filter!');
-					filter = jest.fn().mockImplementation(() => {
+					filter = mock.fn(() => {
 						throw filterError;
 					});
 					middleware = createErrorLoggingMiddleware({
@@ -118,24 +118,25 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 				});
 
 				it('logs the error and request', () => {
-					expect(logHandledError).toHaveBeenCalledWith({
-						error,
-						request
-					});
+					assert.strictEqual(logHandledError.mock.callCount(), 1);
+					assert.partialDeepStrictEqual(logHandledError.mock.calls[0].arguments, [
+						{ error, request }
+					]);
 				});
 
 				it('logs a recoverable error indicating that the filter failed', () => {
 					const expectedError = new Error('Log filtering failed');
 					expectedError.code = 'LOG_FILTER_FAILURE';
 					expectedError.cause = filterError;
-					expect(logRecoverableError).toHaveBeenCalledWith({
-						error: expectedError,
-						request
-					});
+					assert.strictEqual(logRecoverableError.mock.callCount(), 1);
+					assert.partialDeepStrictEqual(logRecoverableError.mock.calls[0].arguments, [
+						{ error: expectedError, request }
+					]);
 				});
 
 				it('calls `next` with the original error', () => {
-					expect(next).toHaveBeenCalledWith(error);
+					assert.strictEqual(next.mock.callCount(), 1);
+					assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 				});
 			});
 		});
@@ -143,21 +144,23 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 		describe('when the filter option is set incorrectly', () => {
 			it('throws an error', () => {
 				const expectedError = new TypeError('The `filter` option must be a function');
-				expect(() => {
+				assert.throws(() => {
 					createErrorLoggingMiddleware({
 						filter: {}
 					});
-				}).toThrow(expectedError);
-				expect(() => {
+				}, expectedError);
+				assert.throws(() => {
 					createErrorLoggingMiddleware({
 						filter: 'string'
 					});
-				}).toThrow(expectedError);
+				}, expectedError);
 			});
 		});
 
 		describe('when the includeHeaders option is set', () => {
 			beforeEach(() => {
+				logHandledError.mock.resetCalls();
+				next.mock.resetCalls();
 				middleware = createErrorLoggingMiddleware({
 					includeHeaders: ['header-1', 'header-2']
 				});
@@ -165,15 +168,15 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('logs the error and request passing on the includeHeaders option', () => {
-				expect(logHandledError).toHaveBeenCalledWith({
-					error,
-					request,
-					includeHeaders: ['header-1', 'header-2']
-				});
+				assert.strictEqual(logHandledError.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(logHandledError.mock.calls[0].arguments, [
+					{ error, request, includeHeaders: ['header-1', 'header-2'] }
+				]);
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toHaveBeenCalledWith(error);
+				assert.strictEqual(next.mock.callCount(), 1);
+				assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 			});
 		});
 
@@ -182,21 +185,22 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 				const expectedError = new TypeError(
 					'The `includeHeaders` option must be an array of strings'
 				);
-				expect(() => {
+				assert.throws(() => {
 					createErrorLoggingMiddleware({
 						includeHeaders: {}
 					});
-				}).toThrow(expectedError);
-				expect(() => {
+				}, expectedError);
+				assert.throws(() => {
 					createErrorLoggingMiddleware({
 						includeHeaders: ['string', 123, 'another string']
 					});
-				}).toThrow(expectedError);
+				}, expectedError);
 			});
 		});
 
 		describe('when the logger option is set', () => {
 			beforeEach(() => {
+				logHandledError.mock.resetCalls();
 				middleware = createErrorLoggingMiddleware({
 					logger: 'mock-logger'
 				});
@@ -204,16 +208,17 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('passes on the custom logger to the log method', () => {
-				expect(logHandledError).toHaveBeenCalledWith({
-					error,
-					request,
-					logger: 'mock-logger'
-				});
+				assert.strictEqual(logHandledError.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(logHandledError.mock.calls[0].arguments, [
+					{ error, request, logger: 'mock-logger' }
+				]);
 			});
 		});
 
 		describe('when the logUserErrorsAsWarnings option is set', () => {
 			beforeEach(() => {
+				logHandledError.mock.resetCalls();
+				next.mock.resetCalls();
 				middleware = createErrorLoggingMiddleware({
 					logUserErrorsAsWarnings: true
 				});
@@ -221,21 +226,22 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('it passes the option down to the error logging function', () => {
-				expect(logHandledError).toHaveBeenCalledWith({
-					error,
-					request,
-					logUserErrorsAsWarnings: true
-				});
+				assert.strictEqual(logHandledError.mock.callCount(), 1);
+				assert.partialDeepStrictEqual(logHandledError.mock.calls[0].arguments, [
+					{ error, request, logUserErrorsAsWarnings: true }
+				]);
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toHaveBeenCalledWith(error);
+				assert.strictEqual(next.mock.callCount(), 1);
+				assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 			});
 		});
 
 		describe('when logging fails', () => {
 			beforeEach(() => {
-				logHandledError.mockImplementation(() => {
+				next.mock.resetCalls();
+				logHandledError.mock.mockImplementationOnce(() => {
 					throw new Error('logger error');
 				});
 
@@ -243,7 +249,8 @@ describe('@dotcom-reliability-kit/middleware-log-errors', () => {
 			});
 
 			it('calls `next` with the original error', () => {
-				expect(next).toHaveBeenCalledWith(error);
+				assert.strictEqual(next.mock.callCount(), 1);
+				assert.deepStrictEqual(next.mock.calls[0].arguments, [error]);
 			});
 		});
 	});

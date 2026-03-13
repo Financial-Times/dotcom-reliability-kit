@@ -1,13 +1,13 @@
 const appInfo = require('@dotcom-reliability-kit/app-info');
 const { environment } = require('@dotcom-reliability-kit/app-info');
-const logger1 = require('@dotcom-reliability-kit/logger');
-const logger2 = require('@dotcom-reliability-kit/logger').default;
+const { default: logger1 } = require('@dotcom-reliability-kit/logger');
+const { default: logger2 } = require('@dotcom-reliability-kit/logger').default;
 const { Logger, transforms } = require('@dotcom-reliability-kit/logger');
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
-const serializeRequest = require('@dotcom-reliability-kit/serialize-request');
-const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
-const renderErrorInfoPage = require('@dotcom-reliability-kit/middleware-render-error-info');
-const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
+const { default: serializeError } = require('@dotcom-reliability-kit/serialize-error');
+const { default: serializeRequest } = require('@dotcom-reliability-kit/serialize-request');
+const { default: renderErrorInfoPage } = require('@dotcom-reliability-kit/middleware-render-error-info');
+const { default: registerCrashHandler } = require('@dotcom-reliability-kit/crash-handler');
+const { default: createErrorLogger } = require('@dotcom-reliability-kit/middleware-log-errors');
 
 /**
  * @typedef {object} TypeTests

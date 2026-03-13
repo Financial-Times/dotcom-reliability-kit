@@ -1,12 +1,8 @@
-const serializeError = require('../../../lib/index');
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import serializeError from '../../../lib/index.js';
 
 describe('@dotcom-reliability-kit/serialize-error', () => {
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			expect(serializeError.default).toStrictEqual(serializeError);
-		});
-	});
-
 	describe('when called with an error object', () => {
 		let error;
 
@@ -16,7 +12,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		});
 
 		it('returns the expected serialized error properties', () => {
-			expect(serializeError(error)).toMatchObject({
+			assert.partialDeepStrictEqual(serializeError(error), {
 				// MD5 hash of the first two lines of the mock error stack above
 				fingerprint: '9b5df16d105739b263ecfbf4e8a31f95',
 				name: 'Error',
@@ -34,7 +30,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the error is an instance of something other than `Error`', () => {
 			it('returns the class name in the serialized error properties', () => {
 				error = new TypeError('mock type error');
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					name: 'TypeError'
 				});
 			});
@@ -43,7 +39,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the error has a `code` property', () => {
 			it('returns the code in the serialized error properties', () => {
 				error.code = 'MOCK_CODE';
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					code: 'MOCK_CODE'
 				});
 			});
@@ -51,7 +47,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `code` property is not a string', () => {
 				it('casts the given value to a string', () => {
 					error.code = 123;
-					expect(serializeError(error)).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error), {
 						code: '123'
 					});
 				});
@@ -61,7 +57,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the error has an `isOperational` property', () => {
 			it('returns whether the error is operational in the serialized error properties', () => {
 				error.isOperational = true;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					isOperational: true
 				});
 			});
@@ -69,7 +65,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `isOperational` property is not a boolean', () => {
 				it('casts the given value to a boolean', () => {
 					error.isOperational = 1;
-					expect(serializeError(error)).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error), {
 						isOperational: true
 					});
 				});
@@ -79,7 +75,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the error has a `relatesToSystems` property', () => {
 			it('includes the related systems in the error', () => {
 				error.relatesToSystems = ['system-one'];
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					relatesToSystems: ['system-one']
 				});
 			});
@@ -87,7 +83,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `relatesToSystems` property is not an array', () => {
 				it('is set to the default empty array', () => {
 					error.relatesToSystems = 'system-one';
-					expect(serializeError(error)).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error), {
 						relatesToSystems: []
 					});
 				});
@@ -98,10 +94,10 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
 				const rootCauseErrorInstance = new Error('mock root cause error message');
 				error.cause = rootCauseErrorInstance;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					cause: serializeError(rootCauseErrorInstance)
 				});
-				expect(serializeError(error).cause).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error).cause, {
 					message: 'mock root cause error message'
 				});
 			});
@@ -109,7 +105,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `cause` property is not an Error instance', () => {
 				it('serializes it', () => {
 					error.cause = 'foo';
-					expect(serializeError(error).cause).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error).cause, {
 						message: 'foo'
 					});
 				});
@@ -123,21 +119,22 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 					'aggregate error message'
 				);
 
-				expect(serializeError(aggregateError)).toMatchObject({
+				const serializedError = serializeError(aggregateError);
+				const subErrors = serializedError.errors;
+				assert.partialDeepStrictEqual(serializedError, {
 					message: 'aggregate error message',
-					errors: [
-						{ message: 'error one' },
-						{ message: 'error two' },
-						{ message: 'error three' }
-					]
+					errors: []
 				});
+				assert.partialDeepStrictEqual(subErrors[0], { message: 'error one' });
+				assert.partialDeepStrictEqual(subErrors[1], { message: 'error two' });
+				assert.partialDeepStrictEqual(subErrors[2], { message: 'error three' });
 			});
 		});
 
 		describe('when the error has a `statusCode` property', () => {
 			it('returns the status code in the serialized error properties', () => {
 				error.statusCode = 456;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					statusCode: 456
 				});
 			});
@@ -145,7 +142,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `statusCode` property is not a number', () => {
 				it('casts the given value to a number', () => {
 					error.statusCode = '123';
-					expect(serializeError(error)).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error), {
 						statusCode: 123
 					});
 				});
@@ -155,7 +152,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the error has a `status` property', () => {
 			it('returns the status code in the serialized error properties', () => {
 				error.status = 456;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					statusCode: 456
 				});
 			});
@@ -163,7 +160,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `status` property is not a number', () => {
 				it('casts the given value to a number', () => {
 					error.status = '123';
-					expect(serializeError(error)).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error), {
 						statusCode: 123
 					});
 				});
@@ -175,7 +172,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				error.data = {
 					isMockData: true
 				};
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					data: {
 						isMockData: true
 					}
@@ -185,7 +182,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `data` property is not an object', () => {
 				it('defaults the data to an empty object', () => {
 					error.data = null;
-					expect(serializeError(error)).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error), {
 						data: {}
 					});
 				});
@@ -201,7 +198,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		});
 
 		it('returns the expected serialized error properties', () => {
-			expect(serializeError(error)).toMatchObject({
+			assert.partialDeepStrictEqual(serializeError(error), {
 				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',
@@ -218,7 +215,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the object has a `name` property', () => {
 			it('returns the name in the serialized error properties', () => {
 				error.name = 'MockError';
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					name: 'MockError'
 				});
 			});
@@ -227,7 +224,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the object has a `code` property', () => {
 			it('returns the code in the serialized error properties', () => {
 				error.code = 'MOCK_CODE';
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					code: 'MOCK_CODE'
 				});
 			});
@@ -236,7 +233,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the object has a `message` property', () => {
 			it('returns the message in the serialized error properties', () => {
 				error.message = 'mock message';
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					message: 'mock message'
 				});
 			});
@@ -245,7 +242,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the object has an `isOperational` property', () => {
 			it('returns whether the error is operational in the serialized error properties', () => {
 				error.isOperational = true;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					isOperational: true
 				});
 			});
@@ -254,7 +251,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the error has a `relatesToSystems` property', () => {
 			it('includes the related systems in the error', () => {
 				error.relatesToSystems = ['system-one'];
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					relatesToSystems: ['system-one']
 				});
 			});
@@ -262,7 +259,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			describe('when the `relatesToSystems` property is not an array', () => {
 				it('is set to the default empty array', () => {
 					error.relatesToSystems = 'system-one';
-					expect(serializeError(error)).toMatchObject({
+					assert.partialDeepStrictEqual(serializeError(error), {
 						relatesToSystems: []
 					});
 				});
@@ -273,10 +270,10 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
 				const rootCauseErrorInstance = new Error('mock root cause error message');
 				error.cause = rootCauseErrorInstance;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					cause: serializeError(rootCauseErrorInstance)
 				});
-				expect(serializeError(error).cause).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error).cause, {
 					message: 'mock root cause error message'
 				});
 			});
@@ -285,7 +282,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the object has a `statusCode` property', () => {
 			it('returns the status code in the serialized error properties', () => {
 				error.statusCode = 456;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					statusCode: 456
 				});
 			});
@@ -294,7 +291,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 		describe('when the object has a `status` property', () => {
 			it('returns the status code in the serialized error properties', () => {
 				error.status = 456;
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					statusCode: 456
 				});
 			});
@@ -305,7 +302,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				error.data = {
 					isMockData: true
 				};
-				expect(serializeError(error)).toMatchObject({
+				assert.partialDeepStrictEqual(serializeError(error), {
 					data: {
 						isMockData: true
 					}
@@ -317,7 +314,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 	describe('when called with a string', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = 'mock message';
-			expect(serializeError(error)).toMatchObject({
+			assert.partialDeepStrictEqual(serializeError(error), {
 				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',
@@ -335,7 +332,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 	describe('when called with a number', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = 123;
-			expect(serializeError(error)).toMatchObject({
+			assert.partialDeepStrictEqual(serializeError(error), {
 				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',
@@ -353,7 +350,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 	describe('when called with an array', () => {
 		it('returns the expected serialized error properties', () => {
 			const error = ['mock', 'message'];
-			expect(serializeError(error)).toMatchObject({
+			assert.partialDeepStrictEqual(serializeError(error), {
 				fingerprint: null,
 				name: 'Error',
 				code: 'UNKNOWN',

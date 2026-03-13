@@ -1,7 +1,7 @@
-const pino = require('pino');
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
-const clone = require('lodash.clonedeep');
-const appInfo = require('@dotcom-reliability-kit/app-info');
+import appInfo from '@dotcom-reliability-kit/app-info';
+import serializeError from '@dotcom-reliability-kit/serialize-error';
+import clone from 'lodash.clonedeep';
+import pino from 'pino';
 
 /**
  * @import {
@@ -15,7 +15,7 @@ const appInfo = require('@dotcom-reliability-kit/app-info');
  *   LogTransform,
  *   LogTransport,
  *   PrivateLoggerOptions
- * } from '../types/logger';
+ * } from '../types/logger.d.ts';
  */
 
 /**
@@ -45,45 +45,11 @@ const logLevelToTransportMethodMap = {
 const logLevels = Object.keys(logLevelToTransportMethodMap);
 
 /**
- * Whether log prettification is available. This is based
- * on whether pino-pretty is installed in the application.
- *
- * @type {boolean}
- */
-const prettificationAvailable = (() => {
-	try {
-		// We have to `require` here rather than `require.resolve`
-		// which is less than ideal but otherwise this is actually
-		// impossible to test with Jest. Both technically do the
-		// same file system work though, and it's only done once
-		// when the module first loads. It's also safe to ts-ignore
-		// this one because it's never actually used directly.
-		require('pino-pretty');
-		return true;
-	} catch (_) {
-		return false;
-	}
-})();
-
-/**
- * Whether log prettification is allowed. We never allow log
- * prettification if the `NODE_ENV` environment variable is
- * set to "production". We also disallow prettification if the
- * cloud provider is AWS, pino-pretty does not work well with
- * CloudWatch logs
- *
- * @type {boolean}
- */
-const prettificationAllowed =
-	!['production', 'prod', 'p'].includes(appInfo.environment.toLowerCase()) &&
-	appInfo.cloudProvider !== 'aws';
-
-/**
  * Class representing a logger.
  *
  * @implements {LoggerInterface}
  */
-module.exports = class Logger {
+export default class Logger {
 	/**
 	 * @type {LogLevel}
 	 */
@@ -192,12 +158,6 @@ module.exports = class Logger {
 			this.#transforms = options.transforms;
 		}
 
-		// Default and set the prettifier option
-		const withPrettifier =
-			typeof options.withPrettifier === 'boolean'
-				? options.withPrettifier
-				: !process.env.LOG_DISABLE_PRETTIFIER;
-
 		if (options._transport) {
 			// If we have a configured transport, use it. This means
 			// that a child logger was created with an already-instantated
@@ -216,7 +176,17 @@ module.exports = class Logger {
 				messageKey: 'message', // This is for backwards compatibility with our existing logs
 				timestamp: pino.stdTimeFunctions.isoTime
 			};
-			if (withPrettifier && prettificationAllowed && prettificationAvailable) {
+
+			// Default and set the prettifier option
+			const withPrettifier =
+				typeof options.withPrettifier === 'boolean'
+					? options.withPrettifier
+					: !process.env.LOG_DISABLE_PRETTIFIER;
+
+			// If we're in production or on AWS, never enable the prettifier
+			const { cloudProvider, environment } = options.appInfo || appInfo;
+			const isProduction = ['production', 'prod', 'p'].includes(environment.toLowerCase());
+			if (withPrettifier && !isProduction && cloudProvider !== 'aws') {
 				pinoOptions.transport = {
 					target: 'pino-pretty',
 					worker: { execArgv: [] },
@@ -226,6 +196,7 @@ module.exports = class Logger {
 					}
 				};
 			}
+
 			this.#logTransport = pino(pinoOptions);
 			this.#logTransport.level = this.#logLevel;
 		}
@@ -490,4 +461,4 @@ module.exports = class Logger {
 			)
 		);
 	}
-};
+}
