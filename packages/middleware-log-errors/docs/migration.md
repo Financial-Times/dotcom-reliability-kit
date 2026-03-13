@@ -20,6 +20,7 @@ Emoji           | Label             | Meaning
 * [Migrating from v5 to v6](#migrating-from-v5-to-v6)
   * [Node.js 20 is no longer supported](#nodejs-20-is-no-longer-supported)
   * [Node.js 22.11 is no longer supported](#nodejs-2211-is-no-longer-supported)
+  * [Native ESM](#native-esm)
   * [Stricter TypeScript requirements](#stricter-typescript-requirements)
 
 
@@ -81,6 +82,16 @@ You can safely migrate to this version of the error logging middleware if your a
 ### Node.js 22.11 is no longer supported
 
 **:red_circle: Breaking:** this version drops support for Node.js v22.11 or lower. If your app is already using Node.js v22.12 then you may be able to migrate without code changes. This is so that we can publish native ESM modules without requiring complex changes in our consuming applications. [See #1479 for more information](https://github.com/Financial-Times/dotcom-reliability-kit/issues/1479).
+
+### Native ESM
+
+**:orange_circle: Possibly Breaking:** this version publishes code as [native ECMAScript modules](https://nodejs.org/api/esm.html). If you are already using ESM yourself then this shouldn't cause issues, however systems written in CommonJS may need their imports updating if they use the default exports from this package:
+
+```js
+const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
+// becomes
+const { default: createErrorLogger } = require('@dotcom-reliability-kit/middleware-log-errors');
+```
 
 ### Stricter TypeScript requirements
 
