@@ -1,32 +1,32 @@
 {
 	"compilerOptions": {
-		"alwaysStrict": true,
+		"declaration": true,
+		"declarationMap": true,
 		"checkJs": true,
+		"erasableSyntaxOnly": true,
 		"esModuleInterop": true,
-		"maxNodeModuleJsDepth": 0,
+		"lib": ["DOM", "ES2024", "ESNext.Array", "ESNext.Collection"],
 		"module": "nodenext",
 		"moduleResolution": "nodenext",
 		"noEmit": true,
+		"noImplicitAny": false, // FIXME: we should aim to enable this
 		"noImplicitOverride": true,
 		"noImplicitThis": true,
 		"resolveJsonModule": true,
+		"rewriteRelativeImportExtensions": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
 		"strictBindCallApply": true,
 		"strictFunctionTypes": true,
 		"strictNullChecks": true,
 		"strictPropertyInitialization": true,
-		"target": "es2024",
+		"target": "ES2024",
 		"useUnknownInCatchVariables": true,
-		"types": []
+		"verbatimModuleSyntax": true
 	},
 	"exclude": [
-		"**/coverage",
-		"node_modules",
-		"**/*.spec.js",
-		"test/**/*",
+		"**/dist/**/*",
 		"**/test/**/*"
-	],
-	"include": [
-		"**/*.js",
-		"**/*.d.ts"
 	]
 }
