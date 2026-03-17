@@ -1,4 +1,3 @@
 .husky/_
-coverage
+dist
 node_modules/
-resources/logos/dist

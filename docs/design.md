@@ -4,7 +4,7 @@
 This document outlines the design decisions made in this project.
 
   * [Languages](#languages)
-    * [JavaScript](#javascript)
+    * [TypeScript](#typescript)
     * [Native ES Modules](#native-es-modules)
   * [Tooling](#tooling)
     * [Testing](#testing)
@@ -17,17 +17,13 @@ This document outlines the design decisions made in this project.
 
 We make two language decisions in this project:
 
-  1. We use JavaScript rather than TypeScript
+  1. We author code in TypeScript (as of 2026, we previously authored JavaScript)
 
   2. We use Native ES Modules (as of 2026, we previously published CommonJS modules)
 
-The combination of the above allows us to work on and publish the packages in this monorepo without needing a build step. This means that the code we write is exactly the same as the code run inside our applications.
+### TypeScript
 
-### JavaScript
-
-In terms of TypeScript, the key benefits are having type safety and type hinting in your editor. We can achieve both of these without writing TypeScript. Using [JavaScript with JSDoc comments to document types](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html), VSCode (used by the majority of our engineers) offers the same level of type hinting as it does with TypeScript. It's also possible to run the TypeScript type checker against JavaScript code to verify that everything is type safe (e.g. using `tsc --checkJS`).
-
-In order to be useful for TypeScript projects, we do still need to publish our modules with TypeScript type declaration files (`.d.ts`).
+In terms of TypeScript, the key benefits are having type safety and type hinting in your editor. We previously used [JavaScript with JSDoc comments to document types](https://www.typescriptlang.org/docs/handbook/type-checking-javascript-files.html) however support is lacking and we decided to move to using TypeScript with a build step in 2026.
 
 ### Native ES Modules
 

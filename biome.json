@@ -3,6 +3,7 @@
 	"extends": ["./packages/biome-config/config.json"],
 	"files": {
 		"includes": [
+			"!**/dist",
 			"!test/modules"
 		]
 	},
