@@ -23,7 +23,7 @@
     "@dotcom-reliability-kit/log-error": "^5.1.8",
     "@dotcom-reliability-kit/logger": "^4.2.8",
     "@dotcom-reliability-kit/serialize-error": "^4.2.0",
-    "entities": "^7.0.1"
+    "entities": "^8.0.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.6"
