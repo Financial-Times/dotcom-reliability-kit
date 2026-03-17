@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it } from 'node:test';
-import serializeError from '../../../lib/index.js';
+import serializeError from '../../index.ts';
 
 describe('@dotcom-reliability-kit/serialize-error', () => {
 	describe('when called with an error object', () => {
-		let error;
+		let error: Error & Record<string, any>;
 
 		beforeEach(() => {
 			error = new Error('mock message');
@@ -120,7 +120,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 				);
 
 				const serializedError = serializeError(aggregateError);
-				const subErrors = serializedError.errors;
+				const subErrors = serializedError.errors as Error[];
 				assert.partialDeepStrictEqual(serializedError, {
 					message: 'aggregate error message',
 					errors: []
@@ -191,7 +191,7 @@ describe('@dotcom-reliability-kit/serialize-error', () => {
 	});
 
 	describe('when called with an error-like object', () => {
-		let error;
+		let error: Record<string, any>;
 
 		beforeEach(() => {
 			error = {};

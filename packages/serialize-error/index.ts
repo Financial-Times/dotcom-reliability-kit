@@ -1,23 +1,40 @@
 import crypto from 'node:crypto';
 
 /**
- * @import { ErrorLike, SerializedError } from '@dotcom-reliability-kit/serialize-error'
+ * Represents an error-like object that is serializable.
  */
+export type ErrorLike = string | (Error & Record<string, any>);
+
+/**
+ * Represents an error as a plain object.
+ */
+export type SerializedError = {
+	fingerprint: string | null;
+	name: string;
+	code: string;
+	message: string;
+	isOperational: boolean;
+	relatesToSystems: string[];
+	cause: SerializedError | null;
+	errors?: SerializedError[];
+	stack: string | null;
+	statusCode: number | null;
+	data: {
+		[key: string]: any;
+	};
+};
 
 /**
  * Serialize an error object so that it can be consistently logged or output as JSON.
- *
- * @param {unknown} error
- * @returns {SerializedError}
  */
-export default function serializeError(error) {
+export default function serializeError(error: unknown) {
 	if (typeof error !== 'object' || Array.isArray(error) || error === null) {
 		return createSerializedError({
 			message: `${error}`
 		});
 	}
 
-	const errorProperties = {};
+	const errorProperties: Partial<SerializedError> = {};
 
 	// If set, error name is cast to a string
 	if ('name' in error) {
@@ -64,13 +81,19 @@ export default function serializeError(error) {
 
 	// If set, cast the error status code to a number
 	if ('statusCode' in error) {
-		errorProperties.statusCode =
-			typeof error.statusCode === 'string'
-				? parseInt(error.statusCode, 10)
-				: error.statusCode;
+		if (typeof error.statusCode === 'string') {
+			errorProperties.statusCode = parseInt(error.statusCode, 10);
+		}
+		if (typeof error.statusCode === 'number') {
+			errorProperties.statusCode = error.statusCode;
+		}
 	} else if ('status' in error) {
-		errorProperties.statusCode =
-			typeof error.status === 'string' ? parseInt(error.status, 10) : error.status;
+		if (typeof error.status === 'string') {
+			errorProperties.statusCode = parseInt(error.status, 10);
+		}
+		if (typeof error.status === 'number') {
+			errorProperties.statusCode = error.status;
+		}
 	}
 
 	// Only include additional error data if it's defined as an object
@@ -95,11 +118,8 @@ export default function serializeError(error) {
 
 /**
  * Create a new serialized error object.
- *
- * @param {Record<string, any>} properties
- * @returns {SerializedError}
  */
-function createSerializedError(properties) {
+function createSerializedError(properties: Record<string, any>): SerializedError {
 	return Object.assign(
 		{},
 		{
