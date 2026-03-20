@@ -1,0 +1,32 @@
+{
+  "name": "@dotcom-reliability-kit/{{name}}",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "TODO write a description",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Financial-Times/dotcom-reliability-kit.git",
+    "directory": "packages/{{name}}"
+  },
+  "homepage": "https://github.com/Financial-Times/dotcom-reliability-kit/tree/main/packages/{{name}}#readme",
+  "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: {{name}}\"",
+  "license": "MIT",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:end-to-end",
+    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude='**/*.spec.ts' --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 'test/unit/**/*.spec.ts'",
+    "test:end-to-end": "node --test 'test/end-to-end/**/*.spec.ts'"
+  },
+  "engines": {
+    "node": "^22.12 || ^24"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!*.tsbuildinfo"
+  ]
+}
