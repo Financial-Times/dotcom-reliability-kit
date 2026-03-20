@@ -37,7 +37,7 @@ In order to contribute and make changes to this repository, you'll need some sof
 
   * [Node.js](https://nodejs.dev) on a version defined in `package.json`: `engines.node`
 
-  * [npm](https://www.npmjs.com) on a version defined in `package.json`: `engines.npm` (usually bundled with Node.js)
+  * [npm](https://www.npmjs.com) (usually bundled with Node.js)
 
 ### Optional
 
@@ -52,8 +52,14 @@ To set up this repo to make changes locally, make sure you have all of the [requ
 
   * Clone this repo and `cd` into it
   * Run `npm install` to install dependencies
+  * Run `npm run build` to build JavaScript and type definitions
   * Run `npm test` to verify that everything's working
 
+When making changes to Reliability Kit packages it's useful to automatically build JavaScript when the TypeScript source files change. You can do with the following:
+
+```sh
+npm run build:watch
+```
 
 ## Creating a new package
 
@@ -171,9 +177,7 @@ The linters are also run on pull requests and linting errors will block merging,
 
 ### Type safety
 
-We do not write TypeScript code, but we _do_ write [thorough JSDoc](https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html) and publish type declarations, then test against it which gives us all the benefits of TypeScript ([more info](./design.md#languages)).
-
-We do not compile the code in our packages, but we do check that all variables are set to the correct types. If there are any type errors then you should see these in your editor if you're using VS Code. Otherwise type checking can be manually run as part of linting:
+We use TypeScript to ensure our packages are type safe. If there are any type errors then you should see these in your editor if you're using VS Code. Otherwise type checking can be manually run as part of linting:
 
 ```
 npm run lint
@@ -183,7 +187,7 @@ As with Biome, we check types in pull requests and errors will block merging, so
 
 ### Unit tests
 
-We run unit tests with [Jest](https://jestjs.io/) across most of our packages and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`). You can run the tests with the following:
+We run unit tests with [the Node test runner](https://nodejs.org/api/test.html) across most of our packages and aim for [100% coverage](#coverage). Tests are written within each package (e.g. `packages/example/test/example.spec.js`). You can run the tests with the following:
 
 ```
 npm run test
@@ -195,14 +199,21 @@ To run the tests for a single package, use:
 npm run test -w packages/<name>
 ```
 
+You can also run unit and end-to-end tests specifically. You might want to do this to get a quick sense check on your code, because unit tests generally run a lot faster. To do this, replace the `test` command above with either `test:unit` or `test:end-to-end`, e.g.
+
+```
+npm run test:unit
+npm run test:end-to-end -w packages/<name>
+```
+
 Tests are also run on pull requests and failing tests will block merging, so it's useful to check before opening a PR.
 
 #### Coverage
 
-We intentionally fail the unit tests if coverage drops below 100%. This library is meant to help our applications be more reliable and so it's important that we cover as many edge cases as possible. If you have a valid reason for some code not to be covered, e.g. an empty function as a default parameter, then [use code comments to disable coverage](https://github.com/gotwarlost/istanbul/blob/master/ignoring-code-for-coverage.md) for that line or block:
+We intentionally fail the unit tests if coverage drops below 100%. This library is meant to help our applications be more reliable and so it's important that we cover as many edge cases as possible. If you have a valid reason for some code not to be covered, e.g. an empty function as a default parameter, then [use code comments to disable coverage](https://nodejs.org/en/learn/test-runner/collecting-code-coverage#using-comments) for that line or block:
 
 ```js
-/* istanbul ignore next */
+/* node:coverage ignore next */
 function example() { console.log('this is not covered'); }
 ```
 

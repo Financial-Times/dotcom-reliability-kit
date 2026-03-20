@@ -1,8 +1,9 @@
-const { OTLPTraceExporter } = require('@opentelemetry/exporter-trace-otlp-proto');
-const { NoopSpanProcessor, TraceIdRatioBasedSampler } = require('@opentelemetry/sdk-node').tracing;
+import logger from '@dotcom-reliability-kit/logger';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-proto';
+import { tracing } from '@opentelemetry/sdk-node';
+import { TRACING_USER_AGENT } from './user-agents.js';
 
-const logger = require('@dotcom-reliability-kit/logger');
-const { TRACING_USER_AGENT } = require('./user-agents');
+const { NoopSpanProcessor, TraceIdRatioBasedSampler } = tracing;
 
 /**
  * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
@@ -17,7 +18,7 @@ const DEFAULT_SAMPLE_PERCENTAGE = 5;
  * @param {TracingOptions} options
  * @returns {Partial<NodeSDKConfiguration>}
  */
-exports.createTracingConfig = function createTracingConfig(options) {
+export function createTracingConfig(options) {
 	/** @type {Partial<NodeSDKConfiguration>} */
 	const config = {};
 
@@ -61,4 +62,4 @@ exports.createTracingConfig = function createTracingConfig(options) {
 	}
 
 	return config;
-};
+}

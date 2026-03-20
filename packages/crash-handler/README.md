@@ -27,9 +27,18 @@ Include in your code:
 
 ```js
 import registerCrashHandler from '@dotcom-reliability-kit/crash-handler';
-// or
-const registerCrashHandler = require('@dotcom-reliability-kit/crash-handler');
 ```
+
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
 
 ### `registerCrashHandler`
 

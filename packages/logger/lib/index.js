@@ -1,17 +1,8 @@
-const Logger = require('./logger');
-const legacyMask = require('./transforms/legacy-mask');
+import Logger from './logger.js';
+import legacyMask from './transforms/legacy-mask.js';
 
-/**
- * @import { DefaultLogger, Transforms } from '@dotcom-reliability-kit/logger'
- */
+export const transforms = { legacyMask };
+export { Logger };
 
-/** @type {Transforms} */
-const transforms = { legacyMask };
-
-/** @type {Logger & DefaultLogger} */
-module.exports = new Logger();
-module.exports.Logger = Logger;
-module.exports.transforms = transforms;
-
-// @ts-expect-error
-module.exports.default = module.exports;
+const logger = new Logger();
+export default logger;

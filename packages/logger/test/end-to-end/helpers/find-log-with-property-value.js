@@ -11,8 +11,6 @@
  * @returns {{[key: string]: any}|null}
  *     Returns the found log or null if one isn't found.
  */
-function findLogWithPropertyValue(logs, property, value) {
+export default function findLogWithPropertyValue(logs, property, value) {
 	return logs.find((log) => log[property] === value) || null;
 }
-
-module.exports = findLogWithPropertyValue;

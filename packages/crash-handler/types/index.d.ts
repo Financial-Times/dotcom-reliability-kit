@@ -1,4 +1,4 @@
-import { Logger } from '@dotcom-reliability-kit/logger';
+import type { Logger } from '@dotcom-reliability-kit/logger';
 
 declare module '@dotcom-reliability-kit/crash-handler' {
 	export type CrashHandlerOptions = {
@@ -6,8 +6,5 @@ declare module '@dotcom-reliability-kit/crash-handler' {
 		process?: NodeJS.Process;
 	};
 
-	declare function registerCrashHandler(options?: CrashHandlerOptions): void;
-
-	export default registerCrashHandler;
-	export = registerCrashHandler;
+	export default function registerCrashHandler(options?: CrashHandlerOptions): void;
 }

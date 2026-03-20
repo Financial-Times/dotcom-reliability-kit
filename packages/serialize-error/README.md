@@ -34,9 +34,18 @@ Include in your code:
 
 ```js
 import serializeError from '@dotcom-reliability-kit/serialize-error';
-// or
-const serializeError = require('@dotcom-reliability-kit/serialize-error');
 ```
+
+> [!TIP]
+> If you're using this package with TypeScript, we recommend using the following settings in your `tsconfig.json` file to avoid type errors:
+>
+> ```json
+> {
+>     "esModuleInterop": true,
+>     "module": "nodenext",
+>     "moduleResolution": "nodenext"
+> }
+> ```
 
 ### `serializeError`
 

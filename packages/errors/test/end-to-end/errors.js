@@ -1,13 +1,13 @@
-const {
+import {
 	BaseError,
 	DataStoreError,
 	HttpError,
 	OperationalError,
 	UpstreamServiceError,
 	UserInputError
-} = require('../../lib');
+} from '@dotcom-reliability-kit/errors';
 
-module.exports = {
+export default {
 	// BaseError tests
 	BaseError: new BaseError(),
 	'BaseError with message': new BaseError('mock message'),

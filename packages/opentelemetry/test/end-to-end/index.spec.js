@@ -1,5 +1,7 @@
-const { fork } = require('node:child_process');
-const { setTimeout } = require('node:timers/promises');
+import assert from 'node:assert/strict';
+import { fork } from 'node:child_process';
+import { after, before, describe, it } from 'node:test';
+import { setTimeout } from 'node:timers/promises';
 
 function waitForBaseUrl(childProcess) {
 	return new Promise((resolve) => {
@@ -31,9 +33,9 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 	let exporterStdout = '';
 	let exporterBaseUrl;
 
-	beforeAll(async () => {
+	before(async () => {
 		// Set up a mock collector
-		collector = fork(`${__dirname}/fixtures/collector.js`, {
+		collector = fork(`${import.meta.dirname}/fixtures/collector.js`, {
 			env: {
 				...process.env,
 				NODE_ENV: 'production',
@@ -50,7 +52,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 		collectorBaseUrl = await waitForBaseUrl(collector);
 
 		// Set up a Node.js app that sends Opentelemetry metrics and traces
-		exporter = fork(`${__dirname}/fixtures/app.js`, {
+		exporter = fork(`${import.meta.dirname}/fixtures/app.js`, {
 			env: {
 				...process.env,
 				NODE_ENV: 'production',
@@ -59,7 +61,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 				OPENTELEMETRY_TRACING_SAMPLE_PERCENTAGE: '100',
 				SYSTEM_CODE: 'mock-system'
 			},
-			execArgv: ['--require', '@dotcom-reliability-kit/opentelemetry/setup'],
+			execArgv: ['--import', '@dotcom-reliability-kit/opentelemetry/setup'],
 			stdio: 'pipe'
 		});
 		exporter.stdout.on('data', (chunk) => {
@@ -71,7 +73,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 		exporterBaseUrl = await waitForBaseUrl(exporter);
 	});
 
-	afterAll(() => {
+	after(() => {
 		if (collector) {
 			collector.kill('SIGINT');
 		}
@@ -84,7 +86,7 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 		let collectorLogs;
 		let exporterLogs;
 
-		beforeAll(async () => {
+		before(async () => {
 			try {
 				await fetch(`${exporterBaseUrl}/example`);
 				// This timeout is required because we have to wait for OpenTelemetry
@@ -109,13 +111,13 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 				const log = exporterLogs.find(
 					(log) => log?.event === 'OTEL_METRICS_STATUS' && log?.enabled === true
 				);
-				expect(log).toBeDefined();
+				assert.notStrictEqual(log, undefined);
 			});
 			it('logs that OpenTelemetry tracing is enabled', () => {
 				const log = exporterLogs.find(
 					(log) => log?.event === 'OTEL_TRACE_STATUS' && log?.enabled === true
 				);
-				expect(log).toBeDefined();
+				assert.notStrictEqual(log, undefined);
 			});
 		});
 
@@ -127,9 +129,9 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 						log?.method === 'POST' &&
 						log?.url === '/metrics'
 				);
-				expect(log).toBeDefined();
-				expect(log.headers['content-type']).toBe('application/x-protobuf');
-				expect(log.body).toContain('mock-system');
+				assert.notStrictEqual(log, undefined);
+				assert.strictEqual(log.headers['content-type'], 'application/x-protobuf');
+				assert.match(log.body, /mock-system/);
 			});
 			it('receives traces', () => {
 				const log = collectorLogs.find(
@@ -138,9 +140,9 @@ describe('@dotcom-reliability-kit/opentelemetry end-to-end', () => {
 						log?.method === 'POST' &&
 						log?.url === '/traces'
 				);
-				expect(log).toBeDefined();
-				expect(log.headers['content-type']).toBe('application/x-protobuf');
-				expect(log.body).toContain('mock-system');
+				assert.notStrictEqual(log, undefined);
+				assert.strictEqual(log.headers['content-type'], 'application/x-protobuf');
+				assert.match(log.body, /mock-system/);
 			});
 		});
 	});
