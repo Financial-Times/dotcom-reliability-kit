@@ -1,12 +1,41 @@
-/**
- * @import {
- *   Request,
- *   RequestHeaders,
- *   SerializedRequest,
- *   SerializedRequestHeaders,
- *   SerializeRequestOptions
- * } from '@dotcom-reliability-kit/serialize-request'
- */
+import type { IncomingHttpHeaders, IncomingMessage } from 'node:http';
+import type { Request as ExpressRequest } from 'express';
+
+// Types to represent input request objects
+type RequestHeaders =
+	| Headers
+	| { [key: string]: string }
+	| Iterable<[string, string]>
+	| IncomingHttpHeaders;
+interface BasicRequest {
+	headers?: RequestHeaders;
+	method?: string;
+	url?: string;
+}
+export type Request =
+	| string
+	| (BasicRequest & { [key: string]: any })
+	| ExpressRequest
+	| (IncomingMessage & { [key: string]: any });
+
+// Types to represent a serialized request object
+interface SerializedRequestHeaders {
+	[key: string]: string;
+}
+interface SerializedRequestRouteParams {
+	[key: string]: string;
+}
+interface SerializedRequestRoute {
+	path: string;
+	params: SerializedRequestRouteParams;
+}
+interface SerializedRequest {
+	id: string | null;
+	method: string;
+	url: string;
+	headers: SerializedRequestHeaders;
+	route?: SerializedRequestRoute;
+}
 
 export const DEFAULT_INCLUDED_HEADERS = Object.freeze([
 	'accept',
@@ -18,19 +47,17 @@ export const DEFAULT_INCLUDED_HEADERS = Object.freeze([
 	'user-agent'
 ]);
 
-/**
- * The maximum length of a URL, any longer than this will be truncated.
- */
+// The maximum length of a URL, any longer than this will be truncated.
 const URL_TRUNCATION_LENGTH = 200;
+
+interface SerializeRequestOptions {
+	includeHeaders?: string[];
+}
 
 /**
  * Serialize a request object so that it can be consistently logged or output as JSON.
- *
- * @param {Request} request
- * @param {SerializeRequestOptions} options
- * @returns {SerializedRequest}
  */
-export default function serializeRequest(request, options = {}) {
+export default function serializeRequest(request: Request, options: SerializeRequestOptions = {}) {
 	// If the request is not an object, assume it's the request
 	// URL and return early
 	if (typeof request !== 'object' || Array.isArray(request) || request === null) {
@@ -49,7 +76,7 @@ export default function serializeRequest(request, options = {}) {
 	}
 	includeHeaders = includeHeaders.map((header) => header.toLowerCase());
 
-	const requestProperties = {};
+	const requestProperties: Partial<SerializedRequest> = {};
 
 	// If set, request ID is cast to a string
 	if (request.headers?.['x-request-id']) {
@@ -93,13 +120,12 @@ export default function serializeRequest(request, options = {}) {
 
 /**
  * Serialize request headers.
- *
- * @param {RequestHeaders} headers
- * @param {string[]} includeHeaders
- * @returns {SerializedRequestHeaders}
  */
-function serializeHeaders(headers, includeHeaders) {
-	const headersObject = {};
+function serializeHeaders(
+	headers: RequestHeaders,
+	includeHeaders: string[]
+): SerializedRequestHeaders {
+	const headersObject: SerializedRequestHeaders = {};
 	const iterableHeaders =
 		Array.isArray(headers) || isIterableHeadersObject(headers)
 			? headers
@@ -118,11 +144,8 @@ function serializeHeaders(headers, includeHeaders) {
 
 /**
  * Create a new serialized request object.
- *
- * @param {{[key: string]: any}} properties
- * @returns {SerializedRequest}
  */
-function createSerializedRequest(properties) {
+function createSerializedRequest(properties: Partial<SerializedRequest>): SerializedRequest {
 	return Object.assign(
 		{},
 		{
@@ -137,10 +160,7 @@ function createSerializedRequest(properties) {
 
 /**
  * Check whether a value is an iterable request headers object.
- *
- * @param {any} value
- * @returns {value is Iterable<[string, string]>}
  */
-function isIterableHeadersObject(value) {
-	return value && typeof value?.[Symbol.iterator] === 'function';
+function isIterableHeadersObject(value: unknown): value is Iterable<[string, string]> {
+	return Boolean(value && typeof value?.[Symbol.iterator] === 'function');
 }

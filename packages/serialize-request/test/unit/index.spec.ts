@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it } from 'node:test';
-import serializeRequest, { DEFAULT_INCLUDED_HEADERS } from '../../../lib/index.js';
+import serializeRequest, { DEFAULT_INCLUDED_HEADERS, type Request } from '../../index.ts';
 
 describe('@dotcom-reliability-kit/serialize-request', () => {
 	describe('.DEFAULT_INCLUDED_HEADERS', () => {
@@ -18,16 +18,18 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		it('is readonly', () => {
 			assert.throws(() => {
+				// @ts-expect-error we're testing runtime error handling
 				DEFAULT_INCLUDED_HEADERS.push('nope');
 			}, TypeError);
 			assert.throws(() => {
+				// @ts-expect-error we're testing runtime error handling
 				DEFAULT_INCLUDED_HEADERS[0] = 'nope';
 			}, TypeError);
 		});
 	});
 
 	describe('when called with an `http.IncomingMessage` object', () => {
-		let request;
+		let request: Request;
 
 		beforeEach(() => {
 			request = {
@@ -66,7 +68,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 	});
 
 	describe('when called with an `express.Request` object', () => {
-		let request;
+		let request: Request;
 
 		beforeEach(() => {
 			request = {
@@ -117,7 +119,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 	});
 
 	describe('when called with an request-like object', () => {
-		let request;
+		let request: Request;
 
 		beforeEach(() => {
 			request = {
@@ -140,6 +142,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		describe('when `request.headers.x-request-id` is undefined', () => {
 			beforeEach(() => {
+				// @ts-expect-error we're deleting weird stuff, expected
 				delete request.headers['x-request-id'];
 			});
 
@@ -164,6 +167,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		describe('when `request.method` is not a string', () => {
 			beforeEach(() => {
+				// @ts-expect-error we're testing runtime error handling
 				request.method = 123;
 			});
 
@@ -188,6 +192,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		describe('when `request.url` is not a string', () => {
 			beforeEach(() => {
+				// @ts-expect-error we're testing runtime error handling
 				request.url = 123;
 			});
 
@@ -225,6 +230,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		describe('when `request.headers` is not an object', () => {
 			beforeEach(() => {
+				// @ts-expect-error we're testing runtime error handling
 				request.headers = ['a', 'b', 'c'];
 			});
 
@@ -250,6 +256,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 
 		describe('when `request.headers` is iterable but has non-string values', () => {
 			beforeEach(() => {
+				// @ts-expect-error we're testing runtime error handling
 				request.headers = new Map([
 					['Content-Type', 123],
 					['accept', {}]
@@ -288,6 +295,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 	describe('when called with a string', () => {
 		it('returns the expected serialized request properties', () => {
 			const request = 'mock message';
+			// @ts-expect-error we're testing runtime error handling
 			assert.deepEqual(serializeRequest(request), {
 				id: null,
 				method: '-',
@@ -298,7 +306,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 	});
 
 	describe('when the `includeHeaders` option is set', () => {
-		let request;
+		let request: Request;
 
 		beforeEach(() => {
 			request = {
@@ -337,6 +345,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				serializeRequest(
 					{},
 					{
+						// @ts-expect-error we're testing runtime error handling
 						includeHeaders: {}
 					}
 				);
@@ -345,6 +354,7 @@ describe('@dotcom-reliability-kit/serialize-request', () => {
 				serializeRequest(
 					{},
 					{
+						// @ts-expect-error we're testing runtime error handling
 						includeHeaders: ['string', 123, 'another string']
 					}
 				);
