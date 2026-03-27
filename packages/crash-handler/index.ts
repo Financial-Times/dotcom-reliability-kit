@@ -1,15 +1,15 @@
 import { logHandledError, logUnhandledError } from '@dotcom-reliability-kit/log-error';
+import type { Logger } from '@dotcom-reliability-kit/logger';
 
-/**
- * @import { CrashHandlerOptions } from '@dotcom-reliability-kit/crash-handler'
- */
+type CrashHandlerOptions = {
+	logger?: Logger & { [key: string]: any };
+	process?: NodeJS.Process;
+};
 
 /**
  * Register a crash handler on a process.
- *
- * @param {CrashHandlerOptions} [options]
  */
-export default function registerCrashHandler(options = {}) {
+export default function registerCrashHandler(options: CrashHandlerOptions = {}) {
 	const process = options.process || global.process;
 	const logger = options.logger;
 

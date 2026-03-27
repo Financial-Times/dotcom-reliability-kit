@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
-import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import { afterEach, beforeEach, describe, it, type Mock, mock } from 'node:test';
+import type { Logger } from '@dotcom-reliability-kit/logger';
 
 const logHandledError = mock.fn();
 const logUnhandledError = mock.fn();
@@ -7,11 +8,18 @@ mock.module('@dotcom-reliability-kit/log-error', {
 	namedExports: { logHandledError, logUnhandledError }
 });
 
-const { default: registerCrashHandler } = await import('@dotcom-reliability-kit/crash-handler');
+const { default: registerCrashHandler } = await import('../../index.ts');
+
+type MockProcessType = {
+	on: Mock<NodeJS.Process['on']>;
+	exit: Mock<NodeJS.Process['exit']>;
+	exitCode?: NodeJS.Process['exitCode'];
+	listeners: Mock<NodeJS.Process['listeners']>;
+};
 
 describe('@dotcom-reliability-kit/crash-handler', () => {
 	describe('registerCrashHandler(options)', () => {
-		let mockProcess;
+		let mockProcess: MockProcessType;
 
 		beforeEach(() => {
 			mockProcess = {
@@ -21,7 +29,7 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 			};
 
 			registerCrashHandler({
-				process: mockProcess
+				process: mockProcess as unknown as NodeJS.Process
 			});
 		});
 
@@ -32,8 +40,8 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		});
 
 		describe('uncaughtExceptionHandler(error)', () => {
-			let error;
-			let uncaughtExceptionHandler;
+			let error: Error & Record<string, any>;
+			let uncaughtExceptionHandler: (...args: any[]) => void;
 
 			beforeEach(() => {
 				error = new Error('mock error');
@@ -68,18 +76,19 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		});
 
 		describe('when `options.logger` is set', () => {
+			const mockedLogger = {} as Logger;
 			beforeEach(() => {
 				mockProcess.on.mock.resetCalls();
 				logUnhandledError.mock.resetCalls();
 				registerCrashHandler({
-					logger: 'mock-logger',
-					process: mockProcess
+					logger: mockedLogger,
+					process: mockProcess as unknown as NodeJS.Process
 				});
 			});
 
 			describe('uncaughtExceptionHandler(error)', () => {
-				let error;
-				let uncaughtExceptionHandler;
+				let error: Error & Record<string, any>;
+				let uncaughtExceptionHandler: (...args: any[]) => void;
 
 				beforeEach(() => {
 					error = new Error('mock error');
@@ -92,7 +101,7 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 					assert.deepStrictEqual(logUnhandledError.mock.calls[0].arguments, [
 						{
 							error,
-							logger: 'mock-logger'
+							logger: mockedLogger
 						}
 					]);
 				});
@@ -100,15 +109,19 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		});
 
 		describe('when `options.process` is undefined', () => {
-			let mockGlobalProcess;
-			let originalProcess;
+			let mockGlobalProcess: MockProcessType;
+			let originalProcess: NodeJS.Process;
 
 			beforeEach(() => {
 				originalProcess = global.process;
-				global.process = mockGlobalProcess = {
+
+				mockGlobalProcess = {
 					on: mock.fn(),
-					listeners: mock.fn(() => [])
+					listeners: mock.fn(() => []),
+					exit: mock.fn(),
+					exitCode: undefined
 				};
+				global.process = mockGlobalProcess as unknown as NodeJS.Process;
 
 				registerCrashHandler({});
 			});
@@ -131,15 +144,18 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		});
 
 		describe('when no options are set', () => {
-			let mockGlobalProcess;
-			let originalProcess;
+			let mockGlobalProcess: MockProcessType;
+			let originalProcess: NodeJS.Process;
 
 			beforeEach(() => {
 				originalProcess = global.process;
-				global.process = mockGlobalProcess = {
+				mockGlobalProcess = {
 					on: mock.fn(),
-					listeners: mock.fn(() => [])
+					listeners: mock.fn(() => []),
+					exit: mock.fn(),
+					exitCode: undefined
 				};
+				global.process = mockGlobalProcess as unknown as NodeJS.Process;
 
 				registerCrashHandler();
 			});
@@ -162,13 +178,15 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 		});
 
 		describe('when the procss already has an uncaughtExceptionHandler', () => {
+			const mockedLogger = {} as Logger;
+			const mockHandler = () => {};
 			beforeEach(() => {
 				mockProcess.on.mock.resetCalls();
-				mockProcess.listeners.mock.mockImplementation(() => ['mockHandler']);
+				mockProcess.listeners.mock.mockImplementation(() => [mockHandler]);
 				logHandledError.mock.resetCalls();
 				registerCrashHandler({
-					process: mockProcess,
-					logger: 'mock-logger'
+					process: mockProcess as unknown as NodeJS.Process,
+					logger: mockedLogger
 				});
 			});
 
@@ -180,7 +198,7 @@ describe('@dotcom-reliability-kit/crash-handler', () => {
 				assert.strictEqual(logHandledError.mock.callCount(), 1);
 				const call = logHandledError.mock.calls[0].arguments[0];
 				assert.ok(call instanceof Object);
-				assert.strictEqual(call.logger, 'mock-logger');
+				assert.strictEqual(call.logger, mockedLogger);
 				assert.ok(call.error instanceof Error);
 				assert.strictEqual(call.error.code, 'CRASH_HANDLER_NOT_REGISTERED');
 			});
