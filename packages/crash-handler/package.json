@@ -26,8 +26,10 @@
     }
   },
   "files": [
+    "**/*.ts",
     "dist",
-    "!*.tsbuildinfo"
+    "!*.tsbuildinfo",
+    "!test"
   ],
   "dependencies": {
     "@dotcom-reliability-kit/logger": "^4.2.8",
