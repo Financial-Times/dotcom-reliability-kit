@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Queue Playground</title>
+		<style></style>
+		<script>
+			const exampleEvent = {
+				namespace: 'test',
+				timestamp: Date.now(),
+				data: { 
+					'event': 'Button was clicked'
+				}
+			}
+			// TODO: add queue functions here
+		</script>
+	</head>
+
+	<body>
+		<div>
+			<h1>Example Event</h1>
+
+			<p> The following event will be used as a test to be added to the queue:</p>
+			<code>
+				namespace: 'test'
+				timestamp: Date.now()
+				data: { 
+					'event': 'Button was clicked'
+				};
+			</code>
+		</div>
+		<div>
+			<h1>In Memory Queue</h1>
+			<button onclick="">Add event to queue</button>
+			<div id="inMemoryQueueEvent"></div>
+
+			<button onclick="">See events in the queue</button>
+			<div id="inMemoryQueueContent"></div>
+		</div>
+
+		<div>
+			<h1>Local Storage Queue</h1>
+
+			<div>The following key will be used for the local storage: <code>client-metrics-test-local-storage</code></div>
+			<button onclick="">Add event to queue</button>
+			<div id="localStorageQueueEvent"></div>
+
+			<button onclick="">Show local storage content</button>
+			<div id="localStorageContent"></div>
+		</div>
+	</body>
+</html>
