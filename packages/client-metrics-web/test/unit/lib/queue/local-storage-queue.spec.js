@@ -1,13 +1,13 @@
 const { LocalStorageQueue } = require('../../../../lib/queue/local-storage-queue');
 
-describe('InMemoryQueue (extends Queue)', () => {
-	it('instanciate a new queue if localStorage is available');
-	it('throws and does not instanciate a queue if localStorage is unavailable');
+describe('LocalStorageQueue (extends Queue)', () => {
+	it('instantiate a new queue if localStorage is available');
+	it('throws and does not instantiate a queue if localStorage is unavailable');
 
 	// example key = client-metrics-next-article
 	it('uses the systemCode to construct the key for localStorage');
 	
-	it('throws if trying to instanciate a queue bigger than the max size');
+	it('throws if trying to instantiate a queue bigger than the max size');
 	
 	// with localStorage, this means get the items already stored, concat the new item, 
 	// put everything back in storage as an array
