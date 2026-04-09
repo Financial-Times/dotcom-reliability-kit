@@ -37,6 +37,13 @@ exports.Queue = class Queue {
 	}
 
 	/**
+	 * To avoid breaking change, this won't throw an error but it should be added at the next possible occasion
+	 * If you do not implement that method, the events that were not sent are just lost
+	 * @type {QueueType['push']}
+	 */
+	push(items) {}
+
+	/**
 	 * @type {QueueType['capacity']}
 	 */
 	get capacity() {

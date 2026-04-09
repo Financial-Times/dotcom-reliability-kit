@@ -46,6 +46,14 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 
 	/**
 	 * @override
+	 * @type {InMemoryQueueType['push']}
+	 */
+	push(items){
+		this.#queue.unshift(...items);
+	}
+
+	/**
+	 * @override
 	 * @type {InMemoryQueueType['size']}
 	 */
 	get size() {

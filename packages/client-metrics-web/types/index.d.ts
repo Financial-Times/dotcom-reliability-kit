@@ -42,6 +42,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		add(item: Metric): void;
 		drop(count?: number): void;
 		pull(count: number): Metric[];
+		push(items: Metric[]): void;
 		get capacity(): number;
 		get size(): number;
 	}

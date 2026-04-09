@@ -39,7 +39,22 @@ exports.MetricsClient = class MetricsClient {
 	#elapsedSeconds = 0;
 
 	/** @type {number} */
-	#retentionPeriod = 10;
+	#defaultRetentionPeriod = 10;
+
+	/** @type {number} */
+	#retentionPeriod = this.#defaultRetentionPeriod;
+
+	/** @type {number} */
+	#increasePercentage = 0.2 
+
+	/** @type {number} */
+	#maxRetentionPeriod = 120;
+
+	/** @type {number} */
+	#fetchFailed = 0;
+
+	/** @type {number} */
+	#maxFetchAttempt = 10;
 
 	/**
 	 * @param {MetricsClientOptions} options
@@ -174,7 +189,9 @@ exports.MetricsClient = class MetricsClient {
 
 			this.#queue.add(batchedEvent);
 
-			if (this.#queue.size >= this.#batchSize) {
+			if ((this.#queue.size >= this.#batchSize)
+				&& (this.#fetchFailed < this.#maxFetchAttempt)
+			) {
 				this.#sendEvents();
 			}
 		} catch (/** @type {any} */ error) {
@@ -211,7 +228,9 @@ exports.MetricsClient = class MetricsClient {
 		const numberOfEvents =
 			this.#queue.size >= this.#batchSize ? this.#batchSize : this.#queue.size;
 
-		const events = this.#queue.pull(numberOfEvents).map((batchedEvent) => {
+		const queuedEvents = this.#queue.pull(numberOfEvents);
+		
+		const events = queuedEvents.map((batchedEvent) => {
 			return {
 				namespace: batchedEvent.namespace,
 				systemCode: this.#systemCode,
@@ -227,15 +246,28 @@ exports.MetricsClient = class MetricsClient {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(events)
-		}).catch((error) => {
+		})
+		.then(() => {
+			this.#fetchFailed = 0;	
+		})
+		.catch((error) => {
 			console.warn('Error happened during fetch: ', error);
+
+			// We keep track of how many failures we 
+			this.#fetchFailed++;
+
+			if(this.#fetchFailed >= this.#maxFetchAttempt 
+				&& this.#retentionPeriod < this.#maxRetentionPeriod){
+				this.#retentionPeriod = this.#retentionPeriod + this.#increasePercentage * this.#retentionPeriod;
+			}
+
+			this.#queue.push(queuedEvents);
 		});
 
-		if (this.#queue.size) {
+		if (this.#queue.size 
+			&& (this.#fetchFailed < this.#maxFetchAttempt)) {
 			this.#sendEvents();
 		}
-		// TODO: add the possibility to retry a batch that fails, with a limited amount of retries.
-		// See offline work.
 	}
 
 	/**
