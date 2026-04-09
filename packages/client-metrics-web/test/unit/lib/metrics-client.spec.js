@@ -737,4 +737,35 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 		});
 	});
+
+	describe('ClientMetrics offline handling', () => {
+		let instance;
+		let options;
+
+		beforeEach(() => {
+			options = {
+				systemCode: 'mock-system-code',
+				systemVersion: 'mock-version',
+				queue: new MockQueue()
+			};
+			instance = new MetricsClient(options);
+		});
+
+		describe('it keeps the events in the queue');
+		describe('it increases a fetchFailed counter');
+		describe('when the fetch has failed enough times', () => {
+			describe('when there are many events in the queue', () => {
+				it('stops calling sendEvents recursively')
+				it('stops calling sendEvents when recording new events')
+			});
+
+			describe('the retentionPeriod increases');
+		});
+
+		describe('when its able to fetch after a period of failure', () => {
+			describe('the retentionPeriod is back to its initial one')
+			describe('the fetchFailure is back to 0');
+			describe('the first events in the queue are no longer there');
+		});
+	});
 });
