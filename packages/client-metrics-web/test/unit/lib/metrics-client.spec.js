@@ -21,6 +21,10 @@ class MockQueue extends Queue {
 		return this.mockItems.splice(0, count);
 	}
 
+	requeue(items) {
+		this.mockItems.unshift(...items);
+	}
+
 	get size() {
 		return this.mockItems.length;
 	}
@@ -743,21 +747,36 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		let options;
 
 		beforeEach(() => {
+			global.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
 			options = {
 				systemCode: 'mock-system-code',
 				systemVersion: 'mock-version',
 				queue: new MockQueue()
 			};
 			instance = new MetricsClient(options);
+			instance.recordEvent('data.event.fetch.reject.first.event', { mockEventData: true });
+			recordBatchOfEvents({
+				instance,
+				namespace: 'data.event.fetch.reject.batch',
+				data: { mockEventData: true }
+			});
+			instance.recordEvent('data.event.fetch.reject.last.event');
 		});
 
-		describe('it keeps the events in the queue');
-		describe('it increases a fetchFailed counter');
-		describe('when the fetch has failed enough times', () => {
-			describe('when there are many events in the queue', () => {
-				it('stops calling sendEvents recursively')
-				it('stops calling sendEvents when recording new events')
-			});
+		it('logs a warning from the fetch catch handler', () => {
+			expect(console.warn).toHaveBeenCalledWith(
+				'Error happened during fetch: ',
+				expect.any(Error)
+			);
+			expect(console.warn.mock.calls[0][1].message).toBe('Network down');
+		});
+
+		it('keeps the events in the queue', () => {
+			expect(instance.queue.size).toBe(22);
+			expect(instance.queue.mockItems[0].namespace).toBe('data.event.fetch.reject.first.event');
+			expect(instance.queue.mockItems[1].namespace).toBe('data.event.fetch.reject.batch');
+			expect(instance.queue.mockItems[21].namespace).toBe('data.event.fetch.reject.last.event');
+		});
 
 			describe('the retentionPeriod increases');
 		});
