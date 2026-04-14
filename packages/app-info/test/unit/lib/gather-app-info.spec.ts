@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import path from 'node:path';
 import { beforeEach, describe, it, mock } from 'node:test';
+import type { AppInfo } from '../../../index.ts';
 
 const crypto = { randomUUID: mock.fn(() => 'mock-generated-uuid') };
 mock.module('node:crypto', { defaultExport: crypto, namedExports: crypto });
 const fixtures = path.resolve(import.meta.dirname, '..', 'fixtures');
 
-const defaultEnv = {
+const defaultEnv: NodeJS.ProcessEnv = {
 	AWS_LAMBDA_FUNCTION_VERSION: 'mock-aws-release-version',
 	AWS_LAMBDA_FUNCTION_NAME: 'mock-lambda-function-name',
 	AWS_REGION: 'mock-aws-region',
@@ -26,7 +27,7 @@ const defaultEnv = {
 	HEROKU_DYNO_ID: 'mock-heroku-dyno-id'
 };
 
-const { default: gatherAppInfo } = await import('../../../lib/gather-app-info.js');
+const { default: gatherAppInfo } = await import('../../../lib/gather-app-info.ts');
 
 describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 	it('exports a function', () => {
@@ -34,7 +35,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 	});
 
 	describe('gatherAppInfo(options)', () => {
-		let appInfo;
+		let appInfo: AppInfo;
 
 		beforeEach(() => {
 			const env = { ...defaultEnv };
@@ -213,7 +214,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 			});
 
 			describe('when neither environment variable is defined but a package.json exists', () => {
-				let env;
+				let env: NodeJS.ProcessEnv;
 
 				beforeEach(async () => {
 					env = { ...defaultEnv };
@@ -270,7 +271,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 			});
 
 			describe('when `env.SYSTEM_CODE` is not defined but a package.json exists', () => {
-				let env;
+				let env: NodeJS.ProcessEnv;
 
 				beforeEach(async () => {
 					env = { ...defaultEnv };
@@ -358,7 +359,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 		});
 
 		describe('.cloudProvider', () => {
-			let env;
+			let env: NodeJS.ProcessEnv;
 
 			beforeEach(async () => {
 				env = { ...defaultEnv };
@@ -432,7 +433,7 @@ describe('@dotcom-reliability-kit/app-info/lib/gather-app-info', () => {
 		});
 
 		describe('.instanceId', () => {
-			let appInfo;
+			let appInfo: AppInfo;
 
 			beforeEach(async () => {
 				crypto.randomUUID.mock.resetCalls();
