@@ -41,4 +41,26 @@ describe('InMemoryQueue (extends Queue)', () => {
 		queue.add(testMetric);
 		expect(queue.pull().length).toBe(1);
 	});
+
+	it('requeue items at the front of the queue', () => {
+		const queue = new InMemoryQueue({ capacity: 11 });
+		queue.add({
+			data: 'first.event'
+		});
+		queue.add({
+			data: 'second.event'
+		});
+		queue.requeue([
+			{
+				data: 'requeue.event'
+			}
+		]);
+		const eventInOrder = queue.pull(3);
+
+		expect(eventInOrder).toStrictEqual([
+			{ data: 'requeue.event' },
+			{ data: 'first.event' },
+			{ data: 'second.event' }
+		]);
+	});
 });

@@ -261,7 +261,7 @@ exports.MetricsClient = class MetricsClient {
 				this.#retentionPeriod = this.#retentionPeriod + this.#increasePercentage * this.#retentionPeriod;
 			}
 
-			this.#queue.push(queuedEvents);
+			this.#queue.requeue(queuedEvents);
 		});
 
 		if (this.#queue.size 

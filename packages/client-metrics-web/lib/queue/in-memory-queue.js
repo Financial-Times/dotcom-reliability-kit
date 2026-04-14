@@ -46,9 +46,9 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 
 	/**
 	 * @override
-	 * @type {InMemoryQueueType['push']}
+	 * @type {InMemoryQueueType['requeue']}
 	 */
-	push(items){
+	requeue(items) {
 		this.#queue.unshift(...items);
 	}
 

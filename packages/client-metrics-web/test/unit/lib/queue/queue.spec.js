@@ -31,5 +31,10 @@ describe('Queue (base class)', () => {
 			const queue = new Queue({ capacity: 11 });
 			expect(() => queue.size()).toThrow('Must be implemented by subclass');
 		});
+
+		it('requeue will not throw because we are not enforcing this method (but we need it for setting the queue type)', () => {
+			const queue = new Queue({ capacity: 11 });
+			expect(() => queue.requeue()).not.toThrow();
+		});
 	});
 });
