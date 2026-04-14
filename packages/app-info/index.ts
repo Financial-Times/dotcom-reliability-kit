@@ -1,4 +1,6 @@
-import gatherAppInfo from './gather-app-info.js';
+import gatherAppInfo from './lib/gather-app-info.ts';
+
+export type { AppInfo, SemanticConventions } from './lib/gather-app-info.ts';
 
 const appInfo = gatherAppInfo({ env: process.env, rootPath: process.cwd() });
 

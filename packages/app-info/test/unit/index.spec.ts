@@ -15,19 +15,19 @@ const gatherAppInfo = mock.fn(() => ({
 	semanticConventions: 'mock-semantic-conventions',
 	systemCode: 'mock-system-code'
 }));
-mock.module('../../../lib/gather-app-info.js', { defaultExport: gatherAppInfo });
+mock.module('../../lib/gather-app-info.ts', { defaultExport: gatherAppInfo });
 
-mock.property(process, 'env', 'mock-process-env');
+mock.property(process, 'env', { 'mock-process-env': 'yes' });
 mock.method(process, 'cwd', () => 'mock-process-cwd');
 
-const { default: appInfo, ...namedAppInfo } = await import('@dotcom-reliability-kit/app-info');
+const { default: appInfo, ...namedAppInfo } = await import('../../index.ts');
 
 describe('@dotcom-reliability-kit/app-info', () => {
 	it('calls `gatherAppInfo` with the process environment and current working directory', () => {
 		assert.strictEqual(gatherAppInfo.mock.callCount(), 1);
 		assert.deepStrictEqual(gatherAppInfo.mock.calls[0].arguments, [
 			{
-				env: 'mock-process-env',
+				env: { 'mock-process-env': 'yes' },
 				rootPath: 'mock-process-cwd'
 			}
 		]);
