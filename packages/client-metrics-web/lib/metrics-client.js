@@ -56,6 +56,12 @@ exports.MetricsClient = class MetricsClient {
 	/** @type {number} */
 	#maxFetchFailed = 3;
 
+	/** @type {number} */
+	#increasePercentage = 0.5;
+
+	/** @type {number} */
+	#maxRetentionPeriod = 120;
+
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
@@ -228,13 +234,27 @@ exports.MetricsClient = class MetricsClient {
 		this.#elapsedSeconds = 0;
 	}
 
+	#increaseRetentionPeriod() {
+		const newRetentionPeriod =
+			this.#retentionPeriod + this.#increasePercentage * this.#retentionPeriod;
+		if (newRetentionPeriod <= this.#maxRetentionPeriod) {
+			this.#retentionPeriod = newRetentionPeriod;
+		} else {
+			this.#retentionPeriod = this.#maxRetentionPeriod;
+		}
+	}
+
+	#resetRetentionPeriod() {
+		this.#retentionPeriod = this.#defaultRetentionPeriod;
+	}
+
 	#sendEvents() {
 		if (!this.#queue.size || !this.#isEnabled || this.#maxFetchInExecution) {
 			return;
 		}
 
 		// This check allows us not to start too many fetches at the same time
-		this.#fetchAttempt++
+		this.#fetchAttempt++;
 
 		this.#resetTimer();
 
@@ -243,7 +263,7 @@ exports.MetricsClient = class MetricsClient {
 			this.#queue.size >= this.#batchSize ? this.#batchSize : this.#queue.size;
 
 		const queuedEvents = this.#queue.pull(numberOfEvents);
-		
+
 		const events = queuedEvents.map((batchedEvent) => {
 			return {
 				namespace: batchedEvent.namespace,
@@ -267,6 +287,10 @@ exports.MetricsClient = class MetricsClient {
 
 			// This check allows us not to start too many fetches at the same time
 			this.#fetchAttempt--;
+
+			// if we had previously detected to be offline, we might have increase the retention period
+			// so if a fetch is succesful, we reset it to its normal amount just in case
+			this.#resetRetentionPeriod();
 		})
 		.catch((error) => {
 			console.warn('Error happened during fetch: ', error);
@@ -280,6 +304,11 @@ exports.MetricsClient = class MetricsClient {
 
 			// We count how many fetch fails to determine if the client might be offline
 			this.#fetchFailed++;
+
+			// whilst we are offline, we are reducing the frequency of attempts to fetch
+			if(this.isOffline){
+				this.#increaseRetentionPeriod(); 
+			}
 
 		});
 
