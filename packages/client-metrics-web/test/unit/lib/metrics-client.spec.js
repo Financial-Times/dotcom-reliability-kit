@@ -3,6 +3,7 @@ jest.mock('../../../package.json', () => ({
 	version: '0.0.0-test'
 }));
 
+const { setTimeout } = require('node:timers/promises');
 const { MetricsClient } = require('../../..');
 const { Queue } = require('../../../lib/queue/queue');
 
@@ -39,7 +40,7 @@ const recordBatchOfEvents = ({
 	data
 }) => {
 	const events = new Array(numberOfEvents).fill({ namespace, data });
-	events.forEach((event) => {
+	events.map((event) => {
 		if (event.data) {
 			instance.recordEvent(event.namespace, event.data);
 		} else {
@@ -603,28 +604,6 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				expect(console.warn).toHaveBeenCalledTimes(0);
 			});
 		});
-
-		describe('when fetch rejects', () => {
-			beforeEach(async () => {
-				global.fetch.mockClear();
-				global.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
-				instance = new MetricsClient(options);
-
-				recordBatchOfEvents({
-					instance,
-					namespace: 'data.event.fetch.reject',
-					data: { mockEventData: true }
-				});
-			});
-
-			it('logs a warning from the fetch catch handler', () => {
-				expect(console.warn).toHaveBeenCalledWith(
-					'Error happened during fetch: ',
-					expect.any(Error)
-				);
-				expect(console.warn.mock.calls[0][1].message).toBe('Network down');
-			});
-		});
 	});
 
 	describe('ClientMetrics batching logic', () => {
@@ -754,16 +733,17 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				queue: new MockQueue()
 			};
 			instance = new MetricsClient(options);
-			instance.recordEvent('data.event.fetch.reject.first.event', { mockEventData: true });
-			recordBatchOfEvents({
-				instance,
-				namespace: 'data.event.fetch.reject.batch',
-				data: { mockEventData: true }
-			});
-			instance.recordEvent('data.event.fetch.reject.last.event');
 		});
 
-		it('logs a warning from the fetch catch handler', () => {
+		it('logs a warning from the fetch catch handler', async () => {
+			recordBatchOfEvents({
+				instance,
+				numberOfEvents: DEFAULT_BATCH_SIZE,
+				namespace: 'data.event.fetch.failed',
+				data: { mockEventData: true }
+			});
+			await setTimeout(1);
+
 			expect(console.warn).toHaveBeenCalledWith(
 				'Error happened during fetch: ',
 				expect.any(Error)
@@ -771,11 +751,57 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			expect(console.warn.mock.calls[0][1].message).toBe('Network down');
 		});
 
-		it('keeps the events in the queue', () => {
-			expect(instance.queue.size).toBe(22);
-			expect(instance.queue.mockItems[0].namespace).toBe('data.event.fetch.reject.first.event');
-			expect(instance.queue.mockItems[1].namespace).toBe('data.event.fetch.reject.batch');
-			expect(instance.queue.mockItems[21].namespace).toBe('data.event.fetch.reject.last.event');
+		it('tries to send metrics', async () => {
+			recordBatchOfEvents({
+				instance,
+				numberOfEvents: DEFAULT_BATCH_SIZE,
+				namespace: 'data.event.fetch.failed',
+				data: { mockEventData: true }
+			});
+			await setTimeout(1);
+
+			expect(global.fetch).toHaveBeenCalledTimes(1);
+		});
+
+		it('keeps the events in the queue as it fails to send the metrics', async () => {
+			recordBatchOfEvents({
+				instance,
+				numberOfEvents: DEFAULT_BATCH_SIZE,
+				namespace: 'data.event.fetch.failed',
+				data: { mockEventData: true }
+			});
+			await setTimeout(1);
+
+			expect(instance.queue.size).toBe(DEFAULT_BATCH_SIZE);
+			expect(instance.queue.mockItems[10].namespace).toBe('data.event.fetch.failed');
+		});
+
+		it('detects the client is offline when the fetch fails too many times', async () => {
+			global.fetch.mockClear();
+	
+			recordBatchOfEvents({
+				instance,
+				numberOfEvents: DEFAULT_BATCH_SIZE * 20,
+				namespace: 'data.event.fetch.failed',
+				data: { mockEventData: true }
+			});
+			await setTimeout(1);
+
+			expect(instance.isOffline).toBe(true)
+		});
+
+		it('does not try to do more than 10 fetches at the same time', async () => {
+			global.fetch.mockClear();
+	
+			recordBatchOfEvents({
+				instance,
+				numberOfEvents: DEFAULT_BATCH_SIZE * 20,
+				namespace: 'data.event.fetch.failed',
+				data: { mockEventData: true }
+			});
+
+			await setTimeout(1);
+			expect(global.fetch).toHaveBeenCalledTimes(10);
 		});
 
 			describe('the retentionPeriod increases');

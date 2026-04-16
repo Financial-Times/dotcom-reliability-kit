@@ -17,6 +17,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get retentionPeriod(): number;
 		get systemVersion(): string;
 		get queue(): readonly Queue;
+		get isOffline(): boolean;
 		enable(): void;
 		disable(): void;
 		recordEvent(namespace: string, eventData?: Record<string, any>): void;
