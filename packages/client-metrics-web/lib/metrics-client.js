@@ -166,7 +166,7 @@ exports.MetricsClient = class MetricsClient {
 
 	// If the fetch fails too many times, we consider that the client
 	// might be offline and we reduce the amount of fetch we attempt
-	get isOffline(){
+	get isOffline() {
 		return this.#fetchFailed >= this.#maxFetchFailed;
 	}
 
@@ -207,7 +207,7 @@ exports.MetricsClient = class MetricsClient {
 
 			this.#queue.add(batchedEvent);
 
-			if ((this.#queue.size >= this.#batchSize) && !this.isOffline) {
+			if (this.#queue.size >= this.#batchSize && !this.isOffline) {
 				this.#sendEvents();
 			}
 		} catch (/** @type {any} */ error) {
@@ -282,38 +282,36 @@ exports.MetricsClient = class MetricsClient {
 			signal: AbortSignal.timeout(1000),
 			body: JSON.stringify(events)
 		})
-		.then(() => {
-			this.#fetchFailed = 0;
+			.then(() => {
+				this.#fetchFailed = 0;
 
-			// This check allows us not to start too many fetches at the same time
-			this.#fetchAttempt--;
+				// This check allows us not to start too many fetches at the same time
+				this.#fetchAttempt--;
 
-			// if we had previously detected to be offline, we might have increase the retention period
-			// so if a fetch is succesful, we reset it to its normal amount just in case
-			this.#resetRetentionPeriod();
-		})
-		.catch((error) => {
-			console.warn('Error happened during fetch: ', error);
+				// if we had previously detected to be offline, we might have increase the retention period
+				// so if a fetch is succesful, we reset it to its normal amount just in case
+				this.#resetRetentionPeriod();
+			})
+			.catch((error) => {
+				console.warn('Error happened during fetch: ', error);
 
-			// when a fetch has failed, we need to put the event we tried to send back in the queue
-			// Note: this brings an issue with the dropping of the eldest event as the events are no longer guaranteed to be in order
-			this.#queue.requeue(queuedEvents);
+				// when a fetch has failed, we need to put the event we tried to send back in the queue
+				// Note: this brings an issue with the dropping of the eldest event as the events are no longer guaranteed to be in order
+				this.#queue.requeue(queuedEvents);
 
-			// This check allows us not to start too many fetches at the same time
-			this.#fetchAttempt--;
+				// This check allows us not to start too many fetches at the same time
+				this.#fetchAttempt--;
 
-			// We count how many fetch fails to determine if the client might be offline
-			this.#fetchFailed++;
+				// We count how many fetch fails to determine if the client might be offline
+				this.#fetchFailed++;
 
-			// whilst we are offline, we are reducing the frequency of attempts to fetch
-			if(this.isOffline){
-				this.#increaseRetentionPeriod(); 
-			}
-
-		});
+				// whilst we are offline, we are reducing the frequency of attempts to fetch
+				if (this.isOffline) {
+					this.#increaseRetentionPeriod();
+				}
+			});
 
 		if (this.#queue.size && !this.isOffline) {
-			&& (this.#fetchFailed < this.#maxFetchAttempt)) {
 			this.#sendEvents();
 		}
 	}
