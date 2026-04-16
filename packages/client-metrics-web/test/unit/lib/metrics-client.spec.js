@@ -40,7 +40,7 @@ const recordBatchOfEvents = ({
 	data
 }) => {
 	const events = new Array(numberOfEvents).fill({ namespace, data });
-	events.map((event) => {
+	events.forEach((event) => {
 		if (event.data) {
 			instance.recordEvent(event.namespace, event.data);
 		} else {
@@ -778,7 +778,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 		it('detects the client is offline when the fetch fails too many times', async () => {
 			global.fetch.mockClear();
-	
+
 			recordBatchOfEvents({
 				instance,
 				numberOfEvents: DEFAULT_BATCH_SIZE * 20,
@@ -787,12 +787,12 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 			await setTimeout(1);
 
-			expect(instance.isOffline).toBe(true)
+			expect(instance.isOffline).toBe(true);
 		});
 
 		it('does not try to do more than 10 fetches at the same time', async () => {
 			global.fetch.mockClear();
-	
+
 			recordBatchOfEvents({
 				instance,
 				numberOfEvents: DEFAULT_BATCH_SIZE * 20,
@@ -804,13 +804,56 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			expect(global.fetch).toHaveBeenCalledTimes(10);
 		});
 
-			describe('the retentionPeriod increases');
+		describe('when the client is offline long enough', () => {
+			it('increases the retention period', async () => {
+				const initialRetentionPeriod = instance.retentionPeriod;
+
+				recordBatchOfEvents({
+					instance,
+					numberOfEvents: DEFAULT_BATCH_SIZE * 3,
+					namespace: 'data.event.fetch.failed',
+					data: { mockEventData: true }
+				});
+				await setTimeout(1);
+
+				expect(instance.retentionPeriod).toBe(
+					initialRetentionPeriod + initialRetentionPeriod * 0.5
+				);
+			});
+
+			it('does not increase the retention period more than 2 minutes', async () => {
+				const maxRetentionPeriod = 120;
+
+				recordBatchOfEvents({
+					instance,
+					numberOfEvents: DEFAULT_BATCH_SIZE * 10,
+					namespace: 'data.event.fetch.failed',
+					data: { mockEventData: true }
+				});
+				await setTimeout(1);
+
+				expect(instance.retentionPeriod).toBe(maxRetentionPeriod);
+			});
 		});
 
-		describe('when its able to fetch after a period of failure', () => {
-			describe('the retentionPeriod is back to its initial one')
-			describe('the fetchFailure is back to 0');
-			describe('the first events in the queue are no longer there');
+		describe('when the client comes back online', () => {
+			beforeEach(async () => {
+				recordBatchOfEvents({
+					instance,
+					numberOfEvents: DEFAULT_BATCH_SIZE * 3,
+					namespace: 'data.event.fetch.failed',
+					data: { mockEventData: true }
+				});
+				await setTimeout(1);
+				global.fetch = jest.fn(() => Promise.resolve({ status: 202, ok: true }));
+				jest.advanceTimersByTime(15000);
+				await setTimeout(1);
+			});
+
+			it('no longer considers the client to be offline and reset the retention period back to 10 seconds', async () => {
+				expect(instance.isOffline).toBe(false);
+				expect(instance.retentionPeriod).toBe(10);
+			});
 		});
 	});
 });
