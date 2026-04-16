@@ -45,16 +45,16 @@ exports.MetricsClient = class MetricsClient {
 	#retentionPeriod = this.#defaultRetentionPeriod;
 
 	/** @type {number} */
-	#increasePercentage = 0.2 
+	#fetchAttempt = 0;
 
 	/** @type {number} */
-	#maxRetentionPeriod = 120;
+	#maxFetchAttempt = 10;
 
 	/** @type {number} */
 	#fetchFailed = 0;
 
 	/** @type {number} */
-	#maxFetchAttempt = 10;
+	#maxFetchFailed = 3;
 
 	/**
 	 * @param {MetricsClientOptions} options
@@ -152,6 +152,18 @@ exports.MetricsClient = class MetricsClient {
 		return this.#queue;
 	}
 
+	// As we are running fetches in parallel, we don't want to have
+	// too many fetches running at the same time
+	get #maxFetchInExecution() {
+		return this.#fetchAttempt >= this.#maxFetchAttempt;
+	}
+
+	// If the fetch fails too many times, we consider that the client
+	// might be offline and we reduce the amount of fetch we attempt
+	get isOffline(){
+		return this.#fetchFailed >= this.#maxFetchFailed;
+	}
+
 	/** @type {MetricsClientType['enable']} */
 	enable() {
 		if (this.#isAvailable && !this.#isEnabled) {
@@ -189,9 +201,7 @@ exports.MetricsClient = class MetricsClient {
 
 			this.#queue.add(batchedEvent);
 
-			if ((this.#queue.size >= this.#batchSize)
-				&& (this.#fetchFailed < this.#maxFetchAttempt)
-			) {
+			if ((this.#queue.size >= this.#batchSize) && !this.isOffline) {
 				this.#sendEvents();
 			}
 		} catch (/** @type {any} */ error) {
@@ -219,12 +229,16 @@ exports.MetricsClient = class MetricsClient {
 	}
 
 	#sendEvents() {
-		if (!this.#queue.size || !this.#isEnabled) {
+		if (!this.#queue.size || !this.#isEnabled || this.#maxFetchInExecution) {
 			return;
 		}
 
+		// This check allows us not to start too many fetches at the same time
+		this.#fetchAttempt++
+
 		this.#resetTimer();
 
+		// We get the first (or all) events in the queue
 		const numberOfEvents =
 			this.#queue.size >= this.#batchSize ? this.#batchSize : this.#queue.size;
 
@@ -245,26 +259,31 @@ exports.MetricsClient = class MetricsClient {
 			headers: {
 				'Content-Type': 'application/json'
 			},
+			signal: AbortSignal.timeout(1000),
 			body: JSON.stringify(events)
 		})
 		.then(() => {
-			this.#fetchFailed = 0;	
+			this.#fetchFailed = 0;
+
+			// This check allows us not to start too many fetches at the same time
+			this.#fetchAttempt--;
 		})
 		.catch((error) => {
 			console.warn('Error happened during fetch: ', error);
 
-			// We keep track of how many failures we 
+			// when a fetch has failed, we need to put the event we tried to send back in the queue
+			// Note: this brings an issue with the dropping of the eldest event as the events are no longer guaranteed to be in order
+			this.#queue.requeue(queuedEvents);
+
+			// This check allows us not to start too many fetches at the same time
+			this.#fetchAttempt--;
+
+			// We count how many fetch fails to determine if the client might be offline
 			this.#fetchFailed++;
 
-			if(this.#fetchFailed >= this.#maxFetchAttempt 
-				&& this.#retentionPeriod < this.#maxRetentionPeriod){
-				this.#retentionPeriod = this.#retentionPeriod + this.#increasePercentage * this.#retentionPeriod;
-			}
-
-			this.#queue.requeue(queuedEvents);
 		});
 
-		if (this.#queue.size 
+		if (this.#queue.size && !this.isOffline) {
 			&& (this.#fetchFailed < this.#maxFetchAttempt)) {
 			this.#sendEvents();
 		}
