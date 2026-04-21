@@ -1,4 +1,4 @@
-const { logHandledError, logRecoverableError } = require('@dotcom-reliability-kit/log-error');
+import { logHandledError, logRecoverableError } from '@dotcom-reliability-kit/log-error';
 
 /**
  * @import { ErrorLoggingOptions } from '@dotcom-reliability-kit/middleware-log-errors'
@@ -11,7 +11,7 @@ const { logHandledError, logRecoverableError } = require('@dotcom-reliability-ki
  * @param {ErrorLoggingOptions} [options]
  * @returns {ExpressErrorHandler}
  */
-function createErrorLoggingMiddleware(options = {}) {
+export default function createErrorLoggingMiddleware(options = {}) {
 	const { logUserErrorsAsWarnings } = options;
 
 	// Validate the included headers (this stops the request serializer from erroring
@@ -73,7 +73,3 @@ function createErrorLoggingMiddleware(options = {}) {
 		next(error);
 	};
 }
-
-module.exports = createErrorLoggingMiddleware;
-
-module.exports.default = module.exports;

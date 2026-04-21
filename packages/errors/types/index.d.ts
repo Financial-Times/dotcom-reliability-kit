@@ -1,13 +1,13 @@
 declare module '@dotcom-reliability-kit/errors' {
-	type BaseErrorData = {
+	export type BaseErrorData = {
 		code?: string;
 		message?: string;
 		cause?: any;
 	} & { [key: string]: any };
 
-	type OperationalErrorData = { relatesToSystems?: string[] } & BaseErrorData;
+	export type OperationalErrorData = { relatesToSystems?: string[] } & BaseErrorData;
 
-	type HttpErrorData = { statusCode?: number } & OperationalErrorData;
+	export type HttpErrorData = { statusCode?: number } & OperationalErrorData;
 
 	export class BaseError extends Error {
 		constructor();
@@ -45,4 +45,13 @@ declare module '@dotcom-reliability-kit/errors' {
 	export class DataStoreError extends OperationalError {}
 	export class UpstreamServiceError extends HttpError {}
 	export class UserInputError extends HttpError {}
+
+	export default {
+		BaseError,
+		DataStoreError,
+		HttpError,
+		OperationalError,
+		UpstreamServiceError,
+		UserInputError
+	};
 }

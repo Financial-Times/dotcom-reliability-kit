@@ -1,4 +1,4 @@
-import { Request } from '@dotcom-reliability-kit/serialize-request';
+import type { Request } from '@dotcom-reliability-kit/serialize-request';
 
 declare module '@dotcom-reliability-kit/log-error' {
 	type LogMethod = (...logData: any) => any;

@@ -1,68 +1,60 @@
-jest.mock('@opentelemetry/host-metrics');
-jest.mock('@opentelemetry/sdk-node');
-jest.mock('@dotcom-reliability-kit/logger');
-jest.mock('../../../lib/config/instrumentations', () => ({
-	createInstrumentationConfig: jest.fn().mockReturnValue('mock-instrumentations')
-}));
-jest.mock('../../../lib/config/metrics', () => ({
-	createMetricsConfig: jest.fn().mockReturnValue({ metrics: 'mock-metrics' })
-}));
-jest.mock('../../../lib/config/resource', () => ({
-	createResourceConfig: jest.fn().mockReturnValue('mock-resource')
-}));
-jest.mock('../../../lib/config/tracing', () => ({
-	createTracingConfig: jest.fn().mockReturnValue({ tracing: 'mock-tracing' })
-}));
-jest.mock('../../../lib/config/views', () => ({
-	createViewConfig: jest.fn().mockReturnValue({ views: 'mock-views' })
-}));
+import assert from 'node:assert/strict';
+import { before, beforeEach, describe, it, mock } from 'node:test';
+
+const mockChildLogger = {
+	debug: mock.fn(),
+	error: mock.fn(),
+	info: mock.fn(),
+	verbose: mock.fn(),
+	warn: mock.fn()
+};
+const logger = { createChildLogger: mock.fn(() => mockChildLogger), warn: mock.fn() };
+mock.module('@dotcom-reliability-kit/logger', { defaultExport: logger });
+
+const api = {
+	diag: { disable: mock.fn(), setLogger: mock.fn() },
+	DiagLogLevel: {
+		INFO: 'mock info log level'
+	},
+	metrics: {
+		getMeter: mock.fn(() => 'mock-meter'),
+		getMeterProvider: mock.fn(() => 'mock-meter-provider')
+	}
+};
+const NodeSDK = mock.fn(
+	class NodeSDK {
+		start = mock.fn();
+	}
+);
+mock.module('@opentelemetry/sdk-node', { defaultExport: { api, NodeSDK } });
+
+const HostMetrics = mock.fn(
+	class HostMetrics {
+		start = mock.fn();
+	}
+);
+mock.module('@opentelemetry/host-metrics', { namedExports: { HostMetrics } });
+
+const createInstrumentationConfig = mock.fn(() => 'mock-instrumentations');
+mock.module('../../../lib/config/instrumentations.js', {
+	namedExports: { createInstrumentationConfig }
+});
+
+const createMetricsConfig = mock.fn(() => ({ metrics: 'mock-metrics' }));
+mock.module('../../../lib/config/metrics.js', { namedExports: { createMetricsConfig } });
+
+const createResourceConfig = mock.fn(() => 'mock-resource');
+mock.module('../../../lib/config/resource.js', { namedExports: { createResourceConfig } });
+
+const createTracingConfig = mock.fn(() => ({ tracing: 'mock-tracing' }));
+mock.module('../../../lib/config/tracing.js', { namedExports: { createTracingConfig } });
+
+const createViewConfig = mock.fn(() => ({ views: 'mock-views' }));
+mock.module('../../../lib/config/views.js', { namedExports: { createViewConfig } });
+
+const opentelemetry = await import('../../../lib/index.js');
 
 describe('@dotcom-reliability-kit/opentelemetry', () => {
-	let api;
-	let createInstrumentationConfig;
-	let createMetricsConfig;
-	let createResourceConfig;
-	let createTracingConfig;
-	let createViewConfig;
-	let HostMetrics;
-	let logger;
-	let mockChildLogger;
-	let NodeSDK;
-	let opentelemetry;
-
-	// Helper function to reload all modules. We need this because the setup
-	// method stores a global singleton so it's impossible to call it multiple
-	// times with different configuration values normally. We need to do this
-	// in the tests though
-	function reloadAllModules() {
-		jest.resetModules();
-		createInstrumentationConfig =
-			require('../../../lib/config/instrumentations').createInstrumentationConfig;
-		createMetricsConfig = require('../../../lib/config/metrics').createMetricsConfig;
-		createResourceConfig = require('../../../lib/config/resource').createResourceConfig;
-		createTracingConfig = require('../../../lib/config/tracing').createTracingConfig;
-		createViewConfig = require('../../../lib/config/views').createViewConfig;
-		api = require('@opentelemetry/sdk-node').api;
-		api.metrics.getMeterProvider.mockReturnValue('mock-meter-provider');
-		HostMetrics = require('@opentelemetry/host-metrics').HostMetrics;
-		NodeSDK = require('@opentelemetry/sdk-node').NodeSDK;
-		logger = require('@dotcom-reliability-kit/logger');
-
-		mockChildLogger = {
-			debug: jest.fn(),
-			error: jest.fn(),
-			info: jest.fn(),
-			verbose: jest.fn(),
-			warn: jest.fn()
-		};
-		logger.createChildLogger.mockReturnValue(mockChildLogger);
-		api.DiagLogLevel.INFO = 'mock info log level';
-
-		opentelemetry = require('../../../lib/index');
-	}
-
-	beforeEach(reloadAllModules);
-
 	describe('.setup(options)', () => {
 		let instances;
 
@@ -82,74 +74,87 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		});
 
 		it('disables the internal OpenTelemetry logger', () => {
-			expect(api.diag.disable).toHaveBeenCalledTimes(1);
-			expect(logger.createChildLogger).toHaveBeenCalledTimes(0);
-			expect(api.diag.setLogger).toHaveBeenCalledTimes(0);
+			assert.strictEqual(api.diag.disable.mock.callCount(), 1);
+			assert.strictEqual(logger.createChildLogger.mock.callCount(), 0);
+			assert.strictEqual(api.diag.setLogger.mock.callCount(), 0);
 		});
 
 		it('configures the OpenTelemetry instrumentations', () => {
-			expect(createInstrumentationConfig).toHaveBeenCalledTimes(1);
-			expect(createInstrumentationConfig).toHaveBeenCalledWith();
+			assert.strictEqual(createInstrumentationConfig.mock.callCount(), 1);
+			assert.deepStrictEqual(createInstrumentationConfig.mock.calls[0].arguments, []);
 		});
 
 		it('configures the OpenTelemetry resource', () => {
-			expect(createResourceConfig).toHaveBeenCalledTimes(1);
-			expect(createResourceConfig).toHaveBeenCalledWith();
+			assert.strictEqual(createResourceConfig.mock.callCount(), 1);
+			assert.deepStrictEqual(createResourceConfig.mock.calls[0].arguments, []);
 		});
 
 		it('creates tracing config', () => {
-			expect(createTracingConfig).toHaveBeenCalledTimes(1);
-			expect(createTracingConfig).toHaveBeenCalledWith({
-				endpoint: 'mock-tracing-endpoint',
-				samplePercentage: 137
-			});
+			assert.strictEqual(createTracingConfig.mock.callCount(), 1);
+			assert.deepStrictEqual(createTracingConfig.mock.calls[0].arguments, [
+				{
+					authorizationHeader: undefined,
+					endpoint: 'mock-tracing-endpoint',
+					samplePercentage: 137
+				}
+			]);
 		});
 
 		it('creates metrics config', () => {
-			expect(createMetricsConfig).toHaveBeenCalledTimes(1);
-			expect(createMetricsConfig).toHaveBeenCalledWith({
-				endpoint: 'mock-metrics-endpoint'
-			});
+			assert.strictEqual(createMetricsConfig.mock.callCount(), 1);
+			assert.deepStrictEqual(createMetricsConfig.mock.calls[0].arguments, [
+				{
+					endpoint: 'mock-metrics-endpoint'
+				}
+			]);
 		});
 
 		it('creates views config', () => {
-			expect(createViewConfig).toHaveBeenCalledTimes(1);
-			expect(createViewConfig).toHaveBeenCalledWith({
-				httpServerDurationBuckets: 'mock-http-duration-buckets'
-			});
+			assert.strictEqual(createViewConfig.mock.callCount(), 1);
+			assert.deepStrictEqual(createViewConfig.mock.calls[0].arguments, [
+				{
+					httpServerDurationBuckets: 'mock-http-duration-buckets'
+				}
+			]);
 		});
 
 		it('instantiates and starts the OpenTelemetry Node SDK with the created config', () => {
-			expect(NodeSDK).toHaveBeenCalledTimes(1);
-			expect(NodeSDK).toHaveBeenCalledWith({
-				instrumentations: 'mock-instrumentations',
-				resource: 'mock-resource',
-				tracing: 'mock-tracing',
-				metrics: 'mock-metrics',
-				views: 'mock-views'
-			});
-			expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
+			assert.strictEqual(NodeSDK.mock.callCount(), 1);
+			assert.deepStrictEqual(NodeSDK.mock.calls[0].arguments, [
+				{
+					instrumentations: 'mock-instrumentations',
+					resource: 'mock-resource',
+					tracing: 'mock-tracing',
+					metrics: 'mock-metrics',
+					views: 'mock-views'
+				}
+			]);
+			assert.strictEqual(NodeSDK.mock.calls[0].result.start.mock.callCount(), 1);
 		});
 
 		it('instantiates and starts a HostMetrics collector', () => {
-			expect(HostMetrics).toHaveBeenCalledTimes(1);
-			expect(HostMetrics).toHaveBeenCalledWith({
-				meterProvider: 'mock-meter-provider'
-			});
-			expect(HostMetrics.prototype.start).toHaveBeenCalledTimes(1);
+			assert.strictEqual(HostMetrics.mock.callCount(), 1);
+			assert.deepStrictEqual(HostMetrics.mock.calls[0].arguments, [
+				{
+					meterProvider: 'mock-meter-provider'
+				}
+			]);
+			assert.strictEqual(HostMetrics.mock.calls[0].result.start.mock.callCount(), 1);
 		});
 
 		it('returns the SDK instances', () => {
-			expect(instances).toEqual({
-				sdk: NodeSDK.mock.instances[0],
-				hostMetrics: HostMetrics.mock.instances[0]
+			assert.deepStrictEqual(instances, {
+				sdk: NodeSDK.mock.calls[0].result,
+				hostMetrics: HostMetrics.mock.calls[0].result
 			});
 		});
 
 		describe('when the logInternals option is set', () => {
-			beforeEach(() => {
-				NodeSDK.mockClear();
-				reloadAllModules();
+			before(() => {
+				api.diag.disable.mock.resetCalls();
+				logger.createChildLogger.mock.resetCalls();
+				NodeSDK.mock.resetCalls();
+				opentelemetry.clearInstances();
 				instances = opentelemetry.setup({
 					logInternals: true,
 					tracing: {
@@ -163,72 +168,82 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 
 			it('sets up OpenTelemetry to log via a custom logger', () => {
-				expect(logger.createChildLogger).toHaveBeenCalledTimes(1);
-				expect(logger.createChildLogger).toHaveBeenCalledWith({
-					event: 'OTEL_INTERNALS'
-				});
-				expect(api.diag.setLogger).toHaveBeenCalledTimes(1);
-				expect(api.diag.setLogger).not.toHaveBeenCalledWith(mockChildLogger);
-				expect(api.diag.setLogger).toHaveBeenCalledWith(
-					expect.objectContaining({
-						debug: expect.any(Function),
-						error: expect.any(Function),
-						info: expect.any(Function),
-						verbose: expect.any(Function),
-						warn: expect.any(Function)
-					})
-				);
-				expect(api.diag.disable).toHaveBeenCalledTimes(0);
+				assert.strictEqual(logger.createChildLogger.mock.callCount(), 1);
+				assert.deepStrictEqual(logger.createChildLogger.mock.calls[0].arguments, [
+					{
+						event: 'OTEL_INTERNALS'
+					}
+				]);
+				assert.strictEqual(api.diag.setLogger.mock.callCount(), 1);
+				assert.notDeepStrictEqual(api.diag.setLogger.mock.calls[0].arguments, [
+					mockChildLogger
+				]);
+				assert.partialDeepStrictEqual(api.diag.setLogger.mock.calls[0].arguments, [{}]);
+				const setLogger = api.diag.setLogger.mock.calls[0].arguments[0];
+				for (const value of Object.values(setLogger)) {
+					assert.strictEqual(typeof value, 'function');
+				}
+				assert.partialDeepStrictEqual(api.diag.setLogger.mock.calls[0].arguments, [{}]);
+				assert.strictEqual(api.diag.disable.mock.callCount(), 0);
 			});
 
 			describe('custom logger', () => {
 				let customLogger;
 
 				beforeEach(() => {
-					customLogger = api.diag.setLogger.mock.calls[0][0];
+					customLogger = api.diag.setLogger.mock.calls[0].arguments[0];
 				});
 
 				describe('.debug()', () => {
 					it('does nothing', () => {
 						customLogger.debug('mock message 1', 'mock message 2');
-						expect(mockChildLogger.debug).toHaveBeenCalledTimes(0);
+						assert.strictEqual(mockChildLogger.debug.mock.callCount(), 0);
 					});
 				});
 
 				describe('.error()', () => {
 					it('logs an error via the Reliability Kit child logger', () => {
 						customLogger.error('mock message 1', 'mock message 2');
-						expect(mockChildLogger.error).toHaveBeenCalledTimes(1);
-						expect(mockChildLogger.error).toHaveBeenCalledWith('mock message 1', {
-							details: ['mock message 2']
-						});
+						assert.strictEqual(mockChildLogger.error.mock.callCount(), 1);
+						assert.deepStrictEqual(mockChildLogger.error.mock.calls[0].arguments, [
+							'mock message 1',
+							{
+								details: ['mock message 2']
+							}
+						]);
 					});
 				});
 
 				describe('.info()', () => {
 					it('logs info via the Reliability Kit child logger', () => {
 						customLogger.info('mock message 1', 'mock message 2');
-						expect(mockChildLogger.info).toHaveBeenCalledTimes(1);
-						expect(mockChildLogger.info).toHaveBeenCalledWith('mock message 1', {
-							details: ['mock message 2']
-						});
+						assert.strictEqual(mockChildLogger.info.mock.callCount(), 1);
+						assert.deepStrictEqual(mockChildLogger.info.mock.calls[0].arguments, [
+							'mock message 1',
+							{
+								details: ['mock message 2']
+							}
+						]);
 					});
 				});
 
 				describe('.verbose()', () => {
 					it('does nothing', () => {
 						customLogger.verbose('mock message 1', 'mock message 2');
-						expect(mockChildLogger.verbose).toHaveBeenCalledTimes(0);
+						assert.strictEqual(mockChildLogger.verbose.mock.callCount(), 0);
 					});
 				});
 
 				describe('.warn()', () => {
-					it('logs an warning via the Reliability Kit child logger', () => {
+					it('logs a warning via the Reliability Kit child logger', () => {
 						customLogger.warn('mock message 1', 'mock message 2');
-						expect(mockChildLogger.warn).toHaveBeenCalledTimes(1);
-						expect(mockChildLogger.warn).toHaveBeenCalledWith('mock message 1', {
-							details: ['mock message 2']
-						});
+						assert.strictEqual(mockChildLogger.warn.mock.callCount(), 1);
+						assert.deepStrictEqual(mockChildLogger.warn.mock.calls[0].arguments, [
+							'mock message 1',
+							{
+								details: ['mock message 2']
+							}
+						]);
 					});
 				});
 			});
@@ -236,8 +251,8 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 
 		describe('when no metrics endpoint is set', () => {
 			beforeEach(() => {
-				NodeSDK.mockClear();
-				reloadAllModules();
+				HostMetrics.mock.resetCalls();
+				opentelemetry.clearInstances();
 				instances = opentelemetry.setup({
 					tracing: {
 						endpoint: 'mock-tracing-endpoint',
@@ -247,37 +262,39 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 
 			it('does not instantiate a HostMetrics collector', () => {
-				expect(HostMetrics).toHaveBeenCalledTimes(0);
+				assert.strictEqual(HostMetrics.mock.callCount(), 0);
 			});
 
 			it('returns instances with hostMetrics undefined', () => {
-				expect(instances.hostMetrics).toBeUndefined();
+				assert.strictEqual(instances.hostMetrics, undefined);
 			});
 		});
 
 		describe('when no options are set', () => {
 			beforeEach(() => {
-				NodeSDK.mockClear();
-				reloadAllModules();
+				NodeSDK.mock.resetCalls();
+				opentelemetry.clearInstances();
 				opentelemetry.setup();
 			});
 
 			it('still instantiates and starts the OpenTelemetry Node SDK with the created config', () => {
-				expect(NodeSDK).toHaveBeenCalledTimes(1);
-				expect(NodeSDK).toHaveBeenCalledWith({
-					instrumentations: 'mock-instrumentations',
-					resource: 'mock-resource',
-					tracing: 'mock-tracing',
-					metrics: 'mock-metrics',
-					views: 'mock-views'
-				});
+				assert.strictEqual(NodeSDK.mock.callCount(), 1);
+				assert.deepStrictEqual(NodeSDK.mock.calls[0].arguments, [
+					{
+						instrumentations: 'mock-instrumentations',
+						resource: 'mock-resource',
+						tracing: 'mock-tracing',
+						metrics: 'mock-metrics',
+						views: 'mock-views'
+					}
+				]);
 			});
 		});
 
 		describe('when an authorization header is passed into the root options (deprecated)', () => {
 			beforeEach(() => {
-				createTracingConfig.mockReset();
-				reloadAllModules();
+				createTracingConfig.mock.resetCalls();
+				opentelemetry.clearInstances();
 				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
@@ -287,18 +304,20 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 
 			it('uses the authorization header when configuring tracing', () => {
-				expect(createTracingConfig).toHaveBeenCalledTimes(1);
-				expect(createTracingConfig).toHaveBeenCalledWith({
-					authorizationHeader: 'mock-authorization-header-root',
-					endpoint: 'mock-tracing-endpoint'
-				});
+				assert.strictEqual(createTracingConfig.mock.callCount(), 1);
+				assert.deepStrictEqual(createTracingConfig.mock.calls[0].arguments, [
+					{
+						authorizationHeader: 'mock-authorization-header-root',
+						endpoint: 'mock-tracing-endpoint'
+					}
+				]);
 			});
 		});
 
 		describe('when an authorization header is passed into the tracing options', () => {
 			beforeEach(() => {
-				createTracingConfig.mockReset();
-				reloadAllModules();
+				createTracingConfig.mock.resetCalls();
+				opentelemetry.clearInstances();
 				opentelemetry.setup({
 					tracing: {
 						authorizationHeader: 'mock-authorization-header-tracing',
@@ -308,18 +327,20 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 
 			it('uses the authorization header when configuring tracing', () => {
-				expect(createTracingConfig).toHaveBeenCalledTimes(1);
-				expect(createTracingConfig).toHaveBeenCalledWith({
-					authorizationHeader: 'mock-authorization-header-tracing',
-					endpoint: 'mock-tracing-endpoint'
-				});
+				assert.strictEqual(createTracingConfig.mock.callCount(), 1);
+				assert.deepStrictEqual(createTracingConfig.mock.calls[0].arguments, [
+					{
+						authorizationHeader: 'mock-authorization-header-tracing',
+						endpoint: 'mock-tracing-endpoint'
+					}
+				]);
 			});
 		});
 
 		describe('when an authorization header is passed into both the root options (deprecated) and tracing options', () => {
 			beforeEach(() => {
-				createTracingConfig.mockReset();
-				reloadAllModules();
+				createTracingConfig.mock.resetCalls();
+				opentelemetry.clearInstances();
 				opentelemetry.setup({
 					authorizationHeader: 'mock-authorization-header-root',
 					tracing: {
@@ -330,27 +351,31 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 
 			it('prioritises the tracing option authorization header', () => {
-				expect(createTracingConfig).toHaveBeenCalledTimes(1);
-				expect(createTracingConfig).toHaveBeenCalledWith({
-					authorizationHeader: 'mock-authorization-header-tracing',
-					endpoint: 'mock-tracing-endpoint'
-				});
+				assert.strictEqual(createTracingConfig.mock.callCount(), 1);
+				assert.deepStrictEqual(createTracingConfig.mock.calls[0].arguments, [
+					{
+						authorizationHeader: 'mock-authorization-header-tracing',
+						endpoint: 'mock-tracing-endpoint'
+					}
+				]);
 			});
 		});
 
 		describe('when OTEL_ environment variables are defined', () => {
 			beforeEach(() => {
 				process.env.OTEL_MOCK = 'mock';
-				reloadAllModules();
+				opentelemetry.clearInstances();
 				opentelemetry.setup();
 			});
 
 			it('logs a warning that these environment variables are not supported', () => {
-				expect(logger.warn).toHaveBeenCalledWith({
-					event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
-					message:
-						'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
-				});
+				assert.deepStrictEqual(logger.warn.mock.calls[0].arguments, [
+					{
+						event: 'OTEL_ENVIRONMENT_VARIABLES_DEFINED',
+						message:
+							'OTEL-prefixed environment variables are defined, this use-case is not supported by Reliability Kit. You may encounter issues'
+					}
+				]);
 			});
 		});
 
@@ -359,7 +384,8 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			let returnValue2;
 
 			beforeEach(() => {
-				reloadAllModules();
+				NodeSDK.mock.resetCalls();
+				opentelemetry.clearInstances();
 				returnValue1 = opentelemetry.setup({
 					tracing: {
 						endpoint: 'mock-tracing-endpoint',
@@ -373,19 +399,21 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 			});
 
 			it('instantiates and starts the OpenTelemetry Node SDK once only', () => {
-				expect(NodeSDK).toHaveBeenCalledTimes(1);
-				expect(NodeSDK).toHaveBeenCalledWith({
-					instrumentations: 'mock-instrumentations',
-					resource: 'mock-resource',
-					tracing: 'mock-tracing',
-					metrics: 'mock-metrics',
-					views: 'mock-views'
-				});
-				expect(NodeSDK.prototype.start).toHaveBeenCalledTimes(1);
+				assert.strictEqual(NodeSDK.mock.callCount(), 1);
+				assert.deepStrictEqual(NodeSDK.mock.calls[0].arguments, [
+					{
+						instrumentations: 'mock-instrumentations',
+						resource: 'mock-resource',
+						tracing: 'mock-tracing',
+						metrics: 'mock-metrics',
+						views: 'mock-views'
+					}
+				]);
+				assert.strictEqual(NodeSDK.mock.calls[0].result.start.mock.callCount(), 1);
 			});
 
 			it('returns the same instances on each call', () => {
-				expect(returnValue1).toStrictEqual(returnValue2);
+				assert.strictEqual(returnValue1, returnValue2);
 			});
 		});
 	});
@@ -394,33 +422,32 @@ describe('@dotcom-reliability-kit/opentelemetry', () => {
 		let meter;
 
 		beforeEach(() => {
-			reloadAllModules();
-			api.metrics.getMeter.mockReturnValue('mock-meter');
+			opentelemetry.clearInstances();
 			opentelemetry.setup();
 			meter = opentelemetry.getMeter('mock-name', 'mock-version', 'mock-options');
 		});
 
 		it('creates and returns a global meter', () => {
-			expect(api.metrics.getMeter).toHaveBeenCalledTimes(1);
-			expect(api.metrics.getMeter).toHaveBeenCalledWith(
+			assert.strictEqual(api.metrics.getMeter.mock.callCount(), 1);
+			assert.deepStrictEqual(api.metrics.getMeter.mock.calls[0].arguments, [
 				'mock-name',
 				'mock-version',
 				'mock-options'
-			);
-			expect(meter).toEqual('mock-meter');
+			]);
+			assert.strictEqual(meter, 'mock-meter');
 		});
 
 		describe('when OpenTelemetry has not been set up via Reliability Kit', () => {
 			beforeEach(() => {
-				reloadAllModules();
+				opentelemetry.clearInstances();
 			});
 
 			it('throws an error', () => {
-				expect.hasAssertions();
 				try {
 					opentelemetry.getMeter('mock-name', 'mock-version', 'mock-options');
+					assert.fail('Unreachable: function above should error before this');
 				} catch (error) {
-					expect(error.code).toEqual('OTEL_MISSING_SETUP');
+					assert.strictEqual(error.code, 'OTEL_MISSING_SETUP');
 				}
 			});
 		});

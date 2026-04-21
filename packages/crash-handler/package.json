@@ -1,6 +1,7 @@
 {
   "name": "@dotcom-reliability-kit/crash-handler",
   "version": "5.1.8",
+  "type": "module",
   "description": "A method to bind an uncaught exception handler to ensure that fatal application errors are logged",
   "repository": {
     "type": "git",
@@ -11,13 +12,25 @@
   "bugs": "https://github.com/Financial-Times/dotcom-reliability-kit/issues?q=label:\"package: crash-handler\"",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "npm run test:unit && npm run test:end-to-end",
+    "test:unit": "node --test --experimental-test-module-mocks --experimental-test-coverage --test-coverage-exclude='**/*.spec.ts' --test-coverage-branches=100 --test-coverage-functions=100 --test-coverage-lines=100 'test/unit/**/*.spec.ts'",
+    "test:end-to-end": "node --test 'test/end-to-end/**/*.spec.ts'"
   },
   "engines": {
-    "node": "20.x || 22.x || 24.x"
+    "node": "^22.12 || ^24"
   },
-  "main": "lib/index.js",
-  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "**/*.ts",
+    "dist",
+    "!*.tsbuildinfo",
+    "!test"
+  ],
   "dependencies": {
     "@dotcom-reliability-kit/logger": "^4.2.8",
     "@dotcom-reliability-kit/log-error": "^5.1.8"

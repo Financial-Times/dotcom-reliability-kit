@@ -1,9 +1,5 @@
-const {
-	HttpError,
-	OperationalError,
-	UpstreamServiceError
-} = require('@dotcom-reliability-kit/errors');
-const { Writable } = require('node:stream');
+import { Writable } from 'node:stream';
+import { HttpError, OperationalError, UpstreamServiceError } from '@dotcom-reliability-kit/errors';
 
 const MAX_ERROR_LENGTH = 2000;
 
@@ -45,7 +41,7 @@ const MAX_ERROR_LENGTH = 2000;
  * @returns {FetchErrorHandler}
  *     Returns an error handler for use with a `fetch` function.
  */
-function createFetchErrorHandler(options = {}) {
+export default function createFetchErrorHandler(options = {}) {
 	const { upstreamSystemCode } = options;
 	const relatesToSystems = typeof upstreamSystemCode === 'string' ? [upstreamSystemCode] : [];
 
@@ -313,5 +309,3 @@ class BlackHoleStream extends Writable {
 		done();
 	}
 }
-
-module.exports = createFetchErrorHandler;

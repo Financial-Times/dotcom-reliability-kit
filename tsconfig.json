@@ -1,0 +1,33 @@
+{
+	"compilerOptions": {
+		"declaration": true,
+		"declarationMap": true,
+		"checkJs": true,
+		"erasableSyntaxOnly": true,
+		"esModuleInterop": true,
+		"lib": ["DOM", "ES2024", "ESNext.Array", "ESNext.Collection"],
+		"module": "nodenext",
+		"moduleResolution": "nodenext",
+		"noEmit": true,
+		"noImplicitAny": false, // FIXME: we should aim to enable this
+		"noImplicitOverride": true,
+		"noImplicitThis": true,
+		"resolveJsonModule": true,
+		"rewriteRelativeImportExtensions": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"strict": true,
+		"strictBindCallApply": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
+		"target": "ES2024",
+		"types": ["node"],
+		"useUnknownInCatchVariables": true,
+		"verbatimModuleSyntax": true
+	},
+	"exclude": [
+		"**/dist/**/*",
+		"**/test/**/*"
+	]
+}

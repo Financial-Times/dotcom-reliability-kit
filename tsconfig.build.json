@@ -1,0 +1,17 @@
+{
+	"files": [],
+	"references": [
+		{
+			"path": "packages/app-info"
+		},
+		{
+			"path": "packages/crash-handler"
+		},
+		{
+			"path": "packages/serialize-error"
+		},
+		{
+			"path": "packages/serialize-request"
+		}
+	]
+}

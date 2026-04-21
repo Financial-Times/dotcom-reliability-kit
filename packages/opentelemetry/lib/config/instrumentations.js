@@ -1,6 +1,6 @@
-const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
-const { logRecoverableError } = require('@dotcom-reliability-kit/log-error');
-const { UserInputError } = require('@dotcom-reliability-kit/errors');
+import { UserInputError } from '@dotcom-reliability-kit/errors';
+import { logRecoverableError } from '@dotcom-reliability-kit/log-error';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
 
 /**
  * @import { NodeSDKConfiguration } from '@opentelemetry/sdk-node'
@@ -15,7 +15,7 @@ const IGNORED_REQUEST_PATHS = ['/__gtg', '/__health', '/favicon.ico'];
  *
  * @returns {NodeSDKConfiguration['instrumentations']}
  */
-exports.createInstrumentationConfig = function createInstrumentationConfig() {
+export function createInstrumentationConfig() {
 	return getNodeAutoInstrumentations({
 		'@opentelemetry/instrumentation-http': {
 			ignoreIncomingRequestHook
@@ -24,7 +24,7 @@ exports.createInstrumentationConfig = function createInstrumentationConfig() {
 			enabled: false
 		}
 	});
-};
+}
 
 /**
  * NOTE: this is not a filter like you know it. The name gives us a clue:

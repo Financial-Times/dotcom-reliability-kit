@@ -1,10 +1,9 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-jest.mock('../../../package.json', () => ({
-	version: '0.0.0-test'
-}));
+import assert from 'node:assert/strict';
+import { after, afterEach, beforeEach, describe, it, mock } from 'node:test';
 
-const { MetricsClient } = require('../../..');
-const { Queue } = require('../../../lib/queue/queue');
+import { MetricsClient } from '@dotcom-reliability-kit/client-metrics-web';
+import { Queue } from '../../../lib/queue/queue.js';
 
 class MockQueue extends Queue {
 	mockItems = [];
@@ -47,32 +46,33 @@ const recordBatchOfEvents = ({
 describe('@dotcom-reliability-kit/client-metrics-web', () => {
 	beforeEach(() => {
 		global.window = {
-			addEventListener: jest.fn(),
-			removeEventListener: jest.fn(),
+			addEventListener: mock.fn(),
+			removeEventListener: mock.fn(),
 			location: {
 				hostname: 'mock-hostname'
 			}
 		};
-		jest.replaceProperty(global, 'console', {
+		mock.property(global, 'console', {
 			log: console.log,
-			warn: jest.fn()
+			warn: mock.fn()
 		});
-		jest.useFakeTimers().setSystemTime(new Date('1990-11-11'));
+		mock.timers.enable({
+			apis: ['Date', 'setInterval'],
+			now: new Date('1990-11-11').getTime()
+		});
 
-		global.fetch = jest.fn(() => Promise.resolve({ status: 202, ok: true }));
+		global.fetch = mock.fn(() => Promise.resolve({ status: 202, ok: true }));
 	});
 
 	afterEach(() => {
 		delete global.window;
-		jest.resetAllMocks();
-		jest.restoreAllMocks();
+		mock.timers.reset();
+		mock.restoreAll();
 	});
 
 	it('exports a MetricsClient class', () => {
-		expect(MetricsClient).toBeInstanceOf(Function);
-		expect(() => {
-			MetricsClient();
-		}).toThrow(/class constructor/i);
+		assert.ok(MetricsClient instanceof Function);
+		assert.throws(() => MetricsClient(), /class constructor/i);
 	});
 
 	it('can create a client with a custom queue', () => {
@@ -82,15 +82,16 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			queue: customQueue
 		});
 
-		expect(instance.queue.capacity).toBe(11);
+		assert.strictEqual(instance.queue.capacity, 11);
 	});
 
 	it('will throw when trying to create a MetricsClient with a queue that does not extends the base Queue', () => {
 		const wrongQueue = {};
 
-		expect(() => {
-			new MetricsClient({ queue: wrongQueue });
-		}).toThrow('The queue is not an instance of the base class Queue');
+		assert.throws(
+			() => new MetricsClient({ queue: wrongQueue }),
+			new TypeError('The queue is not an instance of the base class Queue')
+		);
 	});
 
 	describe('Setup which MetricClient server to use based on environment variable or hostname', () => {
@@ -108,7 +109,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('should set up the endpoint to the test server', () => {
-				expect(instance.endpoint).toStrictEqual(
+				assert.strictEqual(
+					instance.endpoint,
 					'https://client-metrics-test.ft.com/api/v1/ingest'
 				);
 			});
@@ -127,7 +129,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('should set up the endpoint to the production server', () => {
-				expect(instance.endpoint).toStrictEqual(
+				assert.strictEqual(
+					instance.endpoint,
 					'https://client-metrics.ft.com/api/v1/ingest'
 				);
 			});
@@ -158,7 +161,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					});
 
 					it(`should set up the test server`, () => {
-						expect(instance.endpoint).toStrictEqual(
+						assert.strictEqual(
+							instance.endpoint,
 							'https://client-metrics-test.ft.com/api/v1/ingest'
 						);
 					});
@@ -179,7 +183,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					});
 
 					it(`should set up the prod server for hostname ${prodEnvironmentHostname}`, () => {
-						expect(instance.endpoint).toStrictEqual(
+						assert.strictEqual(
+							instance.endpoint,
 							'https://client-metrics.ft.com/api/v1/ingest'
 						);
 					});
@@ -202,16 +207,19 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		});
 
 		it('adds an "ft.clientMetric" event listener to the window', () => {
-			expect(window.addEventListener).toHaveBeenCalledTimes(1);
-			// Jest expect.any(Function) does not work with bound functions so we can't
-			// use `toHaveBeenCalledWith`
-			const args = window.addEventListener.mock.calls[0];
-			expect(args[0]).toStrictEqual('ft.clientMetric');
-			expect(typeof args[1]).toStrictEqual('function');
+			assert.strictEqual(window.addEventListener.mock.callCount(), 1);
+			assert.strictEqual(
+				window.addEventListener.mock.calls[0].arguments[0],
+				'ft.clientMetric'
+			);
+			assert.strictEqual(
+				typeof window.addEventListener.mock.calls[0].arguments[1],
+				'function'
+			);
 		});
 
 		it('does not log any warnings', () => {
-			expect(console.warn).toHaveBeenCalledTimes(0);
+			assert.strictEqual(console.warn.mock.callCount(), 0);
 		});
 
 		it('sends a batch of events', () => {
@@ -221,23 +229,20 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				data: { mockEventData: true }
 			});
 
-			expect(global.fetch).toHaveBeenCalledTimes(1);
+			assert.strictEqual(global.fetch.mock.callCount(), 1);
 
-			const requestBody = JSON.parse(global.fetch.mock.calls[0][1].body);
+			const requestBody = JSON.parse(global.fetch.mock.calls[0].arguments[1].body);
 
-			expect(global.fetch.mock.calls[0][0]).toStrictEqual(
+			assert.strictEqual(
+				global.fetch.mock.calls[0].arguments[0],
 				'https://client-metrics.ft.com/api/v1/ingest'
 			);
-			expect(global.fetch.mock.calls[0][1]).toStrictEqual(
-				expect.objectContaining({
-					method: 'POST',
-					headers: expect.objectContaining({
-						'Content-Type': 'application/json'
-					})
-				})
-			);
-			expect(requestBody.length).toBe(DEFAULT_BATCH_SIZE);
-			expect(requestBody[0]).toEqual({
+			assert.partialDeepStrictEqual(global.fetch.mock.calls[0].arguments[1], {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' }
+			});
+			assert.strictEqual(requestBody.length, DEFAULT_BATCH_SIZE);
+			assert.deepStrictEqual(requestBody[0], {
 				namespace: 'mock.event.create.client.metrics',
 				systemCode: 'mock-system-code',
 				systemVersion: 'mock-version',
@@ -248,13 +253,13 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 		describe('.isAvailable', () => {
 			it('is set to true', () => {
-				expect(instance.isAvailable).toStrictEqual(true);
+				assert.strictEqual(instance.isAvailable, true);
 			});
 		});
 
 		describe('.isEnabled', () => {
 			it('is set to true', () => {
-				expect(instance.isEnabled).toStrictEqual(true);
+				assert.strictEqual(instance.isEnabled, true);
 			});
 		});
 
@@ -264,58 +269,64 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('removes the "ft.clientMetric" event listener from the window', () => {
-				expect(window.removeEventListener).toHaveBeenCalledTimes(1);
-				// Jest expect.any(Function) does not work with bound functions so we can't
-				// use `toHaveBeenCalledWith`
-				const args = window.removeEventListener.mock.calls[0];
-				expect(args[0]).toStrictEqual('ft.clientMetric');
-				expect(typeof args[1]).toStrictEqual('function');
+				assert.strictEqual(window.removeEventListener.mock.callCount(), 1);
+				assert.strictEqual(
+					window.removeEventListener.mock.calls[0].arguments[0],
+					'ft.clientMetric'
+				);
+				assert.strictEqual(
+					typeof window.removeEventListener.mock.calls[0].arguments[1],
+					'function'
+				);
 			});
 
 			it('sets the isEnabled property to false', () => {
-				expect(instance.isEnabled).toStrictEqual(false);
+				assert.strictEqual(instance.isEnabled, false);
 			});
 
 			describe('when the client is already disabled', () => {
 				beforeEach(() => {
-					window.removeEventListener.mockClear();
+					window.removeEventListener.mock.resetCalls();
 					instance.disable();
 				});
 
 				it('does nothing', () => {
-					expect(window.removeEventListener).toHaveBeenCalledTimes(0);
+					assert.strictEqual(window.removeEventListener.mock.callCount(), 0);
 				});
 			});
 		});
 
 		describe('.enable()', () => {
 			beforeEach(() => {
-				window.addEventListener.mockClear();
+				window.addEventListener.mock.resetCalls();
 				instance.disable();
 				instance.enable();
 			});
 
 			it('re-adds the "ft.clientMetric" event listener to the window', () => {
-				expect(window.addEventListener).toHaveBeenCalledTimes(1);
-				// Jest expect.any(Function) does not work with bound functions so we can't
-				// use `toHaveBeenCalledWith`
-				const args = window.addEventListener.mock.calls[0];
-				expect(args[0]).toStrictEqual('ft.clientMetric');
-				expect(typeof args[1]).toStrictEqual('function');
+				assert.strictEqual(window.addEventListener.mock.callCount(), 1);
+				assert.strictEqual(
+					window.addEventListener.mock.calls[0].arguments[0],
+					'ft.clientMetric'
+				);
+				assert.strictEqual(
+					typeof window.addEventListener.mock.calls[0].arguments[1],
+					'function'
+				);
 			});
 
 			it('sets the isEnabled property to true', () => {
-				expect(instance.isEnabled).toStrictEqual(true);
+				assert.strictEqual(instance.isEnabled, true);
 			});
 
 			describe('when the client is already enabled', () => {
 				beforeEach(() => {
-					window.addEventListener.mockClear();
+					window.addEventListener.mock.resetCalls();
 					instance.enable();
 				});
 
 				it('does nothing', () => {
-					expect(window.addEventListener).toHaveBeenCalledTimes(0);
+					assert.strictEqual(window.addEventListener.mock.callCount(), 0);
 				});
 			});
 		});
@@ -333,66 +344,66 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('posts the event with the namespace', () => {
-				expect(global.fetch).toHaveBeenCalledTimes(1);
-				const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-				expect(body[0].namespace).toBe('mock.event.record.event');
-				expect(body[0].data).toStrictEqual(mockData);
+				assert.strictEqual(global.fetch.mock.callCount(), 1);
+				const body = JSON.parse(global.fetch.mock.calls[0].arguments[1].body);
+				assert.strictEqual(body[0].namespace, 'mock.event.record.event');
+				assert.deepStrictEqual(body[0].data, mockData);
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 
 			describe('when the namespace includes uppercase characters', () => {
 				beforeEach(() => {
-					global.fetch.mockClear();
+					global.fetch.mock.resetCalls();
 					instance.recordEvent('Mock.UPPER.Event', mockData);
 				});
 
 				it('hands the event to the client with the namespace converted to lower case', () => {
-					expect(instance.queue.mockItems[0].namespace).toBe('mock.upper.event');
+					assert.strictEqual(instance.queue.mockItems[0].namespace, 'mock.upper.event');
 				});
 			});
 
 			describe('when the namespace is not a string', () => {
 				beforeEach(() => {
-					global.fetch.mockClear();
+					global.fetch.mock.resetCalls();
 					instance.recordEvent(123, mockData);
 				});
 
 				it('does not record the event', () => {
-					expect(instance.queue.size).toBe(0);
+					assert.strictEqual(instance.queue.size, 0);
 				});
 
 				it('logs a warning about the namespace type', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: namespace (number) must be a string'
-					);
+					]);
 				});
 			});
 
 			describe('when the namespace includes invalid characters', () => {
 				beforeEach(() => {
-					global.fetch.mockClear();
+					global.fetch.mock.resetCalls();
 					instance.recordEvent('mock . namespace', mockData);
 				});
 
 				it('does not post the event', () => {
-					expect(instance.queue.size).toBe(0);
+					assert.strictEqual(instance.queue.size, 0);
 				});
 
 				it('logs a warning about valid namespace characters', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: namespace ("mock . namespace") must be a combination of alphanumeric characters, underscores, and hyphens, possibly separated by periods'
-					);
+					]);
 				});
 			});
 
 			describe('when event data is not defined', () => {
 				beforeEach(() => {
-					global.fetch.mockClear();
+					global.fetch.mock.resetCalls();
 					recordBatchOfEvents({
 						instance,
 						namespace: 'mock.event.empty.data'
@@ -400,10 +411,10 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 
 				it('hands the event to the client with an empty object as event data', () => {
-					expect(global.fetch).toHaveBeenCalledTimes(1);
-					const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-					expect(body[0].namespace).toStrictEqual('mock.event.empty.data');
-					expect(body[0].data).toStrictEqual({});
+					assert.strictEqual(global.fetch.mock.callCount(), 1);
+					const body = JSON.parse(global.fetch.mock.calls[0].arguments[1].body);
+					assert.strictEqual(body[0].namespace, 'mock.event.empty.data');
+					assert.deepStrictEqual(body[0].data, {});
 				});
 			});
 		});
@@ -413,7 +424,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			let eventHandler;
 
 			beforeEach(() => {
-				eventHandler = window.addEventListener.mock.calls[0][1];
+				eventHandler = window.addEventListener.mock.calls[0].arguments[1];
 				event = new CustomEvent('ft.clientMetric', {
 					detail: {
 						namespace: 'mock.event.check.event.handler',
@@ -424,16 +435,16 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('adds the event namespace and data to the queue of events to be sent', () => {
-				expect(instance.queue.size).toBe(1);
+				assert.strictEqual(instance.queue.size, 1);
 				const firstEl = instance.queue.mockItems[0];
-				expect(firstEl.namespace).toBe('mock.event.check.event.handler');
-				expect(firstEl.data).toStrictEqual({
+				assert.strictEqual(firstEl.namespace, 'mock.event.check.event.handler');
+				assert.deepStrictEqual(firstEl.data, {
 					mockProperty: 'mock-value'
 				});
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 
 			describe('when event.detail.namespace is not a string', () => {
@@ -444,14 +455,17 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 				it('does not add the event to the queue of events to be sent', () => {
 					const queueItems = instance.queue.mockItems;
-					expect(queueItems.filter((event) => event.namespace === 123).length).toBe(0);
+					assert.strictEqual(
+						queueItems.filter((event) => event.namespace === 123).length,
+						0
+					);
 				});
 
 				it('logs a warning about the namespace type', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: detail.namespace (number) must be a string'
-					);
+					]);
 				});
 			});
 
@@ -465,17 +479,18 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 				it('does not add the event to the queue of events to be sent', () => {
 					const queueItems = instance.queue.mockItems;
-					expect(
+					assert.strictEqual(
 						queueItems.filter((event) => event.namespace === 'event.detail.not.object')
-							.length
-					).toBe(0);
+							.length,
+						0
+					);
 				});
 
 				it('logs a warning about the detail type', () => {
-					expect(console.warn).toHaveBeenCalledTimes(1);
-					expect(console.warn).toHaveBeenCalledWith(
+					assert.strictEqual(console.warn.mock.callCount(), 1);
+					assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 						'Invalid metrics event: detail must be an object'
-					);
+					]);
 				});
 			});
 
@@ -488,122 +503,133 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					// The condition that gets us here is mostly there to satisfy TypeScript
 					// so we don't care about anyhing getting logged - I don't think it's
 					// a case that can actually happen
-					expect(console.warn).toHaveBeenCalledTimes(0);
+					assert.strictEqual(console.warn.mock.callCount(), 0);
 				});
 			});
 		});
 
 		describe('when the window location is not part of allowedHostnamePattern', () => {
 			beforeEach(() => {
-				global.fetch.mockClear();
+				global.fetch.mock.resetCalls();
 				window.location.hostname = 'mock-non-matching-hostname';
 				instance = new MetricsClient(options);
 			});
 
 			it('enables the client and uses the prod server', () => {
-				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe('https://client-metrics.ft.com/api/v1/ingest');
+				assert.strictEqual(instance.isEnabled, true);
+				assert.strictEqual(
+					instance.endpoint,
+					'https://client-metrics.ft.com/api/v1/ingest'
+				);
 			});
 		});
 
 		describe('when the hostname is on ft.com', () => {
 			beforeEach(() => {
-				global.fetch.mockClear();
+				global.fetch.mock.resetCalls();
 				window.location.hostname = 'example.ft.com';
 				instance = new MetricsClient(options);
 			});
 
 			it('enables the client and uses the production server', () => {
-				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe('https://client-metrics.ft.com/api/v1/ingest');
+				assert.strictEqual(instance.isEnabled, true);
+				assert.strictEqual(
+					instance.endpoint,
+					'https://client-metrics.ft.com/api/v1/ingest'
+				);
 			});
 		});
 
 		describe("when the hostname is on ft.com but it's local", () => {
 			beforeEach(() => {
-				global.fetch.mockClear();
+				global.fetch.mock.resetCalls();
 				window.location.hostname = 'local.ft.com';
 				instance = new MetricsClient(options);
 			});
 
 			it('enables the client and uses the production server', () => {
-				expect(instance.isEnabled).toBe(true);
-				expect(instance.endpoint).toBe('https://client-metrics-test.ft.com/api/v1/ingest');
+				assert.strictEqual(instance.isEnabled, true);
+				assert.strictEqual(
+					instance.endpoint,
+					'https://client-metrics-test.ft.com/api/v1/ingest'
+				);
 			});
 		});
 
 		describe('when options.systemCode is not a string', () => {
 			beforeEach(() => {
-				global.fetch.mockClear();
+				global.fetch.mock.resetCalls();
 				options.systemCode = 123;
 				instance = new MetricsClient(options);
 			});
 
 			it('does not enabled the client', () => {
-				expect(instance.isEnabled).toBe(false);
+				assert.strictEqual(instance.isEnabled, false);
 			});
 
 			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: systemCode must be be a combination of alphanumeric characters possibly separated by hyphens'
-				);
+				]);
 			});
 
 			it('logs a warning if trying to record an event', () => {
+				console.warn.mock.resetCalls();
 				instance.recordEvent('mock.event', { mockEventData: true });
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised properly, cannot record an event'
-				);
+				]);
 			});
 		});
 
 		describe('when options.systemCode includes invalid characters', () => {
 			beforeEach(() => {
-				global.fetch.mockClear();
+				global.fetch.mock.resetCalls();
 				options.systemCode = '123.456';
 				instance = new MetricsClient(options);
 			});
 
 			it('does not enabled the client', () => {
-				expect(instance.isEnabled).toBe(false);
+				assert.strictEqual(instance.isEnabled, false);
 			});
 
 			it('logs a warning about the invalid type', () => {
-				expect(console.warn).toHaveBeenCalledTimes(1);
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.strictEqual(console.warn.mock.callCount(), 1);
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised: systemCode must be be a combination of alphanumeric characters possibly separated by hyphens'
-				);
+				]);
 			});
 
 			it('logs a warning if trying to record an event', () => {
+				console.warn.mock.resetCalls();
 				instance.recordEvent('mock.event', { mockEventData: true });
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Client not initialised properly, cannot record an event'
-				);
+				]);
 			});
 		});
 
 		describe('when options.systemVersion is not set', () => {
 			beforeEach(() => {
-				global.fetch.mockClear();
+				global.fetch.mock.resetCalls();
 				delete options.systemVersion;
 				instance = new MetricsClient(options);
 			});
 
 			it('creates a client with a default version of 0.0.0', () => {
-				expect(instance.systemVersion).toStrictEqual('0.0.0');
+				assert.strictEqual(instance.systemVersion, '0.0.0');
 			});
 
 			it('does not log any warnings', () => {
-				expect(console.warn).toHaveBeenCalledTimes(0);
+				assert.strictEqual(console.warn.mock.callCount(), 0);
 			});
 		});
 
 		describe('when fetch rejects', () => {
 			beforeEach(async () => {
-				global.fetch.mockClear();
-				global.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
+				global.fetch.mock.resetCalls();
+				global.fetch = mock.fn(() => Promise.reject(new Error('Network down')));
 				instance = new MetricsClient(options);
 
 				recordBatchOfEvents({
@@ -614,11 +640,10 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 
 			it('logs a warning from the fetch catch handler', () => {
-				expect(console.warn).toHaveBeenCalledWith(
+				assert.deepStrictEqual(console.warn.mock.calls[0].arguments, [
 					'Error happened during fetch: ',
-					expect.any(Error)
-				);
-				expect(console.warn.mock.calls[0][1].message).toBe('Network down');
+					new Error('Network down')
+				]);
 			});
 		});
 	});
@@ -639,50 +664,50 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		describe('batchSize', () => {
 			const defaultBatchSize = 20;
 
-			afterAll(() => {
+			after(() => {
 				options.batchSize = undefined;
 			});
 
 			it('uses the default batchSize if none is passed when creating the client', () => {
 				const instance = new MetricsClient(options);
-				expect(instance.batchSize).toBe(defaultBatchSize);
+				assert.strictEqual(instance.batchSize, defaultBatchSize);
 			});
 
 			it('uses the default batchSize if a user try to set it to a smaller number than the default', () => {
 				options.batchSize = defaultBatchSize - 1;
 				const instance = new MetricsClient(options);
-				expect(instance.batchSize).toBe(defaultBatchSize);
+				assert.strictEqual(instance.batchSize, defaultBatchSize);
 			});
 
 			it('uses the batchSize option if its bigger than the default', () => {
 				options.batchSize = defaultBatchSize + 1;
 				const instance = new MetricsClient(options);
-				expect(instance.batchSize).toBe(defaultBatchSize + 1);
+				assert.strictEqual(instance.batchSize, defaultBatchSize + 1);
 			});
 		});
 
 		describe('retentionPeriod', () => {
 			const defaultRetentionPeriod = 10;
 
-			afterAll(() => {
+			after(() => {
 				options.retentionPeriod = undefined;
 			});
 
 			it('uses the default retentionPeriod if none is passed when creating the client', () => {
 				const instance = new MetricsClient(options);
-				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod);
+				assert.strictEqual(instance.retentionPeriod, defaultRetentionPeriod);
 			});
 
 			it('uses the default retentionPeriod if a user try to set it to a smaller number than the default', () => {
 				options.retentionPeriod = defaultRetentionPeriod - 1;
 				const instance = new MetricsClient(options);
-				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod);
+				assert.strictEqual(instance.retentionPeriod, defaultRetentionPeriod);
 			});
 
 			it('uses the batchSize option if its bigger than the default', () => {
 				options.retentionPeriod = defaultRetentionPeriod + 1;
 				const instance = new MetricsClient(options);
-				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod + 1);
+				assert.strictEqual(instance.retentionPeriod, defaultRetentionPeriod + 1);
 			});
 		});
 
@@ -693,20 +718,20 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('sends the events once the retentionPeriod is finished (even if the batch is not full)', () => {
 				instance.recordEvent('mock.event.timer', { data: 'ok' });
-				expect(global.fetch).toHaveBeenCalledTimes(0);
+				assert.strictEqual(global.fetch.mock.callCount(), 0);
 
 				// We check that we are sending event only after the elapsedTime
-				jest.advanceTimersByTime(10000);
-				expect(global.fetch).toHaveBeenCalledTimes(1);
+				mock.timers.tick(10000);
+				assert.strictEqual(global.fetch.mock.callCount(), 1);
 
-				const body = JSON.parse(global.fetch.mock.calls[0][1].body);
-				expect(body[0].namespace).toBe('mock.event.timer');
-				expect(instance.queue.size).toBe(0);
+				const body = JSON.parse(global.fetch.mock.calls[0].arguments[1].body);
+				assert.strictEqual(body[0].namespace, 'mock.event.timer');
+				assert.strictEqual(instance.queue.size, 0);
 			});
 
 			it('does not call fetch when retentionPeriod is finished but the queue is empty', () => {
-				jest.advanceTimersByTime(10000);
-				expect(global.fetch).toHaveBeenCalledTimes(0);
+				mock.timers.tick(10000);
+				assert.strictEqual(global.fetch.mock.callCount(), 0);
 			});
 
 			it('does not call fetch when batchSize is reached but the client is disabled', () => {
@@ -717,8 +742,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 					data: { ok: true }
 				});
 
-				expect(global.fetch).toHaveBeenCalledTimes(0);
-				expect(instance.queue.size).toBe(instance.batchSize);
+				assert.strictEqual(global.fetch.mock.callCount(), 0);
+				assert.strictEqual(instance.queue.size, instance.batchSize);
 			});
 
 			it('recursively sends multiple batches until the queue is empty', () => {
@@ -732,8 +757,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 
 				instance.enable();
-				jest.advanceTimersByTime(10000);
-				expect(global.fetch).toHaveBeenCalledTimes(3);
+				mock.timers.tick(10000);
+				assert.strictEqual(global.fetch.mock.callCount(), 3);
 			});
 		});
 	});

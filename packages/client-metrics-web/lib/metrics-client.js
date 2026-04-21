@@ -1,6 +1,6 @@
 // biome-ignore-all lint/suspicious/noConsole: required because we're in a browser environment
-const { InMemoryQueue } = require('./queue/in-memory-queue');
-const { Queue } = require('./queue/queue');
+import { InMemoryQueue } from './queue/in-memory-queue.js';
+import { Queue } from './queue/queue.js';
 
 /**
  * @import { MetricsClientOptions, MetricsClient as MetricsClientType, MetricsEvent } from '@dotcom-reliability-kit/client-metrics-web'
@@ -10,7 +10,7 @@ const namespacePattern = /^([a-z0-9_-]+)(\.[a-z0-9_-]+)*$/i;
 const testHostnamePattern = /(local|test|staging)/i;
 const systemCodePattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-exports.MetricsClient = class MetricsClient {
+export class MetricsClient {
 	/** @type {boolean} */
 	#isAvailable = false;
 
@@ -281,4 +281,4 @@ exports.MetricsClient = class MetricsClient {
 		}
 		return detail;
 	}
-};
+}

@@ -1,9 +1,9 @@
-const { Queue } = require('./queue');
+import { Queue } from './queue.js';
 
 /**
  * @import { QueueOptions, Metric, InMemoryQueue as InMemoryQueueType} from '@dotcom-reliability-kit/client-metrics-web'
  */
-exports.InMemoryQueue = class InMemoryQueue extends Queue {
+export class InMemoryQueue extends Queue {
 	/** @type { Metric[] } */
 	#queue;
 
@@ -51,4 +51,4 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	get size() {
 		return this.#queue.length;
 	}
-};
+}

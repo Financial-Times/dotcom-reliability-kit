@@ -1,8 +1,8 @@
-const express = require('express');
-const logger = require('@dotcom-reliability-kit/logger');
+import logger from '@dotcom-reliability-kit/logger';
+// We set up OpenTelemetry via `--import` but this allows us to grab the same instances
+import { setup } from '@dotcom-reliability-kit/opentelemetry';
+import express from 'express';
 
-// We set up OpenTelemetry via `--require` but this allows us to grab the same instances
-const { setup } = require('@dotcom-reliability-kit/opentelemetry');
 const { sdk } = setup();
 
 const app = express();

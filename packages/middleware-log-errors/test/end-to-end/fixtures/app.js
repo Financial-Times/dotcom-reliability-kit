@@ -1,5 +1,5 @@
-const express = require('express');
-const createErrorLogger = require('@dotcom-reliability-kit/middleware-log-errors');
+import createErrorLogger from '@dotcom-reliability-kit/middleware-log-errors';
+import express from 'express';
 
 const app = express();
 

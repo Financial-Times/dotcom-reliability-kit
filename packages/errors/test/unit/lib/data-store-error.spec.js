@@ -1,20 +1,21 @@
-const OperationalError = require('../../../lib/operational-error');
-const DataStoreError = require('../../../lib/data-store-error');
+import assert from 'node:assert/strict';
+import { afterEach, beforeEach, describe, it, mock } from 'node:test';
+import OperationalError from '../../../lib/operational-error.js';
+
+const { default: DataStoreError } = await import('../../../lib/data-store-error.js');
 
 describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 	afterEach(() => {
-		jest.restoreAllMocks();
+		mock.restoreAll();
 	});
 
 	it('exports a class', () => {
-		expect(DataStoreError).toBeInstanceOf(Function);
-		expect(() => {
-			DataStoreError();
-		}).toThrow(/class constructor/i);
+		assert.ok(DataStoreError instanceof Function);
+		assert.throws(() => DataStoreError(), /class constructor/i);
 	});
 
 	it('extends the OperationalError class', () => {
-		expect(DataStoreError.prototype).toBeInstanceOf(OperationalError);
+		assert.ok(DataStoreError.prototype instanceof OperationalError);
 	});
 
 	describe('new DataStoreError()', () => {
@@ -26,25 +27,25 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 
 		describe('.code', () => {
 			it('is set to "UNKNOWN"', () => {
-				expect(instance.code).toStrictEqual('UNKNOWN');
+				assert.strictEqual(instance.code, 'UNKNOWN');
 			});
 		});
 
 		describe('.data', () => {
 			it('is set to an empty object', () => {
-				expect(instance.data).toEqual({});
+				assert.deepStrictEqual(instance.data, {});
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to a default value', () => {
-				expect(instance.message).toStrictEqual('An operational error occurred');
+				assert.strictEqual(instance.message, 'An operational error occurred');
 			});
 		});
 
 		describe('.name', () => {
 			it('is set to "DataStoreError"', () => {
-				expect(instance.name).toStrictEqual('DataStoreError');
+				assert.strictEqual(instance.name, 'DataStoreError');
 			});
 		});
 	});
@@ -58,25 +59,25 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 
 		describe('.code', () => {
 			it('is set to "UNKNOWN"', () => {
-				expect(instance.code).toStrictEqual('UNKNOWN');
+				assert.strictEqual(instance.code, 'UNKNOWN');
 			});
 		});
 
 		describe('.data', () => {
 			it('is set to an empty object', () => {
-				expect(instance.data).toEqual({});
+				assert.deepStrictEqual(instance.data, {});
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to the passed in message parameter', () => {
-				expect(instance.message).toStrictEqual('mock message');
+				assert.strictEqual(instance.message, 'mock message');
 			});
 		});
 
 		describe('.name', () => {
 			it('is set to "DataStoreError"', () => {
-				expect(instance.name).toStrictEqual('DataStoreError');
+				assert.strictEqual(instance.name, 'DataStoreError');
 			});
 		});
 	});
@@ -85,7 +86,7 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(OperationalError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
+			mock.method(OperationalError, 'normalizeErrorCode', () => 'MOCK_CODE');
 			instance = new DataStoreError({
 				message: 'mock message',
 				code: 'mock_code',
@@ -95,13 +96,13 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 
 		describe('.code', () => {
 			it('is set to the normalized error code', () => {
-				expect(instance.code).toStrictEqual('MOCK_CODE');
+				assert.strictEqual(instance.code, 'MOCK_CODE');
 			});
 		});
 
 		describe('.data', () => {
 			it('is set to an object containing the extra keys in `data`', () => {
-				expect(instance.data).toEqual({
+				assert.deepStrictEqual(instance.data, {
 					extra: 'mock extra data'
 				});
 			});
@@ -109,13 +110,13 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 
 		describe('.message', () => {
 			it('is set to the data.message property', () => {
-				expect(instance.message).toStrictEqual('mock message');
+				assert.strictEqual(instance.message, 'mock message');
 			});
 		});
 
 		describe('.name', () => {
 			it('is set to "DataStoreError"', () => {
-				expect(instance.name).toStrictEqual('DataStoreError');
+				assert.strictEqual(instance.name, 'DataStoreError');
 			});
 		});
 	});
@@ -124,7 +125,7 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 		let instance;
 
 		beforeEach(() => {
-			jest.spyOn(OperationalError, 'normalizeErrorCode').mockReturnValue('MOCK_CODE');
+			mock.method(OperationalError, 'normalizeErrorCode', () => 'MOCK_CODE');
 			instance = new DataStoreError('mock message', {
 				code: 'mock_code'
 			});
@@ -132,20 +133,14 @@ describe('@dotcom-reliability-kit/errors/lib/data-store-error', () => {
 
 		describe('.code', () => {
 			it('is set to the normalized error code', () => {
-				expect(instance.code).toStrictEqual('MOCK_CODE');
+				assert.strictEqual(instance.code, 'MOCK_CODE');
 			});
 		});
 
 		describe('.message', () => {
 			it('is set to the data.message property', () => {
-				expect(instance.message).toStrictEqual('mock message');
+				assert.strictEqual(instance.message, 'mock message');
 			});
-		});
-	});
-
-	describe('.default', () => {
-		it('aliases the module exports', () => {
-			expect(DataStoreError.default).toStrictEqual(DataStoreError);
 		});
 	});
 });

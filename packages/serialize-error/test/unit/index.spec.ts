@@ -1,0 +1,367 @@
+import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
+import serializeError from '../../index.ts';
+
+describe('@dotcom-reliability-kit/serialize-error', () => {
+	describe('when called with an error object', () => {
+		let error: Error & Record<string, any>;
+
+		beforeEach(() => {
+			error = new Error('mock message');
+			error.stack = 'Error: mock message\nmock line 1\nmock line 2';
+		});
+
+		it('returns the expected serialized error properties', () => {
+			assert.partialDeepStrictEqual(serializeError(error), {
+				// MD5 hash of the first two lines of the mock error stack above
+				fingerprint: '9b5df16d105739b263ecfbf4e8a31f95',
+				name: 'Error',
+				code: 'UNKNOWN',
+				message: 'mock message',
+				isOperational: false,
+				relatesToSystems: [],
+				cause: null,
+				stack: error.stack,
+				statusCode: null,
+				data: {}
+			});
+		});
+
+		describe('when the error is an instance of something other than `Error`', () => {
+			it('returns the class name in the serialized error properties', () => {
+				error = new TypeError('mock type error');
+				assert.partialDeepStrictEqual(serializeError(error), {
+					name: 'TypeError'
+				});
+			});
+		});
+
+		describe('when the error has a `code` property', () => {
+			it('returns the code in the serialized error properties', () => {
+				error.code = 'MOCK_CODE';
+				assert.partialDeepStrictEqual(serializeError(error), {
+					code: 'MOCK_CODE'
+				});
+			});
+
+			describe('when the `code` property is not a string', () => {
+				it('casts the given value to a string', () => {
+					error.code = 123;
+					assert.partialDeepStrictEqual(serializeError(error), {
+						code: '123'
+					});
+				});
+			});
+		});
+
+		describe('when the error has an `isOperational` property', () => {
+			it('returns whether the error is operational in the serialized error properties', () => {
+				error.isOperational = true;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					isOperational: true
+				});
+			});
+
+			describe('when the `isOperational` property is not a boolean', () => {
+				it('casts the given value to a boolean', () => {
+					error.isOperational = 1;
+					assert.partialDeepStrictEqual(serializeError(error), {
+						isOperational: true
+					});
+				});
+			});
+		});
+
+		describe('when the error has a `relatesToSystems` property', () => {
+			it('includes the related systems in the error', () => {
+				error.relatesToSystems = ['system-one'];
+				assert.partialDeepStrictEqual(serializeError(error), {
+					relatesToSystems: ['system-one']
+				});
+			});
+
+			describe('when the `relatesToSystems` property is not an array', () => {
+				it('is set to the default empty array', () => {
+					error.relatesToSystems = 'system-one';
+					assert.partialDeepStrictEqual(serializeError(error), {
+						relatesToSystems: []
+					});
+				});
+			});
+		});
+
+		describe('when the error has a `cause` property', () => {
+			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
+				const rootCauseErrorInstance = new Error('mock root cause error message');
+				error.cause = rootCauseErrorInstance;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					cause: serializeError(rootCauseErrorInstance)
+				});
+				assert.partialDeepStrictEqual(serializeError(error).cause, {
+					message: 'mock root cause error message'
+				});
+			});
+
+			describe('when the `cause` property is not an Error instance', () => {
+				it('serializes it', () => {
+					error.cause = 'foo';
+					assert.partialDeepStrictEqual(serializeError(error).cause, {
+						message: 'foo'
+					});
+				});
+			});
+		});
+
+		describe('when the error is an AggregateError', () => {
+			it('serialises its errors', () => {
+				const aggregateError = new AggregateError(
+					[new Error('error one'), new Error('error two'), new Error('error three')],
+					'aggregate error message'
+				);
+
+				const serializedError = serializeError(aggregateError);
+				const subErrors = serializedError.errors as Error[];
+				assert.partialDeepStrictEqual(serializedError, {
+					message: 'aggregate error message',
+					errors: []
+				});
+				assert.partialDeepStrictEqual(subErrors[0], { message: 'error one' });
+				assert.partialDeepStrictEqual(subErrors[1], { message: 'error two' });
+				assert.partialDeepStrictEqual(subErrors[2], { message: 'error three' });
+			});
+		});
+
+		describe('when the error has a `statusCode` property', () => {
+			it('returns the status code in the serialized error properties', () => {
+				error.statusCode = 456;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					statusCode: 456
+				});
+			});
+
+			describe('when the `statusCode` property is not a number', () => {
+				it('casts the given value to a number', () => {
+					error.statusCode = '123';
+					assert.partialDeepStrictEqual(serializeError(error), {
+						statusCode: 123
+					});
+				});
+			});
+		});
+
+		describe('when the error has a `status` property', () => {
+			it('returns the status code in the serialized error properties', () => {
+				error.status = 456;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					statusCode: 456
+				});
+			});
+
+			describe('when the `status` property is not a number', () => {
+				it('casts the given value to a number', () => {
+					error.status = '123';
+					assert.partialDeepStrictEqual(serializeError(error), {
+						statusCode: 123
+					});
+				});
+			});
+		});
+
+		describe('when the error has additional data', () => {
+			it('returns the data in the serialized error properties', () => {
+				error.data = {
+					isMockData: true
+				};
+				assert.partialDeepStrictEqual(serializeError(error), {
+					data: {
+						isMockData: true
+					}
+				});
+			});
+
+			describe('when the `data` property is not an object', () => {
+				it('defaults the data to an empty object', () => {
+					error.data = null;
+					assert.partialDeepStrictEqual(serializeError(error), {
+						data: {}
+					});
+				});
+			});
+		});
+	});
+
+	describe('when called with an error-like object', () => {
+		let error: Record<string, any>;
+
+		beforeEach(() => {
+			error = {};
+		});
+
+		it('returns the expected serialized error properties', () => {
+			assert.partialDeepStrictEqual(serializeError(error), {
+				fingerprint: null,
+				name: 'Error',
+				code: 'UNKNOWN',
+				message: 'An error occurred',
+				isOperational: false,
+				relatesToSystems: [],
+				cause: null,
+				stack: null,
+				statusCode: null,
+				data: {}
+			});
+		});
+
+		describe('when the object has a `name` property', () => {
+			it('returns the name in the serialized error properties', () => {
+				error.name = 'MockError';
+				assert.partialDeepStrictEqual(serializeError(error), {
+					name: 'MockError'
+				});
+			});
+		});
+
+		describe('when the object has a `code` property', () => {
+			it('returns the code in the serialized error properties', () => {
+				error.code = 'MOCK_CODE';
+				assert.partialDeepStrictEqual(serializeError(error), {
+					code: 'MOCK_CODE'
+				});
+			});
+		});
+
+		describe('when the object has a `message` property', () => {
+			it('returns the message in the serialized error properties', () => {
+				error.message = 'mock message';
+				assert.partialDeepStrictEqual(serializeError(error), {
+					message: 'mock message'
+				});
+			});
+		});
+
+		describe('when the object has an `isOperational` property', () => {
+			it('returns whether the error is operational in the serialized error properties', () => {
+				error.isOperational = true;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					isOperational: true
+				});
+			});
+		});
+
+		describe('when the error has a `relatesToSystems` property', () => {
+			it('includes the related systems in the error', () => {
+				error.relatesToSystems = ['system-one'];
+				assert.partialDeepStrictEqual(serializeError(error), {
+					relatesToSystems: ['system-one']
+				});
+			});
+
+			describe('when the `relatesToSystems` property is not an array', () => {
+				it('is set to the default empty array', () => {
+					error.relatesToSystems = 'system-one';
+					assert.partialDeepStrictEqual(serializeError(error), {
+						relatesToSystems: []
+					});
+				});
+			});
+		});
+
+		describe('when the object has a `cause` property', () => {
+			it('includes the root cause error instance in serialized form in the serialized error properties', () => {
+				const rootCauseErrorInstance = new Error('mock root cause error message');
+				error.cause = rootCauseErrorInstance;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					cause: serializeError(rootCauseErrorInstance)
+				});
+				assert.partialDeepStrictEqual(serializeError(error).cause, {
+					message: 'mock root cause error message'
+				});
+			});
+		});
+
+		describe('when the object has a `statusCode` property', () => {
+			it('returns the status code in the serialized error properties', () => {
+				error.statusCode = 456;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					statusCode: 456
+				});
+			});
+		});
+
+		describe('when the object has a `status` property', () => {
+			it('returns the status code in the serialized error properties', () => {
+				error.status = 456;
+				assert.partialDeepStrictEqual(serializeError(error), {
+					statusCode: 456
+				});
+			});
+		});
+
+		describe('when the object has additional data', () => {
+			it('returns the data in the serialized error properties', () => {
+				error.data = {
+					isMockData: true
+				};
+				assert.partialDeepStrictEqual(serializeError(error), {
+					data: {
+						isMockData: true
+					}
+				});
+			});
+		});
+	});
+
+	describe('when called with a string', () => {
+		it('returns the expected serialized error properties', () => {
+			const error = 'mock message';
+			assert.partialDeepStrictEqual(serializeError(error), {
+				fingerprint: null,
+				name: 'Error',
+				code: 'UNKNOWN',
+				message: 'mock message',
+				isOperational: false,
+				relatesToSystems: [],
+				cause: null,
+				stack: null,
+				statusCode: null,
+				data: {}
+			});
+		});
+	});
+
+	describe('when called with a number', () => {
+		it('returns the expected serialized error properties', () => {
+			const error = 123;
+			assert.partialDeepStrictEqual(serializeError(error), {
+				fingerprint: null,
+				name: 'Error',
+				code: 'UNKNOWN',
+				message: '123',
+				isOperational: false,
+				relatesToSystems: [],
+				cause: null,
+				stack: null,
+				statusCode: null,
+				data: {}
+			});
+		});
+	});
+
+	describe('when called with an array', () => {
+		it('returns the expected serialized error properties', () => {
+			const error = ['mock', 'message'];
+			assert.partialDeepStrictEqual(serializeError(error), {
+				fingerprint: null,
+				name: 'Error',
+				code: 'UNKNOWN',
+				message: 'mock,message',
+				isOperational: false,
+				relatesToSystems: [],
+				cause: null,
+				stack: null,
+				statusCode: null,
+				data: {}
+			});
+		});
+	});
+});

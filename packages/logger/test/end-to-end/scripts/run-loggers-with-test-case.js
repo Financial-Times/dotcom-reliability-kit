@@ -1,18 +1,9 @@
-// These environment variables are required to make n-logger
-// output JSON logs which can be tested against Reliability Kit
-process.env.MIGRATE_TO_HEROKU_LOG_DRAINS = 'true';
-process.env.SPLUNK_LOG_LEVEL = 'silly';
+import nLogger from '@financial-times/n-logger';
+import reliabilityKitLogger, { Logger, transforms } from '../../../lib/index.js';
+import testCases from '../compatibility-test-cases.js';
 
-// This environment variable is required to ensure that Reliability
-// Kit logger outputs JSON regardless of NODE_ENV
-process.env.LOG_DISABLE_PRETTIFIER = 'true';
-
-const nLogger = require('@financial-times/n-logger').default;
-const reliabilityKitLogger = require('../../../lib');
-const testCases = require('../compatibility-test-cases');
-
-const reliabilityKitMaskLogger = new reliabilityKitLogger.Logger({
-	transforms: [reliabilityKitLogger.transforms.legacyMask()]
+const reliabilityKitMaskLogger = new Logger({
+	transforms: [transforms.legacyMask()]
 });
 
 // The test case ID is passed as an additional argument on the command.
@@ -25,8 +16,8 @@ if (!testCase) {
 const { method, args } = testCase.call;
 
 // Run n-logger
-if (nLogger[method]) {
-	nLogger[method](...args, { _logger: 'nextLogger' });
+if (nLogger.default[method]) {
+	nLogger.default[method](...args, { _logger: 'nextLogger' });
 }
 
 // Run reliability kit logger
