@@ -4,7 +4,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		systemVersion?: string;
 		environment?: 'production' | 'test';
 		batchSize?: number;
-		retentionPeriod?: number;
+		currentSendIntervalSeconds?: number;
 		queue?: Queue;
 	};
 
@@ -14,7 +14,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		get isEnabled(): boolean;
 		get endpoint(): string;
 		get batchSize(): number;
-		get retentionPeriod(): number;
+		get currentSendIntervalSeconds(): number;
 		get systemVersion(): string;
 		get queue(): readonly Queue;
 		get isOffline(): boolean;

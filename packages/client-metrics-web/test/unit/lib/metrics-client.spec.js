@@ -644,28 +644,28 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 		});
 
-		describe('retentionPeriod', () => {
-			const defaultRetentionPeriod = 10;
+		describe('currentSendIntervalSeconds', () => {
+			const defaultSendIntervalSeconds = 10;
 
 			afterAll(() => {
-				options.retentionPeriod = undefined;
+				options.currentSendIntervalSeconds = undefined;
 			});
 
-			it('uses the default retentionPeriod if none is passed when creating the client', () => {
+			it('uses the default currentSendIntervalSeconds if none is passed when creating the client', () => {
 				const instance = new MetricsClient(options);
-				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod);
+				expect(instance.currentSendIntervalSeconds).toBe(defaultSendIntervalSeconds);
 			});
 
-			it('uses the default retentionPeriod if a user try to set it to a smaller number than the default', () => {
-				options.retentionPeriod = defaultRetentionPeriod - 1;
+			it('uses the default currentSendIntervalSeconds if a user try to set it to a smaller number than the default', () => {
+				options.currentSendIntervalSeconds = defaultSendIntervalSeconds - 1;
 				const instance = new MetricsClient(options);
-				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod);
+				expect(instance.currentSendIntervalSeconds).toBe(defaultSendIntervalSeconds);
 			});
 
 			it('uses the batchSize option if its bigger than the default', () => {
-				options.retentionPeriod = defaultRetentionPeriod + 1;
+				options.currentSendIntervalSeconds = defaultSendIntervalSeconds + 1;
 				const instance = new MetricsClient(options);
-				expect(instance.retentionPeriod).toBe(defaultRetentionPeriod + 1);
+				expect(instance.currentSendIntervalSeconds).toBe(defaultSendIntervalSeconds + 1);
 			});
 		});
 
@@ -674,7 +674,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				instance.enable();
 			});
 
-			it('sends the events once the retentionPeriod is finished (even if the batch is not full)', () => {
+			it('sends the events once the currentSendIntervalSeconds is finished (even if the batch is not full)', () => {
 				instance.recordEvent('mock.event.timer', { data: 'ok' });
 				expect(global.fetch).toHaveBeenCalledTimes(0);
 
@@ -687,7 +687,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				expect(instance.queue.size).toBe(0);
 			});
 
-			it('does not call fetch when retentionPeriod is finished but the queue is empty', () => {
+			it('does not call fetch when currentSendIntervalSeconds is finished but the queue is empty', () => {
 				jest.advanceTimersByTime(10000);
 				expect(global.fetch).toHaveBeenCalledTimes(0);
 			});
@@ -805,8 +805,8 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 		});
 
 		describe('when the client is offline long enough', () => {
-			it('increases the retention period', async () => {
-				const initialRetentionPeriod = instance.retentionPeriod;
+			it('increases the currentSendIntervalSeconds', async () => {
+				const initialSendIntervalSeconds = instance.currentSendIntervalSeconds;
 
 				recordBatchOfEvents({
 					instance,
@@ -816,13 +816,13 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 				await setTimeout(1);
 
-				expect(instance.retentionPeriod).toBe(
-					initialRetentionPeriod + initialRetentionPeriod * 0.5
+				expect(instance.currentSendIntervalSeconds).toBe(
+					initialSendIntervalSeconds + initialSendIntervalSeconds * 0.5
 				);
 			});
 
-			it('does not increase the retention period more than 2 minutes', async () => {
-				const maxRetentionPeriod = 120;
+			it('does not increase the currentSendIntervalSeconds more than 2 minutes', async () => {
+				const maxSendIntervalSeconds = 120;
 
 				recordBatchOfEvents({
 					instance,
@@ -832,7 +832,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 				});
 				await setTimeout(1);
 
-				expect(instance.retentionPeriod).toBe(maxRetentionPeriod);
+				expect(instance.currentSendIntervalSeconds).toBe(maxSendIntervalSeconds);
 			});
 		});
 
@@ -852,7 +852,7 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 
 			it('no longer considers the client to be offline and reset the retention period back to 10 seconds', async () => {
 				expect(instance.isOffline).toBe(false);
-				expect(instance.retentionPeriod).toBe(10);
+				expect(instance.currentSendIntervalSeconds).toBe(10);
 			});
 		});
 	});
