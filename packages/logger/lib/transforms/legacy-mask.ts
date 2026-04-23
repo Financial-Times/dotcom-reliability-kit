@@ -1,13 +1,20 @@
-/**
- * @import { InternalMaskSettings } from '../../types/transforms/legacy-mask.d.ts'
- * @import CreateLegacyMaskTransform from '../../types/transforms/legacy-mask.d.ts'
- */
+import type { LogTransform } from '../logger.ts';
+
+interface LegacyMaskTransformOptions {
+	denyList?: string[];
+	allowList?: string[];
+	maskString?: string;
+}
+
+interface InternalMaskSettings {
+	maskedFields: Set<string>;
+	maskRegExp: RegExp;
+	maskString: string;
+	references: WeakSet<{ [key: string]: any }>;
+}
 
 /**
  * The default masked fields.
- *
- * @private
- * @type {string[]}
  */
 const DEFAULT_MASKED_FIELDS = [
 	'email',
@@ -27,9 +34,6 @@ const DEFAULT_MASKED_FIELDS = [
 
 /**
  * Properties of an error object we need to mask.
- *
- * @private
- * @type {string[]}
  */
 const ERROR_OBJECT_PROPERTIES = [
 	'name',
@@ -42,15 +46,8 @@ const ERROR_OBJECT_PROPERTIES = [
 
 /**
  * Mask an unknown value.
- *
- * @param {any} value
- *     The value to mask.
- * @param {InternalMaskSettings} settings
- *     The settings to use for masking.
- * @returns {any}
- *     Returns the masked value.
  */
-function mask(value, settings) {
+function mask(value: any, settings: InternalMaskSettings) {
 	if (typeof value === 'string') {
 		return maskString(value, settings);
 	}
@@ -74,15 +71,8 @@ function mask(value, settings) {
 
 /**
  * Mask a string.
- *
- * @param {string} string
- *     The string to mask.
- * @param {InternalMaskSettings} settings
- *     The settings to use for masking.
- * @returns {string}
- *     Returns the masked string.
  */
-function maskString(string, settings) {
+function maskString(string: string, settings: InternalMaskSettings) {
 	// Guess to see if string is stringified JSON and parse as object for better masking
 	if (string.startsWith('{')) {
 		try {
@@ -100,18 +90,11 @@ function maskString(string, settings) {
 
 /**
  * Mask properties and values of an object.
- *
- * @param {object} object
- *     The object to mask.
- * @param {InternalMaskSettings} settings
- *     The settings to use for masking.
- * @returns {object}
- *     Returns the masked object.
  */
-function maskObject(object, settings) {
+function maskObject(object: Record<string, any>, settings: InternalMaskSettings) {
 	// Make a new object rather than modifying the original
 	// which could have some side effects
-	const maskedObject = {};
+	const maskedObject: Record<string, any> = {};
 
 	// Loop over object properties to mask all keys and values
 	for (const key in object) {
@@ -142,14 +125,12 @@ function maskObject(object, settings) {
 
 /**
  * Create a log transform function which masks sensitive fields in log data.
- *
- * @type {CreateLegacyMaskTransform}
  */
 export default function createLegacyMaskTransform({
 	denyList = [],
 	allowList = [],
 	maskString = '*****'
-} = {}) {
+}: LegacyMaskTransformOptions = {}): LogTransform {
 	// Deduplicate the mask list and filter out explicitly allowed values
 	const maskedFields = new Set(
 		[...DEFAULT_MASKED_FIELDS, ...denyList].filter((item) => !allowList.includes(item))

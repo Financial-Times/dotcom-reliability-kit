@@ -3,29 +3,51 @@ import serializeError from '@dotcom-reliability-kit/serialize-error';
 import clone from 'lodash.clonedeep';
 import pino from 'pino';
 
-/**
- * @import {
- *   BaseLogData,
- *   LogData,
- *   LoggerInterface,
- *   LoggerOptions,
- *   LogLevel,
- *   LogLevelInfo,
- *   LogSerializer,
- *   LogTransform,
- *   LogTransport,
- *   PrivateLoggerOptions
- * } from '../types/logger.d.ts';
- */
+type LogLevel = 'silly' | 'data' | 'debug' | 'verbose' | 'info' | 'warn' | 'error' | 'fatal';
+
+interface LogLevelInfo {
+	logLevel: LogLevel;
+	isDeprecated: boolean;
+	isDefaulted: boolean;
+}
+
+interface BaseLogData {
+	[key: string]: any;
+}
+type LogData = string | BaseLogData | Error;
+
+export type LogTransform = (logData: { [key: string]: any }) => { [key: string]: any };
+type LogSerializer = (value: any, propertyName: string) => any;
+
+interface LogTransport {
+	level?: string;
+	debug: (...args: any) => any;
+	error: (...args: any) => any;
+	fatal: (...args: any) => any;
+	info: (...args: any) => any;
+	warn: (...args: any) => any;
+	flush?: () => void;
+}
+
+interface LoggerOptions {
+	appInfo?: typeof appInfo;
+	baseLogData?: object;
+	logLevel?: LogLevel;
+	transforms?: LogTransform[];
+	serializers?: { [key: string]: LogSerializer };
+	withPrettifier?: boolean;
+}
+
+export interface PrivateLoggerOptions {
+	_transport?: LogTransport;
+}
 
 /**
  * A map of log levels to the underlying log method that
  * should be called when a log of that level is sent, as
  * well as the deprecation status of the log level.
- *
- * @type {{[key: string]: LogLevelInfo}}
  */
-const logLevelToTransportMethodMap = {
+const logLevelToTransportMethodMap: { [key: string]: LogLevelInfo } = {
 	data: { logLevel: 'debug', isDeprecated: true, isDefaulted: false },
 	debug: { logLevel: 'debug', isDeprecated: false, isDefaulted: false },
 	default: { logLevel: 'info', isDeprecated: false, isDefaulted: true },
@@ -39,8 +61,6 @@ const logLevelToTransportMethodMap = {
 
 /**
  * A list of supported log levels.
- *
- * @type {string[]}
  */
 const logLevels = Object.keys(logLevelToTransportMethodMap);
 
@@ -50,53 +70,19 @@ const logLevels = Object.keys(logLevelToTransportMethodMap);
  * @implements {LoggerInterface}
  */
 export default class Logger {
-	/**
-	 * @type {LogLevel}
-	 */
-	#logLevel = 'debug';
-
-	/**
-	 * @type {BaseLogData}
-	 */
-	#baseLogData = {};
-
-	/**
-	 * @type {{[key: string]: LogSerializer}}
-	 */
-	#serializers = {};
-
-	/**
-	 * @type {string[]}
-	 */
-	#serializedProperties = [];
-
-	/**
-	 * @type {LogTransform[]}
-	 */
-	#transforms = [];
-
-	/**
-	 * @type {LogTransport}
-	 */
-	#logTransport;
-
-	/**
-	 * @type {string[]}
-	 */
-	#deprecatedMethodTracker = [];
-
-	/**
-	 * @type {string[]}
-	 */
-	#defaultedLogLevelTracker = [];
+	#logLevel: LogLevel = 'debug';
+	#baseLogData: BaseLogData = {};
+	#serializers: { [key: string]: LogSerializer } = {};
+	#serializedProperties: string[] = [];
+	#transforms: LogTransform[] = [];
+	#logTransport: LogTransport;
+	#deprecatedMethodTracker: string[] = [];
+	#defaultedLogLevelTracker: string[] = [];
 
 	/**
 	 * Create a logger.
-	 *
-	 * @param {LoggerOptions & PrivateLoggerOptions} [options]
-	 *     Options to configure the logger.
 	 */
-	constructor(options = {}) {
+	constructor(options: LoggerOptions & PrivateLoggerOptions = {}) {
 		// Default and set the base log data option
 		if (options.baseLogData) {
 			// TODO when we remove `setContext` and `clearContext` we can freeze this
@@ -165,8 +151,7 @@ export default class Logger {
 			this.#logTransport = options._transport;
 		} else {
 			// Otherwise set up Pino to replicate n-logger as closely as possible
-			/** @type {pino.LoggerOptions} */
-			const pinoOptions = {
+			const pinoOptions: pino.LoggerOptions = {
 				base: {},
 				formatters: {
 					level(label) {
@@ -225,7 +210,7 @@ export default class Logger {
 	/**
 	 * Create a child logger with additional base log data.
 	 */
-	createChildLogger(baseLogData) {
+	createChildLogger(baseLogData: BaseLogData) {
 		return new Logger({
 			_transport: this.transport,
 			baseLogData: Object.assign({}, this.#baseLogData, baseLogData),
@@ -236,8 +221,9 @@ export default class Logger {
 
 	/**
 	 * Add additional log data to all subsequent log calls.
+	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
 	 */
-	addContext(extraLogData) {
+	addContext(extraLogData: LogData) {
 		this.#baseLogData = Object.assign({}, this.#baseLogData, extraLogData);
 		if (!this.#deprecatedMethodTracker.includes('addContext')) {
 			this.#deprecatedMethodTracker.push('addContext');
@@ -251,8 +237,9 @@ export default class Logger {
 
 	/**
 	 * Set the `context` property for all subsequent log calls.
+	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
 	 */
-	setContext(contextData) {
+	setContext(contextData: LogData) {
 		this.#baseLogData.context = contextData;
 		if (!this.#deprecatedMethodTracker.includes('setContext')) {
 			this.#deprecatedMethodTracker.push('setContext');
@@ -266,6 +253,7 @@ export default class Logger {
 
 	/**
 	 * Clear the `context` property for all subsequent log calls.
+	 * @deprecated Please create a child logger with `createChildLogger` or use the `baseLogData` option.
 	 */
 	clearContext() {
 		delete this.#baseLogData.context;
@@ -282,7 +270,7 @@ export default class Logger {
 	/**
 	 * Send a log.
 	 */
-	log(level, ...logData) {
+	log(level: LogLevel, ...logData: LogData[]) {
 		if (typeof level !== 'string') {
 			throw new TypeError('The log `level` argument must be a string');
 		}
@@ -349,57 +337,60 @@ export default class Logger {
 
 	/**
 	 * Send a log with a level of "data".
+	 * @deprecated Please use a log level of "debug" instead.
 	 */
-	data(...logData) {
+	data(...logData: LogData[]) {
 		this.log('data', ...logData);
 	}
 
 	/**
 	 * Send a log with a level of "debug".
 	 */
-	debug(...logData) {
+	debug(...logData: LogData[]) {
 		this.log('debug', ...logData);
 	}
 
 	/**
 	 * Send a log with a level of "error".
 	 */
-	error(...logData) {
+	error(...logData: LogData[]) {
 		this.log('error', ...logData);
 	}
 
 	/**
 	 * Send a log with a level of "fatal".
 	 */
-	fatal(...logData) {
+	fatal(...logData: LogData[]) {
 		this.log('fatal', ...logData);
 	}
 
 	/**
 	 * Send a log with a level of "info".
 	 */
-	info(...logData) {
+	info(...logData: LogData[]) {
 		this.log('info', ...logData);
 	}
 
 	/**
 	 * Send a log with a level of "silly".
+	 * @deprecated Please use a log level of "debug" instead.
 	 */
-	silly(...logData) {
+	silly(...logData: LogData[]) {
 		this.log('silly', ...logData);
 	}
 
 	/**
 	 * Send a log with a level of "verbose".
+	 * @deprecated Please use a log level of "debug" instead.
 	 */
-	verbose(...logData) {
+	verbose(...logData: LogData[]) {
 		this.log('verbose', ...logData);
 	}
 
 	/**
 	 * Send a log with a level of "warn".
 	 */
-	warn(...logData) {
+	warn(...logData: LogData[]) {
 		this.log('warn', ...logData);
 	}
 
@@ -414,51 +405,31 @@ export default class Logger {
 
 	/**
 	 * Get information on a given log level.
-	 *
-	 * @private
-	 * @param {string} level
-	 *     The log level to get information for.
-	 * @returns {LogLevelInfo}
-	 *     Returns information about the log level.
 	 */
-	static getLogLevelInfo(level) {
+	private static getLogLevelInfo(level: string) {
 		return logLevelToTransportMethodMap[level] || logLevelToTransportMethodMap.default;
 	}
 
 	/**
 	 * Combine multiple log data into a single zipped object.
-	 *
-	 * @private
-	 * @param {...LogData} logData
-	 *     The log data.
-	 * @returns {BaseLogData}
-	 *     Returns a single zipped object containing all log data.
 	 */
-	static zipLogData(...logData) {
+	private static zipLogData(...logData: LogData[]) {
 		// We reverse the log data to maintain compatibility with n-logger,
 		// which always uses the _first_ instance of a property or message
 		// rather than the last
 		const reversedLogData = logData.reverse();
 		return clone(
-			reversedLogData.reduce(
-				/**
-				 * @param {BaseLogData} collect
-				 * @param {LogData} item
-				 * @returns {BaseLogData}
-				 */
-				(collect, item) => {
-					if (typeof item === 'string') {
-						return Object.assign(collect, { message: item });
-					}
-					if (item instanceof Error) {
-						return Object.assign(collect, {
-							error: serializeError(item)
-						});
-					}
-					return Object.assign(collect, item);
-				},
-				{}
-			)
+			reversedLogData.reduce((collect: BaseLogData, item: LogData) => {
+				if (typeof item === 'string') {
+					return Object.assign(collect, { message: item });
+				}
+				if (item instanceof Error) {
+					return Object.assign(collect, {
+						error: serializeError(item)
+					});
+				}
+				return Object.assign(collect, item);
+			}, {})
 		);
 	}
 }

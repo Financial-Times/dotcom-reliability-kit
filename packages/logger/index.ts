@@ -1,5 +1,5 @@
-import Logger from './logger.js';
-import legacyMask from './transforms/legacy-mask.js';
+import Logger from './lib/logger.ts';
+import legacyMask from './lib/transforms/legacy-mask.ts';
 
 export const transforms = { legacyMask };
 export { Logger };

@@ -8,6 +8,9 @@
 			"path": "packages/crash-handler"
 		},
 		{
+			"path": "packages/logger"
+		},
+		{
 			"path": "packages/serialize-error"
 		},
 		{
