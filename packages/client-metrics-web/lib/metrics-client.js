@@ -38,17 +38,33 @@ exports.MetricsClient = class MetricsClient {
 	/** @type {number} */
 	#elapsedSeconds = 0;
 
-	/** @type {number} */
-	#defaultRetentionPeriod = 10;
+	// The currentSendIntervalSeconds is the time we wait before we try or retry to send metrics
+	// It is used to send metrics on a regular interval when we don't get lots of events
+	// Or if we failed to send metrics previously and we need to retry
 
 	/** @type {number} */
-	#retentionPeriod = this.#defaultRetentionPeriod;
+	#defaultSendIntervalSeconds = 10;
 
 	/** @type {number} */
-	#fetchAttempt = 0;
+	#currentSendIntervalSeconds = this.#defaultSendIntervalSeconds;
 
 	/** @type {number} */
-	#maxFetchAttempt = 10;
+	#sendIntervalMultiplier = 0.5;
+
+	/** @type {number} */
+	#maxSendIntervalSeconds = 120; // = 2 minutes
+
+	// We can have several fetches running in parallel
+	// so we want to limit how many of them can be running
+
+	/** @type {number} */
+	#runningFetches = 0;
+
+	/** @type {number} */
+	#maxFetchesRunningInParallel = 10;
+
+	// We keep track of how many times fetches failed in a row
+	// to detect offline or flaky network
 
 	/** @type {number} */
 	#fetchFailed = 0;
@@ -56,17 +72,18 @@ exports.MetricsClient = class MetricsClient {
 	/** @type {number} */
 	#maxFetchFailed = 3;
 
-	/** @type {number} */
-	#increasePercentage = 0.5;
-
-	/** @type {number} */
-	#maxRetentionPeriod = 120;
-
 	/**
 	 * @param {MetricsClientOptions} options
 	 */
 	constructor(options) {
-		let { systemCode, systemVersion, environment, batchSize, retentionPeriod, queue } = options;
+		let {
+			systemCode,
+			systemVersion,
+			environment,
+			batchSize,
+			currentSendIntervalSeconds,
+			queue
+		} = options;
 
 		if (queue) {
 			if (!(queue instanceof Queue)) {
@@ -110,8 +127,11 @@ exports.MetricsClient = class MetricsClient {
 				this.#batchSize = Math.max(batchSize, this.#batchSize);
 			}
 
-			if (retentionPeriod && typeof retentionPeriod === 'number') {
-				this.#retentionPeriod = Math.max(retentionPeriod, this.#retentionPeriod);
+			if (currentSendIntervalSeconds && typeof currentSendIntervalSeconds === 'number') {
+				this.#currentSendIntervalSeconds = Math.max(
+					currentSendIntervalSeconds,
+					this.#currentSendIntervalSeconds
+				);
 			}
 
 			this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);
@@ -143,9 +163,9 @@ exports.MetricsClient = class MetricsClient {
 		return this.#batchSize;
 	}
 
-	/** @type {MetricsClientType['retentionPeriod']} */
-	get retentionPeriod() {
-		return this.#retentionPeriod;
+	/** @type {MetricsClientType['currentSendIntervalSeconds']} */
+	get currentSendIntervalSeconds() {
+		return this.#currentSendIntervalSeconds;
 	}
 
 	/** @type {MetricsClientType['systemVersion']} */
@@ -160,8 +180,8 @@ exports.MetricsClient = class MetricsClient {
 
 	// As we are running fetches in parallel, we don't want to have
 	// too many fetches running at the same time
-	get #maxFetchInExecution() {
-		return this.#fetchAttempt >= this.#maxFetchAttempt;
+	get #hasTooManyFetchesRunning() {
+		return this.#runningFetches >= this.#maxFetchesRunningInParallel;
 	}
 
 	// If the fetch fails too many times, we consider that the client
@@ -218,7 +238,7 @@ exports.MetricsClient = class MetricsClient {
 	#startTimer() {
 		this.#timer = setInterval(() => {
 			this.#elapsedSeconds += 1;
-			if (this.#elapsedSeconds >= this.#retentionPeriod) {
+			if (this.#elapsedSeconds >= this.#currentSendIntervalSeconds) {
 				this.#sendEvents();
 				this.#elapsedSeconds = 0;
 			}
@@ -234,27 +254,28 @@ exports.MetricsClient = class MetricsClient {
 		this.#elapsedSeconds = 0;
 	}
 
-	#increaseRetentionPeriod() {
-		const newRetentionPeriod =
-			this.#retentionPeriod + this.#increasePercentage * this.#retentionPeriod;
-		if (newRetentionPeriod <= this.#maxRetentionPeriod) {
-			this.#retentionPeriod = newRetentionPeriod;
+	#increaseSendTimeInterval() {
+		const newSendTimeInterval =
+			this.#currentSendIntervalSeconds +
+			this.#sendIntervalMultiplier * this.#currentSendIntervalSeconds;
+		if (newSendTimeInterval <= this.#maxSendIntervalSeconds) {
+			this.#currentSendIntervalSeconds = newSendTimeInterval;
 		} else {
-			this.#retentionPeriod = this.#maxRetentionPeriod;
+			this.#currentSendIntervalSeconds = this.#maxSendIntervalSeconds;
 		}
 	}
 
-	#resetRetentionPeriod() {
-		this.#retentionPeriod = this.#defaultRetentionPeriod;
+	#resetSendTimeInterval() {
+		this.#currentSendIntervalSeconds = this.#defaultSendIntervalSeconds;
 	}
 
 	#sendEvents() {
-		if (!this.#queue.size || !this.#isEnabled || this.#maxFetchInExecution) {
+		if (!this.#queue.size || !this.#isEnabled || this.#hasTooManyFetchesRunning) {
 			return;
 		}
 
 		// This check allows us not to start too many fetches at the same time
-		this.#fetchAttempt++;
+		this.#runningFetches++;
 
 		this.#resetTimer();
 
@@ -286,11 +307,11 @@ exports.MetricsClient = class MetricsClient {
 				this.#fetchFailed = 0;
 
 				// This check allows us not to start too many fetches at the same time
-				this.#fetchAttempt--;
+				this.#runningFetches--;
 
-				// if we had previously detected to be offline, we might have increase the retention period
+				// if we had previously detected to be offline, we might have increase the sent time interval
 				// so if a fetch is succesful, we reset it to its normal amount just in case
-				this.#resetRetentionPeriod();
+				this.#resetSendTimeInterval();
 			})
 			.catch((error) => {
 				console.warn('Error happened during fetch: ', error);
@@ -300,14 +321,14 @@ exports.MetricsClient = class MetricsClient {
 				this.#queue.requeue(queuedEvents);
 
 				// This check allows us not to start too many fetches at the same time
-				this.#fetchAttempt--;
+				this.#runningFetches--;
 
 				// We count how many fetch fails to determine if the client might be offline
 				this.#fetchFailed++;
 
 				// whilst we are offline, we are reducing the frequency of attempts to fetch
 				if (this.isOffline) {
-					this.#increaseRetentionPeriod();
+					this.#increaseSendTimeInterval();
 				}
 			});
 
