@@ -67,10 +67,10 @@ exports.MetricsClient = class MetricsClient {
 	// to detect offline or flaky network
 
 	/** @type {number} */
-	#fetchFailed = 0;
+	#runningFetchFailed = 0;
 
 	/** @type {number} */
-	#maxFetchFailed = 3;
+	#maxRunningFetchFailed = 3;
 
 	/**
 	 * @param {MetricsClientOptions} options
@@ -182,7 +182,7 @@ exports.MetricsClient = class MetricsClient {
 	// If the fetch fails too many times, we consider that the client
 	// might be offline and we reduce the amount of fetch we attempt
 	get isOffline() {
-		return this.#fetchFailed >= this.#maxFetchFailed;
+		return this.#runningFetchFailed >= this.#maxRunningFetchFailed;
 	}
 
 	/** @type {MetricsClientType['enable']} */
@@ -299,7 +299,7 @@ exports.MetricsClient = class MetricsClient {
 			body: JSON.stringify(events)
 		})
 			.then(() => {
-				this.#fetchFailed = 0;
+				this.#runningFetchFailed = 0;
 
 				// This check allows us not to start too many fetches at the same time
 				this.#runningFetches--;
@@ -319,7 +319,7 @@ exports.MetricsClient = class MetricsClient {
 				this.#runningFetches--;
 
 				// We count how many fetch fails to determine if the client might be offline
-				this.#fetchFailed++;
+				this.#runningFetchFailed++;
 
 				// whilst we are offline, we are reducing the frequency of attempts to fetch
 				if (this.isOffline) {
