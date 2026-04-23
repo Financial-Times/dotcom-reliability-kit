@@ -4,7 +4,7 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 		systemVersion?: string;
 		environment?: 'production' | 'test';
 		batchSize?: number;
-		currentSendIntervalSeconds?: number;
+		sendIntervalSeconds?: number;
 		queue?: Queue;
 	};
 

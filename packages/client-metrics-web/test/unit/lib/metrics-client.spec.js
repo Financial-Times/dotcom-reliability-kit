@@ -644,26 +644,26 @@ describe('@dotcom-reliability-kit/client-metrics-web', () => {
 			});
 		});
 
-		describe('currentSendIntervalSeconds', () => {
+		describe('sendIntervalSeconds', () => {
 			const defaultSendIntervalSeconds = 10;
 
 			afterAll(() => {
-				options.currentSendIntervalSeconds = undefined;
+				options.sendIntervalSeconds = undefined;
 			});
 
-			it('uses the default currentSendIntervalSeconds if none is passed when creating the client', () => {
+			it('uses the defaultSendIntervalSeconds if currentSendIntervalSeconds is passed when creating the client', () => {
 				const instance = new MetricsClient(options);
 				expect(instance.currentSendIntervalSeconds).toBe(defaultSendIntervalSeconds);
 			});
 
-			it('uses the default currentSendIntervalSeconds if a user try to set it to a smaller number than the default', () => {
-				options.currentSendIntervalSeconds = defaultSendIntervalSeconds - 1;
+			it('uses the defaultIntervalSeconds if a user try to set it to a smaller number than the default', () => {
+				options.sendIntervalSeconds = defaultSendIntervalSeconds - 1;
 				const instance = new MetricsClient(options);
 				expect(instance.currentSendIntervalSeconds).toBe(defaultSendIntervalSeconds);
 			});
 
-			it('uses the batchSize option if its bigger than the default', () => {
-				options.currentSendIntervalSeconds = defaultSendIntervalSeconds + 1;
+			it('uses the sendIntervalSeconds option if its bigger than the default', () => {
+				options.sendIntervalSeconds = defaultSendIntervalSeconds + 1;
 				const instance = new MetricsClient(options);
 				expect(instance.currentSendIntervalSeconds).toBe(defaultSendIntervalSeconds + 1);
 			});

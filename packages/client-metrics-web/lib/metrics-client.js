@@ -76,14 +76,8 @@ exports.MetricsClient = class MetricsClient {
 	 * @param {MetricsClientOptions} options
 	 */
 	constructor(options) {
-		let {
-			systemCode,
-			systemVersion,
-			environment,
-			batchSize,
-			currentSendIntervalSeconds,
-			queue
-		} = options;
+		let { systemCode, systemVersion, environment, batchSize, sendIntervalSeconds, queue } =
+			options;
 
 		if (queue) {
 			if (!(queue instanceof Queue)) {
@@ -127,11 +121,12 @@ exports.MetricsClient = class MetricsClient {
 				this.#batchSize = Math.max(batchSize, this.#batchSize);
 			}
 
-			if (currentSendIntervalSeconds && typeof currentSendIntervalSeconds === 'number') {
-				this.#currentSendIntervalSeconds = Math.max(
-					currentSendIntervalSeconds,
-					this.#currentSendIntervalSeconds
+			if (sendIntervalSeconds && typeof sendIntervalSeconds === 'number') {
+				this.#defaultSendIntervalSeconds = Math.max(
+					sendIntervalSeconds,
+					this.#defaultSendIntervalSeconds
 				);
+				this.#currentSendIntervalSeconds = this.#defaultSendIntervalSeconds;
 			}
 
 			this.#handleMetricsEvent = this.#handleMetricsEvent.bind(this);

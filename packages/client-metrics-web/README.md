@@ -23,7 +23,7 @@ A lightweight client for sending operational metrics events from the browser to 
     * [`options.systemVersion`](#optionssystemversion)
     * [`options.environment`](#optionsenvironment)
     * [`options.batchSize`](#optionsbatchsize)
-    * [`options.currentSendIntervalSeconds`](#optionscurrentsendintervalseconds)
+    * [`options.sendIntervalSeconds`](#optionssendintervalseconds)
     * [`options.queue`](#optionsqueue)
       * [Queue interface](#queue-interface)
         * [Options](#options)
@@ -56,7 +56,7 @@ const { MetricsClient } = require('@dotcom-reliability-kit/client-metrics-web');
 
 The MetricsClient sends events to the Client Metrics Server, using POST to the following endpoint `/api/v1/ingest`.
 
-The events are added to a batch. When the batch reaches its max capacity, which defaults to 20, the client sends the events to the server. If it does not reach that max capacity, the client sends the events every 10 seconds. This `currentSendIntervalSeconds` is a configurable option (see [`options.currentSendIntervalSeconds`](#optionscurrentSendIntervalSeconds)). If there are no events added to the batch, nothing is sent.
+The events are added to a batch. When the batch reaches its max capacity, which defaults to 20, the client sends the events to the server. If it does not reach that max capacity, the client sends the events every 10 seconds. This `sendIntervalSeconds` is a configurable option (see [`options.sendIntervalSeconds`](#optionssendIntervalSeconds)). If there are no events added to the batch, nothing is sent.
 
 The correct environment (production vs test) is automatically selected based on the browser hostname.
 If your hostname has `test`, `staging` or `local`, the events will be sent to our test server. Else, it will send the metrics to the production server.
@@ -217,18 +217,18 @@ new MetricsClient({ environment: 'production' });
 
 **Optional** `number`. This is how many events can be accumulated in the queue before the client send them to the server. The minimum size is 20 events, and if you try to set `batchSize` to a lower number, it will be ignore and the options will be set to be 20 events.
 
-#### `options.currentSendIntervalSeconds`
+#### `options.sendIntervalSeconds`
 
-**Optional** `number`. This is the amount of seconds the client will wait before sending a batch of events. The minimum wait time is 10 seconds, and if you try to set `currentSendIntervalSeconds` to a lower number, it will be ignored and the client will use 10 seconds.
+**Optional** `number`. This is the amount of seconds the client will wait before sending a batch of events. The minimum wait time is 10 seconds, and if you try to set `sendIntervalSeconds` to a lower number, it will be ignored and the client will use 10 seconds.
 
 ```js
-new MetricsClient({ currentSendIntervalSeconds: 15 });
+new MetricsClient({ sendIntervalSeconds: 15 });
 ```
 
-If the network is flaky or unavailable, we are increasing the wait time to avoid having too many retries at once. The max interval is set to be 2 minutes, so you should set the `currentSendIntervalSeconds` to be less than 2 minutes.
+If the network is flaky or unavailable, we are increasing the wait time to avoid having too many retries at once. The max interval is set to be 2 minutes, so you should set the `sendIntervalSeconds` to be less than 2 minutes.
 
 > [!NOTE]
-> If the batch of event reaches its maximum size, the events are sent before reaching the end of the currentSendIntervalSeconds.
+> If the batch of event reaches its maximum size, the events are sent before reaching the end of the sendIntervalSeconds.
 
 #### `options.queue`
 
