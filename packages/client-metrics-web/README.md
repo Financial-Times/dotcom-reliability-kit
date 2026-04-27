@@ -79,13 +79,24 @@ This will bind some global event handlers:
 Send a metrics event:
 
 ```js
-client.recordEvent('namespace.event', {
+client.recordEvent('example-namespace', {
     // Any event details you want to send can go here as key/value pairs
 });
 ```
 
-The event namespace must be comprised of alphanumeric characters, underscores, and hyphens, possibly separated by periods.
-Other than the above, the event namespace is free-form for now. A later major version of the client may lock down the top-level namespace further.
+The event namespace must be comprised of alphanumeric characters, underscores, and hyphens. The namespace will be converted to lowercase.
+If you wish to have top-level namespace and second-level namespaces, you can use periods separator. Ex:
+```
+'top-level-namespace.success'
+'top-level-namespace.failure'
+```
+
+An alternative is to have the second-level namespace as a property:
+```
+namespace: top-level-namespace,
+status: success | failure
+```
+
 
 #### `client.enable()`
 
@@ -121,7 +132,7 @@ This allows you to send metric events from anywhere in your system, even if you 
 window.dispatchEvent(
     new CustomEvent('ft.clientMetric', {
         detail: {
-            namespace: 'namespace.event',
+            namespace: 'example-namespace',
             // Any event details you want to send can go here as key/value pairs
         }
     }
@@ -136,7 +147,7 @@ element.dispatchEvent(
     new CustomEvent('ft.clientMetric', {
         bubbles: true,
         detail: {
-            namespace: 'namespace.event',
+            namespace: 'example-namespace',
             // Any event details you want to send can go here as key/value pairs
         }
     }
@@ -266,13 +277,6 @@ This ensures that:
   * We don't end up with duplicate global event handlers
   * The system installing your library does not have to inject the metrics client and manage the instance
   * We don't end up with systems and libraries using different incompatible versions of the metrics client (dependency hell)
-
-We recommend that your library decides on a top-level namespace that all other events live under. E.g.
-
-```
-my-library.success
-my-library.failure
-```
 
 ## Usage (infrastructure)
 
