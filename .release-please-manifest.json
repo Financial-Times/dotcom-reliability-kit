@@ -1,7 +1,7 @@
 {
   "packages/app-info": "4.2.1",
   "packages/biome-config": "1.0.0",
-  "packages/client-metrics-web": "1.0.0",
+  "packages/client-metrics-web": "1.1.0",
   "packages/crash-handler": "5.1.8",
   "packages/errors": "4.2.0",
   "packages/eslint-config": "4.1.0",
