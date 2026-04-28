@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.1.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v1.0.0...client-metrics-web-v1.1.0) (2026-04-28)
+
+
+### Features
+
+* add specs for offline support ([071cb7f](https://github.com/Financial-Times/dotcom-reliability-kit/commit/071cb7fddf417c26d77c52d681158fbd13fd3767))
+* adds back event in the queue if fetch has failed ([d523e86](https://github.com/Financial-Times/dotcom-reliability-kit/commit/d523e8634354381005b9c22179a2cba5cfe2605c))
+
+
+### Bug Fixes
+
+* biome ([7b08eb1](https://github.com/Financial-Times/dotcom-reliability-kit/commit/7b08eb1538afc59527255c4648cba09dfe13f6c9))
+
+
+### Documentation Changes
+
+* make namespace rules more explicit ([0e89e66](https://github.com/Financial-Times/dotcom-reliability-kit/commit/0e89e66e993131488cda9ceed6fac9530ded9068))
+
 ## [1.0.0](https://github.com/Financial-Times/dotcom-reliability-kit/compare/client-metrics-web-v0.1.4...client-metrics-web-v1.0.0) (2026-03-12)
 
 
