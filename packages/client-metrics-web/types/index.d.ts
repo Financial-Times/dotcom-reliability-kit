@@ -49,4 +49,9 @@ declare module '@dotcom-reliability-kit/client-metrics-web' {
 	}
 
 	export class InMemoryQueue extends Queue {}
+
+	export type LocalStorageQueueOptions = QueueOptions & {
+		systemCode: string;
+	}
+	export class LocalStorageQueue extends Queue {}
 }
