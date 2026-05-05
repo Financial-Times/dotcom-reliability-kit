@@ -19,7 +19,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	 * @override
 	 * @type {InMemoryQueueType['add']}
 	 */
-	add(item) {
+	async add(item) {
 		if (this.#queue.length >= this.capacity) {
 			this.drop();
 		}
@@ -32,7 +32,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	 * @type {InMemoryQueueType['drop']}
 	 * This method is dropping the oldest item(s) from the queue
 	 */
-	drop(count = 1) {
+	async drop(count = 1) {
 		this.#queue = this.#queue.slice(count);
 	}
 
@@ -40,7 +40,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	 * @override
 	 * @type {InMemoryQueueType['pull']}
 	 */
-	pull(count = 1) {
+	async pull(count = 1) {
 		return this.#queue.splice(0, count);
 	}
 
@@ -48,7 +48,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	 * @override
 	 * @type {InMemoryQueueType['requeue']}
 	 */
-	requeue(items) {
+	async requeue(items) {
 		this.#queue.unshift(...items);
 	}
 
@@ -56,7 +56,7 @@ exports.InMemoryQueue = class InMemoryQueue extends Queue {
 	 * @override
 	 * @type {InMemoryQueueType['size']}
 	 */
-	get size() {
+	async size() {
 		return this.#queue.length;
 	}
 };
