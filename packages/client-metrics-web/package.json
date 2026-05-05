@@ -17,5 +17,8 @@
     "node": "20.x || 22.x || 24.x"
   },
   "main": "lib/index.js",
-  "types": "types/index.d.ts"
+  "types": "types/index.d.ts",
+  "dependencies": {
+    "idb-keyval": "^6.2.2"
+  }
 }
