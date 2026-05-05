@@ -18,21 +18,21 @@ exports.Queue = class Queue {
 	/**
 	 * @type {QueueType['add']}
 	 */
-	add(_item) {
+	async add(_item) {
 		throw new Error('Must be implemented by subclass');
 	}
 
 	/**
 	 * @type {QueueType['drop']}
 	 */
-	drop(_count) {
+	async drop(_count) {
 		throw new Error('Must be implemented by subclass');
 	}
 
 	/**
 	 * @type {QueueType['pull']}
 	 */
-	pull(_count) {
+	async pull(_count) {
 		throw new Error('Must be implemented by subclass');
 	}
 
@@ -41,19 +41,19 @@ exports.Queue = class Queue {
 	 * If you do not implement that method, the events that were not sent are just lost
 	 * @type {QueueType['requeue']}
 	 */
-	requeue(_items) {}
+	async requeue(_items) {}
+
+	/**
+	 * @type {QueueType['size']}
+	 */
+	async size() {
+		throw new Error('Must be implemented by subclass');
+	}
 
 	/**
 	 * @type {QueueType['capacity']}
 	 */
 	get capacity() {
 		return this.#capacity;
-	}
-
-	/**
-	 * @type {QueueType['size']}
-	 */
-	get size() {
-		throw new Error('Must be implemented by subclass');
 	}
 };

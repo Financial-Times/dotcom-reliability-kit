@@ -12,29 +12,50 @@ describe('Queue (base class)', () => {
 	});
 
 	describe('Abstract methods will throw if called', () => {
-		it('add (item)', () => {
+		it('add (item)', async () => {
 			const queue = new Queue({ capacity: 11 });
-			expect(() => queue.add({ data: 'test' })).toThrow('Must be implemented by subclass');
+			expect.assertions(1);
+			try{
+				await queue.add({ data: 'test' });
+			} catch(error) {
+				expect(error.message).toBe('Must be implemented by subclass');
+			}
 		});
 
-		it('drop', () => {
+		it('drop', async () => {
 			const queue = new Queue({ capacity: 11 });
-			expect(() => queue.drop()).toThrow('Must be implemented by subclass');
+			expect.assertions(1);
+			try{
+				await queue.drop();
+			} catch(error) {
+				expect(error.message).toBe('Must be implemented by subclass');
+			}
 		});
 
-		it('pull', () => {
+		it('pull', async () => {
 			const queue = new Queue({ capacity: 11 });
-			expect(() => queue.pull()).toThrow('Must be implemented by subclass');
+			expect.assertions(1);
+			try{
+				await queue.pull();
+			} catch(error) {
+				expect(error.message).toBe('Must be implemented by subclass');
+			}
 		});
 
-		it('size getter', () => {
+		it('size getter', async () => {
 			const queue = new Queue({ capacity: 11 });
-			expect(() => queue.size()).toThrow('Must be implemented by subclass');
+			expect.assertions(1);
+			try{
+				await  queue.size();
+			} catch(error) {
+				expect(error.message).toBe('Must be implemented by subclass');
+			}
 		});
 
 		it('requeue will not throw because we are not enforcing this method (but we need it for setting the queue type)', () => {
 			const queue = new Queue({ capacity: 11 });
-			expect(() => queue.requeue()).not.toThrow();
+			expect.assertions(1);
+			expect(async() => await queue.requeue()).not.toThrow();
 		});
 	});
 });
